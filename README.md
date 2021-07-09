@@ -41,17 +41,17 @@ The project is structured as below
         - models
             Any models for the widgets or screens or any data transfering between UI modules
         - sub_views
-            Any subview such as tabview, inner screens, etc are included in this screen
+            Any subview such as tabview, inner screens, etc are included in this folder
         - dialogs
             The popups or dialogs are created in this folder
     
     - Providers
-        Any public providers which are needs for multiple features are declared in this screen
+        Any public providers which are needs for multiple features are declared in this folder
 
     - Utils
-        The utilies such as colors, stylesheets are defined in this screen
+        The utilies such as colors, stylesheets are defined in this folder
     - Widgets
-        Any public widgets which are needs for multiple features are declared in this screen
+        Any public widgets which are needs for multiple features are declared in this folder
 
 
 ## Environment
