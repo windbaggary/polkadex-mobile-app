@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="18" viewBox="0 0 22 18">
+    <g transform="translate(-4.896 -7)">
+        <g transform="translate(1 1)">
+            <rect fill="#0ca564" width="10" height="2" transform="translate(13.896 8) rotate(180)" />
+            <rect fill="#0ca564" width="10" height="2" transform="translate(13.896 16) rotate(180)" />
+            <rect fill="#0ca564" width="10" height="2" transform="translate(13.896 12) rotate(180)" />
+            <rect fill="#0ca564" width="10" height="2" transform="translate(13.896 20) rotate(180)" />
+            <rect fill="#0ca564" width="10" height="2" transform="translate(13.896 24) rotate(180)" />
+        </g>
+        <g transform="translate(12.594 1)">
+            <rect fill="#e6007a" width="10" height="2" transform="translate(14.302 8) rotate(180)" />
+            <rect fill="#e6007a" width="10" height="2" transform="translate(14.302 16) rotate(180)" />
+            <rect fill="#e6007a" width="10" height="2" transform="translate(14.302 12) rotate(180)" />
+            <rect fill="#e6007a" width="10" height="2" transform="translate(14.302 20) rotate(180)" />
+            <rect fill="#e6007a" width="10" height="2" transform="translate(14.302 24) rotate(180)" />
+        </g>
+    </g>
+</svg>

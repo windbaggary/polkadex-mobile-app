@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="15.422" height="14.5" viewBox="0 0 15.422 14.5">
+    <g transform="translate(0.801 0.75)">
+        <path fill="none" stroke= "#0ca564" stroke-width="1.5px" d="M15,0H0" transform="translate(-0.699)" />
+        <path fill="none" stroke= "#0ca564" stroke-width="1.5px" d="M15,0,11.027.606l-3.3-1.719L4.395.606,0,0" transform="translate(-0.699 4)" />
+        <line fill="none" stroke= "#2E303C" stroke-width="1.5px" x1="15" transform="translate(-0.379 9)" />
+        <line fill="none" stroke= "#2E303C" stroke-width="1.5px" x1="15" transform="translate(-0.379 13)" />
+    </g>
+</svg>

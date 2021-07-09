@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+
+    <g transform="translate(-3.5 -1.5)">
+        <path fill="#fff" opacity="0.5"
+            d="M2.219,5.548H6.658a1.11,1.11,0,0,1,0,2.219H1.11A1.11,1.11,0,0,1,0,6.658V1.11a1.11,1.11,0,0,1,2.219,0Z"
+            transform="translate(11.768 7.548)" />
+        <path fill="#fff"  
+            d="M10,20A10,10,0,1,1,20,10,10.011,10.011,0,0,1,10,20ZM10,2.223A7.777,7.777,0,1,0,17.777,10,7.786,7.786,0,0,0,10,2.223Z"
+            transform="translate(4 2)" />
+    </g>
+</svg>

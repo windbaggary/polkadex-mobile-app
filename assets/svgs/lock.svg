@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="8" height="10" viewBox="0 0 8 10">
+    <g opacity="0.8" transform="translate(-4.192 -2.24)">
+        <path fill="#fff" opacity="0.5" d="M1.048,2.1A1.048,1.048,0,1,0,0,1.048,1.048,1.048,0,0,0,1.048,2.1Z"
+            transform="translate(7.144 8.026)" />
+        <path fill="#fff" opacity="0.6"
+            d="M7,10H1A1,1,0,0,1,0,9V4a.5.5,0,0,1,.5-.5H1V3A3,3,0,1,1,7,3v.5h.5A.5.5,0,0,1,8,4V9A1,1,0,0,1,7,10ZM1.2,4.5a.2.2,0,0,0-.2.2V8.8a.2.2,0,0,0,.2.2H6.8A.2.2,0,0,0,7,8.8V4.7a.2.2,0,0,0-.2-.2ZM4,1A2,2,0,0,0,2,3v.5H6V3A2,2,0,0,0,4,1Z"
+            transform="translate(4.192 2.24)" />
+    </g>
+</svg>

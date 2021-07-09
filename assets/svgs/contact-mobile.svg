@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="20" viewBox="0 0 14 20">
+
+    <g transform="translate(-2 -2)">
+        <path fill="#fff"
+            d="M11,20H3a3,3,0,0,1-3-3V3A3,3,0,0,1,3,0h8a3,3,0,0,1,3,3V17A3,3,0,0,1,11,20ZM2,17a1,1,0,0,0,1,1h8a1,1,0,0,0,1-1ZM3,2A1,1,0,0,0,2,3V15H12V3a1,1,0,0,0-1-1Z"
+            transform="translate(2 2)" />
+        <path fill="#fff" opacity="0.5" d="M1,0H3A1,1,0,0,1,3,2H1A1,1,0,0,1,1,0Z" transform="translate(7 5)" />
+    </g>
+</svg>
