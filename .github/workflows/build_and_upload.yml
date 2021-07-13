@@ -1,8 +1,11 @@
 name: Build Polkadex App
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    types: [assigned]
+    branches: [develop]
+    types: [ready_for_review]
 
 jobs:
   build:
