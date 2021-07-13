@@ -36,4 +36,4 @@ jobs:
           name: app-builds
           path: |
             build/app/outputs/apk/release/*.apk
-            build/ios/ipa/*.ipa
+            build/ios/iphoneos/*.ipa
