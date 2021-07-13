@@ -1,7 +1,8 @@
 name: Build Polkadex App (Alpha)
 
-pull_request:
-  types: [assigned]
+on:
+  pull_request:
+    types: [assigned]
 
 jobs:
   build:
