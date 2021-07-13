@@ -1,4 +1,4 @@
-name: Build Polkadex App (Alpha)
+name: Build Polkadex App
 
 on:
   push:
