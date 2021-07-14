@@ -243,8 +243,7 @@ class _ThisInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.onNavigateToCreateAccount !=
-            onNavigateToCreateAccount ||
+    return oldWidget.onNavigateToCreateAccount != onNavigateToCreateAccount ||
         oldWidget.onNavigateToLogin != onNavigateToLogin;
   }
 }

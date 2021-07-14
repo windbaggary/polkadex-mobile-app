@@ -290,7 +290,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                 onTap: () {
                                   final provider =
                                       context.read<_ThisListDataProvider>();
-                                  date_range_picker.showDatePicker(
+                                  date_range_picker
+                                      .showDatePicker(
                                           context: context,
                                           initialFirstDate:
                                               provider?.filterStartDate ??
@@ -299,8 +300,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                               provider?.filterEndDate ??
                                                   DateTime.now(),
                                           firstDate: DateTime(2015),
-                                          lastDate: DateTime(
-                                              DateTime.now().year + 2))
+                                          lastDate:
+                                              DateTime(DateTime.now().year + 2))
                                       .then((dates) {
                                     if (dates?.isNotEmpty ?? false) {
                                       provider.setFilterDates(

@@ -31,8 +31,7 @@ class AppChartDummyProvider extends ChangeNotifier {
   double get chartScale => _scale;
 
   EnumAppChartDataTypes get chartDataType => _chartDataType;
-  EnumBalanceChartDataTypes get balanceChartDataType =>
-      _balanceChartDataTypes;
+  EnumBalanceChartDataTypes get balanceChartDataType => _balanceChartDataTypes;
 
   List<LineChartModel> get list {
     if (filterStartDate != null || _filterEndDate != null) {
@@ -40,8 +39,8 @@ class AppChartDummyProvider extends ChangeNotifier {
         bool hasThisItem = true;
         if (_filterStartDate != null) {
           final compare =
-          DateTime(item.date.year, item.date.month, item.date.day)
-              .compareTo(filterStartDate);
+              DateTime(item.date.year, item.date.month, item.date.day)
+                  .compareTo(filterStartDate);
           hasThisItem = compare >= 0;
         }
 
@@ -50,8 +49,8 @@ class AppChartDummyProvider extends ChangeNotifier {
         }
         if (_filterEndDate != null) {
           final compare =
-          DateTime(item.date.year, item.date.month, item.date.day)
-              .compareTo(filterEndDate);
+              DateTime(item.date.year, item.date.month, item.date.day)
+                  .compareTo(filterEndDate);
           hasThisItem = compare <= 0;
         }
 
@@ -64,12 +63,11 @@ class AppChartDummyProvider extends ChangeNotifier {
 
   DateTime get filterStartDate => _filterStartDate == null
       ? null
-      : DateTime(_filterStartDate.year, _filterStartDate.month,
-          _filterStartDate.day);
+      : DateTime(
+          _filterStartDate.year, _filterStartDate.month, _filterStartDate.day);
   DateTime get filterEndDate => _filterEndDate == null
       ? null
-      : DateTime(_filterEndDate.year, _filterEndDate.month,
-          _filterEndDate.day);
+      : DateTime(_filterEndDate.year, _filterEndDate.month, _filterEndDate.day);
 
   set chartDataType(EnumAppChartDataTypes val) {
     stopTimer();

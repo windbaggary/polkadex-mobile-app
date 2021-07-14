@@ -426,8 +426,7 @@ class OrderBookHeadingWidget extends StatelessWidget {
                   child: ValueListenableBuilder<int>(
                     valueListenable: _priceLengthNotifier,
                     builder: (context, selectedPriceLenIndex, child) => Text(
-                      dummyPriceLengthData[selectedPriceLenIndex]?.price ??
-                          "",
+                      dummyPriceLengthData[selectedPriceLenIndex]?.price ?? "",
                       style: tsS15W600CFF.copyWith(
                           color: colorFFFFFF.withOpacity(0.30)),
                     ),

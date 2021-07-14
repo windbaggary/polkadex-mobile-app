@@ -83,9 +83,8 @@ class _ThisProgressContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final crossFadeState = selIndex != null
-        ? CrossFadeState.showSecond
-        : CrossFadeState.showFirst;
+    final crossFadeState =
+        selIndex != null ? CrossFadeState.showSecond : CrossFadeState.showFirst;
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,

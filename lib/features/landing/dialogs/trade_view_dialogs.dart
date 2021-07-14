@@ -19,8 +19,7 @@ class _OrderTypeDialogWidget extends StatelessWidget {
     Key key,
     EnumOrderTypes selectedIndex,
     this.onItemSelected,
-  })  : selectedTypeNotifier =
-            ValueNotifier<EnumOrderTypes>(selectedIndex),
+  })  : selectedTypeNotifier = ValueNotifier<EnumOrderTypes>(selectedIndex),
         super(key: key);
 
   @override
@@ -287,8 +286,7 @@ class _PriceLengthDialogWidget extends StatelessWidget {
                       if (onItemSelected != null) {
                         onItemSelected(dummyPriceLengthData.indexOf(e));
                       }
-                      _selectedNotifier.value =
-                          dummyPriceLengthData.indexOf(e);
+                      _selectedNotifier.value = dummyPriceLengthData.indexOf(e);
                       Navigator.pop(context);
                     },
                     child: ValueListenableBuilder(

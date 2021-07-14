@@ -650,7 +650,8 @@ class _ThisGraphOptionWidget extends StatelessWidget {
 
   void _onDateTapped(BuildContext context) {
     final provider = context.read<AppChartDummyProvider>();
-    date_range_picker.showDatePicker(
+    date_range_picker
+        .showDatePicker(
             context: context,
             initialFirstDate: provider.filterStartDate ?? DateTime.now(),
             initialLastDate: provider.filterEndDate ?? DateTime.now(),

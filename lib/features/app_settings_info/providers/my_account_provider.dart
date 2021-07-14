@@ -6,7 +6,7 @@ class MyAccountProfileProvider extends ChangeNotifier {
   /// The local image path
   String _imgFilePath;
 
-  bool get hasImg =>_imgFilePath?.isNotEmpty ?? false;
+  bool get hasImg => _imgFilePath?.isNotEmpty ?? false;
 
   String get imgFile => _imgFilePath;
 

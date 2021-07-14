@@ -86,8 +86,8 @@ class CustomAppBar extends StatelessWidget {
                       //   position: _headingAnimation,
                       //   child: FadeTransition(
                       //       opacity: _opacityAnimation,
-                      child: Text(title ?? "",
-                          style: titleStyle ?? tsS21W500CFF)),
+                      child:
+                          Text(title ?? "", style: titleStyle ?? tsS21W500CFF)),
                   //   ),
                   // ),
                 ),

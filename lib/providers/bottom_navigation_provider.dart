@@ -19,8 +19,7 @@ class BottomNavigationProvider extends ChangeNotifier {
 
   EnumBottonBarItem get enumBottomBarItem => _enumBottonBarItem;
 
-  Stream<EnumBottonBarItem> get streamBottomBarItem =>
-      _streamController.stream;
+  Stream<EnumBottonBarItem> get streamBottomBarItem => _streamController.stream;
 
   set enumBottomBarItem(EnumBottonBarItem val) {
     _enumBottonBarItem = val;

@@ -22,8 +22,7 @@ class BalanceChartDummyProvider extends ChangeNotifier {
 
   double get chartScale => _scale;
 
-  EnumBalanceChartDataTypes get balanceChartDataType =>
-      _balanceChartDataTypes;
+  EnumBalanceChartDataTypes get balanceChartDataType => _balanceChartDataTypes;
 
   List<LineChartModel> get list => _list;
 

@@ -432,8 +432,8 @@ class _ThisPairItemWidget extends AnimatedWidget {
                       child: Text(
                         model?.code ?? "",
                         style: tsS12W400CFF.copyWith(
-                          color: colorFFFFFF
-                              .withOpacity(isSelected ? 1.0 : 0.6),
+                          color:
+                              colorFFFFFF.withOpacity(isSelected ? 1.0 : 0.6),
                         ),
                       ),
                     ),
@@ -554,8 +554,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                   child: Text(
                     model?.code ?? "",
                     style: tsS12W400CFF.copyWith(
-                      color:
-                          colorFFFFFF.withOpacity(isSelected ? 1.0 : 0.6),
+                      color: colorFFFFFF.withOpacity(isSelected ? 1.0 : 0.6),
                     ),
                     textAlign: TextAlign.start,
                   ),

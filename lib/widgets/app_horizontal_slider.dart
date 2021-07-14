@@ -334,8 +334,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
   void _onDragStart(DragStartDetails details) {}
 
   void _onDragUpdate(DragUpdateDetails details) {
-    _progress =
-        (details.localPosition.dx / (size.width - 1)).clamp(0.0, 1.0);
+    _progress = (details.localPosition.dx / (size.width - 1)).clamp(0.0, 1.0);
     if (onProgressUpdate != null) {
       onProgressUpdate(_progress);
     }

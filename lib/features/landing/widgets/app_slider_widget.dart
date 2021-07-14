@@ -146,8 +146,8 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
                     child: Transform(
                       transform: Matrix4.identity()
                         ..scale(scale, scale)
-                        ..translate(offset.dx * (_directionX ? 1.0 : -1.0),
-                            offset.dy)
+                        ..translate(
+                            offset.dx * (_directionX ? 1.0 : -1.0), offset.dy)
                         ..rotateZ(math.sin(math.pi / 2 * rotateZ) *
                             (_directionX ? 1.0 : -1.0)),
                       alignment: Alignment.bottomCenter,
