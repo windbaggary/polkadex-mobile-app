@@ -8,23 +8,23 @@ import 'package:polkadex/utils/enums.dart';
 /// Click event and listener for the selection
 class BottomNavigationProvider extends ChangeNotifier {
   final _streamController = StreamController<EnumBottonBarItem>.broadcast();
-  static BottomNavigationProvider _instance =
+  static final BottomNavigationProvider _instance =
       BottomNavigationProvider._initialise();
 
   BottomNavigationProvider._initialise() : super();
 
   factory BottomNavigationProvider() => _instance;
 
-  EnumBottonBarItem _enumBottonBarItem = EnumBottonBarItem.Home;
+  EnumBottonBarItem _enumBottonBarItem = EnumBottonBarItem.home;
 
-  EnumBottonBarItem get enumBottomBarItem => this._enumBottonBarItem;
+  EnumBottonBarItem get enumBottomBarItem => _enumBottonBarItem;
 
   Stream<EnumBottonBarItem> get streamBottomBarItem =>
-      this._streamController.stream;
+      _streamController.stream;
 
   set enumBottomBarItem(EnumBottonBarItem val) {
-    this._enumBottonBarItem = val;
-    this._streamController.add(val);
+    _enumBottonBarItem = val;
+    _streamController.add(val);
     notifyListeners();
   }
 

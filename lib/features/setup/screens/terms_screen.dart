@@ -185,7 +185,7 @@ class _ThisBottomWidget extends AnimatedWidget {
     @required Animation<double> entryAnimation,
   }) : super(key: key, listenable: entryAnimation);
 
-  Animation<double> get _entryAnimation => this.listenable as Animation<double>;
+  Animation<double> get _entryAnimation => listenable as Animation<double>;
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +244,7 @@ class _ThisInheritedWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
     return oldWidget.onNavigateToCreateAccount !=
-            this.onNavigateToCreateAccount ||
-        oldWidget.onNavigateToLogin != this.onNavigateToLogin;
+            onNavigateToCreateAccount ||
+        oldWidget.onNavigateToLogin != onNavigateToLogin;
   }
 }

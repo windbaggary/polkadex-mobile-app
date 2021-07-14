@@ -26,32 +26,32 @@ class BasicCoinListModel {
     @required double percentage,
     @required this.buySell,
     double volume,
-  })  : this._volume = volume,
-        this._percentage = percentage;
+  })  : _volume = volume,
+        _percentage = percentage;
 
   bool isFavorite = false;
 
-  String get volume => NumberFormat().format(this._volume);
+  String get volume => NumberFormat().format(_volume);
 
   String get percentage {
     String sign = "";
-    switch (this.buySell) {
-      case EnumBuySell.Buy:
+    switch (buySell) {
+      case EnumBuySell.buy:
         sign = "+";
         break;
-      case EnumBuySell.Sell:
+      case EnumBuySell.sell:
         sign = "-";
 
         break;
     }
-    return sign + this._percentage.toStringAsFixed(2);
+    return sign + _percentage.toStringAsFixed(2);
   }
 
   Color get color {
-    switch (this.buySell) {
-      case EnumBuySell.Buy:
+    switch (buySell) {
+      case EnumBuySell.buy:
         return color0CA564;
-      case EnumBuySell.Sell:
+      case EnumBuySell.sell:
         return colorE6007A;
     }
     return Colors.transparent;

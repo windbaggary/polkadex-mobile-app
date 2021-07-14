@@ -229,7 +229,7 @@ class MyAccountScreen extends StatelessWidget {
                                         ),
                                         Consumer<MyAccountEditNameProvider>(
                                           builder: (context, provider, child) {
-                                            if (provider.canEditName)
+                                            if (provider.canEditName) {
                                               return Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 4.0),
@@ -238,6 +238,7 @@ class MyAccountScreen extends StatelessWidget {
                                                   style: tsS11W600CFF,
                                                 ),
                                               );
+                                            }
                                             return Container();
                                           },
                                         )

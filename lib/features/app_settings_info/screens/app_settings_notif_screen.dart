@@ -60,7 +60,7 @@ class _AppSettingsNotificationScreenState
         body: AppSettingsLayout(
           // animationController: _animationController,
           onBack: () =>
-              this._onWillPop().then((value) => Navigator.of(context).pop()),
+              _onWillPop().then((value) => Navigator.of(context).pop()),
           subTitle: 'Notifications',
           mainTitle: 'Notifications',
           isShowSubTitle: false,
@@ -91,16 +91,16 @@ class _AppSettingsNotificationScreenState
     List<EnumNotificationAlert> lockedMenu;
 
     switch (e) {
-      case EnumNotificationsMenu.Withdraw:
-        lockedMenu = [EnumNotificationAlert.Email];
+      case EnumNotificationsMenu.withdraw:
+        lockedMenu = [EnumNotificationAlert.email];
         title = "Withdraw";
         description = 'Notify when a withdrawal is requested.';
         break;
-      case EnumNotificationsMenu.Deposit:
+      case EnumNotificationsMenu.deposit:
         title = "Deposit";
         description = 'Notify when a funds are received.';
         break;
-      case EnumNotificationsMenu.FilledOrder:
+      case EnumNotificationsMenu.filledOrder:
         title = "Filled order";
         description = 'Notify when an order is filled.';
         break;
@@ -187,17 +187,17 @@ class _ThisMenuItemWidget extends StatelessWidget {
 
     // double _deltaX;
     switch (e) {
-      case EnumNotificationAlert.Email:
+      case EnumNotificationAlert.email:
         label = 'Email';
         svgAsset = 'email'.asAssetSvg();
         // _deltaX = 0.0;
         break;
-      case EnumNotificationAlert.Phone:
+      case EnumNotificationAlert.phone:
         label = 'Phone';
         svgAsset = 'message-text'.asAssetSvg();
         // _deltaX = 1.0;
         break;
-      case EnumNotificationAlert.Push:
+      case EnumNotificationAlert.push:
         label = 'Push';
         svgAsset = 'phone'.asAssetSvg();
         // _deltaX = 2.0;
@@ -236,8 +236,8 @@ class _ThisMenuItemWidget extends StatelessWidget {
           _ThisAlertItemWidget(
         label: label,
         svgAsset: svgAsset,
-        isLocked: this.lockedItems?.contains(e) ?? false,
-        isActive: this.lockedItems?.contains(e) ?? false,
+        isLocked: lockedItems?.contains(e) ?? false,
+        isActive: lockedItems?.contains(e) ?? false,
       ),
       //   ),
       // ),
@@ -253,7 +253,7 @@ class _ThisAlertItemWidget extends StatelessWidget {
     this.isLocked = false,
     this.isActive = false,
     this.onTap,
-  })  : this._selectedNotifier = ValueNotifier<bool>(isActive),
+  })  : _selectedNotifier = ValueNotifier<bool>(isActive),
         super(key: key);
 
   final ValueNotifier<bool> _selectedNotifier;
@@ -267,11 +267,11 @@ class _ThisAlertItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: this.isLocked
+      onTap: isLocked
           ? null
           : () {
               _selectedNotifier.value = !_selectedNotifier.value;
-              if (this.onTap != null) this.onTap();
+              if (onTap != null) onTap();
             },
       child: ValueListenableBuilder<bool>(
         valueListenable: _selectedNotifier,
@@ -299,7 +299,7 @@ class _ThisAlertItemWidget extends StatelessWidget {
                   style: tsS14W400CFF,
                 ),
               ),
-              if (this.isLocked ?? false) SvgPicture.asset('lock'.asAssetSvg()),
+              if (isLocked ?? false) SvgPicture.asset('lock'.asAssetSvg()),
               SizedBox(width: 11),
             ],
           ),

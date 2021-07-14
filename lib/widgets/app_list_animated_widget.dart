@@ -68,7 +68,7 @@ class _AppHeightFactorAnimatedWidgetState
   @override
   void didUpdateWidget(covariant AppHeightFactorAnimatedWidget oldWidget) {
     if (oldWidget.animationController != widget.animationController) {
-      this._animationController = widget.animationController;
+      _animationController = widget.animationController;
       _initAnimation();
     }
     super.didUpdateWidget(oldWidget);

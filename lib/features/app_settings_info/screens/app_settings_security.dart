@@ -179,8 +179,8 @@ class _ThisItemWidget extends StatelessWidget {
             height: 48,
             child: FittedBox(
               child: Switch(
-                value: this.isChecked,
-                onChanged: this.onSwitchChanged,
+                value: isChecked,
+                onChanged: onSwitchChanged,
                 inactiveTrackColor: Colors.white.withOpacity(0.15),
                 activeColor: colorABB2BC,
                 activeTrackColor: Colors.white.withOpacity(0.15),
@@ -201,28 +201,28 @@ class _ThisProvider extends ChangeNotifier {
       _isTwoFactor = false,
       _isIp = false;
 
-  bool get isFingerPrint => this._isFigerPrint;
-  bool get isPinCode => this._isPinCode;
-  bool get isTwoFactor => this._isTwoFactor;
-  bool get isIp => this._isIp;
+  bool get isFingerPrint => _isFigerPrint;
+  bool get isPinCode => _isPinCode;
+  bool get isTwoFactor => _isTwoFactor;
+  bool get isIp => _isIp;
 
   set isFingerPrint(bool val) {
-    this._isFigerPrint = val;
+    _isFigerPrint = val;
     notifyListeners();
   }
 
   set isPinCode(bool val) {
-    this._isPinCode = val;
+    _isPinCode = val;
     notifyListeners();
   }
 
   set isTwoFactor(bool val) {
-    this._isTwoFactor = val;
+    _isTwoFactor = val;
     notifyListeners();
   }
 
   set isIp(bool val) {
-    this._isIp = val;
+    _isIp = val;
     notifyListeners();
   }
 }

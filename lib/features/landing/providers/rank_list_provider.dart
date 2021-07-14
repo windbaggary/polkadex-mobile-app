@@ -5,17 +5,17 @@ import 'package:polkadex/utils/enums.dart';
 
 /// The provider to show the rank list based on the type selected
 class HomeRankListProvider extends ChangeNotifier {
-  EnumRankingListSorts _listType = EnumRankingListSorts.Gainers;
-  EnumRankingListSorts get listType => this._listType;
+  EnumRankingListSorts _listType = EnumRankingListSorts.gainers;
+  EnumRankingListSorts get listType => _listType;
 
   List<BasicCoinListModel> get list {
     final tmpList = List<BasicCoinListModel>.from(basicCoinDummyList);
-    switch (this._listType) {
-      case EnumRankingListSorts.Gainers:
-        return tmpList.where((e) => e.buySell == EnumBuySell.Buy).toList();
-      case EnumRankingListSorts.Losers:
-        return tmpList.where((e) => e.buySell == EnumBuySell.Sell).toList();
-      case EnumRankingListSorts.Vol:
+    switch (_listType) {
+      case EnumRankingListSorts.gainers:
+        return tmpList.where((e) => e.buySell == EnumBuySell.buy).toList();
+      case EnumRankingListSorts.losers:
+        return tmpList.where((e) => e.buySell == EnumBuySell.sell).toList();
+      case EnumRankingListSorts.vol:
         tmpList.sort((a, b) => b.volume.compareTo(a.volume));
         return tmpList;
     }
@@ -24,7 +24,7 @@ class HomeRankListProvider extends ChangeNotifier {
 
   /// Set the filter type and notify. So the [list] will filtered
   set listType(EnumRankingListSorts val) {
-    this._listType = val;
+    _listType = val;
     notifyListeners();
   }
 }

@@ -23,7 +23,7 @@ import 'package:polkadex/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
 
 /// The left drawer width
-const double APP_DRAWER_WIDTH = 300;
+const double appDrawerWidth = 300;
 
 /// The right drawer width
 double getAppDrawerNotifWidth() {
@@ -55,7 +55,7 @@ class AppDrawerWidget extends StatelessWidget {
       ),
       child: SizedBox(
         height: double.infinity,
-        width: APP_DRAWER_WIDTH,
+        width: appDrawerWidth,
         child: Container(
           decoration: BoxDecoration(
             color: color2E303C.withOpacity(0.30),
@@ -125,27 +125,27 @@ class AppDrawerWidget extends StatelessWidget {
   ///  This method will be invoked when user tap on app settings item
   void _onTapAppSettingsItem(EnumDrawerAppSettings e, BuildContext context) {
     switch (e) {
-      case EnumDrawerAppSettings.Notifications:
+      case EnumDrawerAppSettings.notifications:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsNotificationScreen(),
         ));
         break;
-      case EnumDrawerAppSettings.Appearance:
+      case EnumDrawerAppSettings.appearance:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsAppearance(),
         ));
         break;
-      case EnumDrawerAppSettings.LanguageCurrency:
+      case EnumDrawerAppSettings.languageCurrency:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsLangCurrScreen(),
         ));
         break;
-      case EnumDrawerAppSettings.PrivacySecurtiy:
+      case EnumDrawerAppSettings.privacySecurtiy:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsSecurity(),
         ));
         break;
-      case EnumDrawerAppSettings.MyAccount:
+      case EnumDrawerAppSettings.myAccount:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MyAccountScreen(),
         ));
@@ -160,23 +160,23 @@ class AppDrawerWidget extends StatelessWidget {
     String label;
 
     switch (e) {
-      case EnumDrawerAppSettings.Notifications:
+      case EnumDrawerAppSettings.notifications:
         svg = 'drawer_notification'.asAssetSvg();
         label = 'Notifications';
         break;
-      case EnumDrawerAppSettings.Appearance:
+      case EnumDrawerAppSettings.appearance:
         svg = 'drawer_toggle'.asAssetSvg();
         label = 'Appearance';
         break;
-      case EnumDrawerAppSettings.LanguageCurrency:
+      case EnumDrawerAppSettings.languageCurrency:
         svg = 'drawer_flag'.asAssetSvg();
         label = 'Language & Currency';
         break;
-      case EnumDrawerAppSettings.PrivacySecurtiy:
+      case EnumDrawerAppSettings.privacySecurtiy:
         svg = 'drawer_finger-print'.asAssetSvg();
         label = 'Privacy & Security';
         break;
-      case EnumDrawerAppSettings.MyAccount:
+      case EnumDrawerAppSettings.myAccount:
         svg = 'drawer_avatar'.asAssetSvg();
         label = 'My Account';
         break;
@@ -201,19 +201,19 @@ class AppDrawerWidget extends StatelessWidget {
     String label;
 
     switch (e) {
-      case EnumDrawerAppInfo.TermsConditions:
+      case EnumDrawerAppInfo.termsConditions:
         label = 'Terms and Conditions';
         svg = 'drawer_terms'.asAssetSvg();
         break;
-      case EnumDrawerAppInfo.PrivacyPolicy:
+      case EnumDrawerAppInfo.privacyPolicy:
         label = 'Privacy Policy';
         svg = 'drawer_privacy'.asAssetSvg();
         break;
-      case EnumDrawerAppInfo.HelpSupport:
+      case EnumDrawerAppInfo.helpSupport:
         label = 'Help & Support';
         svg = 'drawer_chat'.asAssetSvg();
         break;
-      case EnumDrawerAppInfo.ChangeLog:
+      case EnumDrawerAppInfo.changeLog:
         label = 'Changelog';
         svg = 'drawer_news'.asAssetSvg();
         break;
@@ -234,19 +234,19 @@ class AppDrawerWidget extends StatelessWidget {
   /// This method will be invoked when user tap on [e] in drawer
   void _onTapAppInfoItem(EnumDrawerAppInfo e, BuildContext context) {
     switch (e) {
-      case EnumDrawerAppInfo.TermsConditions:
+      case EnumDrawerAppInfo.termsConditions:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => TermsConditionsScreen()));
         break;
-      case EnumDrawerAppInfo.PrivacyPolicy:
+      case EnumDrawerAppInfo.privacyPolicy:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => PrivacyPolicyScreen()));
         break;
-      case EnumDrawerAppInfo.HelpSupport:
+      case EnumDrawerAppInfo.helpSupport:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => AppSettingsHelpScreen()));
         break;
-      case EnumDrawerAppInfo.ChangeLog:
+      case EnumDrawerAppInfo.changeLog:
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => AppSettingsChangeLogsScreen()));
         break;
@@ -435,9 +435,9 @@ class NotificationDrawerWidget extends StatelessWidget {
                                       builder: (context) => NotifDepositScreen(
                                         screenType: model.enumType ==
                                                 EnumDrawerNotificationTypes
-                                                    .TransactionWithdraw
-                                            ? EnumDepositScreenTypes.Withdraw
-                                            : EnumDepositScreenTypes.Deposit,
+                                                    .transactionWithdraw
+                                            ? EnumDepositScreenTypes.withdraw
+                                            : EnumDepositScreenTypes.deposit,
                                       ),
                                     ),
                                   );

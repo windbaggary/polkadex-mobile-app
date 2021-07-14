@@ -76,8 +76,9 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
     final double yMax = _getMaxRoundValue(currentData.reduce((value, element) {
       if (value.pointY > element.pointY) {
         return value;
-      } else
+      } else {
         return element;
+      }
     }).pointY);
     final double yRatio = size.height / yMax;
 
@@ -229,7 +230,7 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
           ),
         ),
         TextSpan(
-          text: "$date",
+          text: date,
           style: TextStyle(
             fontSize: 12,
             fontFamily: 'WorkSans',
@@ -272,10 +273,11 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
             _AxisLabelModel(ratioDy: ratio, labelValue: (1.0 - ratio) * yMax));
       }
     }
-    if (options.yLabelCount > 1)
+    if (options.yLabelCount > 1) {
       yAxises.add(_AxisLabelModel(
           ratioDy: options.yAxisTopPaddingRatio,
           labelValue: yMax * (1.0 - options.yAxisTopPaddingRatio)));
+    }
 
     // Draw with text painter
     for (int i = 0; i < yAxises.length; i++) {

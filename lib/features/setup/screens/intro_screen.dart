@@ -265,8 +265,8 @@ class __ThisPageViewState extends State<_ThisPageView> {
   }
 
   void animateTo(int index) {
-    if (this._pageController != null) {
-      this._pageController.animateToPage(
+    if (_pageController != null) {
+      _pageController.animateToPage(
             index,
             duration: AppConfigs.animDuration,
             curve: Curves.ease,

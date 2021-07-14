@@ -55,13 +55,13 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
   @override
   void didUpdateWidget(covariant AppHorizontalProgressBar oldWidget) {
     if (widget.progress != oldWidget.progress) {
-      this.previousProgress = oldWidget.progress;
-      this.progress = widget.progress;
+      previousProgress = oldWidget.progress;
+      progress = widget.progress;
       Future.microtask(() {
         _initialiseAnimation();
         if (_animationController != null) {
-          this._animationController.reset();
-          this._animationController.forward().orCancel;
+          _animationController.reset();
+          _animationController.forward().orCancel;
         }
       });
     }
@@ -70,8 +70,8 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
 
   @override
   void initState() {
-    this.previousProgress = 0.00;
-    this.progress = widget.progress;
+    previousProgress = 0.00;
+    progress = widget.progress;
     _animationController = AnimationController(
         vsync: this,
         duration: AppConfigs.animDurationSmall,
@@ -80,8 +80,9 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
     Future.microtask(() async {
       await Future.delayed(Duration(
           milliseconds: AppConfigs.animDuration.inMilliseconds ~/ 1.5));
-      if (_animationController != null)
-        this._animationController.forward().orCancel;
+      if (_animationController != null) {
+        _animationController.forward().orCancel;
+      }
     });
     super.initState();
   }

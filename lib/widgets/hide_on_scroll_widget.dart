@@ -21,7 +21,7 @@ class HideOnScrollWidget extends SingleChildRenderObjectWidget {
   @override
   void updateRenderObject(
       BuildContext context, covariant _HideOnScrollRenderObject renderObject) {
-    renderObject..scrollController = this.scrollController;
+    renderObject.scrollController = scrollController;
   }
 }
 
@@ -29,13 +29,13 @@ class _HideOnScrollRenderObject extends RenderProxyBox {
   ScrollController _scrollController;
 
   _HideOnScrollRenderObject({@required ScrollController scrollController})
-      : this._scrollController = scrollController,
+      : _scrollController = scrollController,
         super();
 
-  ScrollController get scrollController => this._scrollController;
+  ScrollController get scrollController => _scrollController;
 
   set scrollController(ScrollController value) {
-    this._scrollController = value;
+    _scrollController = value;
     _scrollController.addListener(_scrollListener);
 
     markNeedsLayout();

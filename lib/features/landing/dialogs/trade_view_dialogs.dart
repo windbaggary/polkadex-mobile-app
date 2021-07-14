@@ -19,7 +19,7 @@ class _OrderTypeDialogWidget extends StatelessWidget {
     Key key,
     EnumOrderTypes selectedIndex,
     this.onItemSelected,
-  })  : this.selectedTypeNotifier =
+  })  : selectedTypeNotifier =
             ValueNotifier<EnumOrderTypes>(selectedIndex),
         super(key: key);
 
@@ -84,14 +84,14 @@ class _OrderTypeDialogWidget extends StatelessWidget {
           ...EnumOrderTypes.values
               .map((e) => InkWell(
                     onTap: () {
-                      if (this.onItemSelected != null) {
-                        this.onItemSelected(e);
+                      if (onItemSelected != null) {
+                        onItemSelected(e);
                       }
-                      this.selectedTypeNotifier.value = e;
+                      selectedTypeNotifier.value = e;
                       Navigator.pop(context);
                     },
                     child: ValueListenableBuilder<EnumOrderTypes>(
-                      valueListenable: this.selectedTypeNotifier,
+                      valueListenable: selectedTypeNotifier,
                       builder: (context, selectedItem, child) =>
                           _ThisOrderTypeItemWidget(
                         orderTypeModel: e,
@@ -131,17 +131,17 @@ class _ThisOrderTypeItemWidget extends StatelessWidget {
     String title;
     String description;
     switch (orderTypeModel) {
-      case EnumOrderTypes.Market:
+      case EnumOrderTypes.market:
         title = "Market Order";
         description =
             "A market order is an order to buy or sell a stock at the market’s current best available price.";
         break;
-      case EnumOrderTypes.Limit:
+      case EnumOrderTypes.limit:
         title = "Limit Order";
         description =
             "A limit order is an order to buy or sell a stock with a restriction on the maximum price to be paid or the minimum price to be received.";
         break;
-      case EnumOrderTypes.Stop:
+      case EnumOrderTypes.stop:
         title = "Stop Order";
         description =
             "A stop order is an order to buy or sell a stock at the market price once the stock has traded at or through a specified price.";
@@ -281,14 +281,14 @@ class _PriceLengthDialogWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14),
-          ...DUMMY_PRICE_LENGTH_DATA
+          ...dummyPriceLengthData
               .map((e) => InkWell(
                     onTap: () {
                       if (onItemSelected != null) {
-                        onItemSelected(DUMMY_PRICE_LENGTH_DATA.indexOf(e));
+                        onItemSelected(dummyPriceLengthData.indexOf(e));
                       }
                       _selectedNotifier.value =
-                          DUMMY_PRICE_LENGTH_DATA.indexOf(e);
+                          dummyPriceLengthData.indexOf(e);
                       Navigator.pop(context);
                     },
                     child: ValueListenableBuilder(
@@ -297,7 +297,7 @@ class _PriceLengthDialogWidget extends StatelessWidget {
                           _ThisPriceLengthWidget(
                         model: e,
                         isSelected:
-                            selectedIndex == DUMMY_PRICE_LENGTH_DATA.indexOf(e),
+                            selectedIndex == dummyPriceLengthData.indexOf(e),
                       ),
                     ),
                   ))
@@ -428,7 +428,7 @@ class PriceLengthModel {
   });
 }
 
-const DUMMY_PRICE_LENGTH_DATA = <PriceLengthModel>[
+const dummyPriceLengthData = <PriceLengthModel>[
   PriceLengthModel(
     id: 1,
     price: "0.9",

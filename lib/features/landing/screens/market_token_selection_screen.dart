@@ -13,7 +13,7 @@ import 'package:polkadex/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 /// The width of the shrink widget for token and pairs
-const _SHRINK_WIDGET_WIDTH = 120.0;
+const shrinkWidgetWidth = 120.0;
 
 /// The response model for the seletion. This model will be passed on
 /// navigator pop. So the previous screen get the result of selection
@@ -185,9 +185,9 @@ class __ThisTokenPairWidgetState extends State<_ThisTokenPairWidget>
 
   /// Initialise the animations
   void _initAnimations() {
-    this._tokenAnimation =
+    _tokenAnimation =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animationController);
-    this._pairAnimation =
+    _pairAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
@@ -212,13 +212,13 @@ class _ThisPairLayoutWidget extends AnimatedWidget {
     @required Animation<double> pairAnimation,
   }) : super(key: key, listenable: pairAnimation);
 
-  Animation<double> get _pairAnimation => this.listenable as Animation<double>;
+  Animation<double> get _pairAnimation => listenable as Animation<double>;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: lerpDouble(
-        _SHRINK_WIDGET_WIDTH,
+        shrinkWidgetWidth,
         MediaQuery.of(context).size.width - 180.0,
         _pairAnimation.value,
       ),
@@ -254,7 +254,7 @@ class _ThisPairLayoutWidget extends AnimatedWidget {
                     model: thisProvider.pairList[index],
                     isSelected: thisProvider.pairList[index] ==
                         thisProvider.selectedPairModel,
-                    pairAnimation: this._pairAnimation,
+                    pairAnimation: _pairAnimation,
                   ),
                 ),
                 itemCount: thisProvider.pairList.length,
@@ -281,13 +281,13 @@ class _ThisTokenLayoutWidget extends AnimatedWidget {
   final VoidCallback onShrinkWidget;
   final VoidCallback onExpandWidget;
 
-  Animation<double> get _tokenAnimation => this.listenable as Animation<double>;
+  Animation<double> get _tokenAnimation => listenable as Animation<double>;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: lerpDouble(
-        _SHRINK_WIDGET_WIDTH,
+        shrinkWidgetWidth,
         MediaQuery.of(context).size.width - 180.0,
         _tokenAnimation.value,
       ),
@@ -352,7 +352,7 @@ class _ThisTokenLayoutWidget extends AnimatedWidget {
                     // }
                   },
                   child: _ThisTokenItemWidget(
-                    tokenAnimation: this._tokenAnimation,
+                    tokenAnimation: _tokenAnimation,
                     model: thisProvider.tokenList[index],
                     isSelected: thisProvider.tokenList[index] ==
                         thisProvider.selectedTokenModel,
@@ -381,7 +381,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
     @required this.isSelected,
   }) : super(key: key, listenable: pairAnimation);
 
-  Animation<double> get _pairAnimation => this.listenable as Animation<double>;
+  Animation<double> get _pairAnimation => listenable as Animation<double>;
 
   @override
   Widget build(BuildContext context) {
@@ -433,7 +433,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                         model?.code ?? "",
                         style: tsS12W400CFF.copyWith(
                           color: colorFFFFFF
-                              .withOpacity(this.isSelected ? 1.0 : 0.6),
+                              .withOpacity(isSelected ? 1.0 : 0.6),
                         ),
                       ),
                     ),
@@ -505,7 +505,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
     @required this.model,
   }) : super(key: key, listenable: tokenAnimation);
 
-  Animation<double> get tokenAnimation => this.listenable as Animation<double>;
+  Animation<double> get tokenAnimation => listenable as Animation<double>;
 
   @override
   Widget build(BuildContext context) {
@@ -555,7 +555,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                     model?.code ?? "",
                     style: tsS12W400CFF.copyWith(
                       color:
-                          colorFFFFFF.withOpacity(this.isSelected ? 1.0 : 0.6),
+                          colorFFFFFF.withOpacity(isSelected ? 1.0 : 0.6),
                     ),
                     textAlign: TextAlign.start,
                   ),
@@ -636,42 +636,44 @@ class _ThisProvider extends ChangeNotifier {
   BasicCoinListModel _selectedTokenModel = _dummyTokenList[0];
   BasicCoinListModel _selectedPairModel;
 
-  BasicCoinListModel get selectedTokenModel => this._selectedTokenModel;
-  BasicCoinListModel get selectedPairModel => this._selectedPairModel;
+  BasicCoinListModel get selectedTokenModel => _selectedTokenModel;
+  BasicCoinListModel get selectedPairModel => _selectedPairModel;
 
   List<BasicCoinListModel> get tokenList {
-    if (_searchText?.isNotEmpty ?? false)
+    if (_searchText?.isNotEmpty ?? false) {
       return _dummyTokenList
           .where((e) =>
               e.name.toLowerCase().contains(_searchText.toLowerCase()) ||
               e.code.toLowerCase().contains(_searchText.toLowerCase()))
           .toList();
+    }
     return _dummyTokenList;
   }
 
   List<BasicCoinListModel> get pairList {
-    if (_searchText?.isNotEmpty ?? false)
+    if (_searchText?.isNotEmpty ?? false) {
       return _dummyPairList
           .where((e) =>
               e.name.toLowerCase().contains(_searchText.toLowerCase()) ||
               e.code.toLowerCase().contains(_searchText.toLowerCase()))
           .toList();
+    }
     return _dummyPairList;
   }
 
   set selectedTokenModel(BasicCoinListModel value) {
-    this._selectedTokenModel = value;
-    this._selectedPairModel = null;
+    _selectedTokenModel = value;
+    _selectedPairModel = null;
     notifyListeners();
   }
 
   set selectedPairModel(BasicCoinListModel value) {
-    this._selectedPairModel = value;
+    _selectedPairModel = value;
     notifyListeners();
   }
 
   set searchText(String val) {
-    this._searchText = val;
+    _searchText = val;
     notifyListeners();
   }
 }

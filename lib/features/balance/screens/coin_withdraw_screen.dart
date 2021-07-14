@@ -496,24 +496,24 @@ class _ThisProvider extends ChangeNotifier {
   String _unit = "0", _amount = "0";
   bool _isKeyboardVisible = false;
 
-  bool get isKeyboardVisible => this._isKeyboardVisible ?? false;
-  double get progress => this._progress;
+  bool get isKeyboardVisible => _isKeyboardVisible ?? false;
+  double get progress => _progress;
 
   set progress(double val) {
-    this._progress = val;
-    this._amount = (_availableAmount * val).toStringAsFixed(2);
-    this._unit = (_availableUnit * val).toStringAsFixed(2);
+    _progress = val;
+    _amount = (_availableAmount * val).toStringAsFixed(2);
+    _unit = (_availableUnit * val).toStringAsFixed(2);
     notifyListeners();
   }
 
   set isKeyboardVisible(bool val) {
-    this._isKeyboardVisible = val;
+    _isKeyboardVisible = val;
     notifyListeners();
   }
 
-  String get unit => this._unit;
+  String get unit => _unit;
 
-  String get amount => "\$${this._amount}";
+  String get amount => "\$$_amount";
 
   String get topValue {
     if (_isSwap) {
@@ -532,7 +532,7 @@ class _ThisProvider extends ChangeNotifier {
   }
 
   void onSwap() {
-    this._isSwap = !this._isSwap;
+    _isSwap = !_isSwap;
     notifyListeners();
   }
 
@@ -545,56 +545,57 @@ class _ThisProvider extends ChangeNotifier {
       enteredString = "";
     }
     switch (val) {
-      case _EnumKeypadNumbers.One:
+      case _EnumKeypadNumbers.one:
         enteredString += "1";
         break;
-      case _EnumKeypadNumbers.Two:
+      case _EnumKeypadNumbers.two:
         enteredString += "2";
 
         break;
-      case _EnumKeypadNumbers.Three:
+      case _EnumKeypadNumbers.three:
         enteredString += "3";
 
         break;
-      case _EnumKeypadNumbers.Four:
+      case _EnumKeypadNumbers.four:
         enteredString += "4";
 
         break;
-      case _EnumKeypadNumbers.Five:
+      case _EnumKeypadNumbers.five:
         enteredString += "5";
 
         break;
-      case _EnumKeypadNumbers.Six:
+      case _EnumKeypadNumbers.six:
         enteredString += "6";
 
         break;
-      case _EnumKeypadNumbers.Seven:
+      case _EnumKeypadNumbers.seven:
         enteredString += "7";
 
         break;
-      case _EnumKeypadNumbers.Eight:
+      case _EnumKeypadNumbers.eight:
         enteredString += "8";
 
         break;
-      case _EnumKeypadNumbers.Nine:
+      case _EnumKeypadNumbers.nine:
         enteredString += "9";
 
         break;
-      case _EnumKeypadNumbers.Zero:
+      case _EnumKeypadNumbers.zero:
         enteredString += "0";
 
         break;
-      case _EnumKeypadNumbers.Dot:
+      case _EnumKeypadNumbers.dot:
         enteredString += ".";
         if (enteredString.length == 1) {
           enteredString = "0.";
         }
 
         break;
-      case _EnumKeypadNumbers.Back:
+      case _EnumKeypadNumbers.back:
         if (enteredString?.isEmpty ?? true) break;
-        if (enteredString.length > 0)
+        if (enteredString.isNotEmpty) {
           enteredString = enteredString.substring(0, enteredString.length - 1);
+        }
         break;
     }
     try {
@@ -621,18 +622,18 @@ class _ThisProvider extends ChangeNotifier {
 }
 
 enum _EnumKeypadNumbers {
-  One,
-  Two,
-  Three,
-  Four,
-  Five,
-  Six,
-  Seven,
-  Eight,
-  Nine,
-  Zero,
-  Dot,
-  Back,
+  one,
+  two,
+  three,
+  four,
+  five,
+  six,
+  seven,
+  eight,
+  nine,
+  zero,
+  dot,
+  back,
 }
 
 typedef _OnKeypadNumberTapped = void Function(_EnumKeypadNumbers number);
@@ -721,7 +722,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                       Expanded(
                         child: InkWell(
                           onTap: () => widget
-                              .onKeypadNumberTapped(_EnumKeypadNumbers.Dot),
+                              .onKeypadNumberTapped(_EnumKeypadNumbers.dot),
                           child: _ThisNumberItemWidget(
                             number: '.',
                           ),
@@ -730,7 +731,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                       Expanded(
                         child: InkWell(
                           onTap: () => widget
-                              .onKeypadNumberTapped(_EnumKeypadNumbers.Zero),
+                              .onKeypadNumberTapped(_EnumKeypadNumbers.zero),
                           child: _ThisNumberItemWidget(
                             number: '0',
                           ),
@@ -739,7 +740,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                       Expanded(
                         child: InkWell(
                           onTap: () => widget
-                              .onKeypadNumberTapped(_EnumKeypadNumbers.Back),
+                              .onKeypadNumberTapped(_EnumKeypadNumbers.back),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: SizedBox(

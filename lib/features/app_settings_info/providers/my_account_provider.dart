@@ -6,9 +6,9 @@ class MyAccountProfileProvider extends ChangeNotifier {
   /// The local image path
   String _imgFilePath;
 
-  bool get hasImg => this._imgFilePath?.isNotEmpty ?? false;
+  bool get hasImg =>_imgFilePath?.isNotEmpty ?? false;
 
-  String get imgFile => this._imgFilePath;
+  String get imgFile => _imgFilePath;
 
   /// Pick the image from system
   void pickImgFile() async {
@@ -17,7 +17,7 @@ class MyAccountProfileProvider extends ChangeNotifier {
         source: ImageSource.gallery,
       );
       if (file != null) {
-        this._imgFilePath = file.path;
+        _imgFilePath = file.path;
         notifyListeners();
       }
     } catch (ex) {
@@ -33,13 +33,13 @@ class MyAccountEditNameProvider extends ChangeNotifier {
       TextEditingController(text: 'Kas Pintxuki');
   bool _isNameEditOn = false;
 
-  bool get canEditName => this._isNameEditOn;
+  bool get canEditName => _isNameEditOn;
 
-  String get name => this._name;
+  String get name => _name;
 
   /// Set to true to enable the save button and textfield
   set canEditName(bool value) {
-    this._isNameEditOn = value;
+    _isNameEditOn = value;
     if (value) {
       controller.text = _name;
     }
@@ -49,7 +49,7 @@ class MyAccountEditNameProvider extends ChangeNotifier {
   /// The method will be invoked when the user clicks on save
   void onSave() {
     _name = controller.text;
-    this._isNameEditOn = false;
+    _isNameEditOn = false;
     notifyListeners();
   }
 }

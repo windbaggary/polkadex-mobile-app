@@ -24,24 +24,24 @@ class AppChartDummyProvider extends ChangeNotifier {
   DateTime _filterStartDate;
   DateTime _filterEndDate;
 
-  EnumAppChartDataTypes _chartDataType = EnumAppChartDataTypes.Hour;
+  EnumAppChartDataTypes _chartDataType = EnumAppChartDataTypes.hour;
   EnumBalanceChartDataTypes _balanceChartDataTypes =
-      EnumBalanceChartDataTypes.Hour;
+      EnumBalanceChartDataTypes.hour;
 
-  double get chartScale => this._scale;
+  double get chartScale => _scale;
 
-  EnumAppChartDataTypes get chartDataType => this._chartDataType;
+  EnumAppChartDataTypes get chartDataType => _chartDataType;
   EnumBalanceChartDataTypes get balanceChartDataType =>
-      this._balanceChartDataTypes;
+      _balanceChartDataTypes;
 
   List<LineChartModel> get list {
-    if (this.filterStartDate != null || this._filterEndDate != null)
-      return this._list.where((item) {
+    if (filterStartDate != null || _filterEndDate != null) {
+      return _list.where((item) {
         bool hasThisItem = true;
         if (_filterStartDate != null) {
           final compare =
-              DateTime(item.date.year, item.date.month, item.date.day)
-                  .compareTo(filterStartDate);
+          DateTime(item.date.year, item.date.month, item.date.day)
+              .compareTo(filterStartDate);
           hasThisItem = compare >= 0;
         }
 
@@ -50,51 +50,52 @@ class AppChartDummyProvider extends ChangeNotifier {
         }
         if (_filterEndDate != null) {
           final compare =
-              DateTime(item.date.year, item.date.month, item.date.day)
-                  .compareTo(filterEndDate);
+          DateTime(item.date.year, item.date.month, item.date.day)
+              .compareTo(filterEndDate);
           hasThisItem = compare <= 0;
         }
 
         return hasThisItem;
       }).toList();
+    }
 
-    return this._list;
+    return _list;
   }
 
-  DateTime get filterStartDate => this._filterStartDate == null
+  DateTime get filterStartDate => _filterStartDate == null
       ? null
-      : DateTime(this._filterStartDate.year, this._filterStartDate.month,
-          this._filterStartDate.day);
-  DateTime get filterEndDate => this._filterEndDate == null
+      : DateTime(_filterStartDate.year, _filterStartDate.month,
+          _filterStartDate.day);
+  DateTime get filterEndDate => _filterEndDate == null
       ? null
-      : DateTime(this._filterEndDate.year, this._filterEndDate.month,
-          this._filterEndDate.day);
+      : DateTime(_filterEndDate.year, _filterEndDate.month,
+          _filterEndDate.day);
 
   set chartDataType(EnumAppChartDataTypes val) {
     stopTimer();
     _list.clear();
     switch (val) {
-      case EnumAppChartDataTypes.Hour:
+      case EnumAppChartDataTypes.hour:
         _list.addAll(_createHourDummyList());
-        this._scale = 0.004;
+        _scale = 0.004;
         break;
 
-      case EnumAppChartDataTypes.Week:
+      case EnumAppChartDataTypes.week:
         _list.addAll(_createWeekDummyList());
-        this._scale = 0.000025;
+        _scale = 0.000025;
         break;
 
-      case EnumAppChartDataTypes.Day:
+      case EnumAppChartDataTypes.day:
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
 
-      case EnumAppChartDataTypes.Month:
+      case EnumAppChartDataTypes.month:
         _list.addAll(_createMonthDummyList());
-        this._scale = 0.000007;
+        _scale = 0.000007;
         break;
     }
-    this._chartDataType = val;
+    _chartDataType = val;
     notifyListeners();
     startTimer();
   }
@@ -103,53 +104,53 @@ class AppChartDummyProvider extends ChangeNotifier {
     stopTimer();
     _list.clear();
     switch (val) {
-      case EnumBalanceChartDataTypes.Hour:
+      case EnumBalanceChartDataTypes.hour:
         _list.addAll(_createHourDummyList());
-        this._scale = 0.004;
+        _scale = 0.004;
         break;
 
-      case EnumBalanceChartDataTypes.Week:
+      case EnumBalanceChartDataTypes.week:
         _list.addAll(_createWeekDummyList());
-        this._scale = 0.000025;
+        _scale = 0.000025;
         break;
 
-      case EnumBalanceChartDataTypes.Month:
+      case EnumBalanceChartDataTypes.month:
         _list.addAll(_createMonthDummyList());
-        this._scale = 0.000007;
+        _scale = 0.000007;
         break;
 
-      case EnumBalanceChartDataTypes.ThreeMonth:
+      case EnumBalanceChartDataTypes.threeMonth:
         // Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
 
-      case EnumBalanceChartDataTypes.SixMonth:
+      case EnumBalanceChartDataTypes.sixMonth:
         // Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
 
-      case EnumBalanceChartDataTypes.Year:
+      case EnumBalanceChartDataTypes.year:
         //  Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
 
-      case EnumBalanceChartDataTypes.All:
+      case EnumBalanceChartDataTypes.all:
         // Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
     }
-    this._balanceChartDataTypes = val;
+    _balanceChartDataTypes = val;
     notifyListeners();
     startTimer();
   }
 
   void setFilterDates(DateTime startDate, DateTime endDate) {
-    this._filterStartDate = startDate;
-    this._filterEndDate = endDate;
+    _filterStartDate = startDate;
+    _filterEndDate = endDate;
     notifyListeners();
   }
 

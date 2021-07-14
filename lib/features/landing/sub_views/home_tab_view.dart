@@ -12,7 +12,7 @@ import 'package:polkadex/utils/extensions.dart';
 import 'package:polkadex/utils/styles.dart';
 import 'package:polkadex/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// XD_PAGE: 34
 class HomeTabView extends StatefulWidget {
@@ -160,8 +160,8 @@ class _HomeTabViewState extends State<HomeTabView>
                       onTap: () async {
                         try {
                           final link = "https://www.polkadex.trade";
-                          if (await urlLauncher.canLaunch(link)) {
-                            urlLauncher.launch(link);
+                          if (await url_launcher.canLaunch(link)) {
+                            url_launcher.launch(link);
                           }
                         } catch (ex) {
                           print(ex);
@@ -313,9 +313,9 @@ class _ThisRankingListSortWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <EnumRankingListSorts>[
-        EnumRankingListSorts.Vol,
-        EnumRankingListSorts.Losers,
-        EnumRankingListSorts.Gainers,
+        EnumRankingListSorts.vol,
+        EnumRankingListSorts.losers,
+        EnumRankingListSorts.gainers,
       ]
           .map(
             (item) => Consumer<HomeRankListProvider>(
@@ -354,20 +354,20 @@ class _ThisRankingListSortItemWidget extends StatelessWidget {
     Color containerColor = Colors.transparent;
     Color textColor = colorABB2BC.withOpacity(0.30);
 
-    switch (this.item) {
-      case EnumRankingListSorts.Gainers:
+    switch (item) {
+      case EnumRankingListSorts.gainers:
         label = 'Gainers';
         if (isSelected) {
           containerColor = color0CA564;
         }
         break;
-      case EnumRankingListSorts.Losers:
+      case EnumRankingListSorts.losers:
         label = 'Losers';
         if (isSelected) {
           containerColor = colorE6007A;
         }
         break;
-      case EnumRankingListSorts.Vol:
+      case EnumRankingListSorts.vol:
         label = 'Vol';
         if (isSelected) {
           containerColor = colorE6007A;
