@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 
 /// XD_PAGE: 42
 class AppSettingsSecurity extends StatelessWidget {
-  const AppSettingsSecurity({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -127,18 +125,17 @@ class AppSettingsSecurity extends StatelessWidget {
 /// The widget represents the each items in the list of the screen
 class _ThisItemWidget extends StatelessWidget {
   final String svgAsset;
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   final bool isChecked;
   final ValueChanged<bool> onSwitchChanged;
   const _ThisItemWidget({
-    Key key,
-    @required this.svgAsset,
-    @required this.title,
-    @required this.description,
-    @required this.isChecked,
-    @required this.onSwitchChanged,
-  }) : super(key: key);
+    required this.svgAsset,
+    required this.title,
+    required this.description,
+    required this.isChecked,
+    required this.onSwitchChanged,
+  });
 
   @override
   Widget build(BuildContext context) {

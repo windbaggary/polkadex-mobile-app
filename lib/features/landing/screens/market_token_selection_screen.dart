@@ -22,11 +22,11 @@ class MarketSelectionResultModel {
   final BasicCoinListModel tokenModel;
 
   /// The selected pair model
-  final BasicCoinListModel pairModel;
+  final BasicCoinListModel? pairModel;
 
   MarketSelectionResultModel({
-    @required this.tokenModel,
-    @required this.pairModel,
+    required this.tokenModel,
+    required this.pairModel,
   });
 }
 
@@ -43,7 +43,7 @@ class _MarketTokenSelectionScreenState extends State<MarketTokenSelectionScreen>
     with SingleTickerProviderStateMixin {
   /// The animation controller to handle the animations which are animating
   /// on screen entry
-  AnimationController _entryAnimationController;
+  late AnimationController _entryAnimationController;
 
   @override
   void initState() {
@@ -115,7 +115,6 @@ class _MarketTokenSelectionScreenState extends State<MarketTokenSelectionScreen>
   /// Dispose the animtation controllers and other controllers
   void _disposeControllers() {
     _entryAnimationController.dispose();
-    _entryAnimationController = null;
   }
 
   /// Handle the animation on back
@@ -129,10 +128,6 @@ class _MarketTokenSelectionScreenState extends State<MarketTokenSelectionScreen>
 /// The widget to display token pair in row. Handles the widget width based on
 /// selection
 class _ThisTokenPairWidget extends StatefulWidget {
-  const _ThisTokenPairWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   __ThisTokenPairWidgetState createState() => __ThisTokenPairWidgetState();
 }
@@ -140,13 +135,13 @@ class _ThisTokenPairWidget extends StatefulWidget {
 class __ThisTokenPairWidgetState extends State<_ThisTokenPairWidget>
     with SingleTickerProviderStateMixin {
   /// The animation controller to handle the screen width
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   /// The animation for token width
-  Animation<double> _tokenAnimation;
+  late Animation<double> _tokenAnimation;
 
   /// The animation for the pair width
-  Animation<double> _pairAnimation;
+  late Animation<double> _pairAnimation;
 
   @override
   void initState() {
@@ -158,7 +153,6 @@ class __ThisTokenPairWidgetState extends State<_ThisTokenPairWidget>
   @override
   void dispose() {
     _animationController.dispose();
-    _animationController = null;
     super.dispose();
   }
 
@@ -208,9 +202,8 @@ class __ThisTokenPairWidgetState extends State<_ThisTokenPairWidget>
 ///
 class _ThisPairLayoutWidget extends AnimatedWidget {
   const _ThisPairLayoutWidget({
-    Key key,
-    @required Animation<double> pairAnimation,
-  }) : super(key: key, listenable: pairAnimation);
+    required Animation<double> pairAnimation,
+  }) : super(listenable: pairAnimation);
 
   Animation<double> get _pairAnimation => this.listenable as Animation<double>;
 
@@ -272,11 +265,10 @@ class _ThisPairLayoutWidget extends AnimatedWidget {
 ///
 class _ThisTokenLayoutWidget extends AnimatedWidget {
   const _ThisTokenLayoutWidget({
-    @required this.onShrinkWidget,
-    @required this.onExpandWidget,
-    Key key,
-    @required Animation<double> tokenAnimation,
-  }) : super(key: key, listenable: tokenAnimation);
+    required this.onShrinkWidget,
+    required this.onExpandWidget,
+    required Animation<double> tokenAnimation,
+  }) : super(listenable: tokenAnimation);
 
   final VoidCallback onShrinkWidget;
   final VoidCallback onExpandWidget;
@@ -375,11 +367,10 @@ class _ThisPairItemWidget extends AnimatedWidget {
   final BasicCoinListModel model;
   final bool isSelected;
   const _ThisPairItemWidget({
-    Key key,
-    @required this.model,
-    @required Animation<double> pairAnimation,
-    @required this.isSelected,
-  }) : super(key: key, listenable: pairAnimation);
+    required this.model,
+    required Animation<double> pairAnimation,
+    required this.isSelected,
+  }) : super(listenable: pairAnimation);
 
   Animation<double> get _pairAnimation => this.listenable as Animation<double>;
 
@@ -398,7 +389,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
           return Row(
             children: [
               Image.asset(
-                model?.imgAsset,
+                model.imgAsset,
                 width: 43,
                 height: 43,
               ),
@@ -418,7 +409,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                               opacity: Interval(0.00, 0.50)
                                   .transform(_pairAnimation.value),
                               child: Text(
-                                model?.name ?? "",
+                                model.name,
                                 style: tsS16W500CFF,
                                 textAlign: TextAlign.start,
                               ),
@@ -430,7 +421,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                     Transform.translate(
                       offset: Offset(0.0, -9 * (1.0 - _pairAnimation.value)),
                       child: Text(
-                        model?.code ?? "",
+                        model.code,
                         style: tsS12W400CFF.copyWith(
                           color: colorFFFFFF
                               .withOpacity(this.isSelected ? 1.0 : 0.6),
@@ -442,14 +433,15 @@ class _ThisPairItemWidget extends AnimatedWidget {
               ),
               AnimatedSwitcher(
                 duration: AppConfigs.animDurationSmall,
-                layoutBuilder: (currentChild, previousChildren) => currentChild,
+                layoutBuilder: (currentChild, previousChildren) =>
+                    currentChild!,
                 child: _pairAnimation.value > 0.9
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           SizedBox(height: 6),
                           Text(
-                            model?.amount ?? "",
+                            model.amount,
                             style: tsS12W600CFF,
                           ),
                           Container(
@@ -465,7 +457,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                                 style: tsS12W500CFF,
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: model?.percentage ?? "",
+                                    text: model.percentage,
                                     style: tsS12W500CFF,
                                   ),
                                   TextSpan(
@@ -499,11 +491,10 @@ class _ThisTokenItemWidget extends AnimatedWidget {
   final bool isSelected;
 
   const _ThisTokenItemWidget({
-    Key key,
-    @required this.isSelected,
-    @required Animation<double> tokenAnimation,
-    @required this.model,
-  }) : super(key: key, listenable: tokenAnimation);
+    required this.isSelected,
+    required Animation<double> tokenAnimation,
+    required this.model,
+  }) : super(listenable: tokenAnimation);
 
   Animation<double> get tokenAnimation => this.listenable as Animation<double>;
 
@@ -520,7 +511,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
       child: Row(
         children: [
           Image.asset(
-            model?.imgAsset,
+            model.imgAsset,
             width: 43,
             height: 43,
           ),
@@ -540,7 +531,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                           opacity: Interval(0.50, 1.0)
                               .transform(tokenAnimation.value),
                           child: Text(
-                            model?.name ?? "",
+                            model.name,
                             style: tsS16W500CFF,
                             textAlign: TextAlign.start,
                           ),
@@ -552,7 +543,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                 Transform.translate(
                   offset: Offset(0.0, -9 * (1.0 - tokenAnimation.value)),
                   child: Text(
-                    model?.code ?? "",
+                    model.code,
                     style: tsS12W400CFF.copyWith(
                       color:
                           colorFFFFFF.withOpacity(this.isSelected ? 1.0 : 0.6),
@@ -567,7 +558,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
             width: 17 * tokenAnimation.value,
             height: 17,
             child: Opacity(
-              opacity: lerpDouble(0.0, 0.6, tokenAnimation.value),
+              opacity: lerpDouble(0.0, 0.6, tokenAnimation.value)!,
               child: Opacity(
                 opacity: 0.5,
                 child: SvgPicture.asset(
@@ -584,10 +575,6 @@ class _ThisTokenItemWidget extends AnimatedWidget {
 
 /// The top search bar with label and search icon
 class _ThisSearchBarWidget extends StatelessWidget {
-  const _ThisSearchBarWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -632,19 +619,19 @@ class _ThisSearchBarWidget extends StatelessWidget {
 
 /// The provider for the screen to manage the list and selection
 class _ThisProvider extends ChangeNotifier {
-  String _searchText;
+  String? _searchText;
   BasicCoinListModel _selectedTokenModel = _dummyTokenList[0];
-  BasicCoinListModel _selectedPairModel;
+  BasicCoinListModel? _selectedPairModel;
 
   BasicCoinListModel get selectedTokenModel => this._selectedTokenModel;
-  BasicCoinListModel get selectedPairModel => this._selectedPairModel;
+  BasicCoinListModel? get selectedPairModel => this._selectedPairModel;
 
   List<BasicCoinListModel> get tokenList {
     if (_searchText?.isNotEmpty ?? false)
       return _dummyTokenList
           .where((e) =>
-              e.name.toLowerCase().contains(_searchText.toLowerCase()) ||
-              e.code.toLowerCase().contains(_searchText.toLowerCase()))
+              e.name.toLowerCase().contains(_searchText!.toLowerCase()) ||
+              e.code.toLowerCase().contains(_searchText!.toLowerCase()))
           .toList();
     return _dummyTokenList;
   }
@@ -653,8 +640,8 @@ class _ThisProvider extends ChangeNotifier {
     if (_searchText?.isNotEmpty ?? false)
       return _dummyPairList
           .where((e) =>
-              e.name.toLowerCase().contains(_searchText.toLowerCase()) ||
-              e.code.toLowerCase().contains(_searchText.toLowerCase()))
+              e.name.toLowerCase().contains(_searchText!.toLowerCase()) ||
+              e.code.toLowerCase().contains(_searchText!.toLowerCase()))
           .toList();
     return _dummyPairList;
   }
@@ -665,7 +652,7 @@ class _ThisProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set selectedPairModel(BasicCoinListModel value) {
+  set selectedPairModel(BasicCoinListModel? value) {
     this._selectedPairModel = value;
     notifyListeners();
   }

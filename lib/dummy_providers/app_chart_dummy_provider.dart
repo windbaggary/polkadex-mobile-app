@@ -15,14 +15,14 @@ class AppChartDummyProvider extends ChangeNotifier {
   }
 
   /// The timer is used to generate new data periodically
-  Timer _timer;
+  Timer? _timer;
 
   /// The default scale between each points
   double _scale = 0.004;
 
   /// The filter dates to sort out the chart data
-  DateTime _filterStartDate;
-  DateTime _filterEndDate;
+  DateTime? _filterStartDate;
+  DateTime? _filterEndDate;
 
   EnumAppChartDataTypes _chartDataType = EnumAppChartDataTypes.Hour;
   EnumBalanceChartDataTypes _balanceChartDataTypes =
@@ -41,7 +41,7 @@ class AppChartDummyProvider extends ChangeNotifier {
         if (_filterStartDate != null) {
           final compare =
               DateTime(item.date.year, item.date.month, item.date.day)
-                  .compareTo(filterStartDate);
+                  .compareTo(filterStartDate!);
           hasThisItem = compare >= 0;
         }
 
@@ -51,7 +51,7 @@ class AppChartDummyProvider extends ChangeNotifier {
         if (_filterEndDate != null) {
           final compare =
               DateTime(item.date.year, item.date.month, item.date.day)
-                  .compareTo(filterEndDate);
+                  .compareTo(filterEndDate!);
           hasThisItem = compare <= 0;
         }
 
@@ -61,14 +61,14 @@ class AppChartDummyProvider extends ChangeNotifier {
     return this._list;
   }
 
-  DateTime get filterStartDate => this._filterStartDate == null
+  DateTime? get filterStartDate => this._filterStartDate == null
       ? null
-      : DateTime(this._filterStartDate.year, this._filterStartDate.month,
-          this._filterStartDate.day);
-  DateTime get filterEndDate => this._filterEndDate == null
+      : DateTime(this._filterStartDate!.year, this._filterStartDate!.month,
+          this._filterStartDate!.day);
+  DateTime? get filterEndDate => this._filterEndDate == null
       ? null
-      : DateTime(this._filterEndDate.year, this._filterEndDate.month,
-          this._filterEndDate.day);
+      : DateTime(this._filterEndDate!.year, this._filterEndDate!.month,
+          this._filterEndDate!.day);
 
   set chartDataType(EnumAppChartDataTypes val) {
     stopTimer();
@@ -187,7 +187,7 @@ class AppChartDummyProvider extends ChangeNotifier {
   void stopTimer() {
     try {
       if (_timer != null) {
-        _timer.cancel();
+        _timer!.cancel();
         _timer = null;
       }
     } catch (ex) {

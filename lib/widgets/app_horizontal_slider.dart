@@ -14,29 +14,24 @@ import 'dart:math' as math;
 ///
 class AppHorizontalSlider extends StatefulWidget {
   final double initialProgress;
-  final OnProgressUpdate onProgressUpdate;
+  final OnProgressUpdate? onProgressUpdate;
   final Color activeColor, bgColor;
 
   const AppHorizontalSlider({
-    Key key,
     this.initialProgress = 0.0,
     this.bgColor = const Color(0xff141415),
     this.activeColor = const Color(0xFFE6007A),
     this.onProgressUpdate,
-  })  : assert(initialProgress != null, '''
-    The [initialProgress] could not be null
-    '''),
-        assert(initialProgress >= 0.0 && initialProgress <= 1.0, '''
+  }) : assert(initialProgress >= 0.0 && initialProgress <= 1.0, '''
     The [initialProgress] must be between 0.0 and 1.0
-    '''),
-        super(key: key);
+    ''');
   @override
   _AppHorizontalSliderState createState() => _AppHorizontalSliderState();
 }
 
 class _AppHorizontalSliderState extends State<AppHorizontalSlider>
     with SingleTickerProviderStateMixin {
-  ValueNotifier<double> _progressNotifier;
+  late ValueNotifier<double> _progressNotifier;
   // AnimationController _animationController;
 
   // Animation _progressAnimation;
@@ -124,16 +119,15 @@ typedef OnProgressUpdate = void Function(double progress);
 
 class _AppHorizontalSliderRenderObjectWidget extends LeafRenderObjectWidget {
   final double progress;
-  final OnProgressUpdate onProgressUpdate;
+  final OnProgressUpdate? onProgressUpdate;
   final Color bgColor, activeColor;
 
   _AppHorizontalSliderRenderObjectWidget({
-    @required this.bgColor,
-    @required this.activeColor,
+    required this.bgColor,
+    required this.activeColor,
     this.progress = 0.0,
     this.onProgressUpdate,
-    Key key,
-  }) : super(key: key);
+  });
   @override
   _AppHorizontalSliderRenderBox createRenderObject(BuildContext context) {
     return _AppHorizontalSliderRenderBox(
@@ -162,17 +156,14 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
   final double progressThumbHeight = 27.0;
   final double progressThumbWidth = 34.0;
   final int dividerCount = 4;
-  Color _bgColor, _activeColor;
+  late Color _bgColor, _activeColor;
 
-  OnProgressUpdate onProgressUpdate;
+  OnProgressUpdate? onProgressUpdate;
   double _progress;
   _AppHorizontalSliderRenderBox({
     double progress = 0.0,
     this.onProgressUpdate,
-  })  : assert(progress != null, '''
-  The [progress] could not be null
-  '''),
-        this._progress = progress,
+  })  : this._progress = progress,
         super();
 
   set progress(double value) {
@@ -190,7 +181,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
     markNeedsPaint();
   }
 
-  HorizontalDragGestureRecognizer _drag;
+  late HorizontalDragGestureRecognizer _drag;
 
   @override
   void attach(covariant PipelineOwner owner) {
@@ -229,9 +220,6 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    assert(_progress != null, '''
-                                  The [progress] could not be null
-                                  ''');
     final pbBgPaint = Paint()
       ..style = PaintingStyle.fill
       ..color = this._bgColor;
@@ -337,7 +325,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
     this._progress =
         (details.localPosition.dx / (this.size.width - 1)).clamp(0.0, 1.0);
     if (this.onProgressUpdate != null) {
-      this.onProgressUpdate(this._progress);
+      this.onProgressUpdate!(this._progress);
     }
     markNeedsPaint();
     markNeedsSemanticsUpdate();
@@ -345,7 +333,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
 
   void _onDragComplete() {
     if (this.onProgressUpdate != null) {
-      this.onProgressUpdate(this._progress);
+      this.onProgressUpdate!(this._progress);
     }
   }
 

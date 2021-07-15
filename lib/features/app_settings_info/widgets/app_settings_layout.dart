@@ -12,23 +12,22 @@ class AppSettingsLayout extends StatelessWidget {
   final Widget contentChild;
   // final AnimationController animationController;
   final VoidCallback onBack;
-  final Alignment childAlignment;
-  final Widget bottomChild;
+  final Alignment? childAlignment;
+  final Widget? bottomChild;
   final bool isExpanded;
   final bool isShowSubTitle;
 
   const AppSettingsLayout({
-    Key key,
-    @required this.subTitle,
-    @required this.contentChild,
+    required this.subTitle,
+    required this.contentChild,
     this.mainTitle = 'App Settings',
     this.childAlignment = Alignment.topCenter,
     // @required this.animationController,
-    this.onBack,
+    required this.onBack,
     this.bottomChild,
     this.isExpanded = true,
     this.isShowSubTitle = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,18 +56,17 @@ class AppSettingsLayout extends StatelessWidget {
 
 class _ThisSubTitleWidget extends StatelessWidget {
   const _ThisSubTitleWidget({
-    Key key,
-    @required this.title,
-    @required this.contentChild,
-    @required this.childAlignment,
-    @required this.bottomChild,
-    @required this.isExpanded,
-    @required this.isShowSubTitle,
-  }) : super(key: key);
+    required this.title,
+    required this.contentChild,
+    required this.childAlignment,
+    required this.bottomChild,
+    required this.isExpanded,
+    required this.isShowSubTitle,
+  });
   final String title;
   final Widget contentChild;
-  final Alignment childAlignment;
-  final Widget bottomChild;
+  final Alignment? childAlignment;
+  final Widget? bottomChild;
   final bool isExpanded;
   final bool isShowSubTitle;
 
@@ -77,7 +75,7 @@ class _ThisSubTitleWidget extends StatelessWidget {
     Widget contentChild = this.contentChild;
     if (childAlignment != null) {
       contentChild = Align(
-        alignment: childAlignment,
+        alignment: childAlignment!,
         child: this.contentChild,
       );
     }
@@ -121,7 +119,7 @@ class _ThisSubTitleWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         contentChild,
-        if (bottomChild != null) bottomChild,
+        bottomChild != null ? bottomChild! : Container(),
       ],
     );
 
@@ -146,7 +144,7 @@ class _ThisSubTitleWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(40, 27, 40, 24),
               child: Text(
-                title ?? "",
+                title,
                 style: tsS20W500CFF,
               ),
             ),
@@ -163,11 +161,10 @@ class _ThisInheritedWidget extends InheritedWidget {
   final VoidCallback onBack;
 
   _ThisInheritedWidget({
-    Key key,
-    @required Widget child,
+    required Widget child,
     // @required this.animationController,
-    @required this.onBack,
-  }) : super(key: key, child: child);
+    required this.onBack,
+  }) : super(child: child);
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
     return

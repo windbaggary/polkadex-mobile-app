@@ -15,11 +15,10 @@ typedef OnOrderBookItemClicked = void Function(OrderBookItemModel model);
 
 /// The order book widget
 class OrderBookWidget extends StatelessWidget {
-  final OnOrderBookItemClicked onOrderBookItemClicked;
+  final OnOrderBookItemClicked? onOrderBookItemClicked;
   const OrderBookWidget({
-    Key key,
     this.onOrderBookItemClicked,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +90,6 @@ class OrderBookWidget extends StatelessWidget {
 
 /// The widget displays the chart on order book content
 class _ThisOrderBookChartWidget extends StatelessWidget {
-  const _ThisOrderBookChartWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrderBookWidgetFilterProvider>();
@@ -201,10 +196,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 }
 
 class _ThisOrderSellWidget extends StatelessWidget {
-  const _ThisOrderSellWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -216,10 +207,6 @@ class _ThisOrderSellWidget extends StatelessWidget {
 }
 
 class _ThisOrderBuyWidget extends StatelessWidget {
-  const _ThisOrderBuyWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -233,14 +220,14 @@ class _ThisOrderBuyWidget extends StatelessWidget {
 class _OrderBuyItemWidget extends StatelessWidget {
   final OrderBookItemModel model;
 
-  const _OrderBuyItemWidget({Key key, @required this.model}) : super(key: key);
+  const _OrderBuyItemWidget({required this.model});
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
       onTap: _ThisInheritedWidget.of(context)?.onOrderBookItemClicked == null
-          ? null
+          ? () {}
           : () =>
-              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked(model),
+              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked!(model),
       child: OrderBookChartItemWidget(
         percentage: model.percentage,
         direction: EnumGradientDirection.Right,
@@ -251,12 +238,12 @@ class _OrderBuyItemWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  model?.price ?? "",
+                  model.price,
                   style: tsS14W500CFF,
                 ),
               ),
               Text(
-                model?.amount ?? "",
+                model.amount,
                 style: tsS14W500CFF.copyWith(color: color0CA564),
               ),
             ],
@@ -270,14 +257,14 @@ class _OrderBuyItemWidget extends StatelessWidget {
 class _OrderSellItemWidget extends StatelessWidget {
   final OrderBookItemModel model;
 
-  const _OrderSellItemWidget({Key key, @required this.model}) : super(key: key);
+  const _OrderSellItemWidget({required this.model});
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
       onTap: _ThisInheritedWidget.of(context)?.onOrderBookItemClicked == null
-          ? null
+          ? () {}
           : () =>
-              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked(model),
+              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked!(model),
       child: OrderBookChartItemWidget(
         percentage: model.percentage,
         color: colorE6007A,
@@ -287,12 +274,12 @@ class _OrderSellItemWidget extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                model?.amount ?? "",
+                model.amount,
                 style: tsS14W500CFF.copyWith(color: colorE6007A),
               ),
               Expanded(
                 child: Text(
-                  model?.price ?? "",
+                  model.price,
                   style: tsS14W500CFF,
                   textAlign: TextAlign.end,
                 ),
@@ -309,9 +296,6 @@ class _OrderSellItemWidget extends StatelessWidget {
 class OrderBookHeadingWidget extends StatelessWidget {
   final _priceLengthNotifier = ValueNotifier<int>(0);
   final _dropDownValueNotifier = ValueNotifier<String>("Order Book");
-  OrderBookHeadingWidget({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -333,12 +317,12 @@ class OrderBookHeadingWidget extends StatelessWidget {
                           ),
                           value: e,
                         ))
-                    ?.toList(),
+                    .toList(),
                 value: dropDownValue,
                 style: tsS20W600CFF,
                 underline: Container(),
                 onChanged: (val) {
-                  _dropDownValueNotifier.value = val;
+                  _dropDownValueNotifier.value = val!;
                 },
                 isExpanded: false,
                 icon: Padding(
@@ -363,7 +347,7 @@ class OrderBookHeadingWidget extends StatelessWidget {
                     switch (e) {
                       case EnumBuySellAll.Buy:
                         svg = 'orderbookBuy'.asAssetSvg();
-                        if (provider?.enumBuySellAll == EnumBuySellAll.Buy) {
+                        if (provider.enumBuySellAll == EnumBuySellAll.Buy) {
                           svg = 'orderbookBuySel'.asAssetSvg();
                         }
                         break;
@@ -373,19 +357,19 @@ class OrderBookHeadingWidget extends StatelessWidget {
                         break;
                       case EnumBuySellAll.Sell:
                         svg = 'orderbookSell'.asAssetSvg();
-                        if (provider?.enumBuySellAll == EnumBuySellAll.Sell) {
+                        if (provider.enumBuySellAll == EnumBuySellAll.Sell) {
                           svg = 'orderbookSellSel'.asAssetSvg();
                         }
                         break;
                     }
 
-                    if (provider?.enumBuySellAll == e) {
+                    if (provider.enumBuySellAll == e) {
                       padding = 5;
                       color = Colors.white;
                     }
                     return InkWell(
                       onTap: () {
-                        provider?.enumBuySellAll = e;
+                        provider.enumBuySellAll = e;
                       },
                       child: AnimatedContainer(
                         duration: AppConfigs.animDurationSmall,
@@ -426,8 +410,7 @@ class OrderBookHeadingWidget extends StatelessWidget {
                   child: ValueListenableBuilder<int>(
                     valueListenable: _priceLengthNotifier,
                     builder: (context, selectedPriceLenIndex, child) => Text(
-                      DUMMY_PRICE_LENGTH_DATA[selectedPriceLenIndex]?.price ??
-                          "",
+                      DUMMY_PRICE_LENGTH_DATA[selectedPriceLenIndex].price,
                       style: tsS15W600CFF.copyWith(
                           color: colorFFFFFF.withOpacity(0.30)),
                     ),
@@ -458,18 +441,18 @@ class OrderBookWidgetFilterProvider extends ChangeNotifier {
 }
 
 class _ThisInheritedWidget extends InheritedWidget {
-  final OnOrderBookItemClicked onOrderBookItemClicked;
+  final OnOrderBookItemClicked? onOrderBookItemClicked;
 
   _ThisInheritedWidget(
-      {@required this.onOrderBookItemClicked, @required Widget child, Key key})
-      : super(child: child, key: key);
+      {required this.onOrderBookItemClicked, required Widget child})
+      : super(child: child);
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
     return oldWidget.onOrderBookItemClicked != this.onOrderBookItemClicked;
   }
 
-  static _ThisInheritedWidget of(BuildContext context) =>
+  static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 }
 

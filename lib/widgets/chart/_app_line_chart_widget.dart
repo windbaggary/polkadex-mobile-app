@@ -16,8 +16,8 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
   final AppLineChartOptions options;
 
   AppLineChartWidget(
-      {@required List<LineChartModel> data, @required this.options, Key key})
-      : super(key: key, parentData: data);
+      {required List<LineChartModel> data, required this.options})
+      : super(parentData: data);
 
   List<LineChartModel> get data => super.parentData;
 
@@ -26,13 +26,13 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
     Canvas canvas,
     Size size,
     Offset offset,
-    Offset touchPoint,
+    Offset? touchPoint,
   ) {
-    if (data?.isEmpty ?? true) {
+    if (data.isEmpty) {
       return;
     }
     // Declaring a variable to check user has a selection
-    int selectedModelIndex;
+    int? selectedModelIndex;
 
     // Finding the total difference of dates to find the ratio of x axis
     final double xDiffInSec =
@@ -81,7 +81,7 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
     }).pointY);
     final double yRatio = size.height / yMax;
 
-    Offset lineOnPath;
+    Offset? lineOnPath;
 
     final Path path = Path();
     final Path strokePath = Path();
@@ -126,7 +126,7 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
         lineOnPath,
         Size(
           size.width,
-          size.height - (tp?.height ?? 0.0),
+          size.height - (tp.height),
         ),
       );
       drawPointerMarker(canvas, lineOnPath);
@@ -305,5 +305,5 @@ class _AxisLabelModel {
   final double ratioDy;
   final double labelValue;
 
-  const _AxisLabelModel({@required this.ratioDy, @required this.labelValue});
+  const _AxisLabelModel({required this.ratioDy, required this.labelValue});
 }

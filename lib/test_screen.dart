@@ -14,16 +14,16 @@ class _TestScreenState extends State<TestScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   bool showLoading = true;
-  QRViewController controller;
-  Barcode result;
+  QRViewController? controller;
+  Barcode? result;
 
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
+      controller?.pauseCamera();
     } else if (Platform.isIOS) {
-      controller.resumeCamera();
+      controller?.resumeCamera();
     }
   }
 
@@ -50,7 +50,7 @@ class _TestScreenState extends State<TestScreen> {
             child: Center(
               child: (result != null)
                   ? Text(
-                      'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}')
+                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                   : Text('Scan a code'),
             ),
           )

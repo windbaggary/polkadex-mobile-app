@@ -7,7 +7,7 @@ import 'package:polkadex/utils/styles.dart';
 
 /// XD_PAGE: 36
 class AppSettingsHelpScreen extends StatelessWidget {
-  const AppSettingsHelpScreen({Key key}) : super(key: key);
+  const AppSettingsHelpScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +63,9 @@ class AppSettingsHelpScreen extends StatelessWidget {
   Widget _buildItem({
     bool isShowActive = false,
     bool isShowBorder = true,
-    @required String description,
-    @required String title,
-    @required String svgIcon,
+    required String description,
+    required String title,
+    required String svgIcon,
     EdgeInsets padding = const EdgeInsets.all(13),
   }) =>
       Container(
@@ -98,7 +98,7 @@ class AppSettingsHelpScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    description ?? "",
+                    description,
                     style: tsS13W400CFFOP60,
                   ),
                   SizedBox(height: 1),
@@ -116,7 +116,7 @@ class AppSettingsHelpScreen extends StatelessWidget {
                         ),
                       Expanded(
                         child: Text(
-                          title ?? "",
+                          title,
                           style: tsS16W500CFF,
                         ),
                       ),

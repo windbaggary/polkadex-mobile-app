@@ -16,7 +16,6 @@ import 'package:polkadex/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
-import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 /// The screen enum menus only accessing inside this file.
 /// The enum represent the first top 3 menu of the screen
@@ -287,24 +286,24 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                     textTheme: ButtonTextTheme.accent)),
                             child: Builder(
                               builder: (context) => InkWell(
-                                onTap: () {
+                                onTap: () async {
                                   final provider =
                                       context.read<_ThisListDataProvider>();
-                                  DateRangePicker.showDatePicker(
-                                          context: context,
-                                          initialFirstDate:
-                                              provider?.filterStartDate ??
-                                                  new DateTime.now(),
-                                          initialLastDate:
-                                              provider?.filterEndDate ??
-                                                  new DateTime.now(),
-                                          firstDate: new DateTime(2015),
-                                          lastDate: new DateTime(
-                                              DateTime.now().year + 2))
-                                      .then((dates) {
-                                    if (dates?.isNotEmpty ?? false) {
+                                  await showDateRangePicker(
+                                    context: context,
+                                    initialDateRange: DateTimeRange(
+                                      start: provider.filterStartDate ??
+                                          new DateTime.now(),
+                                      end: provider.filterEndDate ??
+                                          DateTime.now(),
+                                    ),
+                                    firstDate: new DateTime(2015),
+                                    lastDate:
+                                        new DateTime(DateTime.now().year + 2),
+                                  ).then((dates) {
+                                    if (dates != null) {
                                       provider.setFilterDates(
-                                          dates.first, dates.last);
+                                          dates.start, dates.end);
                                     }
                                   });
                                 },
@@ -341,13 +340,13 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Consumer<_ThisListDataProvider>(
                         builder: (context, provider, child) {
-                          String fromToDate;
+                          String? fromToDate;
                           if (provider.filterStartDate != null &&
                               provider.filterEndDate != null) {
                             fromToDate =
-                                "${DateFormat("MMM dd, yyyy").format(provider.filterStartDate)} to ${DateFormat("MMM dd, yyyy").format(provider.filterEndDate)}";
+                                "${DateFormat("MMM dd, yyyy").format(provider.filterStartDate!)} to ${DateFormat("MMM dd, yyyy").format(provider.filterEndDate!)}";
                           }
-                          if (provider?.dummyList?.isEmpty ?? true) {
+                          if (provider.dummyList.isEmpty) {
                             return Padding(
                               padding: EdgeInsets.fromLTRB(18, 26.0, 18, 10),
                               child: Column(
@@ -376,10 +375,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                             itemCount: provider.dummyList.length,
                             padding: const EdgeInsets.only(top: 13),
                             itemBuilder: (context, index) {
-                              String title;
+                              String? title;
                               if (index == 0) {
                                 if (provider.filterStartDate != null) {
-                                  title = fromToDate;
+                                  title = fromToDate!;
                                 } else {
                                   title = _getDateTitle(
                                       provider.dummyList[index].date);
@@ -432,18 +431,17 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
 /// The base class for the list item
 class _ThisItemWidget extends StatelessWidget {
   final _IBaseModel model;
-  final String dateTitle;
+  final String? dateTitle;
 
   const _ThisItemWidget({
-    Key key,
-    @required this.model,
-    @required this.dateTitle,
-  }) : super(key: key);
+    required this.model,
+    required this.dateTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
     Widget child = Container();
-    switch (model?.type) {
+    switch (model.type) {
       case _EnumListTypes.Buy:
         child = _buildBuyWidget(model as _ThisBuyModel);
         break;
@@ -520,13 +518,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -538,7 +535,7 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF.copyWith(
                     color: color0CA564,
                   ),
@@ -555,14 +552,14 @@ class _ThisItemWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF,
                 ),
               ],
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.point,
+              iModel.fromUnit ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -593,13 +590,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -611,7 +607,7 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF.copyWith(
                     color: colorE6007A,
                   ),
@@ -628,14 +624,14 @@ class _ThisItemWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF,
                 ),
               ],
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.point,
+              iModel.point ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -666,13 +662,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -682,14 +677,14 @@ class _ThisItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              iModel?.unit,
+              iModel.unit ?? "",
               style: tsS14W500CFF.copyWith(
                 color: color0CA564,
               ),
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.amount,
+              iModel.amount ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -720,13 +715,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -736,14 +730,14 @@ class _ThisItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              iModel?.unit,
+              iModel.unit ?? "",
               style: tsS14W500CFF.copyWith(
                 color: colorE6007A,
               ),
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.amount,
+              iModel.amount ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -759,9 +753,8 @@ class _ThisItemWidget extends StatelessWidget {
 /// [_EnumMenus] are represented in this widget
 class _ThisMenuItemWidget extends StatelessWidget {
   const _ThisMenuItemWidget({
-    Key key,
-    @required this.menu,
-  }) : super(key: key);
+    required this.menu,
+  });
 
   final _EnumMenus menu;
 
@@ -810,7 +803,7 @@ class _ThisMenuItemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 36),
-          Text(text ?? "", style: tsS16W500CFF),
+          Text(text, style: tsS16W500CFF),
         ],
       ),
     );
@@ -819,10 +812,6 @@ class _ThisMenuItemWidget extends StatelessWidget {
 
 /// The content widget for the Top Pairs
 class _ThisTopPairsItemWidget extends StatelessWidget {
-  const _ThisTopPairsItemWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -914,10 +903,6 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
 
 /// The very top top widget includes the icon, name, value, price, etc
 class _TopCoinTitleWidget extends StatelessWidget {
-  const _TopCoinTitleWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -934,7 +919,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
             height: 52,
             padding: const EdgeInsets.all(3),
             child: Image.asset(
-              'trade_open/trade_open_2.png'?.asAssetImg(),
+              'trade_open/trade_open_2.png'.asAssetImg(),
               fit: BoxFit.contain,
             ),
           ),
@@ -1017,10 +1002,6 @@ class _TopCoinTitleWidget extends StatelessWidget {
 
 /// The widget displays the options under the graph
 class _ThisGraphOptionWidget extends StatelessWidget {
-  const _ThisGraphOptionWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -1029,22 +1010,19 @@ class _ThisGraphOptionWidget extends StatelessWidget {
         children: EnumBalanceChartDataTypes.values
             .map<Widget>((item) => Consumer<BalanceChartDummyProvider>(
                   builder: (context, appChartProvider, child) {
-                    String text;
+                    String? text;
                     switch (item) {
                       case EnumBalanceChartDataTypes.Hour:
                         text = "24h";
                         break;
                       case EnumBalanceChartDataTypes.Week:
                         text = "7d";
-
                         break;
                       case EnumBalanceChartDataTypes.Month:
                         text = "1m";
-
                         break;
                       case EnumBalanceChartDataTypes.ThreeMonth:
                         text = "3m";
-
                         break;
                       case EnumBalanceChartDataTypes.SixMonth:
                         text = "6m";
@@ -1071,7 +1049,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                               : null,
                         ),
                         child: Text(
-                          text ?? "",
+                          text,
                           style: item == appChartProvider.balanceChartDataType
                               ? tsS13W600CFF
                               : tsS12W400CFF.copyWith(color: colorABB2BC),
@@ -1099,21 +1077,21 @@ abstract class _IBaseModel {
   final DateTime date;
   final _EnumListTypes type;
 
-  const _IBaseModel({@required this.date, @required this.type});
+  const _IBaseModel({required this.date, required this.type});
 }
 
 class _ThisBuyModel extends _IBaseModel {
-  final String name;
-  final String fromUnit;
-  final String toUnit;
-  final String point;
+  final String? name;
+  final String? fromUnit;
+  final String? toUnit;
+  final String? point;
 
   const _ThisBuyModel({
-    @required this.name,
-    @required this.fromUnit,
-    @required this.toUnit,
-    @required this.point,
-    @required DateTime dateTime,
+    required this.name,
+    required this.fromUnit,
+    required this.toUnit,
+    required this.point,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
           type: _EnumListTypes.Buy,
@@ -1121,17 +1099,17 @@ class _ThisBuyModel extends _IBaseModel {
 }
 
 class _ThisSellModel extends _IBaseModel {
-  final String name;
-  final String fromUnit;
-  final String toUnit;
-  final String point;
+  final String? name;
+  final String? fromUnit;
+  final String? toUnit;
+  final String? point;
 
   const _ThisSellModel({
-    @required this.name,
-    @required this.fromUnit,
-    @required this.toUnit,
-    @required this.point,
-    @required DateTime dateTime,
+    required this.name,
+    required this.fromUnit,
+    required this.toUnit,
+    required this.point,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
           type: _EnumListTypes.Sell,
@@ -1139,35 +1117,35 @@ class _ThisSellModel extends _IBaseModel {
 }
 
 class _ThisDepositModel extends _IBaseModel {
-  final String unit;
-  final String amount;
+  final String? unit;
+  final String? amount;
 
   const _ThisDepositModel({
-    @required this.unit,
-    @required this.amount,
-    @required DateTime dateTime,
+    required this.unit,
+    required this.amount,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
           type: _EnumListTypes.Deposit,
         );
 
-  String get name => "Deposit";
+  String? get name => "Deposit";
 }
 
 class _ThisWithdrawModel extends _IBaseModel {
-  final String unit;
-  final String amount;
+  final String? unit;
+  final String? amount;
 
   const _ThisWithdrawModel({
-    @required this.unit,
-    @required this.amount,
-    @required DateTime dateTime,
+    required this.unit,
+    required this.amount,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
           type: _EnumListTypes.Withdraw,
         );
 
-  String get name => "Withdraw";
+  String? get name => "Withdraw";
 }
 
 final _dummyList = <_IBaseModel>[
@@ -1263,17 +1241,17 @@ final _dummyList = <_IBaseModel>[
 
 /// The provider handle the bottom list.
 class _ThisListDataProvider extends ChangeNotifier {
-  _EnumListTypes _filterType;
-  DateTime _filterStartDate, _filterEndDate;
+  DateTime? _filterStartDate, _filterEndDate;
+  _EnumListTypes? _filterType;
 
-  _EnumListTypes get filterType => this._filterType;
-  DateTime get filterStartDate => this._filterStartDate;
-  DateTime get filterEndDate => this._filterEndDate;
+  _EnumListTypes? get filterType => this._filterType;
+  DateTime? get filterStartDate => this._filterStartDate;
+  DateTime? get filterEndDate => this._filterEndDate;
 
   bool get hasFilterDate =>
       (this.filterStartDate != null) && (this.filterEndDate != null);
 
-  set filterType(_EnumListTypes value) {
+  set filterType(_EnumListTypes? value) {
     if (this._filterType == value) {
       this._filterType = null;
     } else {
@@ -1294,14 +1272,14 @@ class _ThisListDataProvider extends ChangeNotifier {
     if (filterStartDate != null) {
       list.removeWhere((m) {
         final compare = DateTime(m.date.year, m.date.month, m.date.day)
-            .compareTo(filterStartDate);
+            .compareTo(filterStartDate!);
         return compare < 0;
       });
     }
     if (filterEndDate != null) {
       list.removeWhere((m) {
         final compare = DateTime(m.date.year, m.date.month, m.date.day)
-            .compareTo(filterEndDate);
+            .compareTo(filterEndDate!);
 
         return compare > 0;
       });

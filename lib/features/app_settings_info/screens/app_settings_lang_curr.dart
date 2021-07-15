@@ -7,7 +7,7 @@ import 'package:polkadex/utils/styles.dart';
 
 /// XD_PAGE: 44
 class AppSettingsLangCurrScreen extends StatelessWidget {
-  const AppSettingsLangCurrScreen({Key key}) : super(key: key);
+  const AppSettingsLangCurrScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -65,11 +65,10 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
 class _ThisItemWidget extends StatelessWidget {
   final String svgAsset, title, description;
   const _ThisItemWidget({
-    Key key,
-    @required this.svgAsset,
-    @required this.title,
-    @required this.description,
-  }) : super(key: key);
+    required this.svgAsset,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +92,7 @@ class _ThisItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  title ?? "",
+                  title,
                   style: tsS13W400CFFOP60,
                 ),
                 SizedBox(height: 3),
@@ -101,7 +100,7 @@ class _ThisItemWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        description ?? "",
+                        description,
                         style: tsS16W500CFF,
                       ),
                     ),

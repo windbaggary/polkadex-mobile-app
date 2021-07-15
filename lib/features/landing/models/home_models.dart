@@ -14,18 +14,18 @@ class BasicCoinListModel {
   final String name;
 
   final EnumBuySell buySell;
-  final double _volume;
+  final double? _volume;
 
   BasicCoinListModel({
-    @required this.name,
-    @required this.imgAsset,
-    @required this.code,
-    @required this.token,
-    @required this.pair,
-    @required this.amount,
-    @required double percentage,
-    @required this.buySell,
-    double volume,
+    required this.name,
+    required this.imgAsset,
+    required this.code,
+    required this.token,
+    required this.pair,
+    required this.amount,
+    required double percentage,
+    required this.buySell,
+    double? volume,
   })  : this._volume = volume,
         this._percentage = percentage;
 
@@ -54,6 +54,5 @@ class BasicCoinListModel {
       case EnumBuySell.Sell:
         return colorE6007A;
     }
-    return Colors.transparent;
   }
 }

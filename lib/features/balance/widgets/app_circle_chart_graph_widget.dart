@@ -32,19 +32,18 @@ class AppCircleChartGraphWidget extends ImplicitlyAnimatedWidget {
   final double strokeSelWidth;
 
   /// The selected index
-  final int selectedIndex;
+  final int? selectedIndex;
 
   const AppCircleChartGraphWidget({
-    Key key,
-    @required this.child,
-    @required this.list,
+    required this.child,
+    required this.list,
     this.totalValue = 100.0,
     this.width = 312,
     this.height = 312,
     this.strokeWidth = 6.0,
     this.strokeSelWidth = 20.0,
     this.selectedIndex,
-  }) : super(key: key, duration: AppConfigs.animDurationSmall);
+  }) : super(duration: AppConfigs.animDurationSmall);
 
   @override
   _AppCircleChartGraphWidgetState createState() =>
@@ -53,8 +52,8 @@ class AppCircleChartGraphWidget extends ImplicitlyAnimatedWidget {
 
 class _AppCircleChartGraphWidgetState
     extends AnimatedWidgetBaseState<AppCircleChartGraphWidget> {
-  Tween<double> _indexTween;
-  Tween<double> _strokeTween;
+  Tween<double>? _indexTween;
+  late Tween<double> _strokeTween;
 
   @override
   void initState() {
@@ -101,15 +100,15 @@ class _AppCircleChartGraphWidgetState
 class _ThisCustomPainter extends CustomPainter {
   final List<IAppCircleChartModel> list;
   final double stroke, strokeSel;
-  final int selectedIndex;
+  final int? selectedIndex;
   final double animationStroke;
 
   _ThisCustomPainter({
-    @required this.list,
-    @required this.stroke,
-    @required this.strokeSel,
-    @required this.selectedIndex,
-    @required this.animationStroke,
+    required this.list,
+    required this.stroke,
+    required this.strokeSel,
+    required this.selectedIndex,
+    required this.animationStroke,
   }) : super();
 
   @override
@@ -159,7 +158,7 @@ class _ThisCustomPainter extends CustomPainter {
     }
 
     if (selectedIndex != null) {
-      final iModel = list[selectedIndex];
+      final iModel = list[selectedIndex!];
       canvas.save();
       _rotate(canvas, selRotateAngle, center);
       final Rect rect = Offset(maxStroke / 2, maxStroke / 2) &
@@ -228,8 +227,8 @@ class AppCircleChartModel implements IAppCircleChartModel {
   final Color color;
 
   AppCircleChartModel({
-    @required this.perc,
-    @required this.color,
+    required this.perc,
+    required this.color,
   });
 
   @override

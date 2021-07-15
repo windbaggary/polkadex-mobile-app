@@ -26,10 +26,9 @@ class ExchangeTabView extends StatefulWidget {
   final TabController tabController;
 
   const ExchangeTabView({
-    Key key,
-    @required this.onBottombarItemSel,
-    @required this.tabController,
-  }) : super(key: key);
+    required this.onBottombarItemSel,
+    required this.tabController,
+  });
 
   @override
   _ExchangeTabViewState createState() => _ExchangeTabViewState();
@@ -38,19 +37,19 @@ class ExchangeTabView extends StatefulWidget {
 class _ExchangeTabViewState extends State<ExchangeTabView>
     with TickerProviderStateMixin {
   /// The animation controller for screen entry animations
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   /// The animtion controller for hide/expant alt coins on top selection
-  AnimationController _altCoinAnimationController;
+  late AnimationController _altCoinAnimationController;
 
   /// A scroll controller for the list
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   /// A value notifier for hiding the appbar
-  ValueNotifier<double> _scrollHideNotifier;
+  late ValueNotifier<double> _scrollHideNotifier;
 
   /// An animation for the alt section expand hide
-  Animation<double> _altHeightAnimation;
+  late Animation<double> _altHeightAnimation;
 
   EnumExchangeFilter _selectedExchangeFilter = EnumExchangeFilter.DEX;
 
@@ -82,7 +81,6 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   void dispose() {
     _animationController.dispose();
     _altCoinAnimationController.dispose();
-    _animationController = null;
     _scrollController.removeListener(_onScrollChanged);
     _scrollController.dispose();
     _scrollHideNotifier.dispose();
@@ -242,8 +240,8 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double height;
 
   _SliverPersistentHeaderDelegate({
-    @required this.child,
-    @required this.height,
+    required this.child,
+    required this.height,
   }) : super();
   @override
   Widget build(
@@ -269,7 +267,7 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
   final ValueNotifier<EnumExchangeFilter> _selectedNotifier;
 
   /// A callbadk for the selection
-  final Function(EnumExchangeFilter val) onSelected;
+  final Function(EnumExchangeFilter val)? onSelected;
 
   /// A initial selection
   final EnumExchangeFilter initial;
@@ -278,13 +276,11 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
   final ValueNotifier<bool> _isShowSubMenuNotifier;
 
   _ThisFilterHeadingWidget({
-    Key key,
-    @required this.initial,
+    required this.initial,
     this.onSelected,
   })  : _selectedNotifier = ValueNotifier<EnumExchangeFilter>(initial),
         _isShowSubMenuNotifier =
-            ValueNotifier<bool>(initial == EnumExchangeFilter.AltCoins),
-        super(key: key);
+            ValueNotifier<bool>(initial == EnumExchangeFilter.AltCoins);
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +360,7 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
                 _isShowSubMenuNotifier.value =
                     (e == EnumExchangeFilter.AltCoins);
                 if (this.onSelected != null) {
-                  this.onSelected(e);
+                  this.onSelected!(e);
                 }
               },
               child: _ThisFilterItemWidget(
@@ -381,9 +377,6 @@ class _ThisSubMenuFilterWidget extends StatelessWidget {
     'XRP',
     'ADA',
   ];
-  _ThisSubMenuFilterWidget({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -408,7 +401,7 @@ class _ThisSubMenuFilterWidget extends StatelessWidget {
               .map((e) => Padding(
                     padding: const EdgeInsets.only(right: 29),
                     child: Text(
-                      e ?? "",
+                      e,
                       style: tsS15W400CFFOP50,
                     ),
                   ))
@@ -422,10 +415,9 @@ class _ThisSubMenuFilterWidget extends StatelessWidget {
 /// The item of the top filter widget
 class _ThisFilterItemWidget extends StatelessWidget {
   const _ThisFilterItemWidget({
-    Key key,
-    @required this.isSelected,
-    @required this.item,
-  }) : super(key: key);
+    required this.isSelected,
+    required this.item,
+  });
 
   final bool isSelected;
   final EnumExchangeFilter item;
@@ -453,10 +445,6 @@ class _ThisFilterItemWidget extends StatelessWidget {
 }
 
 class _ThisHeaderWidget extends StatelessWidget {
-  const _ThisHeaderWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -492,7 +480,7 @@ class _ThisHeaderWidget extends StatelessWidget {
 /// The item widget which will be displayed in list view
 class _ThisListItemWidget extends StatelessWidget {
   final BasicCoinListModel model;
-  const _ThisListItemWidget({Key key, @required this.model}) : super(key: key);
+  const _ThisListItemWidget({required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -634,8 +622,6 @@ class _ThisListItemWidget extends StatelessWidget {
 }
 
 class _ThisLoadingItem extends StatelessWidget {
-  const _ThisLoadingItem({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(

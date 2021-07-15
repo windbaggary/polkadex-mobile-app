@@ -7,17 +7,16 @@ import 'package:polkadex/utils/styles.dart';
 /// The button slides from left to right by changing the text opacity
 class AppSlideButton extends StatefulWidget {
   final Widget icon;
-  final String label;
+  final String? label;
   final EdgeInsets padding;
-  final BoxDecoration decoration;
+  final BoxDecoration? decoration;
   final double height;
   final double iconRightSize;
-  final VoidCallback onComplete;
+  final VoidCallback? onComplete;
 
   AppSlideButton({
-    Key key,
-    @required this.icon,
-    @required this.height,
+    required this.icon,
+    required this.height,
     this.onComplete,
     this.iconRightSize = 45,
     this.label,
@@ -28,7 +27,7 @@ class AppSlideButton extends StatefulWidget {
       right: 11,
     ),
     this.decoration,
-  }) : super(key: key);
+  });
 
   @override
   _AppSlideButtonState createState() => _AppSlideButtonState();
@@ -36,7 +35,7 @@ class AppSlideButton extends StatefulWidget {
 
 class _AppSlideButtonState extends State<AppSlideButton>
     with SingleTickerProviderStateMixin {
-  AnimationController _animController;
+  late AnimationController _animController;
 
   @override
   void initState() {
@@ -59,7 +58,7 @@ class _AppSlideButtonState extends State<AppSlideButton>
       if (_animController.value > 0.750) {
         _animController.forward(from: _animController.value).then((value) {
           if (widget.onComplete != null) {
-            widget.onComplete();
+            widget.onComplete!();
           }
           _animController.reverse();
         });
@@ -111,13 +110,12 @@ class _AppSlideButtonState extends State<AppSlideButton>
                   right: 0.0,
                   top: 0,
                   bottom: 0,
-                  child: child,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: widget.icon,
+                  ),
                 );
               },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: widget.icon,
-              ),
             ),
             Positioned.fill(
               child: GestureDetector(

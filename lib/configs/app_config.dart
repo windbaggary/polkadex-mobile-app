@@ -12,5 +12,5 @@ class AppConfigs {
   static const Duration animReverseDuration = Duration(milliseconds: 400);
 
   /// The app screen size
-  static Size size;
+  static Size? size;
 }

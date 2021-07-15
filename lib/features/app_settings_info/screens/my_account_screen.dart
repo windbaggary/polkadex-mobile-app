@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 /// XD_PAGE: 41
 class MyAccountScreen extends StatelessWidget {
   final _isCheckedNotifier = ValueNotifier<bool>(false);
-  MyAccountScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,17 +79,16 @@ class MyAccountScreen extends StatelessWidget {
                                     bottom: 0,
                                     child: Consumer<MyAccountProfileProvider>(
                                       builder: (context, provider, child) {
-                                        if (provider?.hasImg ?? false) {
+                                        if (provider.hasImg) {
                                           return CircleAvatar(
                                             backgroundImage: FileImage(
                                                 File(provider.imgFile)),
                                           );
                                         }
-                                        return child;
+                                        return Image.asset(
+                                          'user_avatar.png'.asAssetImg(),
+                                        );
                                       },
-                                      child: Image.asset(
-                                        'user_avatar.png'.asAssetImg(),
-                                      ),
                                     ),
                                   ),
                                   Positioned(
@@ -173,7 +171,7 @@ class MyAccountScreen extends StatelessWidget {
                                       SizedBox(height: 2),
                                       Consumer<MyAccountEditNameProvider>(
                                         builder: (context, provider, child) {
-                                          if (provider?.canEditName ?? false) {
+                                          if (provider.canEditName) {
                                             return TextField(
                                               controller: provider.controller,
                                               autofocus: true,
@@ -195,7 +193,7 @@ class MyAccountScreen extends StatelessWidget {
                                           }
 
                                           return Text(
-                                            provider?.name ?? "",
+                                            provider.name,
                                             style: tsS16W500CFF,
                                           );
                                         },

@@ -14,13 +14,12 @@ import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 class NotifDepositScreen extends StatelessWidget {
   final EnumDepositScreenTypes screenType;
   const NotifDepositScreen({
-    Key key,
-    @required this.screenType,
-  }) : super(key: key);
+    required this.screenType,
+  });
 
   @override
   Widget build(BuildContext context) {
-    String title;
+    String? title;
     String titleSvg;
 
     switch (screenType) {
@@ -74,7 +73,7 @@ class NotifDepositScreen extends StatelessWidget {
                             bottom: 4,
                           ),
                           child: Text(
-                            title ?? "Deposit Successful",
+                            title,
                             style: tsS20W500CFF,
                           ),
                         ),
@@ -345,7 +344,7 @@ class NotifDepositScreen extends StatelessWidget {
   }
 
   /// Builds the common label value pair for the screen
-  Widget _buildLabelValue({@required String label, @required String value}) =>
+  Widget _buildLabelValue({required String? label, required String? value}) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

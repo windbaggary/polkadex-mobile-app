@@ -51,17 +51,17 @@ class TradeTabViewProvider extends ChangeNotifier {
 /// The provider to handle the selection of token pair
 class TradeTabCoinProvider extends ChangeNotifier {
   BasicCoinListModel _tokenCoin = basicCoinDummyList[0];
-  BasicCoinListModel _pairCoin = basicCoinDummyList[1];
+  BasicCoinListModel? _pairCoin = basicCoinDummyList[1];
 
   BasicCoinListModel get tokenCoin => this._tokenCoin;
-  BasicCoinListModel get pairCoin => this._pairCoin;
+  BasicCoinListModel? get pairCoin => this._pairCoin;
 
   set tokenCoin(BasicCoinListModel value) {
     this._tokenCoin = value;
     notifyListeners();
   }
 
-  set pairCoin(BasicCoinListModel value) {
+  set pairCoin(BasicCoinListModel? value) {
     this._pairCoin = value;
     notifyListeners();
   }
