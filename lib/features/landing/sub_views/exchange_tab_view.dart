@@ -11,6 +11,7 @@ import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
 import 'package:polkadex/utils/colors.dart';
 import 'package:polkadex/utils/enums.dart';
 import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/utils/maps.dart';
 import 'package:polkadex/utils/styles.dart';
 import 'package:polkadex/widgets/app_list_animated_widget.dart';
 import 'package:polkadex/widgets/build_methods.dart';
@@ -444,7 +445,7 @@ class _ThisFilterItemWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
           child: AnimatedDefaultTextStyle(
             duration: AppConfigs.animDurationSmall,
-            child: Text(item.toString().replaceAll('EnumExchangeFilter.', '')),
+            child: Text(enumExchangeToString[item]),
             style: isSelected ? tsS15W600CFF : tsS15W400CFF,
           ),
         ),
