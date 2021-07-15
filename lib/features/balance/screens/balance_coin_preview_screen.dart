@@ -14,6 +14,7 @@ import 'package:polkadex/utils/styles.dart';
 import 'package:polkadex/widgets/build_methods.dart';
 import 'package:polkadex/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/widgets/custom_app_bar.dart';
+import 'package:polkadex/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
@@ -289,18 +290,12 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                 onTap: () async {
                                   final provider =
                                       context.read<_ThisListDataProvider>();
-                                  await showDateRangePicker(
-                                    context: context,
-                                    initialDateRange: DateTimeRange(
-                                      start: provider.filterStartDate ??
-                                          new DateTime.now(),
-                                      end: provider.filterEndDate ??
-                                          DateTime.now(),
-                                    ),
-                                    firstDate: new DateTime(2015),
-                                    lastDate:
-                                        new DateTime(DateTime.now().year + 2),
-                                  ).then((dates) {
+                                  await CustomDateRangePicker.call(
+                                          filterStartDate:
+                                              provider.filterStartDate,
+                                          filterEndDate: provider.filterEndDate,
+                                          context: context)
+                                      .then((dates) {
                                     if (dates != null) {
                                       provider.setFilterDates(
                                           dates.start, dates.end);

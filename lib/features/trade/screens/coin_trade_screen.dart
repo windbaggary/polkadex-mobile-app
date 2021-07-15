@@ -11,6 +11,7 @@ import 'package:polkadex/utils/enums.dart';
 import 'package:polkadex/utils/styles.dart';
 import 'package:polkadex/widgets/app_buttons.dart';
 import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/utils/extensions.dart';
 import 'dart:math' as math;
@@ -633,15 +634,11 @@ class _ThisGraphOptionWidget extends StatelessWidget {
 
   void _onDateTapped(BuildContext context) async {
     final provider = context.read<AppChartDummyProvider>();
-    await showDateRangePicker(
-      context: context,
-      initialDateRange: DateTimeRange(
-        start: provider.filterStartDate ?? DateTime.now(),
-        end: provider.filterEndDate ?? DateTime.now(),
-      ),
-      firstDate: DateTime(2015),
-      lastDate: DateTime(DateTime.now().year + 2),
-    ).then((dates) {
+    await CustomDateRangePicker.call(
+            filterStartDate: provider.filterStartDate,
+            filterEndDate: provider.filterEndDate,
+            context: context)
+        .then((dates) {
       if (dates != null) {
         provider.setFilterDates(dates.start, dates.end);
       }
