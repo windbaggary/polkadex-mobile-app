@@ -264,11 +264,11 @@ class __ThisPageViewState extends State<_ThisPageView> {
   }
 
   void animateTo(int index) {
-    this._pageController.animateToPage(
-          index,
-          duration: AppConfigs.animDuration,
-          curve: Curves.ease,
-        );
+    _pageController.animateToPage(
+      index,
+      duration: AppConfigs.animDuration,
+      curve: Curves.ease,
+    );
   }
 
   @override

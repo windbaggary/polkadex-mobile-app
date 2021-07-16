@@ -528,8 +528,8 @@ class _ThisCheckBoxWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        if (this.onTap != null) {
-          this.onTap!(!isChecked);
+        if (onTap != null) {
+          onTap!(!isChecked);
         }
       },
       child: AnimatedContainer(
@@ -677,15 +677,15 @@ class _ThisTopBalanceWidget extends StatelessWidget {
 class _ThisIsChartVisibleProvider extends ChangeNotifier {
   bool _isChartVisible = false;
 
-  bool get isChartVisible => this._isChartVisible;
+  bool get isChartVisible => _isChartVisible;
 
   set isChartVisible(bool value) {
-    this._isChartVisible = value;
+    _isChartVisible = value;
     notifyListeners();
   }
 
   void toggleVisible() {
-    this._isChartVisible = !this._isChartVisible;
+    _isChartVisible = !_isChartVisible;
     notifyListeners();
   }
 }
@@ -695,22 +695,22 @@ class _ThisProvider extends ChangeNotifier {
   bool _isHideSmallBalance = true;
   bool _isHideFiat = false;
 
-  bool get isHideFiat => this._isHideFiat;
+  bool get isHideFiat => _isHideFiat;
 
-  bool get isHideSmallBalance => this._isHideSmallBalance;
+  bool get isHideSmallBalance => _isHideSmallBalance;
 
   set isHideSmallBalance(bool val) {
-    this._isHideSmallBalance = val;
+    _isHideSmallBalance = val;
     notifyListeners();
   }
 
   set isHideFiat(bool val) {
-    this._isHideFiat = val;
+    _isHideFiat = val;
     notifyListeners();
   }
 
   List<_ThisModel> get listCoins {
-    final list = List<_ThisModel>.from(_DUMMY_LIST);
+    final list = List<_ThisModel>.from(_dummyList);
     if (isHideFiat) {
       list.removeWhere((e) => !e.iIsFiat);
     }
@@ -733,26 +733,26 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                   builder: (context, appChartProvider, child) {
                     String text;
                     switch (item) {
-                      case EnumBalanceChartDataTypes.Hour:
+                      case EnumBalanceChartDataTypes.hour:
                         text = "24h";
                         break;
-                      case EnumBalanceChartDataTypes.Week:
+                      case EnumBalanceChartDataTypes.week:
                         text = "7d";
                         break;
-                      case EnumBalanceChartDataTypes.Month:
+                      case EnumBalanceChartDataTypes.month:
                         text = "1m";
                         break;
-                      case EnumBalanceChartDataTypes.ThreeMonth:
+                      case EnumBalanceChartDataTypes.threeMonth:
                         text = "3m";
 
                         break;
-                      case EnumBalanceChartDataTypes.SixMonth:
+                      case EnumBalanceChartDataTypes.sixMonth:
                         text = "6m";
                         break;
-                      case EnumBalanceChartDataTypes.Year:
+                      case EnumBalanceChartDataTypes.year:
                         text = "1y";
                         break;
-                      case EnumBalanceChartDataTypes.All:
+                      case EnumBalanceChartDataTypes.all:
                         text = "All";
                         break;
                     }
@@ -802,14 +802,14 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => this.height;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => this.height;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(covariant _SliverPersistentHeaderDelegate oldDelegate) {
-    return oldDelegate.height != this.height || oldDelegate.child != this.child;
+    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
 
@@ -833,15 +833,15 @@ class _ThisModel {
     required this.isFiat,
   });
 
-  bool get iIsFiat => this.isFiat;
+  bool get iIsFiat => isFiat;
 
-  bool get isSmallBalance => this.price < 100.0;
+  bool get isSmallBalance => price < 100.0;
 
-  String get iPrice => '~\$${this.price.toStringAsFixed(2)}';
+  String get iPrice => '~\$${price.toStringAsFixed(2)}';
 }
 
 /// Creates the dummy data for the list
-const _DUMMY_LIST = <_ThisModel>[
+const _dummyList = <_ThisModel>[
   _ThisModel(
     imgAsset: 'trade_open/trade_open_1.png',
     name: 'Ethereum',

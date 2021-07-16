@@ -163,11 +163,11 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
   _AppHorizontalSliderRenderBox({
     double progress = 0.0,
     this.onProgressUpdate,
-  })  : this._progress = progress,
+  })  : _progress = progress,
         super();
 
   set progress(double value) {
-    this._progress = value;
+    _progress = value;
     markNeedsPaint();
   }
 
@@ -186,7 +186,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
   @override
   void attach(covariant PipelineOwner owner) {
     super.attach(owner);
-    this._drag = HorizontalDragGestureRecognizer()
+    _drag = HorizontalDragGestureRecognizer()
       ..onStart = _onDragStart
       ..onUpdate = _onDragUpdate
       ..onCancel = _onCancel
@@ -222,11 +222,11 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
   void paint(PaintingContext context, Offset offset) {
     final pbBgPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = this._bgColor;
+      ..color = _bgColor;
 
     final pbFgPaint = Paint()
       ..style = PaintingStyle.fill
-      ..color = this._activeColor;
+      ..color = _activeColor;
 
     final canvas = context.canvas;
     canvas.save();
@@ -253,10 +253,10 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
     final double heightHalf = size.height / 2;
 
     // Calculate the top of progress bg and drawing
-    final double horizontalRectTopY = heightHalf - this.progressBarHeight / 2;
+    final double horizontalRectTopY = heightHalf - progressBarHeight / 2;
     final horizontalRect = RRect.fromRectAndRadius(
         Rect.fromLTWH(
-            widthDx, horizontalRectTopY, size.width, this.progressBarHeight),
+            widthDx, horizontalRectTopY, size.width, progressBarHeight),
         Radius.circular(size.shortestSide));
     canvas.drawRRect(horizontalRect, pbBgPaint);
 
@@ -264,7 +264,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
     canvas.drawRRect(
         RRect.fromRectAndRadius(
             Rect.fromLTWH(widthDx, horizontalRectTopY, size.width * _progress,
-                this.progressBarHeight),
+                progressBarHeight),
             Radius.circular(size.shortestSide)),
         pbFgPaint);
 
@@ -304,7 +304,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
     final rrect = RRect.fromRectAndRadius(rect, radius);
 
     if (_progress == 0.0) {
-      pbFgPaint..color = this._bgColor;
+      pbFgPaint.color = _bgColor;
     }
     canvas.drawRRect(rrect, pbFgPaint);
 
@@ -322,18 +322,17 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
   void _onDragStart(DragStartDetails details) {}
 
   void _onDragUpdate(DragUpdateDetails details) {
-    this._progress =
-        (details.localPosition.dx / (this.size.width - 1)).clamp(0.0, 1.0);
-    if (this.onProgressUpdate != null) {
-      this.onProgressUpdate!(this._progress);
+    _progress = (details.localPosition.dx / (size.width - 1)).clamp(0.0, 1.0);
+    if (onProgressUpdate != null) {
+      onProgressUpdate!(_progress);
     }
     markNeedsPaint();
     markNeedsSemanticsUpdate();
   }
 
   void _onDragComplete() {
-    if (this.onProgressUpdate != null) {
-      this.onProgressUpdate!(this._progress);
+    if (onProgressUpdate != null) {
+      onProgressUpdate!(_progress);
     }
   }
 

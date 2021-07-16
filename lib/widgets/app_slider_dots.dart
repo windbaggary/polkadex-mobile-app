@@ -35,9 +35,9 @@ class AppSliderDots extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: List.generate(
-        this.length,
+        length,
         (index) => InkWell(
-            onTap: this.onDotSelected == null
+            onTap: onDotSelected == null
                 ? null
                 : () {
                     onDotSelected!(index);

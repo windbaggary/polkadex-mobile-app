@@ -11,11 +11,11 @@ abstract class CustomDateRangePicker {
         context: context,
         initialEntryMode: DatePickerEntryMode.calendarOnly,
         initialDateRange: DateTimeRange(
-          start: filterStartDate ?? new DateTime.now(),
+          start: filterStartDate ?? DateTime.now(),
           end: filterEndDate ?? DateTime.now(),
         ),
-        firstDate: new DateTime(2015),
-        lastDate: new DateTime(DateTime.now().year + 2),
+        firstDate: DateTime(2015),
+        lastDate: DateTime(DateTime.now().year + 2),
         builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.dark().copyWith(

@@ -145,14 +145,14 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
                     child: Transform(
                       transform: Matrix4.identity()
                         ..scale(scale, scale)
-                        ..translate(offset.dx * (this._directionX ? 1.0 : -1.0),
-                            offset.dy)
+                        ..translate(
+                            offset.dx * (_directionX ? 1.0 : -1.0), offset.dy)
                         ..rotateZ(math.sin(math.pi / 2 * rotateZ) *
-                            (this._directionX ? 1.0 : -1.0)),
+                            (_directionX ? 1.0 : -1.0)),
                       alignment: Alignment.bottomCenter,
                       child: Opacity(
                         opacity: opacity ?? 0.0,
-                        child: this._contentChildrens[index],
+                        child: _contentChildrens[index],
                       ),
                     ),
                   );
@@ -176,9 +176,9 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
   void _updateContentChildrens() {
     _selectedIndex = widget.itemsDisplayCount - 1;
     int j = 0;
-    this._contentChildrens.clear();
+    _contentChildrens.clear();
     for (int i = 0; i < widget.itemsDisplayCount; i++) {
-      this._contentChildrens.add(widget.childrens[j]);
+      _contentChildrens.add(widget.childrens[j]);
       j++;
       if (widget.childrens.length <= j) {
         j = 0;
@@ -188,12 +188,12 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
 
   void _onDragUpdate(DragUpdateDetails details) {
     final dx = details.localPosition.dx;
-    final diff = dx - this._startDx;
-    this._directionX = !diff.isNegative;
+    final diff = dx - _startDx;
+    _directionX = !diff.isNegative;
     final renderBox = context.findRenderObject() as RenderBox;
     final perc = (diff / renderBox.size.width).abs().clamp(0.0, 1.0);
 
-    this._animPerc = perc;
+    _animPerc = perc;
     _animationController.value = perc;
   }
 
@@ -202,6 +202,6 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
   }
 
   _onDragComplete() {
-    _animationController.forward(from: this._animPerc);
+    _animationController.forward(from: _animPerc);
   }
 }

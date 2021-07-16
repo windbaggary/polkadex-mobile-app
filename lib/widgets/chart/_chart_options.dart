@@ -101,10 +101,10 @@ class AppLineChartOptions {
         isGridAlignWithDate: false,
       );
 
-  Paint get markerPaint => this._markerPaint;
-  Paint get markerAxisPaint => this._markerAxisPaint;
-  Paint get strokePaint => this._strokePaint;
-  Paint get gridPaint => this._gridPaint;
+  Paint get markerPaint => _markerPaint;
+  Paint get markerAxisPaint => _markerAxisPaint;
+  Paint get strokePaint => _strokePaint;
+  Paint get gridPaint => _gridPaint;
 
   double get yAxisBottomPaddingRatio => 1.0 - _yAxisBottomPaddingRatio;
   double get yAxisPaddingRight => 30.0;
@@ -114,5 +114,5 @@ class AppLineChartOptions {
   double get datePaddingBottom => 30.0;
 
   double get gridBottomPadding =>
-      (this.isGridAlignWithDate ? this.datePaddingBottom : 15.0);
+      (isGridAlignWithDate ? datePaddingBottom : 15.0);
 }

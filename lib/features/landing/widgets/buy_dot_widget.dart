@@ -10,7 +10,7 @@ import 'package:polkadex/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/widgets/build_methods.dart';
 
 /// The callback type for buy or sell
-typedef void OnBuyOrSell(String price, String amount, double total);
+typedef OnBuyOrSell = void Function(String price, String amount, double total);
 
 /// The common textField for the widget
 TextField _buildTextField(
@@ -71,14 +71,14 @@ class BuyDotWidgetState extends State<BuyDotWidget>
   late ValueNotifier<double> _progressNotifier;
   late ValueNotifier<EnumAmountType> _amountTypeNotifier;
 
-  double _walletBalance = 12000.89;
+  final double _walletBalance = 12000.89;
 
   @override
   void initState() {
     _priceController = TextEditingController();
     _amountController = TextEditingController();
     _progressNotifier = ValueNotifier<double>(0.00);
-    _amountTypeNotifier = ValueNotifier(EnumAmountType.USD);
+    _amountTypeNotifier = ValueNotifier(EnumAmountType.usd);
     super.initState();
   }
 
@@ -95,7 +95,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
+        FocusScope.of(context).requestFocus(FocusNode());
       },
       child: _ThisInheritedWidget(
         amountController: _amountController,
@@ -159,11 +159,11 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                           builder: (context, buyOrSell, child) {
                             String svg;
                             switch (buyOrSell) {
-                              case EnumBuySell.Buy:
+                              case EnumBuySell.buy:
                                 svg = 'tradeArrowsBuy'.asAssetSvg();
 
                                 break;
-                              case EnumBuySell.Sell:
+                              case EnumBuySell.sell:
                                 svg = 'tradeArrows'.asAssetSvg();
                                 break;
                             }
@@ -182,7 +182,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                 ValueListenableBuilder<EnumOrderTypes>(
                     valueListenable:
                         _ThisInheritedWidget.of(context)?.orderTypeNotifier ??
-                            ValueNotifier(EnumOrderTypes.Market),
+                            ValueNotifier(EnumOrderTypes.market),
                     builder: (context, orderType, child) {
                       Widget contentChild = child!;
                       // if (orderType == EnumOrderTypes.Market) {
@@ -208,11 +208,11 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                           String btnText = "Buy";
                           Color color;
                           switch (enumBuySell) {
-                            case EnumBuySell.Buy:
+                            case EnumBuySell.buy:
                               btnText = "Buy";
                               color = color0CA564;
                               break;
-                            case EnumBuySell.Sell:
+                            case EnumBuySell.sell:
                               btnText = "Sell";
                               color = colorE6007A;
                               break;
@@ -220,10 +220,10 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                           return InkWell(
                             onTap: () {
                               switch (enumBuySell) {
-                                case EnumBuySell.Buy:
+                                case EnumBuySell.buy:
                                   _onBuy(context);
                                   break;
-                                case EnumBuySell.Sell:
+                                case EnumBuySell.sell:
                                   _onSell(context);
                                   break;
                               }
@@ -486,7 +486,7 @@ class _ThisTotalWidget extends StatelessWidget {
                 child: ValueListenableBuilder<EnumAmountType>(
                   valueListenable:
                       _ThisInheritedWidget.of(context)?.amountTypeNotifier ??
-                          ValueNotifier(EnumAmountType.USD),
+                          ValueNotifier(EnumAmountType.usd),
                   builder: (context, amountType, child) =>
                       ValueListenableBuilder<double>(
                     valueListenable:
@@ -499,10 +499,10 @@ class _ThisTotalWidget extends StatelessWidget {
                             (_ThisInheritedWidget.of(context)!.walletBalance *
                                 progress);
                         switch (amountType) {
-                          case EnumAmountType.BTC:
+                          case EnumAmountType.btc:
                             amt /= 0.030;
                             break;
-                          case EnumAmountType.USD:
+                          case EnumAmountType.usd:
                             break;
                         }
                         totalAmount = amt.toStringAsFixed(2);
@@ -528,7 +528,7 @@ class _ThisTotalWidget extends StatelessWidget {
                 child: ValueListenableBuilder<EnumAmountType>(
                   valueListenable:
                       _ThisInheritedWidget.of(context)?.amountTypeNotifier ??
-                          ValueNotifier(EnumAmountType.USD),
+                          ValueNotifier(EnumAmountType.usd),
                   builder: (context, amountType, child) {
                     final selectedTextStyle = tsS13W600CFF;
                     final unSelectedTextStyle =
@@ -536,10 +536,10 @@ class _ThisTotalWidget extends StatelessWidget {
                     TextStyle btcTextStyle = unSelectedTextStyle,
                         usdTextStyle = unSelectedTextStyle;
                     switch (amountType) {
-                      case EnumAmountType.BTC:
+                      case EnumAmountType.btc:
                         btcTextStyle = selectedTextStyle;
                         break;
-                      case EnumAmountType.USD:
+                      case EnumAmountType.usd:
                         usdTextStyle = selectedTextStyle;
                         break;
                     }
@@ -549,7 +549,7 @@ class _ThisTotalWidget extends StatelessWidget {
                           onTap: () {
                             _ThisInheritedWidget.of(context)
                                 ?.amountTypeNotifier
-                                .value = EnumAmountType.BTC;
+                                .value = EnumAmountType.btc;
                           },
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(10, 12, 0, 12),
@@ -563,7 +563,7 @@ class _ThisTotalWidget extends StatelessWidget {
                           onTap: () {
                             _ThisInheritedWidget.of(context)
                                 ?.amountTypeNotifier
-                                .value = EnumAmountType.USD;
+                                .value = EnumAmountType.usd;
                           },
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(0, 12, 10, 12),
@@ -585,14 +585,14 @@ class _ThisTotalWidget extends StatelessWidget {
             child: ValueListenableBuilder<EnumBuySell>(
               valueListenable:
                   _ThisInheritedWidget.of(context)?.buySellNotifier ??
-                      ValueNotifier(EnumBuySell.Buy),
+                      ValueNotifier(EnumBuySell.buy),
               builder: (context, buyOrSell, child) {
                 Color color;
                 switch (buyOrSell) {
-                  case EnumBuySell.Buy:
+                  case EnumBuySell.buy:
                     color = color0CA564;
                     break;
-                  case EnumBuySell.Sell:
+                  case EnumBuySell.sell:
                     color = colorE6007A;
                     break;
                 }
@@ -667,13 +667,13 @@ class _ThisInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.amountController != this.amountController ||
-        oldWidget.priceController != this.priceController ||
-        oldWidget.progressNotifier != this.progressNotifier ||
-        oldWidget.buySellNotifier != this.buySellNotifier ||
-        oldWidget.orderTypeNotifier != this.orderTypeNotifier ||
-        oldWidget.walletBalance != this.walletBalance ||
-        oldWidget.amountTypeNotifier != this.amountTypeNotifier;
+    return oldWidget.amountController != amountController ||
+        oldWidget.priceController != priceController ||
+        oldWidget.progressNotifier != progressNotifier ||
+        oldWidget.buySellNotifier != buySellNotifier ||
+        oldWidget.orderTypeNotifier != orderTypeNotifier ||
+        oldWidget.walletBalance != walletBalance ||
+        oldWidget.amountTypeNotifier != amountTypeNotifier;
   }
 
   static _ThisInheritedWidget? of(BuildContext context) =>

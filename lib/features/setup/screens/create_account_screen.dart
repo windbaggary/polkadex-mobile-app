@@ -11,8 +11,8 @@ import 'package:polkadex/widgets/app_step_progress_widget.dart';
 /// XD_PAGE: 4
 /// XD_PAGE: 5
 class CreateAccountScreen extends StatefulWidget {
-  static const String TAG_HEADING = "tag_heading";
-  static const String TAG_BACK_BUTTON = "tag_back_button";
+  static const String tagHeading = "tag_heading";
+  static const String tagBackButton = "tag_back_button";
 
   @override
   _CreateAccountScreenState createState() => _CreateAccountScreenState();
@@ -124,7 +124,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
       _entryCardExpandAnimController
           .forward()
           .orCancel
-          .then((value) => this._isChromeExpandedNotifier.value = true);
+          .then((value) => _isChromeExpandedNotifier.value = true);
     });
   }
 
@@ -159,14 +159,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Hero(
-                    tag: CreateAccountScreen.TAG_BACK_BUTTON,
+                    tag: CreateAccountScreen.tagBackButton,
                     child: _buildBackButton(context)),
                 SlideTransition(
                   position: _headingAnimation,
                   child: FadeTransition(
                     opacity: _opacityAnimation,
                     child: Hero(
-                      tag: CreateAccountScreen.TAG_HEADING,
+                      tag: CreateAccountScreen.tagHeading,
                       child: Material(
                         type: MaterialType.transparency,
                         child: Text(
@@ -266,7 +266,7 @@ class _ThisBrowserExpandCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       duration: AppConfigs.animDuration,
-      opacity: this.isExpanded ? 1.0 : 0.0,
+      opacity: isExpanded ? 1.0 : 0.0,
       child: AnimatedContainer(
         duration: AppConfigs.animDuration,
         curve: Curves.easeOutCubic,
@@ -493,13 +493,13 @@ class _ThisInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.onChromeTapExpanded != this.onChromeTapExpanded ||
-        oldWidget.onFirefoxTapExpanded != this.onFirefoxTapExpanded ||
-        oldWidget.onChromeTapHide != this.onChromeTapHide ||
-        oldWidget.onFirefoxTapHide != this.onFirefoxTapHide ||
-        oldWidget.isChromeExpandedNotifier != this.isChromeExpandedNotifier ||
-        oldWidget.isFirefoxExpandedNotifier != this.isFirefoxExpandedNotifier ||
-        oldWidget.onNextTap != this.onNextTap;
+    return oldWidget.onChromeTapExpanded != onChromeTapExpanded ||
+        oldWidget.onFirefoxTapExpanded != onFirefoxTapExpanded ||
+        oldWidget.onChromeTapHide != onChromeTapHide ||
+        oldWidget.onFirefoxTapHide != onFirefoxTapHide ||
+        oldWidget.isChromeExpandedNotifier != isChromeExpandedNotifier ||
+        oldWidget.isFirefoxExpandedNotifier != isFirefoxExpandedNotifier ||
+        oldWidget.onNextTap != onNextTap;
   }
 
   static _ThisInheritedWidget? of(BuildContext context) =>

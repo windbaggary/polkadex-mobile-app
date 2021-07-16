@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 
 /// The direction for the gradient
 enum EnumGradientDirection {
-  Left,
-  Right,
+  left,
+  right,
 }
 
 /// The widget for the order book
@@ -48,7 +48,7 @@ class _ThisCustomPainter extends CustomPainter {
 
     final double borderHeight = 1;
 
-    double offsetX = size.width - size.width * this.progress;
+    double offsetX = size.width - size.width * progress;
     double width = size.width - offsetX;
     List<double> stops = [0.5, 1.0];
     List<Color> colors = <Color>[
@@ -57,17 +57,17 @@ class _ThisCustomPainter extends CustomPainter {
     ];
 
     switch (direction) {
-      case EnumGradientDirection.Left:
+      case EnumGradientDirection.left:
         offsetX = 0.0;
-        width = size.width * this.progress;
+        width = size.width * progress;
         colors = <Color>[
           color,
           color.withOpacity(0.32),
         ];
         stops = [0.3450, 1.0];
         break;
-      case EnumGradientDirection.Right:
-        offsetX = size.width - size.width * this.progress;
+      case EnumGradientDirection.right:
+        offsetX = size.width - size.width * progress;
         width = size.width - offsetX;
         colors = <Color>[
           color.withOpacity(0.32),
@@ -109,8 +109,8 @@ class _ThisCustomPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _ThisCustomPainter oldDelegate) {
-    return oldDelegate.color != this.color ||
-        oldDelegate.direction != this.direction ||
-        oldDelegate.progress != this.progress;
+    return oldDelegate.color != color ||
+        oldDelegate.direction != direction ||
+        oldDelegate.progress != progress;
   }
 }

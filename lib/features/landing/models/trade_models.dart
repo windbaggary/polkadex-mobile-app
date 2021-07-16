@@ -34,44 +34,44 @@ class TradeOpenOrderModel implements ITradeOpenOrderModel {
   });
 
   @override
-  String get iAmount => "${this.amount ?? ""} ${this.amountCoin ?? ""}";
+  String get iAmount => "${amount ?? ""} ${amountCoin ?? ""}";
 
   @override
   String get iFormattedDate {
-    return DateFormat("MMM dd, yyyy HH:mm:ss").format(this.dateTime);
+    return DateFormat("MMM dd, yyyy HH:mm:ss").format(dateTime);
   }
 
   @override
-  String get iPrice => "${this.price} ${this.priceCoin}";
+  String get iPrice => "$price $priceCoin";
 
   @override
   String get iType {
-    switch (this.type) {
-      case EnumBuySell.Buy:
+    switch (type) {
+      case EnumBuySell.buy:
         return "Buy";
-      case EnumBuySell.Sell:
+      case EnumBuySell.sell:
         return "Sell";
     }
   }
 
   @override
-  EnumBuySell get iEnumType => this.type;
+  EnumBuySell get iEnumType => type;
 
   @override
   String get iOrderTypeName {
-    switch (this.orderType) {
-      case EnumOrderTypes.Market:
+    switch (orderType) {
+      case EnumOrderTypes.market:
         return "Market";
-      case EnumOrderTypes.Limit:
+      case EnumOrderTypes.limit:
         return "Limit";
-      case EnumOrderTypes.Stop:
+      case EnumOrderTypes.stop:
         return "Stop";
     }
   }
 
   @override
-  String get iTokenPairName => this.tokenPairName;
+  String get iTokenPairName => tokenPairName;
 
   @override
-  EnumOrderTypes get iEnumOrderType => this.orderType;
+  EnumOrderTypes get iEnumOrderType => orderType;
 }

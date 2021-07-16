@@ -48,7 +48,7 @@ class _ThisRenderObject extends RenderProxyBox {
   @override
   void attach(covariant PipelineOwner owner) {
     super.attach(owner);
-    this._drag = HorizontalDragGestureRecognizer()
+    _drag = HorizontalDragGestureRecognizer()
       ..onStart = _onDragStart
       ..onUpdate = _onDragUpdate
       ..onCancel = _onCancel

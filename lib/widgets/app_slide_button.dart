@@ -73,7 +73,7 @@ class _AppSlideButtonState extends State<AppSlideButton>
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: this.widget.decoration,
+      decoration: widget.decoration,
       height: widget.height,
       padding: widget.padding,
       child: LayoutBuilder(
@@ -92,7 +92,7 @@ class _AppSlideButtonState extends State<AppSlideButton>
                     child: child,
                   ),
                   child: Text(
-                    this.widget.label ?? "",
+                    widget.label ?? "",
                     style: tsS16W500CFF,
                     textAlign: TextAlign.center,
                   ),

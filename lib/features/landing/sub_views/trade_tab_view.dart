@@ -55,7 +55,7 @@ class _TradeTabViewState extends State<TradeTabView>
   @override
   Widget build(BuildContext context) {
     return _ThisInheritedWidget(
-      buySellTabController: this._buySellDotController,
+      buySellTabController: _buySellDotController,
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<TradeTabCoinProvider>(
@@ -120,11 +120,11 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
 
   @override
   void initState() {
-    _orderTypeSelNotifier = ValueNotifier(EnumOrderTypes.Market);
+    _orderTypeSelNotifier = ValueNotifier(EnumOrderTypes.market);
     _isOrdersExpanded = ValueNotifier(false);
     _orderDisplayTypeNotifier =
         ValueNotifier<EnumTradeOrdersDisplayType?>(null);
-    _buySellNotifier = ValueNotifier(EnumBuySell.Buy);
+    _buySellNotifier = ValueNotifier(EnumBuySell.buy);
     super.initState();
     Future.microtask(() {
       final tabController =
@@ -172,10 +172,10 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                     builder: (context, buyOrSell, child) {
                       Color color;
                       switch (buyOrSell) {
-                        case EnumBuySell.Buy:
+                        case EnumBuySell.buy:
                           color = color0CA564;
                           break;
-                        case EnumBuySell.Sell:
+                        case EnumBuySell.sell:
                           color = colorE6007A;
                           break;
                       }
@@ -230,14 +230,14 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             buySellNotifier: _buySellNotifier,
             onSwapTab: () => _onSwapBuySellTab(context),
             onBuy: (price, amount, total) => _onBuyOrSell(
-              EnumBuySell.Buy,
+              EnumBuySell.buy,
               price,
               amount,
               total,
               context,
             ),
             onSell: (price, amount, total) => _onBuyOrSell(
-              EnumBuySell.Sell,
+              EnumBuySell.sell,
               price,
               amount,
               total,
@@ -256,14 +256,15 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                 InkWell(
                   onTap: () {
                     if (_orderDisplayTypeNotifier.value ==
-                        EnumTradeOrdersDisplayType.Open) {
-                      if (_isOrdersExpanded.value)
+                        EnumTradeOrdersDisplayType.open) {
+                      if (_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = false;
-                      else
+                      } else {
                         _isOrdersExpanded.value = true;
+                      }
                     } else {
                       _orderDisplayTypeNotifier.value =
-                          EnumTradeOrdersDisplayType.Open;
+                          EnumTradeOrdersDisplayType.open;
                       if (!_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = true;
                       }
@@ -302,14 +303,15 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                 InkWell(
                   onTap: () {
                     if (_orderDisplayTypeNotifier.value ==
-                        EnumTradeOrdersDisplayType.History) {
-                      if (_isOrdersExpanded.value)
+                        EnumTradeOrdersDisplayType.history) {
+                      if (_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = false;
-                      else
+                      } else {
                         _isOrdersExpanded.value = true;
+                      }
                     } else {
                       _orderDisplayTypeNotifier.value =
-                          EnumTradeOrdersDisplayType.History;
+                          EnumTradeOrdersDisplayType.history;
                       if (!_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = true;
                       }
@@ -421,11 +423,11 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
   /// Returns the order type string from the [type]
   String _getOrderTypeName(EnumOrderTypes type) {
     switch (type) {
-      case EnumOrderTypes.Market:
+      case EnumOrderTypes.market:
         return "Market Order";
-      case EnumOrderTypes.Limit:
+      case EnumOrderTypes.limit:
         return "Limit Order";
-      case EnumOrderTypes.Stop:
+      case EnumOrderTypes.stop:
         return "Stop Order";
     }
   }
@@ -454,7 +456,7 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Alignment barAlignment = Alignment.centerLeft;
     double barWidth = 104;
-    if (type == EnumTradeOrdersDisplayType.History) {
+    if (type == EnumTradeOrdersDisplayType.history) {
       barAlignment = Alignment.centerRight;
       barWidth = 127;
     }
@@ -478,11 +480,11 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
         Consumer<TradeTabViewProvider>(
           builder: (context, thisProvider, child) {
             List<ITradeOpenOrderModel>? list;
-            switch (this.type) {
-              case EnumTradeOrdersDisplayType.Open:
+            switch (type) {
+              case EnumTradeOrdersDisplayType.open:
                 list = thisProvider.listOpenOrders;
                 break;
-              case EnumTradeOrdersDisplayType.History:
+              case EnumTradeOrdersDisplayType.history:
                 list = thisProvider.listOrdersHistory;
                 break;
               default:
@@ -516,7 +518,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color colorBuySell = color0CA564;
-    if (iModel.iEnumType == EnumBuySell.Sell) {
+    if (iModel.iEnumType == EnumBuySell.sell) {
       colorBuySell = colorE6007A;
     }
     return Column(
@@ -558,7 +560,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
               ),
               Spacer(),
               InkWell(
-                onTap: this.onTapClose,
+                onTap: onTapClose,
                 child: SvgPicture.asset(
                   'close'.asAssetSvg(),
                   width: 10,
@@ -801,7 +803,7 @@ class _ThisInheritedWidget extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.buySellTabController != this.buySellTabController;
+    return oldWidget.buySellTabController != buySellTabController;
   }
 
   static _ThisInheritedWidget? of(BuildContext context) =>

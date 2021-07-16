@@ -15,8 +15,8 @@ import 'package:polkadex/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/utils/extensions.dart';
 import 'dart:math' as math;
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
-import 'package:polkadex/widgets/chart/app_charts.dart' as appCharts;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:polkadex/widgets/chart/app_charts.dart' as app_charts;
 
 /// XD_PAGE: 24
 /// XD_PAGE: 25
@@ -347,8 +347,8 @@ class _ThisDetailCard extends StatelessWidget {
   /// navigate to link on app browser
   void _navigateToLink(String link) async {
     try {
-      if (await urlLauncher.canLaunch(link)) {
-        urlLauncher.launch(link);
+      if (await url_launcher.canLaunch(link)) {
+        url_launcher.launch(link);
       }
     } catch (ex) {
       print(ex);
@@ -397,9 +397,9 @@ class _ThisGrpahCard extends StatelessWidget {
                         250, MediaQuery.of(context).size.width * 0.450),
                     child: Consumer<AppChartDummyProvider>(
                       builder: (context, provider, _) =>
-                          appCharts.AppLineChartWidget(
+                          app_charts.AppLineChartWidget(
                         data: provider.list,
-                        options: appCharts.AppLineChartOptions.withDefaults(
+                        options: app_charts.AppLineChartOptions.withDefaults(
                           chartScale: provider.chartScale,
                           areaGradient: LinearGradient(
                             begin: Alignment.topCenter,
@@ -504,16 +504,16 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                           builder: (context, appChartProvider, child) {
                             String text;
                             switch (item) {
-                              case EnumAppChartDataTypes.Hour:
+                              case EnumAppChartDataTypes.hour:
                                 text = "1h";
                                 break;
-                              case EnumAppChartDataTypes.Week:
+                              case EnumAppChartDataTypes.week:
                                 text = "7d";
                                 break;
-                              case EnumAppChartDataTypes.Day:
+                              case EnumAppChartDataTypes.day:
                                 text = "1d";
                                 break;
-                              case EnumAppChartDataTypes.Month:
+                              case EnumAppChartDataTypes.month:
                                 text = "1m";
                                 break;
                             }
@@ -676,7 +676,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(17),
               onTap: () {
                 BottomNavigationProvider().enumBottomBarItem =
-                    EnumBottonBarItem.Trade;
+                    EnumBottonBarItem.trade;
                 Navigator.popUntil(
                     context, ModalRoute.withName(LandingScreen.routeName));
               },
@@ -727,7 +727,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(17),
                 onTap: () {
                   BottomNavigationProvider().enumBottomBarItem =
-                      EnumBottonBarItem.Trade;
+                      EnumBottonBarItem.trade;
                   Navigator.popUntil(
                       context, ModalRoute.withName(LandingScreen.routeName));
                 },
@@ -1042,15 +1042,15 @@ class _ThisOrderDisplayProvider extends ChangeNotifier {
     this.onEnumCoinDisplayListener,
     EnumCardFlipState enumCoinDisplay = EnumCardFlipState.showFirst,
   }) : super() {
-    this._enumCoinDisplay = enumCoinDisplay;
+    _enumCoinDisplay = enumCoinDisplay;
   }
 
-  EnumCardFlipState get enumCoinDisplay => this._enumCoinDisplay;
+  EnumCardFlipState get enumCoinDisplay => _enumCoinDisplay;
 
   set enumCoinDisplay(EnumCardFlipState val) {
-    this._enumCoinDisplay = val;
-    if (this.onEnumCoinDisplayListener != null) {
-      this.onEnumCoinDisplayListener!(val);
+    _enumCoinDisplay = val;
+    if (onEnumCoinDisplayListener != null) {
+      onEnumCoinDisplayListener!(val);
     }
     notifyListeners();
   }

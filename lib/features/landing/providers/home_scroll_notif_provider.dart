@@ -7,14 +7,14 @@ class HomeScrollNotifProvider extends ChangeNotifier {
   final double _appbarSize = kToolbarHeight;
   final double _bottomSize = 64;
 
-  double get bottombarSize => this._bottomSize;
+  double get bottombarSize => _bottomSize;
 
   double _scrollOffset = 0.0;
 
   // double get scrollOffset => this._scrollOffset;
 
   set scrollOffset(double val) {
-    this._scrollOffset = val;
+    _scrollOffset = val;
     notifyListeners();
   }
 

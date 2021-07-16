@@ -33,11 +33,11 @@ class AppSettingsLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return _ThisInheritedWidget(
       // animationController: this.animationController,
-      onBack: this.onBack,
+      onBack: onBack,
       child: SafeArea(
         child: CustomAppBar(
           isExpanded: true,
-          title: this.mainTitle,
+          title: mainTitle,
           // animationController: this.animationController,
           onTapBack: onBack,
           child: _ThisSubTitleWidget(
@@ -169,7 +169,7 @@ class _ThisInheritedWidget extends InheritedWidget {
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
     return
         // oldWidget.animationController != this.animationController ||
-        oldWidget.onBack != this.onBack;
+        oldWidget.onBack != onBack;
   }
 
   // static _ThisInheritedWidget of(BuildContext context) =>

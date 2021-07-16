@@ -56,8 +56,8 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: this.onTap,
-      child: Text(this.label, style: tsS18W600CFF),
+      onPressed: onTap,
+      child: Text(label, style: tsS18W600CFF),
       style: TextButton.styleFrom(
         textStyle: tsS18W600CFF,
         backgroundColor: color8BA1BE.withOpacity(0.20),

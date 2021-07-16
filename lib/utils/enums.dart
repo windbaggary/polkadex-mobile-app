@@ -1,111 +1,111 @@
 /// The enum for identifying the sliding steps
-enum EnumCreateSliderSteps { Step1, Step2, Step3 }
+enum EnumCreateSliderSteps { step1, step2, step3 }
 
 /// The enum for the ranking list sorting
 /// Gainers, Losers, Vol
-enum EnumRankingListSorts { Gainers, Losers, Vol }
+enum EnumRankingListSorts { gainers, losers, vol }
 
 /// The enum for the drawer menu app settings
 enum EnumDrawerAppSettings {
-  Notifications,
-  Appearance,
-  LanguageCurrency,
-  PrivacySecurtiy,
-  MyAccount,
+  notifications,
+  appearance,
+  languageCurrency,
+  privacySecurtiy,
+  myAccount,
 }
 
 /// The enum for the drawer menu app settings
 enum EnumDrawerAppInfo {
-  TermsConditions,
-  PrivacyPolicy,
-  HelpSupport,
-  ChangeLog,
+  termsConditions,
+  privacyPolicy,
+  helpSupport,
+  changeLog,
 }
 
 /// The enum for the bottom navigation bar
 enum EnumBottonBarItem {
-  Home,
-  Exchange,
-  Trade,
-  Balance,
+  home,
+  exchange,
+  trade,
+  balance,
 }
 
 /// The enum for the exchage screen top section
 enum EnumExchangeFilter {
-  DEX,
-  BTC,
-  DOT,
-  AltCoins,
-  Fiat,
+  dex,
+  btc,
+  dot,
+  altCoins,
+  fiat,
 }
 
 /// The enum class app settings notification screen
 enum EnumNotificationsMenu {
-  Withdraw,
-  Deposit,
-  FilledOrder,
+  withdraw,
+  deposit,
+  filledOrder,
 }
 
 /// The enum class for menu for notifications
 enum EnumNotificationAlert {
-  Email,
-  Phone,
-  Push,
+  email,
+  phone,
+  push,
 }
 
 /// Enum class for buy sell filter
 enum EnumBuySellAll {
-  Buy,
-  All,
-  Sell,
+  buy,
+  all,
+  sell,
 }
 
 enum EnumBuySell {
-  Buy,
-  Sell,
+  buy,
+  sell,
 }
 
 /// Enum for market limit drop down popups
 enum EnumOrderTypes {
-  Market,
-  Limit,
-  Stop,
+  market,
+  limit,
+  stop,
 }
 
 enum EnumAppChartDataTypes {
-  Hour,
-  Week,
-  Day,
-  Month,
+  hour,
+  week,
+  day,
+  month,
 }
 
 enum EnumBalanceChartDataTypes {
-  Hour,
-  Week,
-  Month,
-  ThreeMonth,
-  SixMonth,
-  Year,
-  All,
+  hour,
+  week,
+  month,
+  threeMonth,
+  sixMonth,
+  year,
+  all,
 }
 
 enum EnumDrawerNotificationTypes {
-  TransactionDeposit,
-  TransactionWithdraw,
-  Normal,
+  transactionDeposit,
+  transactionWithdraw,
+  normal,
 }
 
 enum EnumAmountType {
-  BTC,
-  USD,
+  btc,
+  usd,
 }
 
 enum EnumTradeOrdersDisplayType {
-  Open,
-  History,
+  open,
+  history,
 }
 
 enum EnumDepositScreenTypes {
-  Withdraw,
-  Deposit,
+  withdraw,
+  deposit,
 }

@@ -29,7 +29,7 @@ class BalanceSummaryScreen extends StatelessWidget {
                   child: _ThisProgressContentWidget(
                     selIndex: selIndex,
                   ),
-                  list: _DUMMY_LIST,
+                  list: dummyList,
                   selectedIndex: selIndex,
                 ),
               ),
@@ -46,7 +46,7 @@ class BalanceSummaryScreen extends StatelessWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) =>
                         ValueListenableBuilder<int?>(
-                      valueListenable: this._selIndexNotifier,
+                      valueListenable: _selIndexNotifier,
                       builder: (context, selIndex, child) => InkWell(
                         onTap: () {
                           if (selIndex == index) {
@@ -56,12 +56,12 @@ class BalanceSummaryScreen extends StatelessWidget {
                           }
                         },
                         child: _ThisItemWidget(
-                          model: _DUMMY_LIST[index],
+                          model: dummyList[index],
                           isSelected: selIndex == index,
                         ),
                       ),
                     ),
-                    itemCount: _DUMMY_LIST.length,
+                    itemCount: dummyList.length,
                   ),
                 ),
               ),
@@ -82,9 +82,8 @@ class _ThisProgressContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final crossFadeState = this.selIndex != null
-        ? CrossFadeState.showSecond
-        : CrossFadeState.showFirst;
+    final crossFadeState =
+        selIndex != null ? CrossFadeState.showSecond : CrossFadeState.showFirst;
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -182,7 +181,7 @@ class _ThisSummaryTopSelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iModel = _DUMMY_LIST[selIndex];
+    final iModel = dummyList[selIndex];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -405,20 +404,20 @@ class _ThisModel implements IAppCircleChartModel {
   });
 
   @override
-  Color get iColor => this.color;
+  Color get iColor => color;
 
   @override
-  double get iPerc => this.perc / 100;
+  double get iPerc => perc / 100;
 }
 
-const _DUMMY_LIST = <_ThisModel>[
+const dummyList = <_ThisModel>[
   _ThisModel(
     imgAsset: 'trade_open/trade_open_1.png',
     name: 'Ethereum',
     code: 'ETH',
     unit: '0.8621',
     perc: 60,
-    color: const Color(0xFFFFB100),
+    color: Color(0xFFFFB100),
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_2.png',
@@ -426,7 +425,7 @@ const _DUMMY_LIST = <_ThisModel>[
     code: 'DEX',
     unit: '2.0000',
     perc: 22,
-    color: const Color(0xFF11A564),
+    color: Color(0xFF11A564),
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_8.png',
@@ -450,6 +449,6 @@ const _DUMMY_LIST = <_ThisModel>[
     code: 'ETH',
     unit: '0.8621',
     perc: 2,
-    color: const Color(0xFFABB2BC),
+    color: Color(0xFFABB2BC),
   ),
 ];

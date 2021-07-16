@@ -8,7 +8,7 @@ import 'package:polkadex/utils/extensions.dart';
 import 'package:polkadex/utils/styles.dart';
 import 'package:polkadex/widgets/build_methods.dart';
 import 'package:polkadex/widgets/custom_app_bar.dart';
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// XD_PAGE: 43
 class NotifDepositScreen extends StatelessWidget {
@@ -23,11 +23,11 @@ class NotifDepositScreen extends StatelessWidget {
     String titleSvg;
 
     switch (screenType) {
-      case EnumDepositScreenTypes.Withdraw:
+      case EnumDepositScreenTypes.withdraw:
         title = "Withdraw Successful";
         titleSvg = "Withdraw".asAssetSvg();
         break;
-      case EnumDepositScreenTypes.Deposit:
+      case EnumDepositScreenTypes.deposit:
         title = "Deposit Successful";
         titleSvg = 'Deposit'.asAssetSvg();
         break;
@@ -245,8 +245,8 @@ class NotifDepositScreen extends StatelessWidget {
                                 onTap: () async {
                                   try {
                                     final link = "https://www.polkadex.trade";
-                                    if (await urlLauncher.canLaunch(link)) {
-                                      urlLauncher.launch(link);
+                                    if (await url_launcher.canLaunch(link)) {
+                                      url_launcher.launch(link);
                                     }
                                   } catch (ex) {
                                     print(ex);

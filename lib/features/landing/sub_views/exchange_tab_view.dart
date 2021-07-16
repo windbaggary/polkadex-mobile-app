@@ -51,7 +51,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   /// An animation for the alt section expand hide
   late Animation<double> _altHeightAnimation;
 
-  EnumExchangeFilter _selectedExchangeFilter = EnumExchangeFilter.DEX;
+  EnumExchangeFilter _selectedExchangeFilter = EnumExchangeFilter.dex;
 
   @override
   void initState() {
@@ -133,13 +133,14 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
                                       onSelected: (val) {
                                         _selectedExchangeFilter = val;
                                         if (val ==
-                                            EnumExchangeFilter.AltCoins) {
+                                            EnumExchangeFilter.altCoins) {
                                           if (_altCoinAnimationController
                                                   .status !=
-                                              AnimationStatus.completed)
+                                              AnimationStatus.completed) {
                                             _altCoinAnimationController
                                               ..reset()
                                               ..forward().orCancel;
+                                          }
                                         } else {
                                           _altCoinAnimationController
                                               .reverse()
@@ -250,14 +251,14 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => this.height;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => this.height;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(covariant _SliverPersistentHeaderDelegate oldDelegate) {
-    return oldDelegate.height != this.height || oldDelegate.child != this.child;
+    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
 
@@ -280,7 +281,7 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
     this.onSelected,
   })  : _selectedNotifier = ValueNotifier<EnumExchangeFilter>(initial),
         _isShowSubMenuNotifier =
-            ValueNotifier<bool>(initial == EnumExchangeFilter.AltCoins);
+            ValueNotifier<bool>(initial == EnumExchangeFilter.altCoins);
 
   @override
   Widget build(BuildContext context) {
@@ -358,9 +359,9 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
               onTap: () {
                 _selectedNotifier.value = e;
                 _isShowSubMenuNotifier.value =
-                    (e == EnumExchangeFilter.AltCoins);
-                if (this.onSelected != null) {
-                  this.onSelected!(e);
+                    (e == EnumExchangeFilter.altCoins);
+                if (onSelected != null) {
+                  onSelected!(e);
                 }
               },
               child: _ThisFilterItemWidget(
@@ -538,7 +539,7 @@ class _ThisListItemWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          '${model.amount}',
+                          model.amount,
                           style: tsS15W500CFF,
                         ),
                       ],

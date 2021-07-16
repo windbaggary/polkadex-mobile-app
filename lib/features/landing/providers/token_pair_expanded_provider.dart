@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 class TokenPairExpandedProvider extends ChangeNotifier {
   bool _isExpanded = false;
 
-  bool get isPairExpanded => !this._isExpanded;
-  bool get isTokenExpanded => this._isExpanded;
+  bool get isPairExpanded => !_isExpanded;
+  bool get isTokenExpanded => _isExpanded;
 
   set isPairExpanded(bool val) {
-    this._isExpanded = !val;
+    _isExpanded = !val;
     notifyListeners();
   }
 
   set isTokenExpanded(bool val) {
-    this._isExpanded = val;
+    _isExpanded = val;
     notifyListeners();
   }
 }
