@@ -4,7 +4,7 @@ import 'package:polkadex/utils/colors.dart';
 import 'package:polkadex/utils/styles.dart';
 
 /// The build method to show toast over the screen
-void buildAppToast({@required String msg, @required BuildContext context}) {
+void buildAppToast({required String msg, required BuildContext context}) {
   Widget toast = Container(
     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
     decoration: BoxDecoration(
@@ -19,7 +19,7 @@ void buildAppToast({@required String msg, @required BuildContext context}) {
       ],
     ),
     child: Text(
-      msg ?? "",
+      msg,
       style: tsS14W500CFF,
       textAlign: TextAlign.center,
     ),
@@ -34,9 +34,9 @@ void buildAppToast({@required String msg, @required BuildContext context}) {
 /// A useful inkwell which are added default highlight and splash color
 ///
 Widget buildInkWell({
-  @required Widget child,
-  @required VoidCallback onTap,
-  BorderRadius borderRadius,
+  required Widget child,
+  required VoidCallback onTap,
+  BorderRadius? borderRadius,
   Color highlightColor = const Color(0x558BA1BE),
   Color splashColor = const Color(0xFF8BA1BE),
 }) {

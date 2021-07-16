@@ -12,15 +12,13 @@ typedef OnOrderTypeSelected = void Function(EnumOrderTypes type);
 
 /// The content dialog for the order type
 class _OrderTypeDialogWidget extends StatelessWidget {
-  final ValueNotifier<EnumOrderTypes> selectedTypeNotifier;
-  final OnOrderTypeSelected onItemSelected;
+  final ValueNotifier<EnumOrderTypes?> selectedTypeNotifier;
+  final OnOrderTypeSelected? onItemSelected;
 
   _OrderTypeDialogWidget({
-    Key key,
-    EnumOrderTypes selectedIndex,
+    EnumOrderTypes? selectedIndex,
     this.onItemSelected,
-  })  : selectedTypeNotifier = ValueNotifier<EnumOrderTypes>(selectedIndex),
-        super(key: key);
+  }) : selectedTypeNotifier = ValueNotifier<EnumOrderTypes?>(selectedIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +82,12 @@ class _OrderTypeDialogWidget extends StatelessWidget {
               .map((e) => InkWell(
                     onTap: () {
                       if (onItemSelected != null) {
-                        onItemSelected(e);
+                        onItemSelected!(e);
                       }
                       selectedTypeNotifier.value = e;
                       Navigator.pop(context);
                     },
-                    child: ValueListenableBuilder<EnumOrderTypes>(
+                    child: ValueListenableBuilder<EnumOrderTypes?>(
                       valueListenable: selectedTypeNotifier,
                       builder: (context, selectedItem, child) =>
                           _ThisOrderTypeItemWidget(
@@ -111,10 +109,9 @@ class _ThisOrderTypeItemWidget extends StatelessWidget {
   final EnumOrderTypes orderTypeModel;
 
   const _ThisOrderTypeItemWidget({
-    Key key,
     this.isSelected = false,
-    @required this.orderTypeModel,
-  }) : super(key: key);
+    required this.orderTypeModel,
+  });
   @override
   Widget build(BuildContext context) {
     double verticalMargin = 4.0;
@@ -159,7 +156,7 @@ class _ThisOrderTypeItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            title ?? "",
+            title,
             style: tsS18W600CFF,
           ),
           SizedBox(height: 8),
@@ -167,7 +164,7 @@ class _ThisOrderTypeItemWidget extends StatelessWidget {
             duration: AppConfigs.animDuration,
             style: tsS14W400CFF.copyWith(color: textColor),
             child: Text(
-              description ?? "",
+              description,
             ),
           ),
         ],
@@ -178,9 +175,9 @@ class _ThisOrderTypeItemWidget extends StatelessWidget {
 
 /// Displays the dialog to select the order type
 void showOrderTypeDialog({
-  @required BuildContext context,
-  EnumOrderTypes selectedIndex,
-  OnOrderTypeSelected onItemSelected,
+  required BuildContext context,
+  EnumOrderTypes? selectedIndex,
+  OnOrderTypeSelected? onItemSelected,
 }) {
   final content = Material(
     type: MaterialType.transparency,
@@ -216,12 +213,11 @@ void showOrderTypeDialog({
 }
 
 class _PriceLengthDialogWidget extends StatelessWidget {
-  final ValueNotifier<int> _selectedNotifier;
-  final OnItemSelected onItemSelected;
+  final ValueNotifier<int?> _selectedNotifier;
+  final OnItemSelected? onItemSelected;
 
-  _PriceLengthDialogWidget({Key key, this.onItemSelected, int selectedIndex})
-      : _selectedNotifier = ValueNotifier<int>(selectedIndex),
-        super(key: key);
+  _PriceLengthDialogWidget({this.onItemSelected, int? selectedIndex})
+      : _selectedNotifier = ValueNotifier<int?>(selectedIndex);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -284,7 +280,7 @@ class _PriceLengthDialogWidget extends StatelessWidget {
               .map((e) => InkWell(
                     onTap: () {
                       if (onItemSelected != null) {
-                        onItemSelected(dummyPriceLengthData.indexOf(e));
+                        onItemSelected!(dummyPriceLengthData.indexOf(e));
                       }
                       _selectedNotifier.value = dummyPriceLengthData.indexOf(e);
                       Navigator.pop(context);
@@ -311,10 +307,9 @@ class _ThisPriceLengthWidget extends StatelessWidget {
   final PriceLengthModel model;
   final bool isSelected;
   const _ThisPriceLengthWidget({
-    @required this.model,
+    required this.model,
     this.isSelected = false,
-    Key key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -338,7 +333,7 @@ class _ThisPriceLengthWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            model?.price ?? "",
+            model.price,
             style: tsS18W600CFF,
           ),
           SizedBox(height: 4),
@@ -356,7 +351,7 @@ class _ThisPriceLengthWidget extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: model?.likePrice,
+                    text: model.likePrice,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: textColor,
@@ -375,9 +370,9 @@ class _ThisPriceLengthWidget extends StatelessWidget {
 
 /// Displays the dialog to price length
 void showPriceLengthDialog({
-  @required BuildContext context,
-  int selectedIndex,
-  OnItemSelected onItemSelected,
+  required BuildContext context,
+  int? selectedIndex,
+  OnItemSelected? onItemSelected,
 }) {
   final content = Material(
     type: MaterialType.transparency,
@@ -420,9 +415,9 @@ class PriceLengthModel {
   final String likePrice;
 
   const PriceLengthModel({
-    @required this.id,
-    @required this.price,
-    @required this.likePrice,
+    required this.id,
+    required this.price,
+    required this.likePrice,
   });
 }
 

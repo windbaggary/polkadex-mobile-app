@@ -19,7 +19,6 @@ class HomeRankListProvider extends ChangeNotifier {
         tmpList.sort((a, b) => b.volume.compareTo(a.volume));
         return tmpList;
     }
-    return tmpList;
   }
 
   /// Set the filter type and notify. So the [list] will filtered

@@ -17,12 +17,11 @@ class OrderBookChartItemWidget extends StatelessWidget {
   final Color color;
 
   OrderBookChartItemWidget({
-    @required this.child,
+    required this.child,
     this.percentage = 0.0,
-    this.direction,
+    required this.direction,
     this.color = const Color(0xFF0CA564),
-    Key key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

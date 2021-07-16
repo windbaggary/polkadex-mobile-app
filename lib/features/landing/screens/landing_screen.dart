@@ -32,20 +32,20 @@ class _LandingScreenState extends State<LandingScreen>
   // AnimationController _entryAnimationController;
   // Animation<Offset> _offsetBottomTopAnimation;
   // Animation<double> _appbarAnimation;
-  AnimationController _drawerAnimationController;
-  AnimationController _drawerNotifAnimController;
-  AnimationController _contentAnimController;
+  late AnimationController _drawerAnimationController;
+  late AnimationController _drawerNotifAnimController;
+  late AnimationController _contentAnimController;
 
-  Animation<double> _leftDrawerWidthAnimation;
-  Animation<double> _rightDrawerWidthAnimation;
-  Animation<Color> _drawerContentColorAnimation;
-  Animation<BorderRadius> _drawerContentRadiusAnimation;
+  late Animation<double> _leftDrawerWidthAnimation;
+  late Animation<double> _rightDrawerWidthAnimation;
+  late Animation<Color?> _drawerContentColorAnimation;
+  late Animation<BorderRadius> _drawerContentRadiusAnimation;
 
   bool _isDrawerVisible = false;
   bool _isNotifDrawerVisible = false;
   double _dragStartDX = 0.0;
 
-  ValueNotifier<String> _titleNotifier;
+  late ValueNotifier<String> _titleNotifier;
 
   @override
   void initState() {
@@ -351,10 +351,10 @@ class _ThisContentWidget extends StatefulWidget {
 
 class __ThisContentWidgetState extends State<_ThisContentWidget>
     with TickerProviderStateMixin {
-  TabController _tabController;
-  StreamSubscription<EnumBottonBarItem> _bottomBarStreamSubScription;
+  late TabController _tabController;
+  StreamSubscription<EnumBottonBarItem>? _bottomBarStreamSubScription;
 
-  ValueNotifier<EnumBottonBarItem> _bottomNavbarNotifier;
+  late ValueNotifier<EnumBottonBarItem> _bottomNavbarNotifier;
 
   @override
   void initState() {
@@ -450,13 +450,6 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
       case EnumBottonBarItem.balance:
         return BalanceTabView();
     }
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        "Coming soon",
-        style: tsS14W400CFFOP50,
-      ),
-    );
   }
 
   /// This method will be called when user click on search icon on app bar
@@ -479,17 +472,14 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
         break;
     }
     Future.microtask(() =>
-        _ThisInheritedWidget.of(context).appbarTitleNotifier.value = title);
+        _ThisInheritedWidget.of(context)?.appbarTitleNotifier.value = title);
     _tabController.animateTo(EnumBottonBarItem.values.indexOf(item),
         curve: Curves.easeIn);
   }
 
   /// Unsubscribe from bottom navigation bar selection
   void _unsubscribeBottomBar() {
-    if (_bottomBarStreamSubScription != null) {
-      _bottomBarStreamSubScription.cancel();
-      _bottomBarStreamSubScription = null;
-    }
+    _bottomBarStreamSubScription?.cancel();
   }
 
   /// Subscribe to bottom navigation bar selection
@@ -509,9 +499,8 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
 class _ThisNotificationIcon extends StatelessWidget {
   final String count;
   const _ThisNotificationIcon({
-    Key key,
-    @required this.count,
-  }) : super(key: key);
+    required this.count,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -524,7 +513,7 @@ class _ThisNotificationIcon extends StatelessWidget {
             'notification'.asAssetSvg(),
           ),
         ),
-        if (count?.isNotEmpty ?? false)
+        if (count.isNotEmpty)
           Positioned(
             top: count.length > 1 ? 0 : -1,
             right: 0,
@@ -535,7 +524,7 @@ class _ThisNotificationIcon extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(4),
               child: Text(
-                count ?? "",
+                count,
                 style: TextStyle(
                   fontSize: 10,
                   color: colorFFFFFF,
@@ -561,13 +550,12 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
   final VoidCallback onAvatarTapped;
 
   const _ThisBaseAppbar({
-    Key key,
-    this.assetImg,
-    this.title,
-    this.actions,
-    this.onAvatarTapped,
+    required this.assetImg,
+    required this.title,
+    required this.actions,
+    required this.onAvatarTapped,
     // this.animation,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -576,9 +564,9 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            if (assetImg?.isNotEmpty ?? false) _buildImage(),
-            if (title?.isNotEmpty ?? false) _buildName() else Spacer(),
-            if (actions?.isNotEmpty ?? false) _buildActions(),
+            if (assetImg.isNotEmpty) _buildImage(),
+            if (title.isNotEmpty) _buildName() else Spacer(),
+            if (actions.isNotEmpty) _buildActions(),
           ],
         ),
       ),
@@ -597,7 +585,7 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
         //       )),
         //   child:
         Row(
-      children: actions ?? <Widget>[],
+      children: actions,
       // ),
     );
   }
@@ -611,7 +599,7 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
             //   opacity: this.animation,
             //   child:
             Text(
-          title ?? "",
+          title,
           style: tsS19W600CFF,
         ),
       ),
@@ -655,13 +643,12 @@ class _ThisInheritedWidget extends InheritedWidget {
   final VoidCallback onNotificationTap;
 
   _ThisInheritedWidget({
-    @required this.onOpenDrawer,
-    @required this.onOpenRightDrawer,
-    @required this.appbarTitleNotifier,
-    @required this.onNotificationTap,
-    @required Widget child,
-    Key key,
-  }) : super(child: child, key: key);
+    required this.onOpenDrawer,
+    required this.onOpenRightDrawer,
+    required this.appbarTitleNotifier,
+    required this.onNotificationTap,
+    required Widget child,
+  }) : super(child: child);
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
@@ -671,14 +658,12 @@ class _ThisInheritedWidget extends InheritedWidget {
         oldWidget.appbarTitleNotifier != appbarTitleNotifier;
   }
 
-  static _ThisInheritedWidget of(BuildContext context) =>
+  static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 }
 
 /// The app bar widget for the screen.
 class _ThisAppBar extends StatelessWidget {
-  const _ThisAppBar({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<HomeScrollNotifProvider>();
@@ -691,11 +676,11 @@ class _ThisAppBar extends StatelessWidget {
           height: kToolbarHeight,
           child: ValueListenableBuilder<String>(
             valueListenable:
-                _ThisInheritedWidget.of(context).appbarTitleNotifier,
+                _ThisInheritedWidget.of(context)!.appbarTitleNotifier,
             builder: (context, title, child) => _ThisBaseAppbar(
               // animation: this._appbarAnimation,
               assetImg: 'user_icon.png'.asAssetImg(),
-              title: title ?? 'Hello Kas',
+              title: title,
               actions: [
                 InkWell(
                   onTap: () {
@@ -714,7 +699,7 @@ class _ThisAppBar extends StatelessWidget {
                 SizedBox(width: 16),
                 InkWell(
                   onTap: () =>
-                      _ThisInheritedWidget.of(context).onNotificationTap(),
+                      _ThisInheritedWidget.of(context)!.onNotificationTap(),
                   child: SizedBox(
                     width: 25,
                     height: 25,
@@ -725,7 +710,7 @@ class _ThisAppBar extends StatelessWidget {
                 ),
               ],
               onAvatarTapped: () =>
-                  _ThisInheritedWidget.of(context).onOpenDrawer(),
+                  _ThisInheritedWidget.of(context)!.onOpenDrawer(),
             ),
           ),
         ),

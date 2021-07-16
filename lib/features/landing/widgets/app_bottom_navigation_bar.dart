@@ -11,17 +11,15 @@ typedef OnAppBottomBarSelected = void Function(EnumBottonBarItem item);
 /// The bottom navigation bar in landing screen
 class AppBottomNavigationBar extends StatelessWidget {
   AppBottomNavigationBar({
-    Key key,
     this.onSelected,
     this.initialItem = EnumBottonBarItem.home,
-  })  : _selectedNotifier = ValueNotifier<EnumBottonBarItem>(
-            initialItem ?? EnumBottonBarItem.home),
-        super(key: key);
+  }) : _selectedNotifier = ValueNotifier<EnumBottonBarItem>(
+            initialItem ?? EnumBottonBarItem.home);
 
   final ValueNotifier<EnumBottonBarItem> _selectedNotifier;
 
-  final OnAppBottomBarSelected onSelected;
-  final EnumBottonBarItem initialItem;
+  final OnAppBottomBarSelected? onSelected;
+  final EnumBottonBarItem? initialItem;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +45,7 @@ class AppBottomNavigationBar extends StatelessWidget {
               onTap: () {
                 _selectedNotifier.value = EnumBottonBarItem.home;
                 if (onSelected != null) {
-                  onSelected(EnumBottonBarItem.home);
+                  onSelected!(EnumBottonBarItem.home);
                 }
               },
               child: Container(
@@ -77,7 +75,7 @@ class AppBottomNavigationBar extends StatelessWidget {
                       onTap: () {
                         _selectedNotifier.value = EnumBottonBarItem.exchange;
                         if (onSelected != null) {
-                          onSelected(EnumBottonBarItem.exchange);
+                          onSelected!(EnumBottonBarItem.exchange);
                         }
                       },
                       child: ValueListenableBuilder<EnumBottonBarItem>(
@@ -88,7 +86,7 @@ class AppBottomNavigationBar extends StatelessWidget {
                       onTap: () {
                         _selectedNotifier.value = EnumBottonBarItem.trade;
                         if (onSelected != null) {
-                          onSelected(EnumBottonBarItem.trade);
+                          onSelected!(EnumBottonBarItem.trade);
                         }
                       },
                       child: ValueListenableBuilder<EnumBottonBarItem>(
@@ -99,7 +97,7 @@ class AppBottomNavigationBar extends StatelessWidget {
                       onTap: () {
                         _selectedNotifier.value = EnumBottonBarItem.balance;
                         if (onSelected != null) {
-                          onSelected(EnumBottonBarItem.balance);
+                          onSelected!(EnumBottonBarItem.balance);
                         }
                       },
                       child: ValueListenableBuilder<EnumBottonBarItem>(

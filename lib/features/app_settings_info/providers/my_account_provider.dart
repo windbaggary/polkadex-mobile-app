@@ -4,9 +4,9 @@ import 'package:image_picker/image_picker.dart';
 /// The provider to handle the image selection and displays
 class MyAccountProfileProvider extends ChangeNotifier {
   /// The local image path
-  String _imgFilePath;
+  String _imgFilePath = "";
 
-  bool get hasImg => _imgFilePath?.isNotEmpty ?? false;
+  bool get hasImg => _imgFilePath.isNotEmpty;
 
   String get imgFile => _imgFilePath;
 

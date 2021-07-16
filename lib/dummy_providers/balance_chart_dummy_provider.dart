@@ -14,7 +14,7 @@ class BalanceChartDummyProvider extends ChangeNotifier {
     startTimer();
   }
 
-  Timer _timer;
+  Timer? _timer;
   double _scale = 0.004;
 
   EnumBalanceChartDataTypes _balanceChartDataTypes =
@@ -106,7 +106,7 @@ class BalanceChartDummyProvider extends ChangeNotifier {
   void stopTimer() {
     try {
       if (_timer != null) {
-        _timer.cancel();
+        _timer?.cancel();
         _timer = null;
       }
     } catch (ex) {

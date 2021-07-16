@@ -9,10 +9,9 @@ import 'dart:ui' as ui;
 class HideOnScrollWidget extends SingleChildRenderObjectWidget {
   final ScrollController scrollController;
   HideOnScrollWidget({
-    Key key,
-    @required Widget child,
-    @required this.scrollController,
-  }) : super(key: key, child: child);
+    required Widget child,
+    required this.scrollController,
+  }) : super(child: child);
   @override
   _HideOnScrollRenderObject createRenderObject(BuildContext context) {
     return _HideOnScrollRenderObject(scrollController: scrollController);
@@ -28,7 +27,7 @@ class HideOnScrollWidget extends SingleChildRenderObjectWidget {
 class _HideOnScrollRenderObject extends RenderProxyBox {
   ScrollController _scrollController;
 
-  _HideOnScrollRenderObject({@required ScrollController scrollController})
+  _HideOnScrollRenderObject({required ScrollController scrollController})
       : _scrollController = scrollController,
         super();
 
@@ -68,13 +67,13 @@ class _HideOnScrollRenderObject extends RenderProxyBox {
     // super.performLayout();
     double width = 0.0;
     width = constraints.maxWidth;
-    child.layout(BoxConstraints(maxWidth: constraints.maxWidth),
+    child!.layout(BoxConstraints(maxWidth: constraints.maxWidth),
         parentUsesSize: true);
-    _childInitHeight = child.size.height;
+    _childInitHeight = child!.size.height;
     _scrollHeight = (_childInitHeight - scrollController.offset)
         .clamp(0.0, _childInitHeight);
 
-    child.layout(BoxConstraints(
+    child!.layout(BoxConstraints(
         maxWidth: constraints.maxWidth, maxHeight: _scrollHeight));
 
     size = Size(width, _scrollHeight);
@@ -95,7 +94,7 @@ class _HideOnScrollRenderObject extends RenderProxyBox {
       if (alpha == 255) {
         // No need to keep the layer. We'll create a new one if necessary.
         layer = null;
-        context.paintChild(child, offset);
+        context.paintChild(child!, offset);
         return;
       }
       layer = context.pushOpacity(offset, alpha, super.paint,

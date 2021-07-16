@@ -181,7 +181,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                               ),
                                                               value: e,
                                                             ))
-                                                        ?.toList(),
+                                                        .toList(),
                                                     value: 'DOT Chain',
                                                     style: tsS16W600CFF,
                                                     underline: Container(),
@@ -377,10 +377,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
 }
 
 class _ThisAmountWidget extends StatelessWidget {
-  const _ThisAmountWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -398,7 +394,7 @@ class _ThisAmountWidget extends StatelessWidget {
           children: [
             Consumer<_ThisProvider>(
               builder: (context, provider, child) => Text(
-                provider?.topValue ?? "0",
+                provider.topValue,
                 style: tsS31W500CFF,
                 textAlign: TextAlign.center,
               ),
@@ -406,7 +402,7 @@ class _ThisAmountWidget extends StatelessWidget {
             SizedBox(height: 4),
             Consumer<_ThisProvider>(
               builder: (context, provider, child) => Text(
-                '~${provider?.bottomValue ?? "0"}',
+                '~${provider.bottomValue}',
                 style: tsS15W400CFFOP50,
                 textAlign: TextAlign.center,
               ),
@@ -427,10 +423,6 @@ class _ThisAmountWidget extends StatelessWidget {
 }
 
 class _ThisCoinTitleWidget extends StatelessWidget {
-  const _ThisCoinTitleWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -496,7 +488,7 @@ class _ThisProvider extends ChangeNotifier {
   String _unit = "0", _amount = "0";
   bool _isKeyboardVisible = false;
 
-  bool get isKeyboardVisible => _isKeyboardVisible ?? false;
+  bool get isKeyboardVisible => _isKeyboardVisible;
   double get progress => _progress;
 
   set progress(double val) {
@@ -537,9 +529,9 @@ class _ThisProvider extends ChangeNotifier {
   }
 
   void setUnitEntered(_EnumKeypadNumbers val) {
-    String enteredString = _unit ?? "";
+    String enteredString = _unit;
     if (_isSwap) {
-      enteredString = _amount ?? "";
+      enteredString = _amount;
     }
     if (enteredString == "0") {
       enteredString = "";
@@ -592,24 +584,24 @@ class _ThisProvider extends ChangeNotifier {
 
         break;
       case _EnumKeypadNumbers.back:
-        if (enteredString?.isEmpty ?? true) break;
+        if (enteredString.isEmpty) break;
         if (enteredString.isNotEmpty) {
           enteredString = enteredString.substring(0, enteredString.length - 1);
         }
         break;
     }
     try {
-      enteredString = (enteredString?.isEmpty ?? true) ? "0" : enteredString;
+      enteredString = (enteredString.isEmpty) ? "0" : enteredString;
       print(enteredString);
-      final double valInDouble = double.tryParse(enteredString);
+      final double? valInDouble = double.tryParse(enteredString);
 
       if (_isSwap) {
-        _progress = (valInDouble / _availableAmount).clamp(0.0, 1.0);
+        _progress = (valInDouble! / _availableAmount).clamp(0.0, 1.0);
 
         _amount = enteredString;
         _unit = (_availableUnit * _progress).toStringAsFixed(2);
       } else {
-        _progress = (valInDouble / _availableUnit).clamp(0.0, 1.0);
+        _progress = (valInDouble! / _availableUnit).clamp(0.0, 1.0);
 
         _unit = enteredString;
         _amount = (_availableAmount * _progress).toStringAsFixed(2);
@@ -639,15 +631,14 @@ enum _EnumKeypadNumbers {
 typedef _OnKeypadNumberTapped = void Function(_EnumKeypadNumbers number);
 
 class AppCustomKeyboard extends StatefulWidget {
-  final VoidCallback onEnterTapped;
-  final VoidCallback onSwapTapped;
+  final VoidCallback? onEnterTapped;
+  final VoidCallback? onSwapTapped;
   final _OnKeypadNumberTapped onKeypadNumberTapped;
   const AppCustomKeyboard({
-    Key key,
     this.onEnterTapped,
     this.onSwapTapped,
-    @required this.onKeypadNumberTapped,
-  }) : super(key: key);
+    required this.onKeypadNumberTapped,
+  });
 
   @override
   AppCustomKeyboardState createState() => AppCustomKeyboardState();
@@ -848,14 +839,14 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
 class _ThisNumberItemWidget extends StatelessWidget {
   final String number;
 
-  const _ThisNumberItemWidget({Key key, @required this.number})
-      : super(key: key);
+  const _ThisNumberItemWidget({required this.number});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(
-        number ?? "",
+        number,
         style: TextStyle(
           fontFamily: 'Roboto',
           fontSize: 30,

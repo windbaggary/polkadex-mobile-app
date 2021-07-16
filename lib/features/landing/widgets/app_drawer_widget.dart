@@ -27,13 +27,13 @@ const double appDrawerWidth = 300;
 
 /// The right drawer width
 double getAppDrawerNotifWidth() {
-  print(AppConfigs.size.width);
+  print(AppConfigs.size!.width);
   // double ratio = 0.300;
   // if (Platform.isIOS) {
   // ratio = 0.750;
   // }
   // return math.min<double>(AppConfigs.size.width * ratio, 350.0);
-  return AppConfigs.size.width - 40;
+  return AppConfigs.size!.width - 40;
 }
 
 /// XD_PAGE: 35
@@ -114,10 +114,10 @@ class AppDrawerWidget extends StatelessWidget {
   /// Build the heading style widget with [label]
   /// Also include the padding to the top and bottom
   ///
-  Widget _buildHeading({@required String label}) => Padding(
+  Widget _buildHeading({required String label}) => Padding(
         padding: const EdgeInsets.only(top: 49, bottom: 2),
         child: Text(
-          label ?? "",
+          label,
           style: tsS16W500CABB2BC,
         ),
       );
@@ -313,11 +313,10 @@ class _ThisProfileWidget extends StatelessWidget {
 class _ThisDrawerItemWidget extends StatelessWidget {
   final String svgAsset;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _ThisDrawerItemWidget(
-      {Key key, @required this.svgAsset, @required this.label, this.onTap})
-      : super(key: key);
+      {required this.svgAsset, required this.label, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -340,7 +339,7 @@ class _ThisDrawerItemWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                label ?? "",
+                label,
                 style: tsS16W400CFF,
               ),
             ),
@@ -353,8 +352,8 @@ class _ThisDrawerItemWidget extends StatelessWidget {
 
 /// XD_PAGE: 37
 class NotificationDrawerWidget extends StatelessWidget {
-  final VoidCallback onClearTap;
-  const NotificationDrawerWidget({Key key, this.onClearTap}) : super(key: key);
+  final VoidCallback? onClearTap;
+  const NotificationDrawerWidget({this.onClearTap});
 
   @override
   Widget build(BuildContext context) {
@@ -491,12 +490,11 @@ class _ThisNotifItemWidget extends StatelessWidget {
   final String description;
   final double opacity;
   const _ThisNotifItemWidget({
-    Key key,
-    @required this.svgItem,
-    @required this.title,
-    @required this.description,
+    required this.svgItem,
+    required this.title,
+    required this.description,
     this.opacity = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -528,7 +526,7 @@ class _ThisNotifItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    title ?? "",
+                    title,
                     style: tsS14W500CFF,
                   ),
                   SizedBox(height: 4),

@@ -10,14 +10,13 @@ typedef OnDotSelected = void Function(int index);
 class AppSliderDots extends StatelessWidget {
   final int length;
   final int selectedIndex;
-  final OnDotSelected onDotSelected;
+  final OnDotSelected? onDotSelected;
 
   AppSliderDots({
-    Key key,
-    @required this.length,
-    @required this.selectedIndex,
+    required this.length,
+    required this.selectedIndex,
     this.onDotSelected,
-  }) : super(key: key);
+  });
 
   Widget _buildChild(BuildContext context, int index) => AnimatedContainer(
         duration: AppConfigs.animDurationSmall,
@@ -41,7 +40,7 @@ class AppSliderDots extends StatelessWidget {
             onTap: onDotSelected == null
                 ? null
                 : () {
-                    onDotSelected(index);
+                    onDotSelected!(index);
                   },
             child: _buildChild(context, index)),
       ),

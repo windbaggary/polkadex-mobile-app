@@ -13,21 +13,20 @@ class AppSliderWidget extends StatefulWidget {
   final List<double> scales;
 
   const AppSliderWidget({
-    Key key,
-    @required this.childrens,
-    this.height,
+    required this.childrens,
+    required this.height,
     this.itemsDisplayCount = 3,
-    this.offsetsY,
-    this.opacities,
-    this.scales,
-  }) : super(key: key);
+    required this.offsetsY,
+    required this.opacities,
+    required this.scales,
+  });
   @override
   _AppSliderWidgetState createState() => _AppSliderWidgetState();
 }
 
 class _AppSliderWidgetState extends State<AppSliderWidget>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
   int _selectedIndex = 0;
   double _startDx = 0.0;
   double _animPerc = 0.0;
@@ -63,10 +62,10 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
           children: List.generate(
             widget.itemsDisplayCount,
             (index) {
-              double bottom;
+              double? bottom;
 
-              Tween<double> scaleTween;
-              Tween<double> opacityTween;
+              Tween<double>? scaleTween;
+              Tween<double>? opacityTween;
 
               if (widget.offsetsY.length - 1 >= index) {
                 bottom = widget.offsetsY[index];
@@ -105,13 +104,13 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
                 ),
               );
 
-              final Animation<double> scaleAnimation = scaleTween.animate(
+              final Animation<double>? scaleAnimation = scaleTween?.animate(
                 CurvedAnimation(
                   parent: _animationController,
                   curve: Interval(0.55, 1.0),
                 ),
               );
-              final Animation<double> opacityAnimation = opacityTween.animate(
+              final Animation<double>? opacityAnimation = opacityTween?.animate(
                 CurvedAnimation(
                   parent: _animationController,
                   curve: Interval(0.55, 1.0),
@@ -131,15 +130,15 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
                 animation: _animationController,
                 builder: (context, child) {
                   Offset offset = Offset.zero;
-                  double scale = 1.0;
-                  double opacity = 1.0;
+                  double? scale = 1.0;
+                  double? opacity = 1.0;
                   double rotateZ = 0.0;
                   if (index == _selectedIndex) {
                     offset = offsetAnimation.value;
                     rotateZ = rotateAnimation.value;
                   } else {
-                    scale = scaleAnimation.value;
-                    opacity = opacityAnimation.value;
+                    scale = scaleAnimation?.value;
+                    opacity = opacityAnimation?.value;
                   }
                   return Positioned.fill(
                     bottom: bottom,
@@ -152,7 +151,7 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
                             (_directionX ? 1.0 : -1.0)),
                       alignment: Alignment.bottomCenter,
                       child: Opacity(
-                        opacity: opacity,
+                        opacity: opacity ?? 0.0,
                         child: _contentChildrens[index],
                       ),
                     ),

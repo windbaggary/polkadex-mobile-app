@@ -12,26 +12,24 @@ import 'package:polkadex/utils/extensions.dart';
 /// the QR code and once its read it will pop the result
 ///
 class QRCodeScanScreen extends StatefulWidget {
-  const QRCodeScanScreen({Key key}) : super(key: key);
-
   @override
   _QRCodeScanScreenState createState() => _QRCodeScanScreenState();
 }
 
 class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  ValueNotifier<bool> _isFlashNotifier;
-  QRViewController controller;
-  StreamSubscription<Barcode> _streamSubscription;
+  late ValueNotifier<bool> _isFlashNotifier;
+  QRViewController? controller;
+  StreamSubscription<Barcode>? _streamSubscription;
   // Barcode result;
 
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
+      controller?.pauseCamera();
     } else if (Platform.isIOS) {
-      controller.resumeCamera();
+      controller?.resumeCamera();
     }
   }
 
@@ -89,12 +87,9 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                           onTap: () async {
                             if (controller != null) {
                               _isFlashNotifier.value = !_isFlashNotifier.value;
-                              await controller.toggleFlash();
-                              controller
-                                  .getFlashStatus()
-                                  .then(
-                                      (value) => _isFlashNotifier.value = value)
-                                  .catchError(print);
+                              await controller?.toggleFlash();
+                              controller?.getFlashStatus().then(
+                                  (value) => _isFlashNotifier.value = value!);
                             }
                           },
                           child: ValueListenableBuilder<bool>(
@@ -161,7 +156,7 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
 
   void _closeSubscription() {
     if (_streamSubscription != null) {
-      _streamSubscription.cancel();
+      _streamSubscription?.cancel();
       _streamSubscription = null;
     }
   }
@@ -169,13 +164,14 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
   bool hasData = false;
   void _subscribe() {
     _closeSubscription();
-    _streamSubscription = controller.scannedDataStream.listen((scanData) async {
+    _streamSubscription =
+        controller!.scannedDataStream.listen((scanData) async {
       // setState(() {
       //   result = scanData;
       // });
       if (hasData) return;
       hasData = true;
-      await controller.pauseCamera();
+      await controller?.pauseCamera();
       Navigator.pop(context, scanData.code);
     });
   }

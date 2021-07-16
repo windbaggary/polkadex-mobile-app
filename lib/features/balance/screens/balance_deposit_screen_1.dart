@@ -106,7 +106,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                                                 ),
                                                 value: e,
                                               ))
-                                          ?.toList(),
+                                          .toList(),
                                       value: 'DOT Chain',
                                       style: tsS16W600CFF,
                                       underline: Container(),
@@ -293,10 +293,6 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
 }
 
 class _ThisCoinTitleWidget extends StatelessWidget {
-  const _ThisCoinTitleWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(

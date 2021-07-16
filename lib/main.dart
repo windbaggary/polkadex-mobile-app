@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    AppConfigs.size = WidgetsBinding.instance.window.physicalSize;
+    AppConfigs.size = WidgetsBinding.instance!.window.physicalSize;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<BottomNavigationProvider>(
@@ -55,18 +55,15 @@ class MyApp extends StatelessWidget {
           },
         ),
         onGenerateRoute: (settings) {
-          Widget screen;
+          late Widget screen;
           switch (settings.name) {
             case LandingScreen.routeName:
               screen = LandingScreen();
               break;
           }
 
-          if (screen != null) {
-            return MaterialPageRoute(
-                builder: (context) => screen, settings: settings);
-          }
-          return null;
+          return MaterialPageRoute(
+              builder: (context) => screen, settings: settings);
         },
 
         debugShowCheckedModeBanner: false,

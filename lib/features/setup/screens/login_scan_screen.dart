@@ -153,19 +153,15 @@ class LoginScanScreen extends StatelessWidget {
 }
 
 class _ThisTopCameraWidget extends StatefulWidget {
-  const _ThisTopCameraWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   __ThisTopCameraWidgetState createState() => __ThisTopCameraWidgetState();
 }
 
 class __ThisTopCameraWidgetState extends State<_ThisTopCameraWidget> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  ValueNotifier<bool> _isFlashNotifier;
-  QRViewController controller;
-  StreamSubscription<Barcode> _streamSubscription;
+  late ValueNotifier<bool> _isFlashNotifier;
+  QRViewController? controller;
+  StreamSubscription<Barcode>? _streamSubscription;
   bool hasData = false;
 
   // Barcode result;
@@ -174,9 +170,9 @@ class __ThisTopCameraWidgetState extends State<_ThisTopCameraWidget> {
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
+      controller?.pauseCamera();
     } else if (Platform.isIOS) {
-      controller.resumeCamera();
+      controller?.resumeCamera();
     }
   }
 
@@ -220,11 +216,10 @@ class __ThisTopCameraWidgetState extends State<_ThisTopCameraWidget> {
               onTap: () async {
                 if (controller != null) {
                   _isFlashNotifier.value = !_isFlashNotifier.value;
-                  await controller.toggleFlash();
+                  await controller?.toggleFlash();
                   controller
-                      .getFlashStatus()
-                      .then((value) => _isFlashNotifier.value = value)
-                      .catchError(print);
+                      ?.getFlashStatus()
+                      .then((value) => _isFlashNotifier.value = value!);
                 }
               },
               child: ValueListenableBuilder<bool>(
@@ -257,22 +252,20 @@ class __ThisTopCameraWidgetState extends State<_ThisTopCameraWidget> {
   }
 
   void _closeSubscription() {
-    if (_streamSubscription != null) {
-      _streamSubscription.cancel();
-      _streamSubscription = null;
-    }
+    _streamSubscription?.cancel();
   }
 
   /// Subscribe to qrcode result
   void _subscribe() {
     _closeSubscription();
-    _streamSubscription = controller.scannedDataStream.listen((scanData) async {
+    _streamSubscription =
+        controller?.scannedDataStream.listen((scanData) async {
       // setState(() {
       //   result = scanData;
       // });
       if (hasData) return;
       hasData = true;
-      await controller.pauseCamera();
+      await controller?.pauseCamera();
       print(scanData.code);
       String data = 'The qr code scanned: ${scanData.code} ${DateTime.now()}';
       buildAppToast(msg: data, context: context);
