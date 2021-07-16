@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/utils/colors.dart';
+import 'package:polkadex/common/utils/colors.dart';
 
 class AppLineChartOptions {
   /// The color of line when the a point is selected on the screen

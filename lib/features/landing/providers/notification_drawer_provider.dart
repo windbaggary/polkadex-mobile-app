@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/features/landing/models/drawer_notification_model.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 /// The provider to list the notifications on the right drawer and handles
 /// its seen functionality

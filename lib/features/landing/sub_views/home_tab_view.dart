@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
 import 'package:polkadex/features/landing/models/home_models.dart';
 import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/providers/rank_list_provider.dart';
 import 'package:polkadex/features/landing/widgets/app_slider_widget.dart';
 import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 

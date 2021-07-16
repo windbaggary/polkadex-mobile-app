@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_buttons.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
 
 /// The app bar with backbutton and curve on the right side
 class CustomAppBar extends StatelessWidget {

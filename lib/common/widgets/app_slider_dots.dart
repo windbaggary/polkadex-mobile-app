@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/utils/colors.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/utils/colors.dart';
 
 typedef OnDotSelected = void Function(int index);
 

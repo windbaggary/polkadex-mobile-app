@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/providers/my_account_provider.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
-import 'package:polkadex/widgets/custom_app_bar.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 41

@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'dart:math' as math;
 
 /// The widget to show pie chart

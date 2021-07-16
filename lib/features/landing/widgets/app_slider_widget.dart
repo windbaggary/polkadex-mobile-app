@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'dart:math' as math;
 
 /// The top slider widget of the home screen

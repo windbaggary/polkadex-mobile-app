@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/dummy_providers/balance_chart_dummy_provider.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
 import 'package:polkadex/features/balance/screens/balance_summary_screen.dart';
 import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/chart/_app_line_chart_widget.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 18

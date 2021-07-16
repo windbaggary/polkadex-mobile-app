@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:polkadex/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/features/landing/models/home_models.dart';
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 /// The provider to show the rank list based on the type selected
 class HomeRankListProvider extends ChangeNotifier {

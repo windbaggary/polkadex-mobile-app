@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 
 /// The widget that animated to vertical on its init
 ///

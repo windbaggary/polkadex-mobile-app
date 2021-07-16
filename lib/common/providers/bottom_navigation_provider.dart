@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 /// The provider to manage the functionality of the bnottom navigation widget
 ///

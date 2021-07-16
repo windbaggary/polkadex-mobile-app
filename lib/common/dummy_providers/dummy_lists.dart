@@ -1,6 +1,6 @@
 import 'package:polkadex/features/landing/models/home_models.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 /// The dummy data
 final basicCoinDummyList = <BasicCoinListModel>[

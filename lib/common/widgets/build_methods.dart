@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
 
 /// The build method to show toast over the screen
 void buildAppToast({@required String msg, @required BuildContext context}) {

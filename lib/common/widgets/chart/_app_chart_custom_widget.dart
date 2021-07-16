@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:polkadex/widgets/chart/app_charts.dart';
-import 'package:polkadex/widgets/chart/chart_models.dart';
+import 'package:polkadex/common/widgets/chart/app_charts.dart';
+import 'package:polkadex/common/widgets/chart/chart_models.dart';
 
 /// The interface for the charts
 abstract class IBaseAppChartCustomWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 /// The basic coint model over all the features
 class BasicCoinListModel {

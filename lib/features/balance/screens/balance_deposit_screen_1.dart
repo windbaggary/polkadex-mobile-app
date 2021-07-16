@@ -2,10 +2,10 @@ import 'package:clipboard/clipboard.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/widgets/chart/app_charts.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/widgets/chart/app_charts.dart';
 
 /// The provider create a dummy data for line chart
 class BalanceChartDummyProvider extends ChangeNotifier {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_change_logs_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_help_screen.dart';
@@ -14,11 +14,11 @@ import 'package:polkadex/features/landing/providers/notification_drawer_provider
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
 import 'package:polkadex/features/setup/screens/intro_screen.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 
 import 'package:provider/provider.dart';
 

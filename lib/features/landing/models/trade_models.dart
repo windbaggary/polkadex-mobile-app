@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 abstract class ITradeOpenOrderModel {
   String get iType;

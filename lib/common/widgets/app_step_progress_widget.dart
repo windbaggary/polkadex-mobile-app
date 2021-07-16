@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_horizontal_progress_bar.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_horizontal_progress_bar.dart';
 
 /// The progress bar with the steps on the left side
 ///

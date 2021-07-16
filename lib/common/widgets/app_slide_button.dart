@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/utils/styles.dart';
 
 /// The slide button showing on login and withdrawal screen
 ///

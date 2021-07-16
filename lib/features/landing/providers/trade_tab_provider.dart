@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/features/landing/models/home_models.dart';
 import 'package:polkadex/features/landing/models/trade_models.dart';
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 /// The provider to manage the functionality of token pair selection
 class TradeTabViewProvider extends ChangeNotifier {

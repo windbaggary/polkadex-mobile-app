@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/screens/intro_screen.dart';
-import 'package:polkadex/providers/bottom_navigation_provider.dart';
-import 'package:polkadex/utils/colors.dart';
+import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
+import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

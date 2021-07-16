@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 /// XD_PAGE: 45
 class AppSettingsNotificationScreen extends StatefulWidget {

@@ -6,11 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_buttons.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class LoginScanScreen extends StatelessWidget {

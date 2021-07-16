@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/features/landing/models/home_models.dart';
 
 /// The provider for handling the favourite functionality

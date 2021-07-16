@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/custom_app_bar.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/custom_app_bar.dart';
 
 /// The base screen for the apps settings from the drawer selection
 ///

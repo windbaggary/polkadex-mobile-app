@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_horizontal_slider.dart';
-import 'package:polkadex/widgets/app_slide_button.dart';
-import 'package:polkadex/widgets/build_methods.dart';
-import 'package:polkadex/widgets/qr_code_screen.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
+import 'package:polkadex/common/widgets/app_slide_button.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/common/widgets/qr_code_screen.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 21
