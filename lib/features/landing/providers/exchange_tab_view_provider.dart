@@ -7,26 +7,26 @@ class ExchangeTabViewProvider extends ChangeNotifier {
   final _list = _generateList();
   bool _isFavoriteFilter = false;
 
-  bool get isFavoriteFilter => this._isFavoriteFilter;
+  bool get isFavoriteFilter => _isFavoriteFilter;
 
   List<BasicCoinListModel> get list {
     if (_isFavoriteFilter) {
-      return this._list.where((e) => e.isFavorite).toList();
+      return _list.where((e) => e.isFavorite).toList();
     }
 
-    return this._list;
+    return _list;
   }
 
   /// Enables the favourite filter. Setting this to true only displays
   /// favourite list items
   set isFavoriteFilter(bool value) {
-    this._isFavoriteFilter = value;
+    _isFavoriteFilter = value;
     notifyListeners();
   }
 
   /// Toggles the favourite filter
   void toggleFavoriteFilter() {
-    this._isFavoriteFilter = !this._isFavoriteFilter;
+    _isFavoriteFilter = !_isFavoriteFilter;
     notifyListeners();
   }
 

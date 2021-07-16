@@ -79,15 +79,15 @@ class CustomAppBar extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8, top: 4),
             child: Row(
               children: [
-                _buildBackButton(context, this.onTapBack),
+                _buildBackButton(context, onTapBack),
                 Expanded(
                   child: Center(
                       // child: SlideTransition(
                       //   position: _headingAnimation,
                       //   child: FadeTransition(
                       //       opacity: _opacityAnimation,
-                      child: Text(this.title ?? "",
-                          style: titleStyle ?? tsS21W500CFF)),
+                      child:
+                          Text(title ?? "", style: titleStyle ?? tsS21W500CFF)),
                   //   ),
                   // ),
                 ),

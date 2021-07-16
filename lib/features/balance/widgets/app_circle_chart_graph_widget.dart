@@ -129,7 +129,7 @@ class _ThisCustomPainter extends CustomPainter {
       canvas.save(
           // Offset.zero & size, Paint()..blendMode = BlendMode.color
           );
-      final bool isSelected = i == this.selectedIndex;
+      final bool isSelected = i == selectedIndex;
       final iModel = list[i];
       final rotateAngle = math.pi * 2.0 * totalPercentage;
 
@@ -233,10 +233,10 @@ class AppCircleChartModel implements IAppCircleChartModel {
   });
 
   @override
-  Color get iColor => this.color;
+  Color get iColor => color;
 
   @override
-  double get iPerc => this.perc;
+  double get iPerc => perc;
 }
 
 abstract class IAppCircleChartModel {

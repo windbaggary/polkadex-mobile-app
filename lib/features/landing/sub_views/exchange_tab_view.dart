@@ -11,6 +11,7 @@ import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
 import 'package:polkadex/utils/colors.dart';
 import 'package:polkadex/utils/enums.dart';
 import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/utils/maps.dart';
 import 'package:polkadex/utils/styles.dart';
 import 'package:polkadex/widgets/app_list_animated_widget.dart';
 import 'package:polkadex/widgets/build_methods.dart';
@@ -52,7 +53,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   /// An animation for the alt section expand hide
   Animation<double> _altHeightAnimation;
 
-  EnumExchangeFilter _selectedExchangeFilter = EnumExchangeFilter.DEX;
+  EnumExchangeFilter _selectedExchangeFilter = EnumExchangeFilter.dex;
 
   @override
   void initState() {
@@ -135,13 +136,14 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
                                       onSelected: (val) {
                                         _selectedExchangeFilter = val;
                                         if (val ==
-                                            EnumExchangeFilter.AltCoins) {
+                                            EnumExchangeFilter.altCoins) {
                                           if (_altCoinAnimationController
                                                   .status !=
-                                              AnimationStatus.completed)
+                                              AnimationStatus.completed) {
                                             _altCoinAnimationController
                                               ..reset()
                                               ..forward().orCancel;
+                                          }
                                         } else {
                                           _altCoinAnimationController
                                               .reverse()
@@ -252,14 +254,14 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => this.height;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => this.height;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(covariant _SliverPersistentHeaderDelegate oldDelegate) {
-    return oldDelegate.height != this.height || oldDelegate.child != this.child;
+    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
 
@@ -283,7 +285,7 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
     this.onSelected,
   })  : _selectedNotifier = ValueNotifier<EnumExchangeFilter>(initial),
         _isShowSubMenuNotifier =
-            ValueNotifier<bool>(initial == EnumExchangeFilter.AltCoins),
+            ValueNotifier<bool>(initial == EnumExchangeFilter.altCoins),
         super(key: key);
 
   @override
@@ -362,9 +364,9 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
               onTap: () {
                 _selectedNotifier.value = e;
                 _isShowSubMenuNotifier.value =
-                    (e == EnumExchangeFilter.AltCoins);
-                if (this.onSelected != null) {
-                  this.onSelected(e);
+                    (e == EnumExchangeFilter.altCoins);
+                if (onSelected != null) {
+                  onSelected(e);
                 }
               },
               child: _ThisFilterItemWidget(
@@ -443,7 +445,7 @@ class _ThisFilterItemWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
           child: AnimatedDefaultTextStyle(
             duration: AppConfigs.animDurationSmall,
-            child: Text(item.toString().replaceAll('EnumExchangeFilter.', '')),
+            child: Text(enumExchangeToString[item]),
             style: isSelected ? tsS15W600CFF : tsS15W400CFF,
           ),
         ),
@@ -550,7 +552,7 @@ class _ThisListItemWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          '${model.amount}',
+                          model.amount,
                           style: tsS15W500CFF,
                         ),
                       ],

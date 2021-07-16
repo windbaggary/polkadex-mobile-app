@@ -8,32 +8,32 @@ import 'package:polkadex/utils/enums.dart';
 class TradeTabViewProvider extends ChangeNotifier {
   final _listOrder = <ITradeOpenOrderModel>[
     TradeOpenOrderModel(
-      type: EnumBuySell.Buy,
+      type: EnumBuySell.buy,
       amount: '0.2900',
       price: '0.4423',
       dateTime: DateTime.now(),
       amountCoin: "DOT",
       priceCoin: "BTC",
-      orderType: EnumOrderTypes.Limit,
+      orderType: EnumOrderTypes.limit,
       tokenPairName: "DOT/BTC",
     )
   ];
   final _listOrderHistory = <ITradeOpenOrderModel>[
     TradeOpenOrderModel(
-      type: EnumBuySell.Buy,
+      type: EnumBuySell.buy,
       amount: '0.2900',
       price: '0.4423',
       dateTime: DateTime.now(),
       amountCoin: "DOT",
       priceCoin: "BTC",
-      orderType: EnumOrderTypes.Limit,
+      orderType: EnumOrderTypes.limit,
       tokenPairName: "DOT/BTC",
     )
   ];
 
-  List<ITradeOpenOrderModel> get listOpenOrders => this._listOrder;
+  List<ITradeOpenOrderModel> get listOpenOrders => _listOrder;
 
-  List<ITradeOpenOrderModel> get listOrdersHistory => this._listOrderHistory;
+  List<ITradeOpenOrderModel> get listOrdersHistory => _listOrderHistory;
 
   void addToListOrder(ITradeOpenOrderModel val) {
     _listOrder.add(val);
@@ -53,16 +53,16 @@ class TradeTabCoinProvider extends ChangeNotifier {
   BasicCoinListModel _tokenCoin = basicCoinDummyList[0];
   BasicCoinListModel _pairCoin = basicCoinDummyList[1];
 
-  BasicCoinListModel get tokenCoin => this._tokenCoin;
-  BasicCoinListModel get pairCoin => this._pairCoin;
+  BasicCoinListModel get tokenCoin => _tokenCoin;
+  BasicCoinListModel get pairCoin => _pairCoin;
 
   set tokenCoin(BasicCoinListModel value) {
-    this._tokenCoin = value;
+    _tokenCoin = value;
     notifyListeners();
   }
 
   set pairCoin(BasicCoinListModel value) {
-    this._pairCoin = value;
+    _pairCoin = value;
     notifyListeners();
   }
 }
