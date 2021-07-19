@@ -43,7 +43,7 @@ class _IntroScreenState extends State<IntroScreen>
     with SingleTickerProviderStateMixin {
   final _keyPageView = GlobalKey<__ThisPageViewState>();
 
-  ValueNotifier<int> _pageviewIndexNotifier;
+  late ValueNotifier<int> _pageviewIndexNotifier;
 
   @override
   void initState() {
@@ -101,7 +101,7 @@ class _IntroScreenState extends State<IntroScreen>
                       length: _DummyData.sliderList.length,
                       selectedIndex: pageIndex,
                       onDotSelected: (dotSelectedIndex) {
-                        _keyPageView.currentState.animateTo(dotSelectedIndex);
+                        _keyPageView.currentState?.animateTo(dotSelectedIndex);
                       },
                     ),
                   ),
@@ -165,9 +165,8 @@ class _IntroScreenState extends State<IntroScreen>
 class _ThisLoginButton extends StatelessWidget {
   final _notifier = ValueNotifier<bool>(false);
   _ThisLoginButton({
-    Key key,
-    @required this.onTap,
-  }) : super(key: key);
+    required this.onTap,
+  });
 
   final VoidCallback onTap;
 
@@ -229,9 +228,9 @@ class _ThisLoginButton extends StatelessWidget {
 ///
 class _ThisPageView extends StatefulWidget {
   const _ThisPageView({
-    Key key,
-    @required this.length,
-    @required ValueNotifier<int> pageviewIndexNotifier,
+    required Key key,
+    required this.length,
+    required ValueNotifier<int> pageviewIndexNotifier,
   })  : _pageviewIndexNotifier = pageviewIndexNotifier,
         super(key: key);
 
@@ -243,13 +242,13 @@ class _ThisPageView extends StatefulWidget {
 }
 
 class __ThisPageViewState extends State<_ThisPageView> {
-  ValueNotifier<double> _pageNotifier;
-  PageController _pageController;
-  Timer _timer;
+  late ValueNotifier<double> _pageNotifier;
+  late PageController _pageController;
+  late Timer _timer;
 
   void _initialiseTimer() {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      if (_pageController.page < widget.length - 1) {
+      if (_pageController.page! < widget.length - 1) {
         _pageController.nextPage(
           duration: AppConfigs.animDuration,
           curve: Curves.ease,
@@ -265,13 +264,11 @@ class __ThisPageViewState extends State<_ThisPageView> {
   }
 
   void animateTo(int index) {
-    if (this._pageController != null) {
-      this._pageController.animateToPage(
-            index,
-            duration: AppConfigs.animDuration,
-            curve: Curves.ease,
-          );
-    }
+    _pageController.animateToPage(
+      index,
+      duration: AppConfigs.animDuration,
+      curve: Curves.ease,
+    );
   }
 
   @override
@@ -279,7 +276,7 @@ class __ThisPageViewState extends State<_ThisPageView> {
     _pageNotifier = ValueNotifier<double>(0.0);
     _pageController = PageController()
       ..addListener(() {
-        _pageNotifier.value = _pageController.page;
+        _pageNotifier.value = _pageController.page!;
       });
 
     _initialiseTimer();
@@ -353,7 +350,7 @@ class __ThisPageViewState extends State<_ThisPageView> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
-                  _DummyData.sliderList[index] ?? "",
+                  _DummyData.sliderList[index],
                   style: tsS32W600CFF,
                 ),
               ),

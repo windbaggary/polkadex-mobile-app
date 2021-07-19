@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class ExchangeLoadingProvider extends ChangeNotifier {
   bool _isLoading = true;
 
-  bool get isLoading => this._isLoading;
+  bool get isLoading => _isLoading;
 
   set isLoading(bool value) {
-    this._isLoading = value;
+    _isLoading = value;
     notifyListeners();
   }
 

@@ -21,7 +21,7 @@ class BalanceTabView extends StatefulWidget {
 
 class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
@@ -174,7 +174,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                         ),
                                         value: e,
                                       ))
-                                  ?.toList(),
+                                  .toList(),
                               value: 'Main Wallet',
                               style: tsS20W600CFF,
                               underline: Container(),
@@ -288,10 +288,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
 
 /// The holding row widget handles the click event for graph
 class _ThisHoldingWidget extends StatelessWidget {
-  const _ThisHoldingWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -317,7 +313,7 @@ class _ThisHoldingWidget extends StatelessWidget {
                       ),
                       value: e,
                     ))
-                ?.toList(),
+                .toList(),
             value: '24 hour',
             style: tsS13W500CFF,
             underline: Container(),
@@ -387,14 +383,10 @@ class _ThisHoldingWidget extends StatelessWidget {
 
 /// The heading part of the graph.
 class _ThisGraphHeadingWidget extends StatelessWidget {
-  const _ThisGraphHeadingWidget({
-    Key key,
-  }) : super(key: key);
-
   Widget _buildItemWidget(
-      {@required String imgAsset,
-      @required String title,
-      @required String value}) {
+      {required String? imgAsset,
+      required String title,
+      required String value}) {
     return Row(
       children: [
         Container(
@@ -412,11 +404,11 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
         ),
         Expanded(
             child: Text(
-          title ?? "",
+          title,
           style: tsS13W500CFF.copyWith(color: colorABB2BC),
         )),
         Text(
-          value ?? "",
+          value,
           style: tsS12W500CFF,
         ),
       ],
@@ -510,21 +502,20 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
 /// A custom checkbox for the screen
 class _ThisCheckBoxWidget extends StatelessWidget {
   final bool isChecked;
-  final void Function(bool val) onTap;
+  final void Function(bool val)? onTap;
   const _ThisCheckBoxWidget({
     this.isChecked = true,
     this.onTap,
-    Key key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    Widget child;
+    Widget? child;
     final Border border = Border.all(
       color: colorE6007A,
       width: 3,
     );
-    Color color;
+    Color? color;
     if (isChecked) {
       color = colorE6007A;
       child = FittedBox(
@@ -537,8 +528,8 @@ class _ThisCheckBoxWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        if (this.onTap != null) {
-          this.onTap(!isChecked);
+        if (onTap != null) {
+          onTap!(!isChecked);
         }
       },
       child: AnimatedContainer(
@@ -561,9 +552,8 @@ class _ThisCheckBoxWidget extends StatelessWidget {
 class _ThisItemWidget extends StatelessWidget {
   final _ThisModel model;
   const _ThisItemWidget({
-    @required this.model,
-    Key key,
-  }) : super(key: key);
+    required this.model,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -585,7 +575,7 @@ class _ThisItemWidget extends StatelessWidget {
             height: 42,
             padding: const EdgeInsets.all(3),
             child: Image.asset(
-              model?.imgAsset?.asAssetImg(),
+              model.imgAsset.asAssetImg(),
               fit: BoxFit.contain,
             ),
           ),
@@ -594,11 +584,11 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                model?.name ?? "",
+                model.name,
                 style: tsS16W500CFF,
               ),
               Text(
-                model?.code ?? "",
+                model.code,
                 style: tsS13W500CFF.copyWith(color: colorABB2BC),
               ),
             ],
@@ -608,11 +598,11 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                model?.unit ?? "",
+                model.unit,
                 style: tsS16W500CFF,
               ),
               Text(
-                model?.iPrice ?? "",
+                model.iPrice,
                 style: tsS13W500CFF.copyWith(color: colorABB2BC),
               ),
             ],
@@ -625,10 +615,6 @@ class _ThisItemWidget extends StatelessWidget {
 
 /// The top balance widget showing the balance amount and wallet icon
 class _ThisTopBalanceWidget extends StatelessWidget {
-  const _ThisTopBalanceWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -691,15 +677,15 @@ class _ThisTopBalanceWidget extends StatelessWidget {
 class _ThisIsChartVisibleProvider extends ChangeNotifier {
   bool _isChartVisible = false;
 
-  bool get isChartVisible => this._isChartVisible;
+  bool get isChartVisible => _isChartVisible;
 
   set isChartVisible(bool value) {
-    this._isChartVisible = value;
+    _isChartVisible = value;
     notifyListeners();
   }
 
   void toggleVisible() {
-    this._isChartVisible = !this._isChartVisible;
+    _isChartVisible = !_isChartVisible;
     notifyListeners();
   }
 }
@@ -709,22 +695,22 @@ class _ThisProvider extends ChangeNotifier {
   bool _isHideSmallBalance = true;
   bool _isHideFiat = false;
 
-  bool get isHideFiat => this._isHideFiat;
+  bool get isHideFiat => _isHideFiat;
 
-  bool get isHideSmallBalance => this._isHideSmallBalance;
+  bool get isHideSmallBalance => _isHideSmallBalance;
 
   set isHideSmallBalance(bool val) {
-    this._isHideSmallBalance = val;
+    _isHideSmallBalance = val;
     notifyListeners();
   }
 
   set isHideFiat(bool val) {
-    this._isHideFiat = val;
+    _isHideFiat = val;
     notifyListeners();
   }
 
   List<_ThisModel> get listCoins {
-    final list = List<_ThisModel>.from(_DUMMY_LIST);
+    final list = List<_ThisModel>.from(_dummyList);
     if (isHideFiat) {
       list.removeWhere((e) => !e.iIsFiat);
     }
@@ -737,10 +723,6 @@ class _ThisProvider extends ChangeNotifier {
 
 /// The bottom option menu unnder the graph
 class _ThisGraphOptionWidget extends StatelessWidget {
-  const _ThisGraphOptionWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -751,28 +733,26 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                   builder: (context, appChartProvider, child) {
                     String text;
                     switch (item) {
-                      case EnumBalanceChartDataTypes.Hour:
+                      case EnumBalanceChartDataTypes.hour:
                         text = "24h";
                         break;
-                      case EnumBalanceChartDataTypes.Week:
+                      case EnumBalanceChartDataTypes.week:
                         text = "7d";
-
                         break;
-                      case EnumBalanceChartDataTypes.Month:
+                      case EnumBalanceChartDataTypes.month:
                         text = "1m";
-
                         break;
-                      case EnumBalanceChartDataTypes.ThreeMonth:
+                      case EnumBalanceChartDataTypes.threeMonth:
                         text = "3m";
 
                         break;
-                      case EnumBalanceChartDataTypes.SixMonth:
+                      case EnumBalanceChartDataTypes.sixMonth:
                         text = "6m";
                         break;
-                      case EnumBalanceChartDataTypes.Year:
+                      case EnumBalanceChartDataTypes.year:
                         text = "1y";
                         break;
-                      case EnumBalanceChartDataTypes.All:
+                      case EnumBalanceChartDataTypes.all:
                         text = "All";
                         break;
                     }
@@ -791,7 +771,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                               : null,
                         ),
                         child: Text(
-                          text ?? "",
+                          text,
                           style: item == appChartProvider.balanceChartDataType
                               ? tsS13W600CFF
                               : tsS12W400CFF.copyWith(color: colorABB2BC),
@@ -812,8 +792,8 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double height;
 
   _SliverPersistentHeaderDelegate({
-    @required this.child,
-    @required this.height,
+    required this.child,
+    required this.height,
   }) : super();
   @override
   Widget build(
@@ -822,14 +802,14 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => this.height;
+  double get maxExtent => height;
 
   @override
-  double get minExtent => this.height;
+  double get minExtent => height;
 
   @override
   bool shouldRebuild(covariant _SliverPersistentHeaderDelegate oldDelegate) {
-    return oldDelegate.height != this.height || oldDelegate.child != this.child;
+    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
 
@@ -845,23 +825,23 @@ class _ThisModel {
   final bool isFiat;
 
   const _ThisModel({
-    @required this.imgAsset,
-    @required this.name,
-    @required @required this.code,
-    @required this.unit,
-    @required this.price,
-    @required this.isFiat,
+    required this.imgAsset,
+    required this.name,
+    required this.code,
+    required this.unit,
+    required this.price,
+    required this.isFiat,
   });
 
-  bool get iIsFiat => this.isFiat;
+  bool get iIsFiat => isFiat;
 
-  bool get isSmallBalance => this.price < 100.0;
+  bool get isSmallBalance => price < 100.0;
 
-  String get iPrice => '~\$${this?.price?.toStringAsFixed(2) ?? ""}';
+  String get iPrice => '~\$${price.toStringAsFixed(2)}';
 }
 
 /// Creates the dummy data for the list
-const _DUMMY_LIST = <_ThisModel>[
+const _dummyList = <_ThisModel>[
   _ThisModel(
     imgAsset: 'trade_open/trade_open_1.png',
     name: 'Ethereum',

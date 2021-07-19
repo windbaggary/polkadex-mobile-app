@@ -13,21 +13,20 @@ class AppSliderWidget extends StatefulWidget {
   final List<double> scales;
 
   const AppSliderWidget({
-    Key key,
-    @required this.childrens,
-    this.height,
+    required this.childrens,
+    required this.height,
     this.itemsDisplayCount = 3,
-    this.offsetsY,
-    this.opacities,
-    this.scales,
-  }) : super(key: key);
+    required this.offsetsY,
+    required this.opacities,
+    required this.scales,
+  });
   @override
   _AppSliderWidgetState createState() => _AppSliderWidgetState();
 }
 
 class _AppSliderWidgetState extends State<AppSliderWidget>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
   int _selectedIndex = 0;
   double _startDx = 0.0;
   double _animPerc = 0.0;
@@ -63,10 +62,10 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
           children: List.generate(
             widget.itemsDisplayCount,
             (index) {
-              double bottom;
+              double? bottom;
 
-              Tween<double> scaleTween;
-              Tween<double> opacityTween;
+              Tween<double>? scaleTween;
+              Tween<double>? opacityTween;
 
               if (widget.offsetsY.length - 1 >= index) {
                 bottom = widget.offsetsY[index];
@@ -105,13 +104,13 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
                 ),
               );
 
-              final Animation<double> scaleAnimation = scaleTween.animate(
+              final Animation<double>? scaleAnimation = scaleTween?.animate(
                 CurvedAnimation(
                   parent: _animationController,
                   curve: Interval(0.55, 1.0),
                 ),
               );
-              final Animation<double> opacityAnimation = opacityTween.animate(
+              final Animation<double>? opacityAnimation = opacityTween?.animate(
                 CurvedAnimation(
                   parent: _animationController,
                   curve: Interval(0.55, 1.0),
@@ -131,29 +130,29 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
                 animation: _animationController,
                 builder: (context, child) {
                   Offset offset = Offset.zero;
-                  double scale = 1.0;
-                  double opacity = 1.0;
+                  double? scale = 1.0;
+                  double? opacity = 1.0;
                   double rotateZ = 0.0;
                   if (index == _selectedIndex) {
                     offset = offsetAnimation.value;
                     rotateZ = rotateAnimation.value;
                   } else {
-                    scale = scaleAnimation.value;
-                    opacity = opacityAnimation.value;
+                    scale = scaleAnimation?.value;
+                    opacity = opacityAnimation?.value;
                   }
                   return Positioned.fill(
                     bottom: bottom,
                     child: Transform(
                       transform: Matrix4.identity()
                         ..scale(scale, scale)
-                        ..translate(offset.dx * (this._directionX ? 1.0 : -1.0),
-                            offset.dy)
+                        ..translate(
+                            offset.dx * (_directionX ? 1.0 : -1.0), offset.dy)
                         ..rotateZ(math.sin(math.pi / 2 * rotateZ) *
-                            (this._directionX ? 1.0 : -1.0)),
+                            (_directionX ? 1.0 : -1.0)),
                       alignment: Alignment.bottomCenter,
                       child: Opacity(
-                        opacity: opacity,
-                        child: this._contentChildrens[index],
+                        opacity: opacity ?? 0.0,
+                        child: _contentChildrens[index],
                       ),
                     ),
                   );
@@ -177,9 +176,9 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
   void _updateContentChildrens() {
     _selectedIndex = widget.itemsDisplayCount - 1;
     int j = 0;
-    this._contentChildrens.clear();
+    _contentChildrens.clear();
     for (int i = 0; i < widget.itemsDisplayCount; i++) {
-      this._contentChildrens.add(widget.childrens[j]);
+      _contentChildrens.add(widget.childrens[j]);
       j++;
       if (widget.childrens.length <= j) {
         j = 0;
@@ -189,12 +188,12 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
 
   void _onDragUpdate(DragUpdateDetails details) {
     final dx = details.localPosition.dx;
-    final diff = dx - this._startDx;
-    this._directionX = !diff.isNegative;
+    final diff = dx - _startDx;
+    _directionX = !diff.isNegative;
     final renderBox = context.findRenderObject() as RenderBox;
     final perc = (diff / renderBox.size.width).abs().clamp(0.0, 1.0);
 
-    this._animPerc = perc;
+    _animPerc = perc;
     _animationController.value = perc;
   }
 
@@ -203,6 +202,6 @@ class _AppSliderWidgetState extends State<AppSliderWidget>
   }
 
   _onDragComplete() {
-    _animationController.forward(from: this._animPerc);
+    _animationController.forward(from: _animPerc);
   }
 }

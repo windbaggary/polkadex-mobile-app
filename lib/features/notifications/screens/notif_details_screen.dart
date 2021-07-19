@@ -7,8 +7,6 @@ import 'package:polkadex/common/utils/extensions.dart';
 
 /// XD_PAGE: 38
 class NotifDetailsScreen extends StatelessWidget {
-  const NotifDetailsScreen({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

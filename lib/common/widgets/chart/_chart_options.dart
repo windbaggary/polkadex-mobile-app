@@ -30,7 +30,7 @@ class AppLineChartOptions {
   final double yAxisTopPaddingRatio;
 
   /// The prefix alogn with y axis value
-  final String yAxisLabelPrefix;
+  final String? yAxisLabelPrefix;
 
   /// The bottom padding for the y axis label. Rotio between 0.0 and 1.0
   final double _yAxisBottomPaddingRatio;
@@ -44,13 +44,13 @@ class AppLineChartOptions {
   final Paint _gridPaint;
 
   AppLineChartOptions({
-    @required this.lineColor,
-    @required this.areaGradient,
-    @required this.yLabelTextStyle,
-    @required Color gridColor,
-    @required double gridStroke,
-    @required this.chartScale,
-    @required this.yLabelCount,
+    required this.lineColor,
+    required this.areaGradient,
+    required this.yLabelTextStyle,
+    required Color gridColor,
+    required double gridStroke,
+    required this.chartScale,
+    required this.yLabelCount,
     this.isGridAlignWithDate = true,
     this.yAxisTopPaddingRatio = 0.125,
     this.pointerMarkerAxisSize = 1.5,
@@ -83,7 +83,7 @@ class AppLineChartOptions {
   factory AppLineChartOptions.withDefaults({
     double chartScale = 0.004,
     int yLabelCount = 5,
-    @required Gradient areaGradient,
+    required Gradient areaGradient,
   }) =>
       AppLineChartOptions(
         chartScale: chartScale,
@@ -101,10 +101,10 @@ class AppLineChartOptions {
         isGridAlignWithDate: false,
       );
 
-  Paint get markerPaint => this._markerPaint;
-  Paint get markerAxisPaint => this._markerAxisPaint;
-  Paint get strokePaint => this._strokePaint;
-  Paint get gridPaint => this._gridPaint;
+  Paint get markerPaint => _markerPaint;
+  Paint get markerAxisPaint => _markerAxisPaint;
+  Paint get strokePaint => _strokePaint;
+  Paint get gridPaint => _gridPaint;
 
   double get yAxisBottomPaddingRatio => 1.0 - _yAxisBottomPaddingRatio;
   double get yAxisPaddingRight => 30.0;
@@ -114,5 +114,5 @@ class AppLineChartOptions {
   double get datePaddingBottom => 30.0;
 
   double get gridBottomPadding =>
-      (this.isGridAlignWithDate ? this.datePaddingBottom : 15.0);
+      (isGridAlignWithDate ? datePaddingBottom : 15.0);
 }

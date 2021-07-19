@@ -11,12 +11,12 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'dart:math' as math;
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
-import 'package:polkadex/common/widgets/chart/app_charts.dart' as appCharts;
-import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:polkadex/common/widgets/chart/app_charts.dart' as app_charts;
 
 /// XD_PAGE: 24
 /// XD_PAGE: 25
@@ -27,9 +27,8 @@ class CoinTradeScreen extends StatefulWidget {
   final EnumCardFlipState enumInitalCardFlipState;
 
   const CoinTradeScreen({
-    Key key,
     this.enumInitalCardFlipState = EnumCardFlipState.showFirst,
-  }) : super(key: key);
+  });
   @override
   _CoinTradeScreenState createState() => _CoinTradeScreenState();
 }
@@ -162,10 +161,6 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
 
 /// The detail card on top that flip. This card list the details about the coin
 class _ThisDetailCard extends StatelessWidget {
-  const _ThisDetailCard({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -302,7 +297,7 @@ class _ThisDetailCard extends StatelessWidget {
   }
 
   /// Build the item widget for Detaisl card
-  Widget _buildItem({String title, String value}) => Row(
+  Widget _buildItem({String? title, String? value}) => Row(
         children: [
           Expanded(
             child: Text(
@@ -320,9 +315,9 @@ class _ThisDetailCard extends StatelessWidget {
 
   /// Build the item widget for social media links
   Widget _buildLinkItem({
-    String title,
-    String svgIcon,
-    VoidCallback onTap,
+    String? title,
+    required String svgIcon,
+    VoidCallback? onTap,
   }) =>
       InkWell(
         onTap: onTap,
@@ -352,8 +347,8 @@ class _ThisDetailCard extends StatelessWidget {
   /// navigate to link on app browser
   void _navigateToLink(String link) async {
     try {
-      if (await urlLauncher.canLaunch(link)) {
-        urlLauncher.launch(link);
+      if (await url_launcher.canLaunch(link)) {
+        url_launcher.launch(link);
       }
     } catch (ex) {
       print(ex);
@@ -363,10 +358,6 @@ class _ThisDetailCard extends StatelessWidget {
 
 /// The card shows the graph on top section
 class _ThisGrpahCard extends StatelessWidget {
-  const _ThisGrpahCard({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -406,18 +397,19 @@ class _ThisGrpahCard extends StatelessWidget {
                         250, MediaQuery.of(context).size.width * 0.450),
                     child: Consumer<AppChartDummyProvider>(
                       builder: (context, provider, _) =>
-                          appCharts.AppLineChartWidget(
+                          app_charts.AppLineChartWidget(
                         data: provider.list,
-                        options: appCharts.AppLineChartOptions.withDefaults(
-                            chartScale: provider.chartScale,
-                            areaGradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                color8BA1BE.withOpacity(0.50),
-                                color8BA1BE.withOpacity(0.0710),
-                              ],
-                            )),
+                        options: app_charts.AppLineChartOptions.withDefaults(
+                          chartScale: provider.chartScale,
+                          areaGradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: <Color>[
+                              color8BA1BE.withOpacity(0.50),
+                              color8BA1BE.withOpacity(0.0710),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -456,10 +448,6 @@ class _ThisGrpahCard extends StatelessWidget {
 }
 
 class _GraphHeadingWidget extends StatelessWidget {
-  const _GraphHeadingWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -475,7 +463,7 @@ class _GraphHeadingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildItemWidget({String title, String value}) => Row(
+  Widget _buildItemWidget({String? title, String? value}) => Row(
         children: [
           Text(
             "${title ?? ""} ",
@@ -492,10 +480,6 @@ class _GraphHeadingWidget extends StatelessWidget {
 }
 
 class _ThisGraphOptionWidget extends StatelessWidget {
-  const _ThisGraphOptionWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     double containerWidth = 38;
@@ -520,16 +504,16 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                           builder: (context, appChartProvider, child) {
                             String text;
                             switch (item) {
-                              case EnumAppChartDataTypes.Hour:
+                              case EnumAppChartDataTypes.hour:
                                 text = "1h";
                                 break;
-                              case EnumAppChartDataTypes.Week:
+                              case EnumAppChartDataTypes.week:
                                 text = "7d";
                                 break;
-                              case EnumAppChartDataTypes.Day:
+                              case EnumAppChartDataTypes.day:
                                 text = "1d";
                                 break;
-                              case EnumAppChartDataTypes.Month:
+                              case EnumAppChartDataTypes.month:
                                 text = "1m";
                                 break;
                             }
@@ -549,7 +533,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                       : null,
                                 ),
                                 child: Text(
-                                  text ?? "",
+                                  text,
                                   style: tsS13W600CFF,
                                 ),
                               ),
@@ -592,7 +576,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                       ),
                                       value: e,
                                     ))
-                                ?.toList(),
+                                .toList(),
                             value: 'Trading',
                             style: tsS13W400CFF,
                             underline: Container(),
@@ -648,27 +632,21 @@ class _ThisGraphOptionWidget extends StatelessWidget {
     );
   }
 
-  void _onDateTapped(BuildContext context) {
+  void _onDateTapped(BuildContext context) async {
     final provider = context.read<AppChartDummyProvider>();
-    DateRangePicker.showDatePicker(
-            context: context,
-            initialFirstDate: provider.filterStartDate ?? DateTime.now(),
-            initialLastDate: provider.filterEndDate ?? DateTime.now(),
-            firstDate: new DateTime(2015),
-            lastDate: new DateTime(DateTime.now().year + 2))
+    await CustomDateRangePicker.call(
+            filterStartDate: provider.filterStartDate,
+            filterEndDate: provider.filterEndDate,
+            context: context)
         .then((dates) {
-      if (dates?.isNotEmpty ?? false) {
-        provider.setFilterDates(dates.first, dates.last);
+      if (dates != null) {
+        provider.setFilterDates(dates.start, dates.end);
       }
     });
   }
 }
 
 class _ThisBottomNavigationBar extends StatelessWidget {
-  const _ThisBottomNavigationBar({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -698,7 +676,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(17),
               onTap: () {
                 BottomNavigationProvider().enumBottomBarItem =
-                    EnumBottonBarItem.Trade;
+                    EnumBottonBarItem.trade;
                 Navigator.popUntil(
                     context, ModalRoute.withName(LandingScreen.routeName));
               },
@@ -749,7 +727,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(17),
                 onTap: () {
                   BottomNavigationProvider().enumBottomBarItem =
-                      EnumBottonBarItem.Trade;
+                      EnumBottonBarItem.trade;
                   Navigator.popUntil(
                       context, ModalRoute.withName(LandingScreen.routeName));
                 },
@@ -828,10 +806,6 @@ class _ThisBottomNavigationBar extends StatelessWidget {
 }
 
 class _ThisAppBar extends StatelessWidget {
-  const _ThisAppBar({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<_ThisOrderDisplayProvider>();
@@ -887,7 +861,7 @@ class _ThisAppBar extends StatelessWidget {
         text: TextSpan(
           children: <TextSpan>[
             TextSpan(
-              text: text ?? "",
+              text: text,
               style: tsS19W700CFF,
             ),
             TextSpan(
@@ -915,10 +889,6 @@ class _ThisAppBar extends StatelessWidget {
 }
 
 class _TopCoinWidget extends StatelessWidget {
-  const _TopCoinWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -1065,22 +1035,22 @@ class _TopCoinWidget extends StatelessWidget {
 }
 
 class _ThisOrderDisplayProvider extends ChangeNotifier {
-  final OnEnumCoinDisplayListener onEnumCoinDisplayListener;
+  final OnEnumCoinDisplayListener? onEnumCoinDisplayListener;
   EnumCardFlipState _enumCoinDisplay = EnumCardFlipState.showFirst;
 
   _ThisOrderDisplayProvider({
     this.onEnumCoinDisplayListener,
     EnumCardFlipState enumCoinDisplay = EnumCardFlipState.showFirst,
   }) : super() {
-    this._enumCoinDisplay = enumCoinDisplay;
+    _enumCoinDisplay = enumCoinDisplay;
   }
 
-  EnumCardFlipState get enumCoinDisplay => this._enumCoinDisplay;
+  EnumCardFlipState get enumCoinDisplay => _enumCoinDisplay;
 
   set enumCoinDisplay(EnumCardFlipState val) {
-    this._enumCoinDisplay = val;
-    if (this.onEnumCoinDisplayListener != null) {
-      this.onEnumCoinDisplayListener(val);
+    _enumCoinDisplay = val;
+    if (onEnumCoinDisplayListener != null) {
+      onEnumCoinDisplayListener!(val);
     }
     notifyListeners();
   }

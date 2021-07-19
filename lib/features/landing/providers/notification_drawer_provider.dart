@@ -26,9 +26,9 @@ class NotificationDrawerProvider extends ChangeNotifier {
   /// Call this method to set the [isSeen] to true for all list items
   /// and notify
   void seenAll() {
-    _list.forEach((model) {
+    for (var model in _list) {
       model.isSeen = true;
-    });
+    }
     notifyListeners();
   }
 }
@@ -36,21 +36,21 @@ class NotificationDrawerProvider extends ChangeNotifier {
 List<DrawerNotificationModel> _dummyList = <DrawerNotificationModel>[
   DrawerNotificationModel(
     dateTime: DateTime.now(),
-    enumType: EnumDrawerNotificationTypes.TransactionDeposit,
+    enumType: EnumDrawerNotificationTypes.transactionDeposit,
     svgAsset: 'Deposit'.asAssetSvg(),
     title: 'Deposit Successful',
     description: 'You have deposited 0.60000000 LTC at Fev 09, 2020 10:52:03',
   ),
   DrawerNotificationModel(
     dateTime: DateTime.now(),
-    enumType: EnumDrawerNotificationTypes.TransactionWithdraw,
+    enumType: EnumDrawerNotificationTypes.transactionWithdraw,
     svgAsset: 'Withdraw'.asAssetSvg(),
     title: 'Withdraw Successful',
     description: 'You have withdraw 1.60000000 LTC at Fev 09, 2020 12:19:22',
   ),
   DrawerNotificationModel(
     dateTime: DateTime.now().add(const Duration(days: -2)),
-    enumType: EnumDrawerNotificationTypes.Normal,
+    enumType: EnumDrawerNotificationTypes.normal,
     svgAsset: 'smiling-face-with-smile-eyes'.asAssetSvg(),
     title: 'Earn with upcoming DeFi airdrops',
     description: 'Polkadex system message',
@@ -58,7 +58,7 @@ List<DrawerNotificationModel> _dummyList = <DrawerNotificationModel>[
   ),
   DrawerNotificationModel(
     dateTime: DateTime.now().add(const Duration(days: -2)),
-    enumType: EnumDrawerNotificationTypes.Normal,
+    enumType: EnumDrawerNotificationTypes.normal,
     svgAsset: 'buy'.asAssetSvg(),
     title: 'DEX/BTC Filled Successful',
     description: 'You bought 1 DEX for 0.000545 BTC at Fev 09, 2020 10:52:03',
@@ -66,7 +66,7 @@ List<DrawerNotificationModel> _dummyList = <DrawerNotificationModel>[
   ),
   DrawerNotificationModel(
     dateTime: DateTime.now().add(const Duration(days: -2)),
-    enumType: EnumDrawerNotificationTypes.Normal,
+    enumType: EnumDrawerNotificationTypes.normal,
     svgAsset: 'sell'.asAssetSvg(),
     title: 'BTC/DEX Filled Successful',
     description:

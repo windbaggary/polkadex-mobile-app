@@ -7,18 +7,13 @@ import 'package:polkadex/common/utils/colors.dart';
 /// The widget is used in landing stpes screens
 class AppHorizontalProgressBar extends StatefulWidget {
   const AppHorizontalProgressBar({
-    Key key,
-    @required this.progress,
+    required this.progress,
     this.animation,
     // this.previousProgress = 0.00,
-  })  : assert(progress != null, '''
-  The progress could not be empty or null
-  '''),
-        assert(progress >= 0.00 && progress <= 1.00, '''
+  }) : assert(progress >= 0.00 && progress <= 1.00, '''
   progress should be greater than or equal to 0.00
   progress should be less than or equal to 1.00
-  '''),
-        super(key: key);
+  ''');
 
   /// The will be percentage to be showed as progress
   ///
@@ -28,7 +23,7 @@ class AppHorizontalProgressBar extends StatefulWidget {
 
   /// The animation to be control the entry
   /// To diable set the animation to null
-  final Animation<double> animation;
+  final Animation<double>? animation;
 
   /// The previous progress state.
   /// If null then 0.00 will be set
@@ -41,27 +36,27 @@ class AppHorizontalProgressBar extends StatefulWidget {
 
 class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _progressAnimation;
-  double progress;
+  AnimationController? _animationController;
+  late Animation<double> _progressAnimation;
+  late double progress;
   double previousProgress = 0.0;
 
   void _initialiseAnimation() {
     _progressAnimation = Tween<double>(begin: previousProgress, end: progress)
         .animate(CurvedAnimation(
-            parent: _animationController, curve: Curves.easeIn));
+            parent: _animationController!, curve: Curves.easeIn));
   }
 
   @override
   void didUpdateWidget(covariant AppHorizontalProgressBar oldWidget) {
     if (widget.progress != oldWidget.progress) {
-      this.previousProgress = oldWidget.progress;
-      this.progress = widget.progress;
+      previousProgress = oldWidget.progress;
+      progress = widget.progress;
       Future.microtask(() {
         _initialiseAnimation();
         if (_animationController != null) {
-          this._animationController.reset();
-          this._animationController.forward().orCancel;
+          _animationController?.reset();
+          _animationController?.forward().orCancel;
         }
       });
     }
@@ -70,8 +65,8 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
 
   @override
   void initState() {
-    this.previousProgress = 0.00;
-    this.progress = widget.progress;
+    previousProgress = 0.00;
+    progress = widget.progress;
     _animationController = AnimationController(
         vsync: this,
         duration: AppConfigs.animDurationSmall,
@@ -80,15 +75,16 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
     Future.microtask(() async {
       await Future.delayed(Duration(
           milliseconds: AppConfigs.animDuration.inMilliseconds ~/ 1.5));
-      if (_animationController != null)
-        this._animationController.forward().orCancel;
+      if (_animationController != null) {
+        _animationController?.forward().orCancel;
+      }
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _animationController?.dispose();
     _animationController = null;
     super.dispose();
   }
@@ -119,10 +115,11 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
           return child;
         } else {
           return AnimatedBuilder(
-            animation: widget.animation,
+            animation: widget.animation!,
             child: child,
             builder: (context, child) => Transform(
-              transform: Matrix4.identity()..scale(widget.animation.value, 1.0),
+              transform: Matrix4.identity()
+                ..scale(widget.animation?.value, 1.0),
               child: child,
               alignment: Alignment.centerLeft,
             ),

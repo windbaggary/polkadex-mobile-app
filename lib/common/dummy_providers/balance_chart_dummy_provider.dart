@@ -14,63 +14,62 @@ class BalanceChartDummyProvider extends ChangeNotifier {
     startTimer();
   }
 
-  Timer _timer;
+  Timer? _timer;
   double _scale = 0.004;
 
   EnumBalanceChartDataTypes _balanceChartDataTypes =
-      EnumBalanceChartDataTypes.Hour;
+      EnumBalanceChartDataTypes.hour;
 
-  double get chartScale => this._scale;
+  double get chartScale => _scale;
 
-  EnumBalanceChartDataTypes get balanceChartDataType =>
-      this._balanceChartDataTypes;
+  EnumBalanceChartDataTypes get balanceChartDataType => _balanceChartDataTypes;
 
-  List<LineChartModel> get list => this._list;
+  List<LineChartModel> get list => _list;
 
   set balanceChartDataType(EnumBalanceChartDataTypes val) {
     stopTimer();
     _list.clear();
     switch (val) {
-      case EnumBalanceChartDataTypes.Hour:
+      case EnumBalanceChartDataTypes.hour:
         _list.addAll(_createHourDummyList());
-        this._scale = 0.004;
+        _scale = 0.004;
         break;
 
-      case EnumBalanceChartDataTypes.Week:
+      case EnumBalanceChartDataTypes.week:
         _list.addAll(_createWeekDummyList());
-        this._scale = 0.000025;
+        _scale = 0.000025;
         break;
 
-      case EnumBalanceChartDataTypes.Month:
+      case EnumBalanceChartDataTypes.month:
         _list.addAll(_createMonthDummyList());
-        this._scale = 0.000007;
+        _scale = 0.000007;
         break;
 
-      case EnumBalanceChartDataTypes.ThreeMonth:
+      case EnumBalanceChartDataTypes.threeMonth:
         //  Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
 
-      case EnumBalanceChartDataTypes.SixMonth:
+      case EnumBalanceChartDataTypes.sixMonth:
         //Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
 
-      case EnumBalanceChartDataTypes.Year:
+      case EnumBalanceChartDataTypes.year:
         //Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
 
-      case EnumBalanceChartDataTypes.All:
+      case EnumBalanceChartDataTypes.all:
         // Handle this case.
         _list.addAll(_createDayDummyList());
-        this._scale = 0.00017;
+        _scale = 0.00017;
         break;
     }
-    this._balanceChartDataTypes = val;
+    _balanceChartDataTypes = val;
     notifyListeners();
     startTimer();
   }
@@ -107,7 +106,7 @@ class BalanceChartDummyProvider extends ChangeNotifier {
   void stopTimer() {
     try {
       if (_timer != null) {
-        _timer.cancel();
+        _timer?.cancel();
         _timer = null;
       }
     } catch (ex) {

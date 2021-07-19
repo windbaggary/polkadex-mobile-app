@@ -60,7 +60,7 @@ class _AppSettingsNotificationScreenState
         body: AppSettingsLayout(
           // animationController: _animationController,
           onBack: () =>
-              this._onWillPop().then((value) => Navigator.of(context).pop()),
+              _onWillPop().then((value) => Navigator.of(context).pop()),
           subTitle: 'Notifications',
           mainTitle: 'Notifications',
           isShowSubTitle: false,
@@ -88,19 +88,19 @@ class _AppSettingsNotificationScreenState
   Widget _buildMenuItem(EnumNotificationsMenu e) {
     String description;
     String title;
-    List<EnumNotificationAlert> lockedMenu;
+    List<EnumNotificationAlert>? lockedMenu;
 
     switch (e) {
-      case EnumNotificationsMenu.Withdraw:
-        lockedMenu = [EnumNotificationAlert.Email];
+      case EnumNotificationsMenu.withdraw:
+        lockedMenu = [EnumNotificationAlert.email];
         title = "Withdraw";
         description = 'Notify when a withdrawal is requested.';
         break;
-      case EnumNotificationsMenu.Deposit:
+      case EnumNotificationsMenu.deposit:
         title = "Deposit";
         description = 'Notify when a funds are received.';
         break;
-      case EnumNotificationsMenu.FilledOrder:
+      case EnumNotificationsMenu.filledOrder:
         title = "Filled order";
         description = 'Notify when an order is filled.';
         break;
@@ -125,23 +125,22 @@ class _AppSettingsNotificationScreenState
 /// The widget represents the each items in the list of the screen
 class _ThisMenuItemWidget extends StatelessWidget {
   const _ThisMenuItemWidget({
-    Key key,
-    @required this.title,
-    @required this.description,
+    required this.title,
+    required this.description,
     this.onEmailTap,
     this.onPhoneTap,
     this.onPushTap,
     this.isShowLine = true,
     this.lockedItems,
-  }) : super(key: key);
+  });
 
   final String title;
   final String description;
-  final VoidCallback onEmailTap;
-  final VoidCallback onPhoneTap;
-  final VoidCallback onPushTap;
+  final VoidCallback? onEmailTap;
+  final VoidCallback? onPhoneTap;
+  final VoidCallback? onPushTap;
   final bool isShowLine;
-  final List<EnumNotificationAlert> lockedItems;
+  final List<EnumNotificationAlert>? lockedItems;
 
   @override
   Widget build(BuildContext context) {
@@ -161,13 +160,13 @@ class _ThisMenuItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            title ?? "",
+            title,
             style: tsS16W400CFF,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 3.0, bottom: 14.0),
             child: Text(
-              description ?? "",
+              description,
               style: tsS13W400CFFOP60,
             ),
           ),
@@ -182,22 +181,22 @@ class _ThisMenuItemWidget extends StatelessWidget {
   }
 
   Widget _buildAlertWidget(EnumNotificationAlert e) {
-    String label;
+    String? label;
     String svgAsset;
 
     // double _deltaX;
     switch (e) {
-      case EnumNotificationAlert.Email:
+      case EnumNotificationAlert.email:
         label = 'Email';
         svgAsset = 'email'.asAssetSvg();
         // _deltaX = 0.0;
         break;
-      case EnumNotificationAlert.Phone:
+      case EnumNotificationAlert.phone:
         label = 'Phone';
         svgAsset = 'message-text'.asAssetSvg();
         // _deltaX = 1.0;
         break;
-      case EnumNotificationAlert.Push:
+      case EnumNotificationAlert.push:
         label = 'Push';
         svgAsset = 'phone'.asAssetSvg();
         // _deltaX = 2.0;
@@ -236,8 +235,8 @@ class _ThisMenuItemWidget extends StatelessWidget {
           _ThisAlertItemWidget(
         label: label,
         svgAsset: svgAsset,
-        isLocked: this.lockedItems?.contains(e) ?? false,
-        isActive: this.lockedItems?.contains(e) ?? false,
+        isLocked: lockedItems?.contains(e) ?? false,
+        isActive: lockedItems?.contains(e) ?? false,
       ),
       //   ),
       // ),
@@ -247,31 +246,29 @@ class _ThisMenuItemWidget extends StatelessWidget {
 
 class _ThisAlertItemWidget extends StatelessWidget {
   _ThisAlertItemWidget({
-    Key key,
-    @required this.label,
-    @required this.svgAsset,
+    required this.label,
+    required this.svgAsset,
     this.isLocked = false,
     this.isActive = false,
     this.onTap,
-  })  : this._selectedNotifier = ValueNotifier<bool>(isActive),
-        super(key: key);
+  }) : _selectedNotifier = ValueNotifier<bool>(isActive);
 
   final ValueNotifier<bool> _selectedNotifier;
 
-  final String label;
+  final String? label;
   final String svgAsset;
   final bool isLocked;
   final bool isActive;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: this.isLocked
+      onTap: isLocked
           ? null
           : () {
               _selectedNotifier.value = !_selectedNotifier.value;
-              if (this.onTap != null) this.onTap();
+              if (onTap != null) onTap!();
             },
       child: ValueListenableBuilder<bool>(
         valueListenable: _selectedNotifier,
@@ -299,7 +296,7 @@ class _ThisAlertItemWidget extends StatelessWidget {
                   style: tsS14W400CFF,
                 ),
               ),
-              if (this.isLocked ?? false) SvgPicture.asset('lock'.asAssetSvg()),
+              if (isLocked) SvgPicture.asset('lock'.asAssetSvg()),
               SizedBox(width: 11),
             ],
           ),

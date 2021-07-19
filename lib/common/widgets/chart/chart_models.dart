@@ -17,6 +17,6 @@ class LineChartModel extends BaseChartModel {
 
   @override
   String toString() {
-    return "Date: ${date?.toIso8601String()}, Point: $pointY";
+    return "Date: ${date.toIso8601String()}, Point: $pointY";
   }
 }

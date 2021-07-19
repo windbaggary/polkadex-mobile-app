@@ -12,12 +12,10 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// XD_PAGE: 34
 class HomeTabView extends StatefulWidget {
-  HomeTabView({Key key}) : super(key: key);
-
   @override
   _HomeTabViewState createState() => _HomeTabViewState();
 }
@@ -34,7 +32,7 @@ class _HomeTabViewState extends State<HomeTabView>
   // Animation<double> _topPairsOpacityAnimation;
   // Animation<double> _rankingListFilterOpacityAnimation;
 
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
@@ -160,8 +158,8 @@ class _HomeTabViewState extends State<HomeTabView>
                       onTap: () async {
                         try {
                           final link = "https://www.polkadex.trade";
-                          if (await urlLauncher.canLaunch(link)) {
-                            urlLauncher.launch(link);
+                          if (await url_launcher.canLaunch(link)) {
+                            url_launcher.launch(link);
                           }
                         } catch (ex) {
                           print(ex);
@@ -260,10 +258,6 @@ class _HomeTabViewState extends State<HomeTabView>
 /// The top filter widget shown above the ranking list.
 /// This widget filter the ranking list
 class _ThisRankingListFilterWidget extends StatelessWidget {
-  const _ThisRankingListFilterWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -279,7 +273,7 @@ class _ThisRankingListFilterWidget extends StatelessWidget {
                       ),
                       value: e,
                     ))
-                ?.toList(),
+                .toList(),
             value: 'All Markets',
             style: tsS15W600CABB2BC,
             underline: Container(),
@@ -305,17 +299,13 @@ class _ThisRankingListFilterWidget extends StatelessWidget {
 /// The right side sorting filter. This filer sort the ranking
 /// list based on the selection
 class _ThisRankingListSortWidget extends StatelessWidget {
-  _ThisRankingListSortWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <EnumRankingListSorts>[
-        EnumRankingListSorts.Vol,
-        EnumRankingListSorts.Losers,
-        EnumRankingListSorts.Gainers,
+        EnumRankingListSorts.vol,
+        EnumRankingListSorts.losers,
+        EnumRankingListSorts.gainers,
       ]
           .map(
             (item) => Consumer<HomeRankListProvider>(
@@ -343,31 +333,30 @@ class _ThisRankingListSortItemWidget extends StatelessWidget {
   final EnumRankingListSorts item;
   final bool isSelected;
   const _ThisRankingListSortItemWidget({
-    Key key,
-    @required this.item,
-    @required this.isSelected,
-  }) : super(key: key);
+    required this.item,
+    required this.isSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    String label;
+    String? label;
     Color containerColor = Colors.transparent;
     Color textColor = colorABB2BC.withOpacity(0.30);
 
-    switch (this.item) {
-      case EnumRankingListSorts.Gainers:
+    switch (item) {
+      case EnumRankingListSorts.gainers:
         label = 'Gainers';
         if (isSelected) {
           containerColor = color0CA564;
         }
         break;
-      case EnumRankingListSorts.Losers:
+      case EnumRankingListSorts.losers:
         label = 'Losers';
         if (isSelected) {
           containerColor = colorE6007A;
         }
         break;
-      case EnumRankingListSorts.Vol:
+      case EnumRankingListSorts.vol:
         label = 'Vol';
         if (isSelected) {
           containerColor = colorE6007A;
@@ -387,7 +376,7 @@ class _ThisRankingListSortItemWidget extends StatelessWidget {
         ),
         padding: const EdgeInsets.fromLTRB(13, 5, 11, 7),
         child: AnimatedDefaultTextStyle(
-          child: Text(label ?? ""),
+          child: Text(label),
           style: tsS15W600CFF.copyWith(color: textColor),
           duration: AppConfigs.animDurationSmall,
         ));
@@ -396,10 +385,6 @@ class _ThisRankingListSortItemWidget extends StatelessWidget {
 
 /// The widget for the top slider
 class _ThisSliderItemWidget extends StatelessWidget {
-  const _ThisSliderItemWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -466,12 +451,11 @@ class _ThisTopPairAnimatedWidget extends StatefulWidget {
   // final Animation<double> animationController;
   // final Duration initialDelay;
   const _ThisTopPairAnimatedWidget({
-    Key key,
-    @required this.child,
-    @required this.index,
+    required this.child,
+    required this.index,
     // this.animationController,
     // this.initialDelay,
-  }) : super(key: key);
+  });
 
   @override
   __ThisTopPairAnimatedWidgetState createState() =>
@@ -556,10 +540,6 @@ class __ThisTopPairAnimatedWidgetState extends State<_ThisTopPairAnimatedWidget>
 
 /// The content widget for the Top Pairs
 class _ThisTopPairsItemWidget extends StatelessWidget {
-  const _ThisTopPairsItemWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
@@ -650,9 +630,8 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
 class _ThisRankingListItemWidget extends StatelessWidget {
   final BasicCoinListModel model;
   const _ThisRankingListItemWidget({
-    Key key,
-    @required this.model,
-  }) : super(key: key);
+    required this.model,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -689,19 +668,19 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 children: [
                   Row(children: <Widget>[
                     Text(
-                      '${model?.code ?? ""} ',
+                      '${model.code} ',
                       style: tsS15W500CFF,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 1.0),
                       child: Text(
-                        '/${model?.pair ?? ""}',
+                        '/${model.pair}',
                         style: tsS11W400CABB2BC,
                       ),
                     ),
                   ]),
                   Text(
-                    'VOL ${model?.volume} BTC',
+                    'VOL ${model.volume} BTC',
                     style: tsS12W400CFF.copyWith(
                       color: colorABB2BC.withOpacity(0.70),
                     ),
@@ -713,7 +692,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    model?.amount ?? "",
+                    model.amount,
                     style: tsS15W500CFF,
                   ),
                   Text(
@@ -729,14 +708,14 @@ class _ThisRankingListItemWidget extends StatelessWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: model?.color,
+                  color: model.color,
                   borderRadius: BorderRadius.circular(7),
                 ),
                 padding: const EdgeInsets.all(5),
                 child: RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                    text: model?.percentage ?? "",
+                    text: model.percentage,
                     style: tsS15W500CFF,
                   ),
                   TextSpan(

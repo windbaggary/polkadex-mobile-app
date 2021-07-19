@@ -4,7 +4,11 @@ A new Flutter project for Polkadex
 
 ## Getting Started
 
-The project is maintained based on the provider architecture
+The source code of the project is maintaned using Google's code style recommendations for Dart: <https://dart.dev/guides/language/effective-dart/style>. To make sure the code being written is following these recommendations, put the pre-commit script provided in the project root in your .git/hooks/pre-commit by running the following command:
+
+    cp pre-commit .git/hooks/pre-commit
+
+The project is maintained based on the provider architecture.
 
 ## Provider Architecture
 

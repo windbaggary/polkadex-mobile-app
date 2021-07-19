@@ -23,13 +23,13 @@ class CreateAccountStepTwoScreen extends StatefulWidget {
 
 class _CreateAccountStepTwoScreenState extends State<CreateAccountStepTwoScreen>
     with SingleTickerProviderStateMixin {
-  ValueNotifier<EnumCreateSliderSteps> _sliderStepNotifier;
-  AnimationController _entryAnimController;
+  late ValueNotifier<EnumCreateSliderSteps> _sliderStepNotifier;
+  late AnimationController _entryAnimController;
 
   @override
   void initState() {
     _sliderStepNotifier =
-        ValueNotifier<EnumCreateSliderSteps>(EnumCreateSliderSteps.Step1);
+        ValueNotifier<EnumCreateSliderSteps>(EnumCreateSliderSteps.step1);
     _entryAnimController = AnimationController(
       vsync: this,
       duration: AppConfigs.animDuration,
@@ -42,8 +42,6 @@ class _CreateAccountStepTwoScreenState extends State<CreateAccountStepTwoScreen>
   @override
   void dispose() {
     _entryAnimController.dispose();
-    _entryAnimController = null;
-
     _sliderStepNotifier.dispose();
     super.dispose();
   }
@@ -66,10 +64,10 @@ class _CreateAccountStepTwoScreenState extends State<CreateAccountStepTwoScreen>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Hero(
-                    tag: CreateAccountScreen.TAG_BACK_BUTTON,
+                    tag: CreateAccountScreen.tagBackButton,
                     child: _buildBackButton(context)),
                 Hero(
-                  tag: CreateAccountScreen.TAG_HEADING,
+                  tag: CreateAccountScreen.tagHeading,
                   child: Material(
                     type: MaterialType.transparency,
                     child: Text(
@@ -92,13 +90,13 @@ class _CreateAccountStepTwoScreenState extends State<CreateAccountStepTwoScreen>
                       double progress = 1 / 3;
 
                       switch (currentStep) {
-                        case EnumCreateSliderSteps.Step1:
+                        case EnumCreateSliderSteps.step1:
                           progress = 1 / 3;
                           break;
-                        case EnumCreateSliderSteps.Step2:
+                        case EnumCreateSliderSteps.step2:
                           progress = 2 / 3;
                           break;
-                        case EnumCreateSliderSteps.Step3:
+                        case EnumCreateSliderSteps.step3:
                           progress = 1.0;
                           break;
                       }
@@ -209,21 +207,15 @@ class _CreateAccountStepTwoScreenState extends State<CreateAccountStepTwoScreen>
 
 /// The top card to choose chrome or firefox
 class _ThisContainerCard extends StatelessWidget {
-  const _ThisContainerCard({
-    Key key,
-  }) : super(key: key);
-
   Widget _getCurrentStepWidget(EnumCreateSliderSteps currentStep) {
     switch (currentStep) {
-      case EnumCreateSliderSteps.Step1:
+      case EnumCreateSliderSteps.step1:
         return _ThisFirstSliderWidget();
-      case EnumCreateSliderSteps.Step2:
+      case EnumCreateSliderSteps.step2:
         return _ThisSecondSliderWidget();
-      case EnumCreateSliderSteps.Step3:
+      case EnumCreateSliderSteps.step3:
         return _ThisThirdSliderWidget();
     }
-
-    return Container();
   }
 
   @override
@@ -239,12 +231,13 @@ class _ThisContainerCard extends StatelessWidget {
       ),
       padding: const EdgeInsets.fromLTRB(24, 34, 16, 50),
       child: ValueListenableBuilder<EnumCreateSliderSteps>(
-          valueListenable: _ThisInheritedWidget.of(context).sliderNotifier,
+          valueListenable: _ThisInheritedWidget.of(context)?.sliderNotifier ??
+              ValueNotifier<EnumCreateSliderSteps>(EnumCreateSliderSteps.step1),
           builder: (context, currentStep, child) => AnimatedSwitcher(
               duration: AppConfigs.animDuration,
               reverseDuration: AppConfigs.animReverseDuration,
               layoutBuilder: (currentChild, previousChildren) {
-                return currentChild;
+                return currentChild!;
               },
               child: _getCurrentStepWidget(currentStep))),
     );
@@ -252,10 +245,6 @@ class _ThisContainerCard extends StatelessWidget {
 }
 
 class _ThisFirstSliderWidget extends StatelessWidget {
-  const _ThisFirstSliderWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -305,10 +294,6 @@ class _ThisFirstSliderWidget extends StatelessWidget {
 }
 
 class _ThisSecondSliderWidget extends StatelessWidget {
-  const _ThisSecondSliderWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -358,10 +343,6 @@ class _ThisSecondSliderWidget extends StatelessWidget {
 }
 
 class _ThisThirdSliderWidget extends StatelessWidget {
-  const _ThisThirdSliderWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -414,16 +395,15 @@ class _ThisInheritedWidget extends InheritedWidget {
   final ValueNotifier<EnumCreateSliderSteps> sliderNotifier;
 
   _ThisInheritedWidget({
-    @required this.sliderNotifier,
-    @required Widget child,
-    Key key,
-  }) : super(child: child, key: key);
+    required this.sliderNotifier,
+    required Widget child,
+  }) : super(child: child);
 
-  static _ThisInheritedWidget of(BuildContext context) =>
+  static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.sliderNotifier != this.sliderNotifier;
+    return oldWidget.sliderNotifier != sliderNotifier;
   }
 }

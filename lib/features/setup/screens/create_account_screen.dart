@@ -11,8 +11,8 @@ import 'package:polkadex/common/widgets/app_step_progress_widget.dart';
 /// XD_PAGE: 4
 /// XD_PAGE: 5
 class CreateAccountScreen extends StatefulWidget {
-  static const String TAG_HEADING = "tag_heading";
-  static const String TAG_BACK_BUTTON = "tag_back_button";
+  static const String tagHeading = "tag_heading";
+  static const String tagBackButton = "tag_back_button";
 
   @override
   _CreateAccountScreenState createState() => _CreateAccountScreenState();
@@ -24,13 +24,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
 
   final _isFirefoxExpandedNotifier = ValueNotifier<bool>(false);
 
-  AnimationController _animationController;
-  AnimationController _entryCardExpandAnimController;
-  Animation<Offset> _nextButtonAnimation;
-  Animation<double> _opacityAnimation;
-  Animation<Offset> _cardAnimation;
-  Animation<Offset> _headingAnimation;
-  Animation<Offset> _backButtonAnimation;
+  late AnimationController _animationController;
+  late AnimationController _entryCardExpandAnimController;
+  late Animation<Offset> _nextButtonAnimation;
+  late Animation<double> _opacityAnimation;
+  late Animation<Offset> _cardAnimation;
+  late Animation<Offset> _headingAnimation;
+  late Animation<Offset> _backButtonAnimation;
 
   /// This method will be invoked when user click on chrome to expand
   void _onChromeTapExpanded(BuildContext context) {
@@ -85,13 +85,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   /// Initialise all the animations
   /// Must initialise the [_animationController] before calling this
   void _initAnimations() {
-    assert(_animationController != null, '''
-   Must initialise the [_animationController] before calling this
-  ''');
-    assert(_entryCardExpandAnimController != null, '''
-   Must initialise the [_entryCardExpandAnimController] before calling this
-  ''');
-
     _opacityAnimation = CurvedAnimation(
         parent: _entryCardExpandAnimController, curve: Interval(0.00, 1.00));
     _backButtonAnimation =
@@ -131,7 +124,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
       _entryCardExpandAnimController
           .forward()
           .orCancel
-          .then((value) => this._isChromeExpandedNotifier.value = true);
+          .then((value) => _isChromeExpandedNotifier.value = true);
     });
   }
 
@@ -166,14 +159,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Hero(
-                    tag: CreateAccountScreen.TAG_BACK_BUTTON,
+                    tag: CreateAccountScreen.tagBackButton,
                     child: _buildBackButton(context)),
                 SlideTransition(
                   position: _headingAnimation,
                   child: FadeTransition(
                     opacity: _opacityAnimation,
                     child: Hero(
-                      tag: CreateAccountScreen.TAG_HEADING,
+                      tag: CreateAccountScreen.tagHeading,
                       child: Material(
                         type: MaterialType.transparency,
                         child: Text(
@@ -267,14 +260,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
 /// The expand card on clicking on brower in [_ThisTopBrowserSelectionCard]
 class _ThisBrowserExpandCard extends StatelessWidget {
   final bool isExpanded;
-  const _ThisBrowserExpandCard({Key key, this.isExpanded = false})
-      : super(key: key);
+  const _ThisBrowserExpandCard({this.isExpanded = false});
 
   @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       duration: AppConfigs.animDuration,
-      opacity: this.isExpanded ? 1.0 : 0.0,
+      opacity: isExpanded ? 1.0 : 0.0,
       child: AnimatedContainer(
         duration: AppConfigs.animDuration,
         curve: Curves.easeOutCubic,
@@ -337,10 +329,6 @@ class _ThisBrowserExpandCard extends StatelessWidget {
 
 /// The top card to choose chrome or firefox
 class _ThisTopBrowserSelectionCard extends StatelessWidget {
-  const _ThisTopBrowserSelectionCard({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -371,17 +359,18 @@ class _ThisTopBrowserSelectionCard extends StatelessWidget {
           Row(
             children: [
               ValueListenableBuilder<bool>(
-                valueListenable:
-                    _ThisInheritedWidget.of(context).isChromeExpandedNotifier,
+                valueListenable: _ThisInheritedWidget.of(context)
+                        ?.isChromeExpandedNotifier ??
+                    ValueNotifier<bool>(false),
                 builder: (context, value, child) => _ChromeOrFirefoxButton(
                   imgIcon: 'chromium.png',
                   label: 'Chrome/Opera/Edge',
                   isSelected: value,
                   onTap: () {
                     if (value) {
-                      _ThisInheritedWidget.of(context).onChromeTapHide();
+                      _ThisInheritedWidget.of(context)?.onChromeTapHide();
                     } else {
-                      _ThisInheritedWidget.of(context).onChromeTapExpanded();
+                      _ThisInheritedWidget.of(context)?.onChromeTapExpanded();
                     }
                   },
                 ),
@@ -391,7 +380,8 @@ class _ThisTopBrowserSelectionCard extends StatelessWidget {
                 fit: FlexFit.tight,
                 child: ValueListenableBuilder<bool>(
                   valueListenable: _ThisInheritedWidget.of(context)
-                      .isFirefoxExpandedNotifier,
+                          ?.isFirefoxExpandedNotifier ??
+                      ValueNotifier<bool>(false),
                   builder: (context, value, child) => _ChromeOrFirefoxButton(
                     imgIcon: 'firefox.png',
                     label: 'Firefox',
@@ -399,9 +389,10 @@ class _ThisTopBrowserSelectionCard extends StatelessWidget {
                     isApplyBlendMode: true,
                     onTap: () {
                       if (value) {
-                        _ThisInheritedWidget.of(context).onFirefoxTapHide();
+                        _ThisInheritedWidget.of(context)?.onFirefoxTapHide();
                       } else {
-                        _ThisInheritedWidget.of(context).onFirefoxTapExpanded();
+                        _ThisInheritedWidget.of(context)
+                            ?.onFirefoxTapExpanded();
                       }
                     },
                   ),
@@ -419,17 +410,16 @@ class _ThisTopBrowserSelectionCard extends StatelessWidget {
 class _ChromeOrFirefoxButton extends StatelessWidget {
   final String label;
   final String imgIcon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool isSelected;
   final bool isApplyBlendMode;
   const _ChromeOrFirefoxButton({
-    Key key,
-    @required this.label,
-    @required this.imgIcon,
+    required this.label,
+    required this.imgIcon,
     this.onTap,
     this.isSelected = false,
     this.isApplyBlendMode = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -457,7 +447,7 @@ class _ChromeOrFirefoxButton extends StatelessWidget {
             ),
             SizedBox(width: 8),
             Text(
-              label ?? "",
+              label,
               style: tsS15W500CFF,
             ),
           ],
@@ -491,28 +481,27 @@ class _ThisInheritedWidget extends InheritedWidget {
   final VoidCallback onNextTap;
 
   _ThisInheritedWidget({
-    @required this.onChromeTapExpanded,
-    @required this.onFirefoxTapExpanded,
-    @required this.onChromeTapHide,
-    @required this.onFirefoxTapHide,
-    @required this.isChromeExpandedNotifier,
-    @required this.isFirefoxExpandedNotifier,
-    @required this.onNextTap,
-    @required Widget child,
-    Key key,
-  }) : super(child: child, key: key);
+    required this.onChromeTapExpanded,
+    required this.onFirefoxTapExpanded,
+    required this.onChromeTapHide,
+    required this.onFirefoxTapHide,
+    required this.isChromeExpandedNotifier,
+    required this.isFirefoxExpandedNotifier,
+    required this.onNextTap,
+    required Widget child,
+  }) : super(child: child);
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.onChromeTapExpanded != this.onChromeTapExpanded ||
-        oldWidget.onFirefoxTapExpanded != this.onFirefoxTapExpanded ||
-        oldWidget.onChromeTapHide != this.onChromeTapHide ||
-        oldWidget.onFirefoxTapHide != this.onFirefoxTapHide ||
-        oldWidget.isChromeExpandedNotifier != this.isChromeExpandedNotifier ||
-        oldWidget.isFirefoxExpandedNotifier != this.isFirefoxExpandedNotifier ||
-        oldWidget.onNextTap != this.onNextTap;
+    return oldWidget.onChromeTapExpanded != onChromeTapExpanded ||
+        oldWidget.onFirefoxTapExpanded != onFirefoxTapExpanded ||
+        oldWidget.onChromeTapHide != onChromeTapHide ||
+        oldWidget.onFirefoxTapHide != onFirefoxTapHide ||
+        oldWidget.isChromeExpandedNotifier != isChromeExpandedNotifier ||
+        oldWidget.isFirefoxExpandedNotifier != isFirefoxExpandedNotifier ||
+        oldWidget.onNextTap != onNextTap;
   }
 
-  static _ThisInheritedWidget of(BuildContext context) =>
+  static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 }

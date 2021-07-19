@@ -6,22 +6,20 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 
 /// The type def for the bottom bar selection
-typedef void OnAppBottomBarSelected(EnumBottonBarItem item);
+typedef OnAppBottomBarSelected = void Function(EnumBottonBarItem item);
 
 /// The bottom navigation bar in landing screen
 class AppBottomNavigationBar extends StatelessWidget {
   AppBottomNavigationBar({
-    Key key,
     this.onSelected,
-    this.initialItem = EnumBottonBarItem.Home,
-  })  : _selectedNotifier = ValueNotifier<EnumBottonBarItem>(
-            initialItem ?? EnumBottonBarItem.Home),
-        super(key: key);
+    this.initialItem = EnumBottonBarItem.home,
+  }) : _selectedNotifier = ValueNotifier<EnumBottonBarItem>(
+            initialItem ?? EnumBottonBarItem.home);
 
   final ValueNotifier<EnumBottonBarItem> _selectedNotifier;
 
-  final OnAppBottomBarSelected onSelected;
-  final EnumBottonBarItem initialItem;
+  final OnAppBottomBarSelected? onSelected;
+  final EnumBottonBarItem? initialItem;
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +43,9 @@ class AppBottomNavigationBar extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                _selectedNotifier.value = EnumBottonBarItem.Home;
+                _selectedNotifier.value = EnumBottonBarItem.home;
                 if (onSelected != null) {
-                  onSelected(EnumBottonBarItem.Home);
+                  onSelected!(EnumBottonBarItem.home);
                 }
               },
               child: Container(
@@ -75,9 +73,9 @@ class AppBottomNavigationBar extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        _selectedNotifier.value = EnumBottonBarItem.Exchange;
+                        _selectedNotifier.value = EnumBottonBarItem.exchange;
                         if (onSelected != null) {
-                          onSelected(EnumBottonBarItem.Exchange);
+                          onSelected!(EnumBottonBarItem.exchange);
                         }
                       },
                       child: ValueListenableBuilder<EnumBottonBarItem>(
@@ -86,9 +84,9 @@ class AppBottomNavigationBar extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        _selectedNotifier.value = EnumBottonBarItem.Trade;
+                        _selectedNotifier.value = EnumBottonBarItem.trade;
                         if (onSelected != null) {
-                          onSelected(EnumBottonBarItem.Trade);
+                          onSelected!(EnumBottonBarItem.trade);
                         }
                       },
                       child: ValueListenableBuilder<EnumBottonBarItem>(
@@ -97,9 +95,9 @@ class AppBottomNavigationBar extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        _selectedNotifier.value = EnumBottonBarItem.Balance;
+                        _selectedNotifier.value = EnumBottonBarItem.balance;
                         if (onSelected != null) {
-                          onSelected(EnumBottonBarItem.Balance);
+                          onSelected!(EnumBottonBarItem.balance);
                         }
                       },
                       child: ValueListenableBuilder<EnumBottonBarItem>(
@@ -119,7 +117,7 @@ class AppBottomNavigationBar extends StatelessWidget {
   AspectRatio _buildBalanceWidget() {
     Color containerColor;
     String svg;
-    if (_selectedNotifier.value == EnumBottonBarItem.Balance) {
+    if (_selectedNotifier.value == EnumBottonBarItem.balance) {
       containerColor = colorE6007A;
       svg = 'wallet_selected'.asAssetSvg();
     } else {
@@ -151,7 +149,7 @@ class AppBottomNavigationBar extends StatelessWidget {
   SizedBox _buildTradeWidget() {
     String svg;
     Color containerColor;
-    if (_selectedNotifier.value == EnumBottonBarItem.Trade) {
+    if (_selectedNotifier.value == EnumBottonBarItem.trade) {
       containerColor = colorE6007A;
       svg = 'trade_selected'.asAssetSvg();
     } else {
@@ -186,7 +184,7 @@ class AppBottomNavigationBar extends StatelessWidget {
   SizedBox _buildExchangeWidget() {
     String svg;
     Color containerColor;
-    if (_selectedNotifier.value == EnumBottonBarItem.Exchange) {
+    if (_selectedNotifier.value == EnumBottonBarItem.exchange) {
       containerColor = colorE6007A;
       svg = 'chart_selected'.asAssetSvg();
     } else {

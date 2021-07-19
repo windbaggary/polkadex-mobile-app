@@ -10,20 +10,18 @@ import 'package:polkadex/common/configs/app_config.dart';
 class AppHeightFactorAnimatedWidget extends StatefulWidget {
   final Widget child;
   final int index;
-  final AnimationController animationController;
+  final AnimationController? animationController;
   final Interval interval;
   const AppHeightFactorAnimatedWidget({
-    Key key,
-    @required this.child,
-    @required this.index,
+    required this.child,
+    required this.index,
     this.animationController,
     this.interval = const Interval(
       0.0,
       1.0,
       curve: Curves.decelerate,
     ),
-  })  : assert(interval != null, ''' The interval could not be null'''),
-        super(key: key);
+  });
 
   @override
   _AppHeightFactorAnimatedWidgetState createState() =>
@@ -33,8 +31,8 @@ class AppHeightFactorAnimatedWidget extends StatefulWidget {
 class _AppHeightFactorAnimatedWidgetState
     extends State<AppHeightFactorAnimatedWidget>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _animaiton;
+  late AnimationController _animationController;
+  late Animation<double> _animaiton;
 
   @override
   void initState() {
@@ -50,7 +48,7 @@ class _AppHeightFactorAnimatedWidgetState
             milliseconds:
                 (widget.index * AppConfigs.animDurationSmall.inMilliseconds) ~/
                     2), () {
-      if (_animationController != null && widget.animationController == null) {
+      if (widget.animationController == null) {
         _animationController.forward();
       }
     });
@@ -68,7 +66,7 @@ class _AppHeightFactorAnimatedWidgetState
   @override
   void didUpdateWidget(covariant AppHeightFactorAnimatedWidget oldWidget) {
     if (oldWidget.animationController != widget.animationController) {
-      this._animationController = widget.animationController;
+      _animationController = widget.animationController!;
       _initAnimation();
     }
     super.didUpdateWidget(oldWidget);
@@ -91,7 +89,6 @@ class _AppHeightFactorAnimatedWidgetState
 
   void _disposeAnimationController() {
     _animationController.dispose();
-    _animationController = null;
   }
 
   void _initAnimation() {

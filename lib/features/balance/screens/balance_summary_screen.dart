@@ -9,7 +9,7 @@ import 'package:polkadex/common/widgets/custom_app_bar.dart';
 /// XD_PAGE: 30
 /// XD_PAGE: 32
 class BalanceSummaryScreen extends StatelessWidget {
-  final _selIndexNotifier = ValueNotifier<int>(null);
+  final _selIndexNotifier = ValueNotifier<int?>(null);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,14 +22,14 @@ class BalanceSummaryScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ValueListenableBuilder<int>(
+              ValueListenableBuilder<int?>(
                 valueListenable: _selIndexNotifier,
                 builder: (context, selIndex, child) =>
                     AppCircleChartGraphWidget(
                   child: _ThisProgressContentWidget(
                     selIndex: selIndex,
                   ),
-                  list: _DUMMY_LIST,
+                  list: dummyList,
                   selectedIndex: selIndex,
                 ),
               ),
@@ -45,8 +45,8 @@ class BalanceSummaryScreen extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(21, 22, 21, 0),
                   child: ListView.builder(
                     itemBuilder: (context, index) =>
-                        ValueListenableBuilder<int>(
-                      valueListenable: this._selIndexNotifier,
+                        ValueListenableBuilder<int?>(
+                      valueListenable: _selIndexNotifier,
                       builder: (context, selIndex, child) => InkWell(
                         onTap: () {
                           if (selIndex == index) {
@@ -56,12 +56,12 @@ class BalanceSummaryScreen extends StatelessWidget {
                           }
                         },
                         child: _ThisItemWidget(
-                          model: _DUMMY_LIST[index],
+                          model: dummyList[index],
                           isSelected: selIndex == index,
                         ),
                       ),
                     ),
-                    itemCount: _DUMMY_LIST.length,
+                    itemCount: dummyList.length,
                   ),
                 ),
               ),
@@ -75,17 +75,15 @@ class BalanceSummaryScreen extends StatelessWidget {
 
 class _ThisProgressContentWidget extends StatelessWidget {
   const _ThisProgressContentWidget({
-    Key key,
-    @required this.selIndex,
-  }) : super(key: key);
+    required this.selIndex,
+  });
 
-  final int selIndex;
+  final int? selIndex;
 
   @override
   Widget build(BuildContext context) {
-    final crossFadeState = this.selIndex != null
-        ? CrossFadeState.showSecond
-        : CrossFadeState.showFirst;
+    final crossFadeState =
+        selIndex != null ? CrossFadeState.showSecond : CrossFadeState.showFirst;
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -100,9 +98,10 @@ class _ThisProgressContentWidget extends StatelessWidget {
               child: AnimatedSwitcher(
                 child: crossFadeState == CrossFadeState.showFirst
                     ? _ThisSummaryTopWidget()
-                    : _ThisSummaryTopSelWidget(selIndex: selIndex),
+                    : _ThisSummaryTopSelWidget(selIndex: selIndex!),
                 duration: AppConfigs.animDurationSmall,
-                layoutBuilder: (currentChild, previousChildren) => currentChild,
+                layoutBuilder: (currentChild, previousChildren) =>
+                    currentChild!,
               ),
             ),
           ),
@@ -114,7 +113,8 @@ class _ThisProgressContentWidget extends StatelessWidget {
                     ? _ThisSummaryBottomWidget()
                     : _ThisCummaryBottomSelWidget(selIndex: selIndex),
                 duration: AppConfigs.animDurationSmall,
-                layoutBuilder: (currentChild, previousChildren) => currentChild,
+                layoutBuilder: (currentChild, previousChildren) =>
+                    currentChild!,
               ),
             ),
           ),
@@ -128,11 +128,10 @@ class _ThisProgressContentWidget extends StatelessWidget {
 /// This widge is visible when user has any selection of index [selIndex]
 class _ThisCummaryBottomSelWidget extends StatelessWidget {
   const _ThisCummaryBottomSelWidget({
-    Key key,
-    @required this.selIndex,
-  }) : super(key: key);
+    required this.selIndex,
+  });
 
-  final int selIndex;
+  final int? selIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -176,33 +175,32 @@ class _ThisCummaryBottomSelWidget extends StatelessWidget {
 /// This widge is visible when user has any selection of index [selIndex]
 class _ThisSummaryTopSelWidget extends StatelessWidget {
   const _ThisSummaryTopSelWidget({
-    Key key,
-    @required this.selIndex,
-  }) : super(key: key);
+    required this.selIndex,
+  });
   final int selIndex;
 
   @override
   Widget build(BuildContext context) {
-    final iModel = _DUMMY_LIST[selIndex];
+    final iModel = dummyList[selIndex];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(height: 16),
         Text(
-          "${((iModel?.iPerc ?? 0.0) * 100)?.toStringAsFixed(0) ?? ""}%",
+          "${((iModel.iPerc) * 100).toStringAsFixed(0)}%",
           style: tsS14W500CFF,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 4),
         Text(
-          iModel?.name ?? "",
+          iModel.name ?? "",
           style: tsS26W500CFF,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 4),
         Text(
-          "${iModel?.unit ?? ""} ${iModel?.code ?? ""}",
+          "${iModel.unit ?? ""} ${iModel.code ?? ""}",
           style: tsS14W500CFF.copyWith(color: colorABB2BC),
           textAlign: TextAlign.center,
         ),
@@ -214,10 +212,6 @@ class _ThisSummaryTopSelWidget extends StatelessWidget {
 /// The widget in summary pie chart card.
 /// This widget is as the content of the bottom part when no selection are made
 class _ThisSummaryBottomWidget extends StatelessWidget {
-  const _ThisSummaryBottomWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -276,10 +270,6 @@ class _ThisSummaryBottomWidget extends StatelessWidget {
 /// This is the content widget on the summary pie chart
 /// This is shown on the top section of th pie chart when no selection are made
 class _ThisSummaryTopWidget extends StatelessWidget {
-  const _ThisSummaryTopWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -308,10 +298,9 @@ class _ThisItemWidget extends StatelessWidget {
   final _ThisModel model;
   final bool isSelected;
   const _ThisItemWidget({
-    Key key,
-    @required this.model,
-    @required this.isSelected,
-  }) : super(key: key);
+    required this.model,
+    required this.isSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -337,7 +326,7 @@ class _ThisItemWidget extends StatelessWidget {
               height: 11,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: model?.color,
+                color: model.color,
               ),
             ),
           ),
@@ -351,7 +340,7 @@ class _ThisItemWidget extends StatelessWidget {
             height: 42,
             padding: const EdgeInsets.all(3),
             child: Image.asset(
-              model?.imgAsset?.asAssetImg(),
+              model.imgAsset.asAssetImg(),
               fit: BoxFit.contain,
             ),
           ),
@@ -361,7 +350,7 @@ class _ThisItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  model?.name ?? "",
+                  model.name ?? "",
                   style: tsS16W500CFF,
                 ),
                 SizedBox(height: 1.5),
@@ -369,11 +358,11 @@ class _ThisItemWidget extends StatelessWidget {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: "${model?.unit} ",
+                        text: "${model.unit} ",
                         style: tsS13W500CFF,
                       ),
                       TextSpan(
-                        text: model?.code ?? "",
+                        text: model.code ?? "",
                         style: tsS13W500CFF.copyWith(
                           color: codeColor,
                         ),
@@ -386,7 +375,7 @@ class _ThisItemWidget extends StatelessWidget {
           ),
           Center(
             child: Text(
-              "${model?.perc?.toStringAsFixed(0) ?? ""}%",
+              "${model.perc.toStringAsFixed(0)}%",
               style: tsS16W500CFF,
             ),
           ),
@@ -399,36 +388,36 @@ class _ThisItemWidget extends StatelessWidget {
 // Remove the dummy data below
 class _ThisModel implements IAppCircleChartModel {
   final String imgAsset;
-  final String name;
-  final String code;
-  final String unit;
+  final String? name;
+  final String? code;
+  final String? unit;
   final double perc;
   final Color color;
 
   const _ThisModel({
-    @required this.imgAsset,
-    @required this.name,
-    @required @required this.code,
-    @required this.unit,
-    @required this.perc,
-    @required this.color,
+    required this.imgAsset,
+    required this.name,
+    required this.code,
+    required this.unit,
+    required this.perc,
+    required this.color,
   });
 
   @override
-  Color get iColor => this.color;
+  Color get iColor => color;
 
   @override
-  double get iPerc => this.perc / 100;
+  double get iPerc => perc / 100;
 }
 
-const _DUMMY_LIST = <_ThisModel>[
+const dummyList = <_ThisModel>[
   _ThisModel(
     imgAsset: 'trade_open/trade_open_1.png',
     name: 'Ethereum',
     code: 'ETH',
     unit: '0.8621',
     perc: 60,
-    color: const Color(0xFFFFB100),
+    color: Color(0xFFFFB100),
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_2.png',
@@ -436,7 +425,7 @@ const _DUMMY_LIST = <_ThisModel>[
     code: 'DEX',
     unit: '2.0000',
     perc: 22,
-    color: const Color(0xFF11A564),
+    color: Color(0xFF11A564),
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_8.png',
@@ -460,6 +449,6 @@ const _DUMMY_LIST = <_ThisModel>[
     code: 'ETH',
     unit: '0.8621',
     perc: 2,
-    color: const Color(0xFFABB2BC),
+    color: Color(0xFFABB2BC),
   ),
 ];

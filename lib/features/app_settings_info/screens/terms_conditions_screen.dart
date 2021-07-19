@@ -6,8 +6,8 @@ import 'package:polkadex/common/utils/styles.dart';
 /// XD_PAGE: 39
 class TermsConditionsScreen extends StatelessWidget {
   Widget _buildTitleContentWidget({
-    @required String title,
-    @required String content,
+    required String? title,
+    required String? content,
   }) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

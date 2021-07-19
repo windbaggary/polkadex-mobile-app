@@ -8,7 +8,7 @@ import 'package:polkadex/common/widgets/chart/chart_models.dart';
 
 /// The interface for the charts
 abstract class IBaseAppChartCustomWidget {
-  void iPaintChart(Canvas canvas, Size size, Offset offset, Offset touchPoint);
+  void iPaintChart(Canvas canvas, Size size, Offset offset, Offset? touchPoint);
 
   void iPaintGrid(Canvas canvas, Size size, Offset offset);
 }
@@ -20,8 +20,7 @@ abstract class BaseAppChartCustomWidget<B extends BaseChartModel>
     extends LeafRenderObjectWidget implements IBaseAppChartCustomWidget {
   final List<B> parentData;
 
-  BaseAppChartCustomWidget({Key key, @required this.parentData})
-      : super(key: key);
+  BaseAppChartCustomWidget({required this.parentData});
 
   @override
   _ThisRenderObject createRenderObject(BuildContext context) {
@@ -41,15 +40,15 @@ abstract class BaseAppChartCustomWidget<B extends BaseChartModel>
 
 class _ThisRenderObject extends RenderProxyBox {
   IBaseAppChartCustomWidget iBaseAppChartCustomWidget;
-  HorizontalDragGestureRecognizer _drag;
-  Offset _touchPoint;
+  late HorizontalDragGestureRecognizer _drag;
+  Offset? _touchPoint;
 
-  _ThisRenderObject({@required this.iBaseAppChartCustomWidget}) : super();
+  _ThisRenderObject({required this.iBaseAppChartCustomWidget}) : super();
 
   @override
   void attach(covariant PipelineOwner owner) {
     super.attach(owner);
-    this._drag = HorizontalDragGestureRecognizer()
+    _drag = HorizontalDragGestureRecognizer()
       ..onStart = _onDragStart
       ..onUpdate = _onDragUpdate
       ..onCancel = _onCancel

@@ -18,8 +18,8 @@ class TermsScreen extends StatefulWidget {
 
 class _TermsScreenState extends State<TermsScreen>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _entryAnimation;
+  late AnimationController _animationController;
+  late Animation<double> _entryAnimation;
 
   @override
   void initState() {
@@ -181,11 +181,10 @@ class _TermsScreenState extends State<TermsScreen>
 ///
 class _ThisBottomWidget extends AnimatedWidget {
   const _ThisBottomWidget({
-    Key key,
-    @required Animation<double> entryAnimation,
-  }) : super(key: key, listenable: entryAnimation);
+    required Animation<double> entryAnimation,
+  }) : super(listenable: entryAnimation);
 
-  Animation<double> get _entryAnimation => this.listenable as Animation<double>;
+  Animation<double> get _entryAnimation => listenable as Animation<double>;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +201,10 @@ class _ThisBottomWidget extends AnimatedWidget {
                 transform: Matrix4.identity()..translate(-75 * (1 - value)),
                 child: AppButton(
                   label: "Yes",
-                  onTap: _ThisInheritedWidget.of(context).onNavigateToLogin,
+                  onTap: _ThisInheritedWidget.of(context)?.onNavigateToLogin !=
+                          null
+                      ? _ThisInheritedWidget.of(context)!.onNavigateToLogin
+                      : () {},
                 ),
               ),
             ),
@@ -213,7 +215,11 @@ class _ThisBottomWidget extends AnimatedWidget {
                 child: AppButton(
                   label: "No",
                   onTap: _ThisInheritedWidget.of(context)
-                      .onNavigateToCreateAccount,
+                              ?.onNavigateToCreateAccount !=
+                          null
+                      ? _ThisInheritedWidget.of(context)!
+                          .onNavigateToCreateAccount
+                      : () {},
                 ),
               ),
             ),
@@ -232,19 +238,17 @@ class _ThisInheritedWidget extends InheritedWidget {
   final VoidCallback onNavigateToLogin;
 
   _ThisInheritedWidget({
-    @required this.onNavigateToCreateAccount,
-    @required this.onNavigateToLogin,
-    @required Widget child,
-    Key key,
-  }) : super(key: key, child: child);
+    required this.onNavigateToCreateAccount,
+    required this.onNavigateToLogin,
+    required Widget child,
+  }) : super(child: child);
 
-  static _ThisInheritedWidget of(BuildContext context) =>
+  static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.onNavigateToCreateAccount !=
-            this.onNavigateToCreateAccount ||
-        oldWidget.onNavigateToLogin != this.onNavigateToLogin;
+    return oldWidget.onNavigateToCreateAccount != onNavigateToCreateAccount ||
+        oldWidget.onNavigateToLogin != onNavigateToLogin;
   }
 }

@@ -5,10 +5,9 @@ import 'package:polkadex/common/utils/styles.dart';
 
 /// XD_PAGE: 47
 class PrivacyPolicyScreen extends StatelessWidget {
-  const PrivacyPolicyScreen({Key key}) : super(key: key);
   Widget _buildTitleContentWidget({
-    @required String title,
-    @required String content,
+    required String? title,
+    required String? content,
   }) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

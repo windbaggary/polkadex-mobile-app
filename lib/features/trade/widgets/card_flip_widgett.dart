@@ -15,12 +15,11 @@ class CardFlipAnimation extends StatefulWidget {
   final EnumCardFlipState cardState;
   final Duration duration;
   const CardFlipAnimation({
-    Key key,
     this.cardState = EnumCardFlipState.showSecond,
-    @required this.firstChild,
-    @required this.secondChild,
+    required this.firstChild,
+    required this.secondChild,
     this.duration = AppConfigs.animDurationSmall,
-  }) : super(key: key);
+  });
 
   @override
   _CardFlipAnimationState createState() => _CardFlipAnimationState();
@@ -28,8 +27,8 @@ class CardFlipAnimation extends StatefulWidget {
 
 class _CardFlipAnimationState extends State<CardFlipAnimation>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _fronCardAnimation, _backCardAnimation;
+  late AnimationController _animationController;
+  late Animation<double> _fronCardAnimation, _backCardAnimation;
 
   @override
   void didUpdateWidget(covariant CardFlipAnimation oldWidget) {

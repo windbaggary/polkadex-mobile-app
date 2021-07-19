@@ -14,17 +14,17 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
-import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 /// The screen enum menus only accessing inside this file.
 /// The enum represent the first top 3 menu of the screen
 ///
 enum _EnumMenus {
-  Deposit,
-  Withdraw,
-  Trade,
+  deposit,
+  withdraw,
+  trade,
 }
 
 /// XD_PAGE: 20
@@ -140,7 +140,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                       builder: (context) =>
                                           BalanceDepositScreenOne())),
                               child: _ThisMenuItemWidget(
-                                menu: _EnumMenus.Deposit,
+                                menu: _EnumMenus.deposit,
                               ),
                             ),
                           ),
@@ -156,7 +156,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                         CoinWithdrawScreen()));
                               },
                               child: _ThisMenuItemWidget(
-                                menu: _EnumMenus.Withdraw,
+                                menu: _EnumMenus.withdraw,
                               ),
                             ),
                           ),
@@ -171,7 +171,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                     builder: (_) => CoinTradeScreen()));
                               },
                               child: _ThisMenuItemWidget(
-                                menu: _EnumMenus.Trade,
+                                menu: _EnumMenus.trade,
                               ),
                             ),
                           ),
@@ -222,7 +222,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                         Color color =
                                             color8BA1BE.withOpacity(0.2);
                                         switch (e) {
-                                          case _EnumListTypes.Buy:
+                                          case _EnumListTypes.buy:
                                             if (thisProvider.filterType == e) {
                                               svg = "buysel";
                                               color = Colors.white;
@@ -230,7 +230,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                               svg = "buy";
                                             }
                                             break;
-                                          case _EnumListTypes.Sell:
+                                          case _EnumListTypes.sell:
                                             if (thisProvider.filterType == e) {
                                               svg = "sellsel";
                                               color = Colors.white;
@@ -238,7 +238,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                               svg = "sell";
                                             }
                                             break;
-                                          case _EnumListTypes.Deposit:
+                                          case _EnumListTypes.deposit:
                                             if (thisProvider.filterType == e) {
                                               svg = "Depositsel";
                                               color = Colors.white;
@@ -246,7 +246,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                               svg = "Deposit";
                                             }
                                             break;
-                                          case _EnumListTypes.Withdraw:
+                                          case _EnumListTypes.withdraw:
                                             if (thisProvider.filterType == e) {
                                               svg = "Withdrawsel";
                                               color = Colors.white;
@@ -287,24 +287,18 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                     textTheme: ButtonTextTheme.accent)),
                             child: Builder(
                               builder: (context) => InkWell(
-                                onTap: () {
+                                onTap: () async {
                                   final provider =
                                       context.read<_ThisListDataProvider>();
-                                  DateRangePicker.showDatePicker(
-                                          context: context,
-                                          initialFirstDate:
-                                              provider?.filterStartDate ??
-                                                  new DateTime.now(),
-                                          initialLastDate:
-                                              provider?.filterEndDate ??
-                                                  new DateTime.now(),
-                                          firstDate: new DateTime(2015),
-                                          lastDate: new DateTime(
-                                              DateTime.now().year + 2))
+                                  await CustomDateRangePicker.call(
+                                          filterStartDate:
+                                              provider.filterStartDate,
+                                          filterEndDate: provider.filterEndDate,
+                                          context: context)
                                       .then((dates) {
-                                    if (dates?.isNotEmpty ?? false) {
+                                    if (dates != null) {
                                       provider.setFilterDates(
-                                          dates.first, dates.last);
+                                          dates.start, dates.end);
                                     }
                                   });
                                 },
@@ -341,13 +335,13 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Consumer<_ThisListDataProvider>(
                         builder: (context, provider, child) {
-                          String fromToDate;
+                          String? fromToDate;
                           if (provider.filterStartDate != null &&
                               provider.filterEndDate != null) {
                             fromToDate =
-                                "${DateFormat("MMM dd, yyyy").format(provider.filterStartDate)} to ${DateFormat("MMM dd, yyyy").format(provider.filterEndDate)}";
+                                "${DateFormat("MMM dd, yyyy").format(provider.filterStartDate!)} to ${DateFormat("MMM dd, yyyy").format(provider.filterEndDate!)}";
                           }
-                          if (provider?.dummyList?.isEmpty ?? true) {
+                          if (provider.dummyList.isEmpty) {
                             return Padding(
                               padding: EdgeInsets.fromLTRB(18, 26.0, 18, 10),
                               child: Column(
@@ -376,10 +370,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                             itemCount: provider.dummyList.length,
                             padding: const EdgeInsets.only(top: 13),
                             itemBuilder: (context, index) {
-                              String title;
+                              String? title;
                               if (index == 0) {
                                 if (provider.filterStartDate != null) {
-                                  title = fromToDate;
+                                  title = fromToDate!;
                                 } else {
                                   title = _getDateTitle(
                                       provider.dummyList[index].date);
@@ -432,28 +426,27 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
 /// The base class for the list item
 class _ThisItemWidget extends StatelessWidget {
   final _IBaseModel model;
-  final String dateTitle;
+  final String? dateTitle;
 
   const _ThisItemWidget({
-    Key key,
-    @required this.model,
-    @required this.dateTitle,
-  }) : super(key: key);
+    required this.model,
+    required this.dateTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
     Widget child = Container();
-    switch (model?.type) {
-      case _EnumListTypes.Buy:
+    switch (model.type) {
+      case _EnumListTypes.buy:
         child = _buildBuyWidget(model as _ThisBuyModel);
         break;
-      case _EnumListTypes.Sell:
+      case _EnumListTypes.sell:
         child = _buildSellWidget(model as _ThisSellModel);
         break;
-      case _EnumListTypes.Deposit:
+      case _EnumListTypes.deposit:
         child = _buildDepositWidget(model as _ThisDepositModel);
         break;
-      case _EnumListTypes.Withdraw:
+      case _EnumListTypes.withdraw:
         child = _buildWithdrawWidget(model as _ThisWithdrawModel);
         break;
     }
@@ -473,14 +466,14 @@ class _ThisItemWidget extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => NotifDepositScreen(
-                      screenType: EnumDepositScreenTypes.Deposit,
+                      screenType: EnumDepositScreenTypes.deposit,
                     )));
           }),
     );
 
-    if (this.dateTitle?.isNotEmpty ?? false) {
+    if (dateTitle?.isNotEmpty ?? false) {
       final double topPadding =
-          ['Today', 'Yesterday'].contains(this.dateTitle) ? 7.0 : 26.0;
+          ['Today', 'Yesterday'].contains(dateTitle) ? 7.0 : 26.0;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -520,13 +513,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -538,7 +530,7 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF.copyWith(
                     color: color0CA564,
                   ),
@@ -555,14 +547,14 @@ class _ThisItemWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF,
                 ),
               ],
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.point,
+              iModel.fromUnit ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -593,13 +585,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -611,7 +602,7 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF.copyWith(
                     color: colorE6007A,
                   ),
@@ -628,14 +619,14 @@ class _ThisItemWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  iModel?.fromUnit,
+                  iModel.fromUnit ?? "",
                   style: tsS14W500CFF,
                 ),
               ],
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.point,
+              iModel.point ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -666,13 +657,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -682,14 +672,14 @@ class _ThisItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              iModel?.unit,
+              iModel.unit ?? "",
               style: tsS14W500CFF.copyWith(
                 color: color0CA564,
               ),
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.amount,
+              iModel.amount ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -720,13 +710,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                iModel?.name ?? "",
+                iModel.name ?? "",
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel?.date)?.toUpperCase() ??
-                    "",
+                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -736,14 +725,14 @@ class _ThisItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              iModel?.unit,
+              iModel.unit ?? "",
               style: tsS14W500CFF.copyWith(
                 color: colorE6007A,
               ),
             ),
             SizedBox(height: 1),
             Text(
-              iModel?.amount,
+              iModel.amount ?? "",
               style: tsS13W400CFFOP60.copyWith(
                 color: colorABB2BC,
               ),
@@ -759,9 +748,8 @@ class _ThisItemWidget extends StatelessWidget {
 /// [_EnumMenus] are represented in this widget
 class _ThisMenuItemWidget extends StatelessWidget {
   const _ThisMenuItemWidget({
-    Key key,
-    @required this.menu,
-  }) : super(key: key);
+    required this.menu,
+  });
 
   final _EnumMenus menu;
 
@@ -769,17 +757,17 @@ class _ThisMenuItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String text;
     String svgAssets;
-    switch (this.menu) {
-      case _EnumMenus.Deposit:
+    switch (menu) {
+      case _EnumMenus.deposit:
         text = "Deposit";
         svgAssets = "Deposit".asAssetSvg();
 
         break;
-      case _EnumMenus.Withdraw:
+      case _EnumMenus.withdraw:
         text = "Withdraw";
         svgAssets = "Withdraw".asAssetSvg();
         break;
-      case _EnumMenus.Trade:
+      case _EnumMenus.trade:
         text = "Trade";
         svgAssets = "trade_selected".asAssetSvg();
         break;
@@ -810,7 +798,7 @@ class _ThisMenuItemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 36),
-          Text(text ?? "", style: tsS16W500CFF),
+          Text(text, style: tsS16W500CFF),
         ],
       ),
     );
@@ -819,10 +807,6 @@ class _ThisMenuItemWidget extends StatelessWidget {
 
 /// The content widget for the Top Pairs
 class _ThisTopPairsItemWidget extends StatelessWidget {
-  const _ThisTopPairsItemWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -914,10 +898,6 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
 
 /// The very top top widget includes the icon, name, value, price, etc
 class _TopCoinTitleWidget extends StatelessWidget {
-  const _TopCoinTitleWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -934,7 +914,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
             height: 52,
             padding: const EdgeInsets.all(3),
             child: Image.asset(
-              'trade_open/trade_open_2.png'?.asAssetImg(),
+              'trade_open/trade_open_2.png'.asAssetImg(),
               fit: BoxFit.contain,
             ),
           ),
@@ -1017,10 +997,6 @@ class _TopCoinTitleWidget extends StatelessWidget {
 
 /// The widget displays the options under the graph
 class _ThisGraphOptionWidget extends StatelessWidget {
-  const _ThisGraphOptionWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -1029,30 +1005,27 @@ class _ThisGraphOptionWidget extends StatelessWidget {
         children: EnumBalanceChartDataTypes.values
             .map<Widget>((item) => Consumer<BalanceChartDummyProvider>(
                   builder: (context, appChartProvider, child) {
-                    String text;
+                    String? text;
                     switch (item) {
-                      case EnumBalanceChartDataTypes.Hour:
+                      case EnumBalanceChartDataTypes.hour:
                         text = "24h";
                         break;
-                      case EnumBalanceChartDataTypes.Week:
+                      case EnumBalanceChartDataTypes.week:
                         text = "7d";
-
                         break;
-                      case EnumBalanceChartDataTypes.Month:
+                      case EnumBalanceChartDataTypes.month:
                         text = "1m";
-
                         break;
-                      case EnumBalanceChartDataTypes.ThreeMonth:
+                      case EnumBalanceChartDataTypes.threeMonth:
                         text = "3m";
-
                         break;
-                      case EnumBalanceChartDataTypes.SixMonth:
+                      case EnumBalanceChartDataTypes.sixMonth:
                         text = "6m";
                         break;
-                      case EnumBalanceChartDataTypes.Year:
+                      case EnumBalanceChartDataTypes.year:
                         text = "1y";
                         break;
-                      case EnumBalanceChartDataTypes.All:
+                      case EnumBalanceChartDataTypes.all:
                         text = "All";
                         break;
                     }
@@ -1071,7 +1044,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                               : null,
                         ),
                         child: Text(
-                          text ?? "",
+                          text,
                           style: item == appChartProvider.balanceChartDataType
                               ? tsS13W600CFF
                               : tsS12W400CFF.copyWith(color: colorABB2BC),
@@ -1087,10 +1060,10 @@ class _ThisGraphOptionWidget extends StatelessWidget {
 }
 
 enum _EnumListTypes {
-  Buy,
-  Sell,
-  Deposit,
-  Withdraw,
+  buy,
+  sell,
+  deposit,
+  withdraw,
 }
 
 /// The base class for the items in the screen. This model is inherited for the
@@ -1099,75 +1072,75 @@ abstract class _IBaseModel {
   final DateTime date;
   final _EnumListTypes type;
 
-  const _IBaseModel({@required this.date, @required this.type});
+  const _IBaseModel({required this.date, required this.type});
 }
 
 class _ThisBuyModel extends _IBaseModel {
-  final String name;
-  final String fromUnit;
-  final String toUnit;
-  final String point;
+  final String? name;
+  final String? fromUnit;
+  final String? toUnit;
+  final String? point;
 
   const _ThisBuyModel({
-    @required this.name,
-    @required this.fromUnit,
-    @required this.toUnit,
-    @required this.point,
-    @required DateTime dateTime,
+    required this.name,
+    required this.fromUnit,
+    required this.toUnit,
+    required this.point,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
-          type: _EnumListTypes.Buy,
+          type: _EnumListTypes.buy,
         );
 }
 
 class _ThisSellModel extends _IBaseModel {
-  final String name;
-  final String fromUnit;
-  final String toUnit;
-  final String point;
+  final String? name;
+  final String? fromUnit;
+  final String? toUnit;
+  final String? point;
 
   const _ThisSellModel({
-    @required this.name,
-    @required this.fromUnit,
-    @required this.toUnit,
-    @required this.point,
-    @required DateTime dateTime,
+    required this.name,
+    required this.fromUnit,
+    required this.toUnit,
+    required this.point,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
-          type: _EnumListTypes.Sell,
+          type: _EnumListTypes.sell,
         );
 }
 
 class _ThisDepositModel extends _IBaseModel {
-  final String unit;
-  final String amount;
+  final String? unit;
+  final String? amount;
 
   const _ThisDepositModel({
-    @required this.unit,
-    @required this.amount,
-    @required DateTime dateTime,
+    required this.unit,
+    required this.amount,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
-          type: _EnumListTypes.Deposit,
+          type: _EnumListTypes.deposit,
         );
 
-  String get name => "Deposit";
+  String? get name => "Deposit";
 }
 
 class _ThisWithdrawModel extends _IBaseModel {
-  final String unit;
-  final String amount;
+  final String? unit;
+  final String? amount;
 
   const _ThisWithdrawModel({
-    @required this.unit,
-    @required this.amount,
-    @required DateTime dateTime,
+    required this.unit,
+    required this.amount,
+    required DateTime dateTime,
   }) : super(
           date: dateTime,
-          type: _EnumListTypes.Withdraw,
+          type: _EnumListTypes.withdraw,
         );
 
-  String get name => "Withdraw";
+  String? get name => "Withdraw";
 }
 
 final _dummyList = <_IBaseModel>[
@@ -1263,29 +1236,29 @@ final _dummyList = <_IBaseModel>[
 
 /// The provider handle the bottom list.
 class _ThisListDataProvider extends ChangeNotifier {
-  _EnumListTypes _filterType;
-  DateTime _filterStartDate, _filterEndDate;
+  DateTime? _filterStartDate, _filterEndDate;
+  _EnumListTypes? _filterType;
 
-  _EnumListTypes get filterType => this._filterType;
-  DateTime get filterStartDate => this._filterStartDate;
-  DateTime get filterEndDate => this._filterEndDate;
+  _EnumListTypes? get filterType => _filterType;
+  DateTime? get filterStartDate => _filterStartDate;
+  DateTime? get filterEndDate => _filterEndDate;
 
   bool get hasFilterDate =>
-      (this.filterStartDate != null) && (this.filterEndDate != null);
+      (filterStartDate != null) && (filterEndDate != null);
 
-  set filterType(_EnumListTypes value) {
-    if (this._filterType == value) {
-      this._filterType = null;
+  set filterType(_EnumListTypes? value) {
+    if (_filterType == value) {
+      _filterType = null;
     } else {
-      this._filterType = value;
+      _filterType = value;
     }
     notifyListeners();
   }
 
   /// The method set the filter date for list.
   void setFilterDates(DateTime start, DateTime end) {
-    this._filterStartDate = DateTime(start.year, start.month, start.day);
-    this._filterEndDate = DateTime(end.year, end.month, end.day);
+    _filterStartDate = DateTime(start.year, start.month, start.day);
+    _filterEndDate = DateTime(end.year, end.month, end.day);
     notifyListeners();
   }
 
@@ -1294,14 +1267,14 @@ class _ThisListDataProvider extends ChangeNotifier {
     if (filterStartDate != null) {
       list.removeWhere((m) {
         final compare = DateTime(m.date.year, m.date.month, m.date.day)
-            .compareTo(filterStartDate);
+            .compareTo(filterStartDate!);
         return compare < 0;
       });
     }
     if (filterEndDate != null) {
       list.removeWhere((m) {
         final compare = DateTime(m.date.year, m.date.month, m.date.day)
-            .compareTo(filterEndDate);
+            .compareTo(filterEndDate!);
 
         return compare > 0;
       });
