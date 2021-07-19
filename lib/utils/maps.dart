@@ -1,4 +1,4 @@
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 Map<EnumExchangeFilter, String> enumExchangeToString = {
   EnumExchangeFilter.dex: 'DEX',

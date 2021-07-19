@@ -2,14 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/features/landing/models/home_models.dart';
 import 'package:polkadex/features/landing/providers/token_pair_expanded_provider.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/custom_app_bar.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 /// The width of the shrink widget for token and pairs

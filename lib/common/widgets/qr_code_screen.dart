@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 /// The QRCode screen can be accessed usign navigator. The screen displays
 /// the QR code and once its read it will pop the result

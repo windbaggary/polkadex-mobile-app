@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/dummy_providers/app_chart_dummy_provider.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
-import 'package:polkadex/providers/bottom_navigation_provider.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_buttons.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-import 'package:polkadex/widgets/chart/app_charts.dart' as app_charts;
+import 'package:polkadex/common/widgets/chart/app_charts.dart' as app_charts;
 
 /// XD_PAGE: 24
 /// XD_PAGE: 25

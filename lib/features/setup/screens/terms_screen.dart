@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/setup/screens/create_account_screen.dart';
 import 'package:polkadex/features/setup/screens/login_scan_screen.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/widgets/app_buttons.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
 
 /// This is the terms screen of the XD
 ///

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
 
 /// XD_PAGE: 39
 class TermsConditionsScreen extends StatelessWidget {

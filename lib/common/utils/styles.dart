@@ -10,7 +10,7 @@
 /// CFF   - Represent the color is FF or FFFFFF
 /// OP20  - Represent the opacity is 20%
 import 'package:flutter/material.dart';
-import 'package:polkadex/utils/colors.dart';
+import 'package:polkadex/common/utils/colors.dart';
 
 TextStyle get tsS16W500CFF => TextStyle(
       fontSize: 16,

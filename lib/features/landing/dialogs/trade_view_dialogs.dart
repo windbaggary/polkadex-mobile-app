@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 /// The callback listener for the Order type item selection
 typedef OnItemSelected = void Function(int index);

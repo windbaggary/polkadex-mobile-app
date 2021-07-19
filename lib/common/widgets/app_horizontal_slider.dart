@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/utils/styles.dart';
 import 'dart:math' as math;
 
 /// The widget shows slider with the interval divider and pointer to drag

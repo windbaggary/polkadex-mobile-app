@@ -1,4 +1,4 @@
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 /// The model for the notification section.
 /// Each model has enumType of [EnumDrawerNotificationTypes]

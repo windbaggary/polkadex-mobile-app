@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/providers/notification_drawer_provider.dart';
 import 'package:polkadex/features/landing/screens/market_token_selection_screen.dart';
@@ -13,11 +13,11 @@ import 'package:polkadex/features/landing/sub_views/home_tab_view.dart';
 import 'package:polkadex/features/landing/sub_views/trade_tab_view.dart';
 import 'package:polkadex/features/landing/widgets/app_bottom_navigation_bar.dart';
 import 'package:polkadex/features/landing/widgets/app_drawer_widget.dart';
-import 'package:polkadex/providers/bottom_navigation_provider.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34

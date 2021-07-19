@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/configs/app_config.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_horizontal_slider.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 
 /// The callback type for buy or sell
 typedef OnBuyOrSell = void Function(String price, String amount, double total);

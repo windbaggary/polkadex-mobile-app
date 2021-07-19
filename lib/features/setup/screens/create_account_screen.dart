@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/setup/screens/create_account_step_two_screen.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_buttons.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/widgets/app_step_progress_widget.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/widgets/app_step_progress_widget.dart';
 
 /// The screen to guide account creation
 /// XD_PAGE: 4
