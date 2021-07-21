@@ -6,9 +6,11 @@ import 'package:polkadex/features/setup/screens/intro_screen.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:polkadex/injection_container.dart' as injection;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await injection.init();
 
   // A 2 seconds delay to show the splash screen
   await Future.delayed(const Duration(seconds: 2));
