@@ -7,8 +7,8 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
-import 'package:polkadex/features/setup/screens/mnemonic_generated_screen.dart';
-import 'package:polkadex/features/setup/widgets/login_button_widget.dart';
+import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
+import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 
 /// The dummy data for the screen
 ///
