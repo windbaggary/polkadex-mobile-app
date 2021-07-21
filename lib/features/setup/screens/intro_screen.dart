@@ -2,14 +2,13 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/setup/screens/terms_screen.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
+import 'package:polkadex/features/setup/screens/mnemonic_generated_screen.dart';
+import 'package:polkadex/features/setup/widgets/login_button_widget.dart';
 
 /// The dummy data for the screen
 ///
@@ -94,7 +93,7 @@ class _IntroScreenState extends State<IntroScreen>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 24, right: 24, top: 30, bottom: 40),
+                      left: 24, right: 24, top: 30, bottom: 30),
                   child: ValueListenableBuilder<int>(
                     valueListenable: _pageviewIndexNotifier,
                     builder: (context, pageIndex, child) => AppSliderDots(
@@ -106,15 +105,27 @@ class _IntroScreenState extends State<IntroScreen>
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: SizedBox(
-                      height: 60,
-                      child: _ThisLoginButton(
-                        onTap: () => _onNavigateToTerms(context),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                  child: SizedBox(
+                    height: 60,
+                    child: LoginButtonWidget(
+                      text: 'Import Wallet',
+                      backgroundColor: colorE6007A,
+                      textStyle: tsS16W500CFF,
+                      onTap: () {},
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: SizedBox(
+                    height: 60,
+                    child: LoginButtonWidget(
+                      text: 'Generate Wallet',
+                      backgroundColor: colorFFFFFF,
+                      textStyle: tsS16W500C24252C,
+                      onTap: () => _onNavigateToTerms(context),
                     ),
                   ),
                 ),
@@ -126,8 +137,8 @@ class _IntroScreenState extends State<IntroScreen>
                     bottom: 24,
                   ),
                   child: Text(
-                    'The following interface shows simulated trades from one of the largest centralized exchanges',
-                    style: tsS16W400CABB2BC,
+                    'By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our Privacy Policy.',
+                    style: tsS14W400CABB2BC,
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -156,71 +167,9 @@ class _IntroScreenState extends State<IntroScreen>
         return FadeTransition(
             opacity: CurvedAnimation(
                 parent: animation, curve: Interval(0.500, 1.00)),
-            child: TermsScreen());
+            child: MnemonicGeneratedScreen());
       },
     ));
-  }
-}
-
-class _ThisLoginButton extends StatelessWidget {
-  final _notifier = ValueNotifier<bool>(false);
-  _ThisLoginButton({
-    required this.onTap,
-  });
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTapDown: (_) {
-        _notifier.value = true;
-      },
-      onTap: () {
-        _notifier.value = false;
-        onTap();
-      },
-      onTapCancel: () {
-        _notifier.value = false;
-      },
-      child: IgnorePointer(
-        ignoring: true,
-        child: ValueListenableBuilder<bool>(
-          valueListenable: _notifier,
-          builder: (context, isTranslate, child) {
-            return AnimatedContainer(
-              duration: AppConfigs.animDurationSmall ~/ 2,
-              transform: Matrix4.translationValues(
-                  0.0, isTranslate ? 10.0 : 0.00, 0.0),
-              child: child,
-            );
-          },
-          child: AppSlideButton(
-            height: 70,
-            label: 'Login with PolkadotJS',
-            icon: Container(
-              decoration: BoxDecoration(
-                color: color1C2023,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              padding: const EdgeInsets.all(14),
-              width: 45,
-              height: 45,
-              child: SvgPicture.asset(
-                'arrow'.asAssetSvg(),
-                fit: BoxFit.contain,
-                color: colorFFFFFF,
-              ),
-            ),
-            decoration: BoxDecoration(
-              color: colorE6007A,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            // onComplete: () => _onNavigateToTerms(context),
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -349,9 +298,20 @@ class __ThisPageViewState extends State<_ThisPageView> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  _DummyData.sliderList[index],
-                  style: tsS32W600CFF,
+                child: Column(
+                  children: [
+                    Text(
+                      _DummyData.sliderList[index],
+                      style: tsS32W600CFF,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Text(
+                        _DummyData.sliderList[index],
+                        style: tsS18W400CFF,
+                      ),
+                    )
+                  ],
                 ),
               ),
             ],

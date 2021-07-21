@@ -10,10 +10,11 @@ import 'package:polkadex/common/utils/styles.dart';
 ///
 
 class AppBackButton extends StatelessWidget {
-  final VoidCallback? onTap;
   const AppBackButton({
     this.onTap,
   });
+
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +45,26 @@ class AppBackButton extends StatelessWidget {
 /// The button widget layout for bottom Yes & No
 ///
 class AppButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
-  final EdgeInsets padding;
   const AppButton({
     required this.label,
-    required this.onTap,
+    this.enabled = true,
+    this.onTap,
     this.padding = const EdgeInsets.symmetric(vertical: 16),
   });
+
+  final String label;
+  final bool enabled;
+  final VoidCallback? onTap;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onTap,
+      onPressed: enabled ? onTap : null,
       child: Text(label, style: tsS18W600CFF),
       style: TextButton.styleFrom(
         textStyle: tsS18W600CFF,
-        backgroundColor: color8BA1BE.withOpacity(0.20),
+        backgroundColor: enabled ? colorE6007A : color8BA1BE.withOpacity(0.20),
         padding: padding,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

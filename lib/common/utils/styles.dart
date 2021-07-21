@@ -18,8 +18,14 @@ TextStyle get tsS16W500CFF => TextStyle(
       color: colorFFFFFF,
     );
 
-TextStyle get tsS16W400CABB2BC => TextStyle(
+TextStyle get tsS16W500C24252C => TextStyle(
       fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: color24252C,
+    );
+
+TextStyle get tsS14W400CABB2BC => TextStyle(
+      fontSize: 14,
       fontWeight: FontWeight.w400,
       color: colorABB2BC,
     );
@@ -33,6 +39,12 @@ TextStyle get tsS16W500CABB2BC => TextStyle(
 TextStyle get tsS32W600CFF => TextStyle(
       fontSize: 32,
       fontWeight: FontWeight.w600,
+      color: colorFFFFFF,
+    );
+
+TextStyle get tsS18W400CFF => TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
       color: colorFFFFFF,
     );
 
