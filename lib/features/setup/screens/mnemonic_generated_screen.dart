@@ -49,158 +49,164 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
         onWillPop: () => _onPop(context),
         child: Scaffold(
           backgroundColor: color1C2023,
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     _animationController.reset();
-          //     _animationController.forward().orCancel;
-          //   },
-          // ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: color24252C,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.10),
-                      blurRadius: 30,
-                      offset: Offset(0.0, 20.0),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: color2E303C,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.10),
-                            blurRadius: 30,
-                            offset: Offset(0.0, 20.0),
-                          ),
-                        ],
-                      ),
-                      child: SafeArea(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            _buildBackButton(context),
-                            //GeneratedMnemonicWordWidget(),
-                            GridView.count(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              primary: false,
-                              padding: const EdgeInsets.all(20),
-                              childAspectRatio: 2,
-                              crossAxisSpacing: 7,
-                              mainAxisSpacing: 7,
-                              crossAxisCount: 3,
-                              children: <Widget>[
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                                GeneratedMnemonicWordWidget(),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(22, 18, 0, 18),
-                      child: Row(
-                        children: [
-                          CheckBoxWidget(
-                            checkColor: colorE6007A,
-                            backgroundColor: color3B4150,
-                          ),
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 6),
-                              child: Text(
-                                'I have saved my mnemonic seed safely.',
-                                style: tsS14W400CFF,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
+          appBar: AppBar(
+            title: Text(
+              'Create Wallet',
+              style: tsS19W600CFF,
+            ),
+            leading: SizedBox(
+              height: 5,
+              child: AnimatedBuilder(
+                animation: _entryAnimation,
+                builder: (context, child) {
+                  final value = _entryAnimation.value;
+                  return Opacity(
+                    opacity: value,
+                    child: Transform(
+                        transform: Matrix4.identity()
+                          ..translate(-50 * (1.0 - value)),
+                        child: child),
+                  );
+                },
+                child: AppBackButton(
+                  onTap: () => _onPop(context),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(28, 0, 28, 32),
+            ),
+            elevation: 0,
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: color24252C,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.10),
+                        blurRadius: 30,
+                        offset: Offset(0.0, 20.0),
+                      ),
+                    ],
+                  ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        'The mnemonic can be used to restore your wallet. Keep it carefully to not lose your assets. Having the mnemonic phrases can have a full control over the assets.',
-                        textAlign: TextAlign.center,
-                        style: tsS14W400CABB2BC,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: color2E303C,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0),
+                          ),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.10),
+                              blurRadius: 30,
+                              offset: Offset(0.0, 20.0),
+                            ),
+                          ],
+                        ),
+                        child: SafeArea(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Create an account',
+                                      style: tsS26W600CFF,
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                    ),
+                                    Text(
+                                      'Please write down your wallet’s mnemonic seed and keep it in a safe place.',
+                                      style: tsS18W400CFF,
+                                    ),
+                                    SizedBox(
+                                      height: 14,
+                                    ),
+                                    IgnorePointer(
+                                      child: GridView.count(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.vertical,
+                                        primary: false,
+                                        childAspectRatio: (120 /
+                                            (AppConfigs.size!.height * 0.0572)),
+                                        crossAxisSpacing: 7,
+                                        mainAxisSpacing: 7,
+                                        crossAxisCount: 3,
+                                        children: List<Widget>.generate(
+                                          24,
+                                          (_) => GeneratedMnemonicWordWidget(),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 28),
-                        child: AppButton(
-                          enabled: false,
-                          label: 'Next',
+                        padding: const EdgeInsets.fromLTRB(22, 18, 0, 18),
+                        child: Row(
+                          children: [
+                            CheckBoxWidget(
+                              checkColor: colorE6007A,
+                              backgroundColor: color3B4150,
+                            ),
+                            Flexible(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 6),
+                                child: Text(
+                                  'I have saved my mnemonic seed safely.',
+                                  style: tsS14W400CFF,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBackButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8, top: 4),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: [
-            AnimatedBuilder(
-              animation: _entryAnimation,
-              builder: (context, child) {
-                final value = _entryAnimation.value;
-                return Opacity(
-                  opacity: value,
-                  child: Transform(
-                      transform: Matrix4.identity()
-                        ..translate(-50 * (1.0 - value)),
-                      child: child),
-                );
-              },
-              child: AppBackButton(
-                onTap: () => _onPop(context),
-              ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 14, 28, 32),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'The mnemonic can be used to restore your wallet. Keep it carefully to not lose your assets. Having the mnemonic phrases can have a full control over the assets.',
+                          textAlign: TextAlign.center,
+                          style: tsS14W400CABB2BC,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 28),
+                          child: AppButton(
+                            enabled: false,
+                            label: 'Next',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 18),
-              child: Text(
-                'Create Wallet',
-                style: tsS19W600CFF,
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );

@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           hoverColor: Colors.transparent,
           focusColor: Colors.transparent,
           buttonColor: Colors.transparent,
-          primarySwatch: Colors.blue,
+          primaryColor: color2E303C,
           canvasColor: color2E303C,
           fontFamily: 'WorkSans',
         ).copyWith(
