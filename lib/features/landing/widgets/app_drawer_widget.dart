@@ -27,7 +27,6 @@ const double appDrawerWidth = 300;
 
 /// The right drawer width
 double getAppDrawerNotifWidth() {
-  print(AppConfigs.size!.width);
   // double ratio = 0.300;
   // if (Platform.isIOS) {
   // ratio = 0.750;

@@ -82,7 +82,6 @@ class _HideOnScrollRenderObject extends RenderProxyBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     // offset = Offset(offset.dx, offset.dy + _scrollHeight - _childInitHeight);
-    print(_scrollHeight / _childInitHeight);
     double opacity = (_scrollHeight / _childInitHeight).clamp(0.0, 1.0);
     int alpha = ui.Color.getAlphaFromOpacity(opacity);
     if (child != null) {

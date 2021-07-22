@@ -592,7 +592,6 @@ class _ThisProvider extends ChangeNotifier {
     }
     try {
       enteredString = (enteredString.isEmpty) ? "0" : enteredString;
-      print(enteredString);
       final double? valInDouble = double.tryParse(enteredString);
 
       if (_isSwap) {
