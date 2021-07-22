@@ -20,7 +20,7 @@ class MnemonicGridShimmerWidget extends StatelessWidget {
           mainAxisSpacing: 7,
           crossAxisCount: 3,
           children: List<Widget>.generate(
-            6,
+            12,
             (_) => Container(
               decoration: BoxDecoration(
                 color: Colors.black,

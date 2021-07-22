@@ -60,7 +60,6 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).textScaleFactor);
     return Scaffold(
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {
@@ -136,7 +135,7 @@ class _IntroScreenState extends State<IntroScreen>
                       text: 'Generate Wallet',
                       backgroundColor: colorFFFFFF,
                       textStyle: tsS16W500C24252C,
-                      onTap: () => _onNavigateToTerms(context),
+                      onTap: () => _onNavigateToGenerateWallet(context),
                     ),
                   ),
                 ),
@@ -172,7 +171,7 @@ class _IntroScreenState extends State<IntroScreen>
   }
 
   /// Navigate to terms and condition screen
-  void _onNavigateToTerms(BuildContext context) async {
+  void _onNavigateToGenerateWallet(BuildContext context) async {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
         return FadeTransition(

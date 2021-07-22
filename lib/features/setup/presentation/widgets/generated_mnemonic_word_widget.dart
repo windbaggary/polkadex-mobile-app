@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:provider/provider.dart';
 
 class GeneratedMnemonicWordWidget extends StatefulWidget {
   const GeneratedMnemonicWordWidget({
     required this.wordNumber,
     required this.mnemonicWord,
+    required this.onReplace,
   });
 
   final int wordNumber;
   final String mnemonicWord;
+  final VoidCallback onReplace;
 
   @override
   _GeneratedMnemonicWordWidgetState createState() =>
@@ -44,10 +48,10 @@ class _GeneratedMnemonicWordWidgetState
             alignment: Alignment.centerLeft,
             child: Text.rich(
               TextSpan(
-                text: '1  ',
+                text: '${widget.wordNumber}  ',
                 style: tsS15W600CFF,
                 children: <TextSpan>[
-                  TextSpan(text: 'hair', style: tsS15W400CFF),
+                  TextSpan(text: widget.mnemonicWord, style: tsS15W400CFF),
                 ],
               ),
             ),
@@ -63,7 +67,7 @@ class _GeneratedMnemonicWordWidgetState
       builder: (_, constraints) => DragTarget(
         builder: (_, accepted, ___) {
           return Draggable<String>(
-            data: 'hair',
+            data: widget.mnemonicWord,
             feedback: _hoveringDragWidget(constraints),
             childWhenDragging: _placeholderWhileDragWidget(),
             child: DottedBorder(
@@ -102,7 +106,15 @@ class _GeneratedMnemonicWordWidgetState
         onWillAccept: (_) {
           return true;
         },
-        onAccept: (_) {},
+        onAccept: (String replacementWord) {
+          if (replacementWord != widget.mnemonicWord) {
+            Provider.of<MnemonicProvider>(context, listen: false)
+                .swapWordsFromShuffled(
+              replacementWord,
+              widget.mnemonicWord,
+            );
+          }
+        },
       ),
     );
   }

@@ -5,15 +5,13 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_generated_provider.dart';
+import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_shimmer_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
 
-/// This is the terms screen of the XD
-///
-/// XD_PAGE: 3
-///
+import 'backup_mnemonic_screen.dart';
+
 class MnemonicGeneratedScreen extends StatefulWidget {
   @override
   _MnemonicGeneratedScreenState createState() =>
@@ -34,7 +32,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
     );
     _entryAnimation = _animationController;
     super.initState();
-    Future.microtask(() => _animationController.forward().orCancel);
+    Future.microtask(() => _animationController.forward());
   }
 
   @override
@@ -46,10 +44,9 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => MnemonicGeneratedProvider()..initLoadingTimer(),
+      create: (context) => MnemonicProvider()..initLoadingTimer(),
       builder: (context, _) {
-        return Consumer<MnemonicGeneratedProvider>(
-            builder: (context, provider, child) {
+        return Consumer<MnemonicProvider>(builder: (context, provider, child) {
           return WillPopScope(
             onWillPop: () => _onPop(context),
             child: Scaffold(
@@ -145,7 +142,10 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                                             ),
                                             provider.isLoading
                                                 ? MnemonicGridShimmerWidget()
-                                                : MnemonicGridWidget()
+                                                : MnemonicGridWidget(
+                                                    mnemonicWords:
+                                                        provider.mnemonicWords,
+                                                  )
                                           ],
                                         ),
                                       ),
@@ -162,7 +162,8 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                                       checkColor: colorE6007A,
                                       backgroundColor: color3B4150,
                                       isChecked: provider.isNextEnabled,
-                                      onTap: (_) => provider.changeNextState(),
+                                      onTap: (_) =>
+                                          provider.changeNextButtonState(),
                                     ),
                                     Flexible(
                                       child: Padding(
@@ -198,6 +199,8 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                           Padding(
                             padding: const EdgeInsets.only(top: 28),
                             child: AppButton(
+                              onTap: () => _onNavigateToBackupMnemonic(
+                                  context, provider),
                               enabled: provider.isNextEnabled,
                               label: 'Next',
                             ),
@@ -215,9 +218,25 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
     );
   }
 
+  void _onNavigateToBackupMnemonic(
+      BuildContext context, MnemonicProvider provider) async {
+    Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return ChangeNotifierProvider.value(
+          value: provider,
+          child: FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: BackupMnemonicScreen(),
+          ),
+        );
+      },
+    ));
+  }
+
   /// Handling the back button animation
   Future<bool> _onPop(BuildContext context) async {
-    await _animationController.reverse().orCancel;
+    await _animationController.reverse();
     Navigator.of(context).pop();
     return false;
   }
