@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/configs/app_config.dart';
 import 'generated_mnemonic_word_widget.dart';
 
 class MnemonicGridWidget extends StatelessWidget {
@@ -11,13 +10,16 @@ class MnemonicGridWidget extends StatelessWidget {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         primary: false,
-        childAspectRatio: (120 / (AppConfigs.size!.height * 0.0572)),
+        childAspectRatio: (120 / 53),
         crossAxisSpacing: 7,
         mainAxisSpacing: 7,
         crossAxisCount: 3,
         children: List<Widget>.generate(
           24,
-          (_) => GeneratedMnemonicWordWidget(),
+          (int index) => GeneratedMnemonicWordWidget(
+            wordNumber: index + 1,
+            mnemonicWord: 'hair',
+          ),
         ),
       ),
     );

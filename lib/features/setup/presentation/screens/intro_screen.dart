@@ -7,6 +7,8 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
+import 'package:polkadex/features/landing/screens/landing_screen.dart';
+import 'package:polkadex/common/utils/responsive_utils.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 
@@ -58,6 +60,7 @@ class _IntroScreenState extends State<IntroScreen>
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).textScaleFactor);
     return Scaffold(
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {
@@ -108,19 +111,27 @@ class _IntroScreenState extends State<IntroScreen>
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
                   child: SizedBox(
-                    height: 60,
+                    height: 54,
                     child: LoginButtonWidget(
                       text: 'Import Wallet',
                       backgroundColor: colorE6007A,
                       textStyle: tsS16W500CFF,
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return FadeTransition(
+                              opacity: CurvedAnimation(
+                                  parent: animation,
+                                  curve: Interval(0.500, 1.00)),
+                              child: LandingScreen());
+                        },
+                      )),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: SizedBox(
-                    height: 60,
+                    height: 54,
                     child: LoginButtonWidget(
                       text: 'Generate Wallet',
                       backgroundColor: colorFFFFFF,
@@ -138,7 +149,7 @@ class _IntroScreenState extends State<IntroScreen>
                   ),
                   child: Text(
                     'By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our Privacy Policy.',
-                    style: tsS14W400CABB2BC,
+                    style: tsS13W400CABB2BC,
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -252,63 +263,64 @@ class __ThisPageViewState extends State<_ThisPageView> {
         pageSnapping: true,
         controller: _pageController,
         itemBuilder: (context, index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          return Stack(
             children: [
-              Expanded(
-                child: ValueListenableBuilder<double>(
-                  valueListenable: _pageNotifier,
-                  builder: (context, page, child) {
-                    final size = Size(392.7272, 759.2727);
-                    final double scaleConst = (1.7 / size.height) *
-                        MediaQuery.of(context).size.height;
-                    final double offsetX =
-                        (100 / size.width) * MediaQuery.of(context).size.width;
-                    final double translateOffsetX =
-                        (250 / size.width) * MediaQuery.of(context).size.width;
-                    final double translateOffsetY = (190 / size.height) *
-                        MediaQuery.of(context).size.height;
+              ValueListenableBuilder<double>(
+                valueListenable: _pageNotifier,
+                builder: (context, page, child) {
+                  final size = Size(392.7272, 759.2727);
+                  final double scaleConst =
+                      (1.7 / size.height) * MediaQuery.of(context).size.height;
+                  final double offsetX =
+                      (100 / size.width) * MediaQuery.of(context).size.width;
+                  final double translateOffsetX =
+                      (250 / size.width) * MediaQuery.of(context).size.width;
+                  final double translateOffsetY =
+                      (190 / size.height) * MediaQuery.of(context).size.height;
 
-                    double value = (index - page);
-                    double translateX = 0.0;
-                    double scale = 1.0;
+                  double value = (index - page);
+                  double translateX = 0.0;
+                  double scale = 1.0;
 
-                    if (value > 0.0) {
-                      value = page - index;
+                  if (value > 0.0) {
+                    value = page - index;
 
-                      scale = (1 - value.abs()).abs() * scaleConst;
-                    } else {
-                      value = 1.0;
-                      scale = scaleConst;
-                      translateX = (page - index).abs();
-                    }
-                    return Transform(
+                    scale = (1 - value.abs()).abs() * scaleConst;
+                  } else {
+                    value = 1.0;
+                    scale = scaleConst;
+                    translateX = (page - index).abs();
+                  }
+                  return Align(
+                    alignment: Alignment(0.0, 0.5),
+                    child: Transform(
                         transform: Matrix4.translationValues(
                             -offsetX + (-translateOffsetX * translateX),
                             -translateOffsetY,
                             0.0)
                           ..scale(scale, scale),
-                        child: child);
-                  },
-                  child: Image.asset(
-                    _DummyData.sliderImgList[index],
-                    fit: BoxFit.contain,
-                  ),
+                        child: child),
+                  );
+                },
+                child: Image.asset(
+                  _DummyData.sliderImgList[index],
+                  fit: BoxFit.contain,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       _DummyData.sliderList[index],
-                      style: tsS32W600CFF,
+                      style: tsS32W600CFF.copyWith(fontSize: 32.sp),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Text(
                         _DummyData.sliderList[index],
-                        style: tsS18W400CFF,
+                        style: tsS18W400CFF.copyWith(fontSize: 18.sp),
                       ),
                     )
                   ],

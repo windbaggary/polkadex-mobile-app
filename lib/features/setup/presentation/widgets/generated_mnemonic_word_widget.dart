@@ -4,6 +4,14 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
 class GeneratedMnemonicWordWidget extends StatefulWidget {
+  const GeneratedMnemonicWordWidget({
+    required this.wordNumber,
+    required this.mnemonicWord,
+  });
+
+  final int wordNumber;
+  final String mnemonicWord;
+
   @override
   _GeneratedMnemonicWordWidgetState createState() =>
       _GeneratedMnemonicWordWidgetState();
@@ -77,10 +85,11 @@ class _GeneratedMnemonicWordWidgetState
                     alignment: Alignment.centerLeft,
                     child: Text.rich(
                       TextSpan(
-                        text: '1  ',
+                        text: '${widget.wordNumber}  ',
                         style: tsS15W600CFF,
                         children: <TextSpan>[
-                          TextSpan(text: 'hair', style: tsS15W400CFF),
+                          TextSpan(
+                              text: widget.mnemonicWord, style: tsS15W400CFF),
                         ],
                       ),
                     ),

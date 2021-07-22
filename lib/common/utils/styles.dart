@@ -201,6 +201,13 @@ TextStyle get tsS13W600CFF => TextStyle(
       fontWeight: FontWeight.w600,
       color: colorFFFFFF,
     );
+
+TextStyle get tsS13W400CABB2BC => TextStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w400,
+      color: colorABB2BC,
+    );
+
 TextStyle get tsS12W700CFF => TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w700,

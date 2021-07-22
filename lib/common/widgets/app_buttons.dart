@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
@@ -45,12 +46,14 @@ class AppBackButton extends StatelessWidget {
 /// The button widget layout for bottom Yes & No
 ///
 class AppButton extends StatelessWidget {
-  const AppButton({
+  AppButton({
     required this.label,
     this.enabled = true,
     this.onTap,
-    this.padding = const EdgeInsets.symmetric(vertical: 16),
+    this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
   });
+
+  final _notifier = ValueNotifier<bool>(false);
 
   final String label;
   final bool enabled;
@@ -59,15 +62,44 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: enabled ? onTap : null,
-      child: Text(label, style: tsS18W600CFF),
-      style: TextButton.styleFrom(
-        textStyle: tsS18W600CFF,
-        backgroundColor: enabled ? colorE6007A : color8BA1BE.withOpacity(0.20),
-        padding: padding,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+    return InkWell(
+      onTapDown: (_) {
+        _notifier.value = true;
+      },
+      onTap: () {
+        _notifier.value = false;
+        if (enabled && onTap != null) {
+          onTap!();
+        }
+      },
+      onTapCancel: () {
+        _notifier.value = false;
+      },
+      child: IgnorePointer(
+        ignoring: true,
+        child: ValueListenableBuilder<bool>(
+          valueListenable: _notifier,
+          builder: (context, isTranslate, child) {
+            return AnimatedContainer(
+              duration: AppConfigs.animDurationSmall ~/ 2,
+              transform: Matrix4.translationValues(
+                  0.0, isTranslate ? 10.0 : 0.00, 0.0),
+              child: child,
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: enabled ? colorE6007A : color8BA1BE.withOpacity(0.20),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: padding,
+              child: Text(
+                label,
+                style: tsS18W600CFF,
+              ),
+            ),
+          ),
         ),
       ),
     );
