@@ -290,12 +290,13 @@ class __ThisPageViewState extends State<_ThisPageView> {
                     scale = scaleConst;
                     translateX = (page - index).abs();
                   }
+
                   return Align(
                     alignment: Alignment(0.0, 0.5),
                     child: Transform(
                         transform: Matrix4.translationValues(
                             -offsetX + (-translateOffsetX * translateX),
-                            -translateOffsetY,
+                            -translateOffsetY - (100 * (scaleConst - scale)),
                             0.0)
                           ..scale(scale, scale),
                         child: child),
