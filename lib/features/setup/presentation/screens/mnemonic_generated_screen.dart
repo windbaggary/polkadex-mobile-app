@@ -161,9 +161,10 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                                     CheckBoxWidget(
                                       checkColor: colorE6007A,
                                       backgroundColor: color3B4150,
-                                      isChecked: provider.isNextEnabled,
+                                      isChecked:
+                                          provider.isButtonToBackupEnabled,
                                       onTap: (_) =>
-                                          provider.changeNextButtonState(),
+                                          provider.changeButtonToBackupState(),
                                     ),
                                     Flexible(
                                       child: Padding(
@@ -201,7 +202,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                             child: AppButton(
                               onTap: () => _onNavigateToBackupMnemonic(
                                   context, provider),
-                              enabled: provider.isNextEnabled,
+                              enabled: provider.isButtonToBackupEnabled,
                               label: 'Next',
                             ),
                           ),
@@ -223,7 +224,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
         return ChangeNotifierProvider.value(
-          value: provider,
+          value: provider..shuffleMnemonicWords(),
           child: FadeTransition(
             opacity: CurvedAnimation(
                 parent: animation, curve: Interval(0.500, 1.00)),

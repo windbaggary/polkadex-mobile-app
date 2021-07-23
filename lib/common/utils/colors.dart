@@ -17,3 +17,4 @@ Color get colorF79326 => Color(0xFFF79326);
 Color get color24252C => Color(0xFF24252C);
 Color get colorD64CA8 => Color(0xFFD64CA8);
 Color get color1F1F1F => Color(0xFF1F1F1F);
+Color get color93949A => Color(0xFF93949A);

@@ -5,6 +5,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -118,7 +119,6 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                                     mnemonicWords:
                                         provider.shuffledMnemonicWords,
                                     isDragEnabled: true,
-                                    onReplace: () {},
                                   ),
                                 ],
                               ),
@@ -140,8 +140,20 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                     child: Padding(
                       padding: const EdgeInsets.only(top: 28),
                       child: AppButton(
-                        enabled: false,
+                        enabled: provider.isButtonBackupVerificationEnabled,
                         label: 'Next',
+                        onTap: () => provider.verifyMnemonicOrder()
+                            ? () {} //TODO: Replace function with call to Wallet Settings screen
+                            : showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30),
+                                  ),
+                                ),
+                                builder: (_) => IncorrectMnemonicWidget(),
+                              ),
                       ),
                     ),
                   ),

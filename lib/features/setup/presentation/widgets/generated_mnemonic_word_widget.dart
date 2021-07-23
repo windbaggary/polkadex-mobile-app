@@ -9,12 +9,10 @@ class GeneratedMnemonicWordWidget extends StatefulWidget {
   const GeneratedMnemonicWordWidget({
     required this.wordNumber,
     required this.mnemonicWord,
-    required this.onReplace,
   });
 
   final int wordNumber;
   final String mnemonicWord;
-  final VoidCallback onReplace;
 
   @override
   _GeneratedMnemonicWordWidgetState createState() =>

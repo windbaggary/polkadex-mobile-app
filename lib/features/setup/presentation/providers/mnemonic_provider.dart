@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 class MnemonicProvider extends ChangeNotifier {
   bool _disposed = false;
   bool _isLoading = true;
-  bool _isNextEnabled = false;
+  bool _isButtonToBackupEnabled = false;
+  bool _isButtonBackupVerificationEnabled = false;
   late List<String> _mnemonicWords;
   late List<String> _shuffledMnemonicWords;
 
   bool get isLoading => _isLoading;
-  bool get isNextEnabled => _isNextEnabled && !_isLoading;
+  bool get isButtonToBackupEnabled => _isButtonToBackupEnabled && !_isLoading;
+  bool get isButtonBackupVerificationEnabled =>
+      _isButtonBackupVerificationEnabled;
   List<String> get mnemonicWords => _mnemonicWords;
   List<String> get shuffledMnemonicWords => _shuffledMnemonicWords;
 
@@ -30,12 +33,19 @@ class MnemonicProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeNextButtonState() {
-    _isNextEnabled = !_isNextEnabled;
+  void changeButtonToBackupState() {
+    _isButtonToBackupEnabled = !_isButtonToBackupEnabled;
     notifyListeners();
   }
 
+  void shuffleMnemonicWords() {
+    _isButtonBackupVerificationEnabled = false;
+    _shuffledMnemonicWords.shuffle();
+  }
+
   void swapWordsFromShuffled(String firstWord, String secondWord) {
+    _isButtonBackupVerificationEnabled = true;
+
     final int _indexFirst = _shuffledMnemonicWords.indexOf(firstWord);
     final int _indexSecond = _shuffledMnemonicWords.indexOf(secondWord);
 
@@ -43,6 +53,19 @@ class MnemonicProvider extends ChangeNotifier {
     _shuffledMnemonicWords[_indexSecond] = firstWord;
 
     notifyListeners();
+  }
+
+  bool verifyMnemonicOrder() {
+    for (int i = 0; i < _mnemonicWords.length; i++) {
+      if (_shuffledMnemonicWords[i] != _mnemonicWords[i]) {
+        _isButtonBackupVerificationEnabled = false;
+        notifyListeners();
+
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /// Make a 2 sec delay and toggle the isLoading to true
@@ -62,7 +85,7 @@ class MnemonicProvider extends ChangeNotifier {
           'lily',
           'rice',
         ]);
-        _shuffledMnemonicWords = [..._mnemonicWords]..shuffle();
+        _shuffledMnemonicWords = [..._mnemonicWords];
 
         _loading = false;
       });

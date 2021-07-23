@@ -6,12 +6,10 @@ class MnemonicGridWidget extends StatelessWidget {
   const MnemonicGridWidget({
     required this.mnemonicWords,
     this.isDragEnabled = false,
-    this.onReplace,
   });
 
   final List<String> mnemonicWords;
   final bool isDragEnabled;
-  final VoidCallback? onReplace;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +28,6 @@ class MnemonicGridWidget extends StatelessWidget {
           (int index) => GeneratedMnemonicWordWidget(
             wordNumber: index + 1,
             mnemonicWord: mnemonicWords[index],
-            onReplace: onReplace ?? () {},
           ),
         ),
       ),

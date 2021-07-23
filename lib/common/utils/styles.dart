@@ -48,6 +48,12 @@ TextStyle get tsS18W400CFF => TextStyle(
       color: colorFFFFFF,
     );
 
+TextStyle get tsS18W400C93949A => TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      color: color93949A,
+    );
+
 TextStyle get tsS23W500CFF => TextStyle(
       fontSize: 23,
       fontWeight: FontWeight.w500,
