@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
+import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
@@ -146,9 +148,27 @@ class _IntroScreenState extends State<IntroScreen>
                     top: 22,
                     bottom: 24,
                   ),
-                  child: Text(
-                    'By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our Privacy Policy.',
-                    style: tsS13W400CABB2BC,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                            style: tsS13W400CABB2BC,
+                            text:
+                                'By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our '),
+                        TextSpan(
+                          style: tsS13W400CABB2BC.copyWith(
+                            decoration: TextDecoration.underline,
+                          ),
+                          text: 'Privacy Policy',
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PrivacyPolicyScreen(),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
