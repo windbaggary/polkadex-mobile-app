@@ -21,6 +21,32 @@ class GeneratedMnemonicWordWidget extends StatefulWidget {
 
 class _GeneratedMnemonicWordWidgetState
     extends State<GeneratedMnemonicWordWidget> {
+  Widget _mnemonicWordBaseWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Text(
+              '${widget.wordNumber}',
+              style: tsS15W600CFF,
+            ),
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  '  ${widget.mnemonicWord}',
+                  style: tsS15W400CFF,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _placeholderWhileDragWidget() {
     return Container(
       decoration: BoxDecoration(
@@ -40,21 +66,7 @@ class _GeneratedMnemonicWordWidgetState
           color: colorE6007A,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 12),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text.rich(
-              TextSpan(
-                text: '${widget.wordNumber}  ',
-                style: tsS15W600CFF,
-                children: <TextSpan>[
-                  TextSpan(text: widget.mnemonicWord, style: tsS15W400CFF),
-                ],
-              ),
-            ),
-          ),
-        ),
+        child: _mnemonicWordBaseWidget(),
       ),
     );
   }
@@ -81,22 +93,7 @@ class _GeneratedMnemonicWordWidgetState
                       : colorE6007A.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 12),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text.rich(
-                      TextSpan(
-                        text: '${widget.wordNumber}  ',
-                        style: tsS15W600CFF,
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: widget.mnemonicWord, style: tsS15W400CFF),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                child: _mnemonicWordBaseWidget(),
               ),
             ),
           );
