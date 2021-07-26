@@ -8,6 +8,7 @@ import 'package:polkadex/common/widgets/check_box_widget.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_shimmer_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
+import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 import 'backup_mnemonic_screen.dart';
@@ -44,7 +45,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MnemonicProvider()..initLoadingTimer(),
+      create: (context) => dependency<MnemonicProvider>()..initLoadingTimer(),
       builder: (context, _) {
         return Consumer<MnemonicProvider>(builder: (context, provider, child) {
           return WillPopScope(

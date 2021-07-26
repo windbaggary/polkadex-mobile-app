@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 
 class MnemonicProvider extends ChangeNotifier {
+  MnemonicProvider({
+    required GenerateMnemonicUseCase generateMnemonicUseCase,
+  }) : _generateMnemonicUseCase = generateMnemonicUseCase;
+
+  final GenerateMnemonicUseCase _generateMnemonicUseCase;
+
   bool _disposed = false;
   bool _isLoading = true;
   bool _isButtonToBackupEnabled = false;
@@ -70,21 +77,16 @@ class MnemonicProvider extends ChangeNotifier {
 
   /// Make a 2 sec delay and toggle the isLoading to true
   void initLoadingTimer() =>
-      Future.delayed(const Duration(seconds: 2)).then((_) {
-        _mnemonicWords = List.unmodifiable([
-          'sickness',
-          'present',
-          'island',
-          'bomb',
-          'applied',
-          'leftovers',
-          'ideology',
-          'center',
-          'tropical',
-          'motivation',
-          'lily',
-          'rice',
-        ]);
+      Future.delayed(const Duration(seconds: 2)).then((_) async {
+        final result = await _generateMnemonicUseCase();
+
+        result.fold(
+          (l) => null,
+          (mnemonic) => _mnemonicWords = List.unmodifiable(
+            [...mnemonic],
+          ),
+        );
+
         _shuffledMnemonicWords = [..._mnemonicWords];
 
         _loading = false;
