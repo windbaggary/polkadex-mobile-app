@@ -13,7 +13,7 @@ import 'package:polkadex/features/app_settings_info/screens/terms_conditions_scr
 import 'package:polkadex/features/landing/providers/notification_drawer_provider.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
-import 'package:polkadex/features/setup/screens/intro_screen.dart';
+import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -27,7 +27,6 @@ const double appDrawerWidth = 300;
 
 /// The right drawer width
 double getAppDrawerNotifWidth() {
-  print(AppConfigs.size!.width);
   // double ratio = 0.300;
   // if (Platform.isIOS) {
   // ratio = 0.750;

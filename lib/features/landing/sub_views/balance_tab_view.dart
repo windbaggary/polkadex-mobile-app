@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
+import 'package:polkadex/common/widgets/check_box_widget.dart';
 import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
 import 'package:polkadex/features/balance/screens/balance_summary_screen.dart';
 import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
@@ -199,8 +200,11 @@ class _BalanceTabViewState extends State<BalanceTabView>
                             children: [
                               Consumer<_ThisProvider>(
                                 builder: (context, thisProvider, child) =>
-                                    _ThisCheckBoxWidget(
+                                    CheckBoxWidget(
+                                  checkColor: colorFFFFFF,
+                                  backgroundColor: colorE6007A,
                                   isChecked: thisProvider.isHideSmallBalance,
+                                  isBackTransparentOnUnchecked: true,
                                   onTap: (val) =>
                                       thisProvider.isHideSmallBalance = val,
                                 ),
@@ -494,55 +498,6 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// A custom checkbox for the screen
-class _ThisCheckBoxWidget extends StatelessWidget {
-  final bool isChecked;
-  final void Function(bool val)? onTap;
-  const _ThisCheckBoxWidget({
-    this.isChecked = true,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget? child;
-    final Border border = Border.all(
-      color: colorE6007A,
-      width: 3,
-    );
-    Color? color;
-    if (isChecked) {
-      color = colorE6007A;
-      child = FittedBox(
-        child: Icon(
-          Icons.check,
-          color: colorFFFFFF,
-        ),
-      );
-    }
-
-    return InkWell(
-      onTap: () {
-        if (onTap != null) {
-          onTap!(!isChecked);
-        }
-      },
-      child: AnimatedContainer(
-        duration: AppConfigs.animDurationSmall ~/ 2,
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(5),
-          border: border,
-        ),
-        padding: const EdgeInsets.all(0),
-        child: child,
       ),
     );
   }
