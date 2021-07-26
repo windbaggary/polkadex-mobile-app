@@ -76,7 +76,7 @@ class MnemonicProvider extends ChangeNotifier {
   }
 
   /// Make a 2 sec delay and toggle the isLoading to true
-  void initLoadingTimer() =>
+  void loadMnemonic() =>
       Future.delayed(const Duration(seconds: 2)).then((_) async {
         final result = await _generateMnemonicUseCase();
 
