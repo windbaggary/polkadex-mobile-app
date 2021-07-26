@@ -192,16 +192,25 @@ TextStyle get tsS13W500CFFOP50 => TextStyle(
       fontWeight: FontWeight.w500,
       color: colorFFFFFF.withOpacity(0.50),
     );
+
 TextStyle get tsS13W500CFFOP40 => TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w500,
       color: colorFFFFFF.withOpacity(0.40),
     );
+
 TextStyle get tsS13W400CFFOP60 => TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w400,
       color: colorFFFFFF.withOpacity(0.60),
     );
+
+TextStyle get tsS13W400C8E8E93 => TextStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w400,
+      color: colorFFFFFF.withOpacity(0.5),
+    );
+
 TextStyle get tsS13W600CFF => TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w600,

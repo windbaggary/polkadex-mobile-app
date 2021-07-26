@@ -4,18 +4,19 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
-import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
-import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 import 'package:provider/provider.dart';
 
-class BackupMnemonicScreen extends StatefulWidget {
+class WalletSettingsScreen extends StatefulWidget {
   @override
-  _BackupMnemonicScreenState createState() => _BackupMnemonicScreenState();
+  _WalletSettingsScreenState createState() => _WalletSettingsScreenState();
 }
 
-class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
+class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
@@ -47,7 +48,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
           backgroundColor: color1C2023,
           appBar: AppBar(
             title: Text(
-              'Create Wallet',
+              'Wallet Settings',
               style: tsS19W600CFF,
             ),
             leading: SizedBox(
@@ -98,28 +99,80 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.only(
+                                left: 20,
+                                top: 20,
+                                right: 20,
+                              ),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Text(
-                                    'Backup mnemonic phrases',
+                                    'Wallet Settings',
                                     style: tsS26W600CFF,
                                   ),
                                   SizedBox(
                                     height: 16,
                                   ),
                                   Text(
-                                    'Please enter the 12-24 words in the correct order.',
+                                    'Security password is used for transfers, create orders, mnemonics backups, applications authorization, etc.',
                                     style: tsS18W400CFF,
                                   ),
                                   SizedBox(
                                     height: 14,
                                   ),
-                                  MnemonicGridWidget(
-                                    mnemonicWords:
-                                        provider.shuffledMnemonicWords,
-                                    isDragEnabled: true,
+                                  WalletInputWidget(
+                                    title: 'Wallet Name',
+                                    description: 'Set wallet name',
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  WalletInputWidget(
+                                    title: 'Password',
+                                    description: 'Set password',
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  WalletInputWidget(
+                                    title: 'Repeat Password',
+                                    description: 'Repeat your password',
+                                  ),
+                                  SizedBox(
+                                    height: 26,
+                                  ),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    primary: false,
+                                    childAspectRatio: (164 / 19),
+                                    crossAxisCount: 2,
+                                    children: [
+                                      PasswordValidationWidget(
+                                        title: 'At least 8 characters',
+                                        isValid: true,
+                                      ),
+                                      PasswordValidationWidget(
+                                        title: 'At least 1 lowercase',
+                                        isValid: true,
+                                      ),
+                                      PasswordValidationWidget(
+                                        title: 'At least 1 uppercase letter',
+                                      ),
+                                      PasswordValidationWidget(
+                                        title: 'At least 1 digit',
+                                      ),
+                                    ],
+                                  ),
+                                  OptionTabSwitchWidget(
+                                    svgAsset: "finger-print".asAssetSvg(),
+                                    title: "Secure with FingerPrint",
+                                    description:
+                                        "Secure your access without typing your Pin Code.",
+                                    isChecked: provider.isFingerPrint,
+                                    onSwitchChanged: (value) {
+                                      provider.fingerPrintAuth = value;
+                                    },
                                   ),
                                 ],
                               ),
@@ -136,27 +189,20 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                 hasScrollBody: false,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(28, 14, 28, 32),
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 28),
-                      child: AppButton(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Polkadex Exchange eApp does not keep it, if you forget the password, you cannot restore it.',
+                        textAlign: TextAlign.center,
+                        style: tsS13W400CABB2BC,
+                      ),
+                      AppButton(
                         enabled: provider.isButtonBackupVerificationEnabled,
                         label: 'Next',
-                        onTap: () => provider.verifyMnemonicOrder()
-                            ? _onNavigateToWalletSettings(context, provider)
-                            : showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30),
-                                  ),
-                                ),
-                                builder: (_) => IncorrectMnemonicWidget(),
-                              ),
+                        onTap: () {},
                       ),
-                    ),
+                    ],
                   ),
                 ),
               )
@@ -165,22 +211,6 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
         ),
       );
     });
-  }
-
-  void _onNavigateToWalletSettings(
-      BuildContext context, MnemonicProvider provider) async {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return ChangeNotifierProvider.value(
-          value: provider,
-          child: FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: WalletSettingsScreen(),
-          ),
-        );
-      },
-    ));
   }
 
   /// Handling the back button animation
