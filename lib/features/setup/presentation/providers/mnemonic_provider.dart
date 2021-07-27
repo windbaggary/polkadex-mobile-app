@@ -76,19 +76,18 @@ class MnemonicProvider extends ChangeNotifier {
   }
 
   /// Make a 2 sec delay and toggle the isLoading to true
-  void loadMnemonic() =>
-      Future.delayed(const Duration(seconds: 2)).then((_) async {
-        final result = await _generateMnemonicUseCase();
+  void loadMnemonic() async {
+    final result = await _generateMnemonicUseCase();
 
-        result.fold(
-          (l) => null,
-          (mnemonic) => _mnemonicWords = List.unmodifiable(
-            [...mnemonic],
-          ),
-        );
+    result.fold(
+      (l) => null,
+      (mnemonic) => _mnemonicWords = List.unmodifiable(
+        [...mnemonic],
+      ),
+    );
 
-        _shuffledMnemonicWords = [..._mnemonicWords];
+    _shuffledMnemonicWords = [..._mnemonicWords];
 
-        _loading = false;
-      });
+    _loading = false;
+  }
 }
