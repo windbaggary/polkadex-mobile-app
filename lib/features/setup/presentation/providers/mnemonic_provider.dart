@@ -12,6 +12,7 @@ class MnemonicProvider extends ChangeNotifier {
   bool _isLoading = true;
   bool _isButtonToBackupEnabled = false;
   bool _isButtonBackupVerificationEnabled = false;
+  bool _isFingerPrint = false;
   late List<String> _mnemonicWords;
   late List<String> _shuffledMnemonicWords;
 
@@ -19,8 +20,19 @@ class MnemonicProvider extends ChangeNotifier {
   bool get isButtonToBackupEnabled => _isButtonToBackupEnabled && !_isLoading;
   bool get isButtonBackupVerificationEnabled =>
       _isButtonBackupVerificationEnabled;
+  bool get isFingerPrint => _isFingerPrint;
   List<String> get mnemonicWords => _mnemonicWords;
   List<String> get shuffledMnemonicWords => _shuffledMnemonicWords;
+
+  set _loading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  set fingerPrintAuth(bool value) {
+    _isFingerPrint = value;
+    notifyListeners();
+  }
 
   @override
   void dispose() {
@@ -33,11 +45,6 @@ class MnemonicProvider extends ChangeNotifier {
     if (!_disposed) {
       super.notifyListeners();
     }
-  }
-
-  set _loading(bool value) {
-    _isLoading = value;
-    notifyListeners();
   }
 
   void changeButtonToBackupState() {
