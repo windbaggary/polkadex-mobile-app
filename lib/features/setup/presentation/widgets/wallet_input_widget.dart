@@ -6,10 +6,16 @@ class WalletInputWidget extends StatelessWidget {
   WalletInputWidget({
     required this.title,
     required this.description,
+    this.onChanged,
+    this.controller,
+    this.obscureText = false,
   });
 
   final String title;
   final String description;
+  final Function(String)? onChanged;
+  final TextEditingController? controller;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +34,19 @@ class WalletInputWidget extends StatelessWidget {
               style: tsS13W400C8E8E93,
             ),
             TextField(
-              obscureText: true,
+              controller: controller,
               decoration: InputDecoration(
                 isDense: true,
                 border: InputBorder.none,
                 hintText: description,
                 hintStyle: tsS16W400CFF,
               ),
+              obscureText: obscureText,
+              obscuringCharacter: '*',
               style: tsS16W400CFF,
               cursorWidth: 1,
               cursorColor: colorFFFFFF,
+              onChanged: onChanged,
             )
           ],
         ),

@@ -45,7 +45,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => dependency<MnemonicProvider>()..initLoadingTimer(),
+      create: (context) => dependency<MnemonicProvider>()..loadMnemonic(),
       builder: (context, _) {
         return Consumer<MnemonicProvider>(builder: (context, provider, child) {
           return WillPopScope(
