@@ -20,17 +20,18 @@ class PasswordValidationWidget extends StatelessWidget {
           child: Icon(
             Icons.check,
             size: 16,
-            color: isValid ? colorFFFFFF.withOpacity(0.5) : color02C076,
+            color: isValid ? color02C076 : colorFFFFFF.withOpacity(0.5),
           ),
         ),
         Flexible(
-            child: FittedBox(
-          fit: BoxFit.fitWidth,
-          child: Text(
-            title,
-            style: tsS14W400CFFOP50,
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              title,
+              style: isValid ? tsS14W400CFF : tsS14W400CFFOP50,
+            ),
           ),
-        )),
+        ),
       ],
     );
   }
