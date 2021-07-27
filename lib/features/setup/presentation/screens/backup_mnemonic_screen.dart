@@ -5,7 +5,6 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
@@ -144,7 +143,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                         enabled: provider.isButtonBackupVerificationEnabled,
                         label: 'Next',
                         onTap: () => provider.verifyMnemonicOrder()
-                            ? _onNavigateToWalletSettings(context, provider)
+                            ? () {} //TODO: Replace function with call to Wallet Settings screen
                             : showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
@@ -165,22 +164,6 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
         ),
       );
     });
-  }
-
-  void _onNavigateToWalletSettings(
-      BuildContext context, MnemonicProvider provider) async {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return ChangeNotifierProvider.value(
-          value: provider,
-          child: FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: WalletSettingsScreen(),
-          ),
-        );
-      },
-    ));
   }
 
   /// Handling the back button animation

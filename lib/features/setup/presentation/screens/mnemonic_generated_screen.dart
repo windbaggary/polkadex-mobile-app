@@ -191,7 +191,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(28, 14, 28, 32),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
                             'The mnemonic can be used to restore your wallet. Keep it carefully to not lose your assets. Having the mnemonic phrases can have a full control over the assets.',
