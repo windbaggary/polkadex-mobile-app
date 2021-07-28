@@ -18,4 +18,12 @@ class EncodingModel extends EncondingEntity {
       version: map['version'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'content': content,
+      'type': type,
+      'version': version,
+    };
+  }
 }
