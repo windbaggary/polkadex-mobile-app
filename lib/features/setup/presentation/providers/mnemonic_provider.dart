@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
 
 class MnemonicProvider extends ChangeNotifier {
   MnemonicProvider({
     required GenerateMnemonicUseCase generateMnemonicUseCase,
-  }) : _generateMnemonicUseCase = generateMnemonicUseCase;
+    required ImportAccountUseCase importAccountUseCase,
+  })  : _generateMnemonicUseCase = generateMnemonicUseCase,
+        _importAccountUseCase = importAccountUseCase;
 
   final GenerateMnemonicUseCase _generateMnemonicUseCase;
+  final ImportAccountUseCase _importAccountUseCase;
 
   bool _disposed = false;
   bool _isLoading = true;
@@ -47,7 +51,7 @@ class MnemonicProvider extends ChangeNotifier {
 
   void shuffleMnemonicWords() {
     _isButtonBackupVerificationEnabled = false;
-    _shuffledMnemonicWords.shuffle();
+    //_shuffledMnemonicWords.shuffle();
   }
 
   void swapWordsFromShuffled(String firstWord, String secondWord) {
@@ -90,4 +94,18 @@ class MnemonicProvider extends ChangeNotifier {
 
         _loading = false;
       });
+
+  void importAccount(String password) async {
+    final result = await _importAccountUseCase(
+      mnemonic: _mnemonicWords.join(' '),
+      password: password,
+    );
+
+    result.fold(
+      (l) => null,
+      (importedAcc) {
+        //TODO: Use the imported in the app or store it
+      },
+    );
+  }
 }

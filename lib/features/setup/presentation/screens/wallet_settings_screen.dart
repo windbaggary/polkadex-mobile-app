@@ -256,7 +256,8 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                     _passwordController.text ==
                                         _passwordRepeatController.text,
                                 label: 'Next',
-                                onTap: () {},
+                                onTap: () => provider
+                                    .importAccount(_passwordController.text),
                               ),
                             ],
                           ),

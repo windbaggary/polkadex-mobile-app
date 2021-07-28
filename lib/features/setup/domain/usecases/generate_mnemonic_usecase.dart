@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 
 class GenerateMnemonicUseCase {
@@ -8,7 +9,7 @@ class GenerateMnemonicUseCase {
 
   final MnemonicRepository _mnemonicRepository;
 
-  Future<Either<Error, List<String>>> call() async {
+  Future<Either<ApiError, List<String>>> call() async {
     return await _mnemonicRepository.generateMnemonic();
   }
 }

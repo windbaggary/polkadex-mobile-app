@@ -7,6 +7,8 @@ import 'package:polkadex/features/setup/presentation/providers/wallet_settings_p
 import 'common/web_view_runner/web_view_runner.dart';
 import 'package:get_it/get_it.dart';
 
+import 'features/setup/domain/usecases/import_account_usecase.dart';
+
 final dependency = GetIt.instance;
 
 Future<void> init() async {
@@ -31,8 +33,15 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => ImportAccountUseCase(
+      mnemonicRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
+      importAccountUseCase: dependency(),
     ),
   );
 
