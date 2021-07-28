@@ -135,7 +135,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(28, 14, 28, 32),
+                  padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
                   child: Container(
                     alignment: Alignment.bottomCenter,
                     child: Padding(

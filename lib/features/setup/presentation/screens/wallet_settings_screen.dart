@@ -241,7 +241,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                       SliverFillRemaining(
                         hasScrollBody: false,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(28, 14, 28, 32),
+                          padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
