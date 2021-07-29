@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
 
 class MnemonicProvider extends ChangeNotifier {
   MnemonicProvider({
     required GenerateMnemonicUseCase generateMnemonicUseCase,
-  }) : _generateMnemonicUseCase = generateMnemonicUseCase;
+    required ImportAccountUseCase importAccountUseCase,
+  })  : _generateMnemonicUseCase = generateMnemonicUseCase,
+        _importAccountUseCase = importAccountUseCase;
 
   final GenerateMnemonicUseCase _generateMnemonicUseCase;
+  final ImportAccountUseCase _importAccountUseCase;
 
   bool _disposed = false;
   bool _isLoading = true;
@@ -22,6 +26,11 @@ class MnemonicProvider extends ChangeNotifier {
   List<String> get mnemonicWords => _mnemonicWords;
   List<String> get shuffledMnemonicWords => _shuffledMnemonicWords;
 
+  set _loading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _disposed = true;
@@ -33,11 +42,6 @@ class MnemonicProvider extends ChangeNotifier {
     if (!_disposed) {
       super.notifyListeners();
     }
-  }
-
-  set _loading(bool value) {
-    _isLoading = value;
-    notifyListeners();
   }
 
   void changeButtonToBackupState() {
@@ -75,7 +79,6 @@ class MnemonicProvider extends ChangeNotifier {
     return true;
   }
 
-  /// Make a 2 sec delay and toggle the isLoading to true
   void loadMnemonic() async {
     final result = await _generateMnemonicUseCase();
 
@@ -89,5 +92,19 @@ class MnemonicProvider extends ChangeNotifier {
     _shuffledMnemonicWords = [..._mnemonicWords];
 
     _loading = false;
+  }
+
+  Future<void> importAccount(String password) async {
+    final result = await _importAccountUseCase(
+      mnemonic: _mnemonicWords.join(' '),
+      password: password,
+    );
+
+    result.fold(
+      (l) => null,
+      (importedAcc) {
+        //TODO: Use the imported in the app or store it
+      },
+    );
   }
 }

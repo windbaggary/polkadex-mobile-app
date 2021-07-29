@@ -10,4 +10,15 @@ class MnemonicRemoteDatasource {
 
     return result;
   }
+
+  Future<Map<String, dynamic>> importAccount(
+      String mnemonic, String password) async {
+    final String _callImportAccount =
+        'keyring.recover("mnemonic", "sr25519", \'$mnemonic\', "$password")';
+
+    final Map<String, dynamic> result =
+        await dependency<WebViewRunner>().evalJavascript(_callImportAccount);
+
+    return result;
+  }
 }

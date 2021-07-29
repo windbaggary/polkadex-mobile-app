@@ -13,7 +13,7 @@ class MyAccountProfileProvider extends ChangeNotifier {
   /// Pick the image from system
   void pickImgFile() async {
     try {
-      final file = await ImagePicker().getImage(
+      final file = await ImagePicker().pickImage(
         source: ImageSource.gallery,
       );
       if (file != null) {

@@ -62,41 +62,44 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTapDown: (_) {
-        _notifier.value = true;
-      },
-      onTap: () {
-        _notifier.value = false;
-        if (enabled && onTap != null) {
-          onTap!();
-        }
-      },
-      onTapCancel: () {
-        _notifier.value = false;
-      },
-      child: IgnorePointer(
-        ignoring: true,
-        child: ValueListenableBuilder<bool>(
-          valueListenable: _notifier,
-          builder: (context, isTranslate, child) {
-            return AnimatedContainer(
-              duration: AppConfigs.animDurationSmall ~/ 2,
-              transform: Matrix4.translationValues(
-                  0.0, isTranslate ? 10.0 : 0.00, 0.0),
-              child: child,
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: enabled ? colorE6007A : color8BA1BE.withOpacity(0.20),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: padding,
-              child: Text(
-                label,
-                style: tsS18W600CFF,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      child: InkWell(
+        onTapDown: (_) {
+          _notifier.value = true;
+        },
+        onTap: () {
+          _notifier.value = false;
+          if (enabled && onTap != null) {
+            onTap!();
+          }
+        },
+        onTapCancel: () {
+          _notifier.value = false;
+        },
+        child: IgnorePointer(
+          ignoring: true,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _notifier,
+            builder: (context, isTranslate, child) {
+              return AnimatedContainer(
+                duration: AppConfigs.animDurationSmall ~/ 2,
+                transform: Matrix4.translationValues(
+                    0.0, isTranslate ? 10.0 : 0.00, 0.0),
+                child: child,
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: enabled ? colorE6007A : color8BA1BE.withOpacity(0.20),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: padding,
+                child: Text(
+                  label,
+                  style: tsS18W600CFF,
+                ),
               ),
             ),
           ),

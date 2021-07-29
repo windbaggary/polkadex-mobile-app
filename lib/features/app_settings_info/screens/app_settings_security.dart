@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
@@ -29,7 +29,8 @@ class AppSettingsSecurity extends StatelessWidget {
               children: [
                 SizedBox(height: 8),
                 Consumer<_ThisProvider>(
-                  builder: (context, thisProvider, child) => _ThisItemWidget(
+                  builder: (context, thisProvider, child) =>
+                      OptionTabSwitchWidget(
                     svgAsset: "finger-print".asAssetSvg(),
                     title: "Secure with FingerPrint",
                     description:
@@ -48,7 +49,8 @@ class AppSettingsSecurity extends StatelessWidget {
                   ),
                 ),
                 Consumer<_ThisProvider>(
-                  builder: (context, thisProvider, child) => _ThisItemWidget(
+                  builder: (context, thisProvider, child) =>
+                      OptionTabSwitchWidget(
                     svgAsset: "keypad".asAssetSvg(),
                     title: "Secure with Pin Code",
                     description: "Your access are kept safe by Pin Code.",
@@ -66,7 +68,8 @@ class AppSettingsSecurity extends StatelessWidget {
                   ),
                 ),
                 Consumer<_ThisProvider>(
-                  builder: (context, thisProvider, child) => _ThisItemWidget(
+                  builder: (context, thisProvider, child) =>
+                      OptionTabSwitchWidget(
                     svgAsset: "security".asAssetSvg(),
                     title: "Two-Factor Authentication (2FA)",
                     description:
@@ -85,7 +88,8 @@ class AppSettingsSecurity extends StatelessWidget {
                   ),
                 ),
                 Consumer<_ThisProvider>(
-                  builder: (context, thisProvider, child) => _ThisItemWidget(
+                  builder: (context, thisProvider, child) =>
+                      OptionTabSwitchWidget(
                     svgAsset: "tracker".asAssetSvg(),
                     title: "Tracking IP",
                     description: "Block access to suspicious IPs.",
@@ -117,75 +121,6 @@ class AppSettingsSecurity extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// The widget represents the each items in the list of the screen
-class _ThisItemWidget extends StatelessWidget {
-  final String svgAsset;
-  final String? title;
-  final String? description;
-  final bool isChecked;
-  final ValueChanged<bool> onSwitchChanged;
-  const _ThisItemWidget({
-    required this.svgAsset,
-    required this.title,
-    required this.description,
-    required this.isChecked,
-    required this.onSwitchChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 22),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: color8BA1BE.withOpacity(0.2),
-            ),
-            padding: const EdgeInsets.all(14),
-            child: SvgPicture.asset(svgAsset),
-          ),
-          SizedBox(width: 9),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  title ?? "",
-                  style: tsS15W400CFF,
-                ),
-                SizedBox(height: 1),
-                Text(
-                  description ?? "",
-                  style: tsS13W400CFFOP60,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: MediaQuery.of(context).size.width * 0.01800),
-          SizedBox(
-            width: 48,
-            height: 48,
-            child: FittedBox(
-              child: Switch(
-                value: isChecked,
-                onChanged: onSwitchChanged,
-                inactiveTrackColor: Colors.white.withOpacity(0.15),
-                activeColor: colorABB2BC,
-                activeTrackColor: Colors.white.withOpacity(0.15),
-                inactiveThumbColor: colorE6007A,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

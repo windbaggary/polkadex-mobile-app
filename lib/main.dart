@@ -32,15 +32,19 @@ class MyApp extends StatelessWidget {
       builder: (context, _) => MaterialApp(
         title: 'Polkadex',
         theme: ThemeData(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          hoverColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          buttonColor: Colors.transparent,
-          primaryColor: color2E303C,
-          canvasColor: color2E303C,
-          fontFamily: 'WorkSans',
-        ).copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            buttonColor: Colors.transparent,
+            primaryColor: color2E303C,
+            canvasColor: color2E303C,
+            fontFamily: 'WorkSans',
+            accentColor: colorE6007A,
+            backgroundColor: color3B4150,
+            dialogTheme: DialogTheme(
+              backgroundColor: color2E303C,
+            )).copyWith(
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
               TargetPlatform.android: CupertinoPageTransitionsBuilder(),
