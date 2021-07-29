@@ -51,7 +51,7 @@ class MnemonicProvider extends ChangeNotifier {
 
   void shuffleMnemonicWords() {
     _isButtonBackupVerificationEnabled = false;
-    //_shuffledMnemonicWords.shuffle();
+    _shuffledMnemonicWords.shuffle();
   }
 
   void swapWordsFromShuffled(String firstWord, String secondWord) {
@@ -95,7 +95,7 @@ class MnemonicProvider extends ChangeNotifier {
         _loading = false;
       });
 
-  void importAccount(String password) async {
+  Future<void> importAccount(String password) async {
     final result = await _importAccountUseCase(
       mnemonic: _mnemonicWords.join(' '),
       password: password,

@@ -4,7 +4,9 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
+import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
@@ -256,8 +258,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                     _passwordController.text ==
                                         _passwordRepeatController.text,
                                 label: 'Next',
-                                onTap: () => provider
-                                    .importAccount(_passwordController.text),
+                                onTap: () => _onNextTap(provider),
                               ),
                             ],
                           ),
@@ -270,6 +271,22 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
         ),
       );
     });
+  }
+
+  void _onNextTap(MnemonicProvider provider) async {
+    LoadingPopup.evalShowDismiss(context: context);
+    await provider.importAccount(_passwordController.text);
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+              opacity: CurvedAnimation(
+                  parent: animation, curve: Interval(0.500, 1.00)),
+              child: LandingScreen());
+        },
+      ),
+    );
   }
 
   Future<bool> _onPop(BuildContext context) async {
