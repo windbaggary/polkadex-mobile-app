@@ -274,7 +274,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
   }
 
   void _onNextTap(MnemonicProvider provider) async {
-    LoadingPopup.evalShowDismiss(context: context);
+    LoadingPopup.show(context: context);
     await provider.importAccount(_passwordController.text);
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.of(context).push(

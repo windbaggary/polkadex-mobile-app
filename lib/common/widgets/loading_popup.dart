@@ -4,7 +4,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
 abstract class LoadingPopup {
-  static void evalShowDismiss({
+  static void show({
     required BuildContext context,
   }) {
     showDialog(
