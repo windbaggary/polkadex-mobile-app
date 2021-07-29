@@ -488,7 +488,6 @@ class _ThisGraphOptionWidget extends StatelessWidget {
       containerWidth = 30;
       calendarPaddingRight = 12;
     }
-    print(MediaQuery.of(context).size.width);
     return Center(
       child: SizedBox(
         height: 36 + 10 + 14.0,

@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/setup/screens/terms_screen.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
+import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
+import 'package:polkadex/features/landing/screens/landing_screen.dart';
+import 'package:polkadex/common/utils/responsive_utils.dart';
+import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
+import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 
 /// The dummy data for the screen
 ///
@@ -94,7 +97,7 @@ class _IntroScreenState extends State<IntroScreen>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 24, right: 24, top: 30, bottom: 40),
+                      left: 24, right: 24, top: 30, bottom: 30),
                   child: ValueListenableBuilder<int>(
                     valueListenable: _pageviewIndexNotifier,
                     builder: (context, pageIndex, child) => AppSliderDots(
@@ -106,15 +109,35 @@ class _IntroScreenState extends State<IntroScreen>
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: SizedBox(
-                      height: 60,
-                      child: _ThisLoginButton(
-                        onTap: () => _onNavigateToTerms(context),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+                  child: SizedBox(
+                    height: 54,
+                    child: LoginButtonWidget(
+                      text: 'Import Wallet',
+                      backgroundColor: colorE6007A,
+                      textStyle: tsS16W500CFF,
+                      onTap: () => Navigator.of(context).push(PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return FadeTransition(
+                              opacity: CurvedAnimation(
+                                  parent: animation,
+                                  curve: Interval(0.500, 1.00)),
+                              child: LandingScreen());
+                        },
+                      )),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: SizedBox(
+                    height: 54,
+                    child: LoginButtonWidget(
+                      text: 'Generate Wallet',
+                      backgroundColor: colorFFFFFF,
+                      textStyle: tsS16W500C24252C,
+                      onTap: () => _onNavigateToGenerateWallet(context),
                     ),
                   ),
                 ),
@@ -125,9 +148,27 @@ class _IntroScreenState extends State<IntroScreen>
                     top: 22,
                     bottom: 24,
                   ),
-                  child: Text(
-                    'The following interface shows simulated trades from one of the largest centralized exchanges',
-                    style: tsS16W400CABB2BC,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                            style: tsS13W400CABB2BC,
+                            text:
+                                'By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our '),
+                        TextSpan(
+                          style: tsS13W400CABB2BC.copyWith(
+                            decoration: TextDecoration.underline,
+                          ),
+                          text: 'Privacy Policy',
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PrivacyPolicyScreen(),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
@@ -150,77 +191,15 @@ class _IntroScreenState extends State<IntroScreen>
   }
 
   /// Navigate to terms and condition screen
-  void _onNavigateToTerms(BuildContext context) async {
+  void _onNavigateToGenerateWallet(BuildContext context) async {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
         return FadeTransition(
             opacity: CurvedAnimation(
                 parent: animation, curve: Interval(0.500, 1.00)),
-            child: TermsScreen());
+            child: MnemonicGeneratedScreen());
       },
     ));
-  }
-}
-
-class _ThisLoginButton extends StatelessWidget {
-  final _notifier = ValueNotifier<bool>(false);
-  _ThisLoginButton({
-    required this.onTap,
-  });
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTapDown: (_) {
-        _notifier.value = true;
-      },
-      onTap: () {
-        _notifier.value = false;
-        onTap();
-      },
-      onTapCancel: () {
-        _notifier.value = false;
-      },
-      child: IgnorePointer(
-        ignoring: true,
-        child: ValueListenableBuilder<bool>(
-          valueListenable: _notifier,
-          builder: (context, isTranslate, child) {
-            return AnimatedContainer(
-              duration: AppConfigs.animDurationSmall ~/ 2,
-              transform: Matrix4.translationValues(
-                  0.0, isTranslate ? 10.0 : 0.00, 0.0),
-              child: child,
-            );
-          },
-          child: AppSlideButton(
-            height: 70,
-            label: 'Login with PolkadotJS',
-            icon: Container(
-              decoration: BoxDecoration(
-                color: color1C2023,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              padding: const EdgeInsets.all(14),
-              width: 45,
-              height: 45,
-              child: SvgPicture.asset(
-                'arrow'.asAssetSvg(),
-                fit: BoxFit.contain,
-                color: colorFFFFFF,
-              ),
-            ),
-            decoration: BoxDecoration(
-              color: colorE6007A,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            // onComplete: () => _onNavigateToTerms(context),
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -303,55 +282,68 @@ class __ThisPageViewState extends State<_ThisPageView> {
         pageSnapping: true,
         controller: _pageController,
         itemBuilder: (context, index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          return Stack(
             children: [
-              Expanded(
-                child: ValueListenableBuilder<double>(
-                  valueListenable: _pageNotifier,
-                  builder: (context, page, child) {
-                    final size = Size(392.7272, 759.2727);
-                    final double scaleConst = (1.7 / size.height) *
-                        MediaQuery.of(context).size.height;
-                    final double offsetX =
-                        (100 / size.width) * MediaQuery.of(context).size.width;
-                    final double translateOffsetX =
-                        (250 / size.width) * MediaQuery.of(context).size.width;
-                    final double translateOffsetY = (190 / size.height) *
-                        MediaQuery.of(context).size.height;
+              ValueListenableBuilder<double>(
+                valueListenable: _pageNotifier,
+                builder: (context, page, child) {
+                  final size = Size(392.7272, 759.2727);
+                  final double scaleConst =
+                      (1.7 / size.height) * MediaQuery.of(context).size.height;
+                  final double offsetX =
+                      (100 / size.width) * MediaQuery.of(context).size.width;
+                  final double translateOffsetX =
+                      (250 / size.width) * MediaQuery.of(context).size.width;
+                  final double translateOffsetY =
+                      (190 / size.height) * MediaQuery.of(context).size.height;
 
-                    double value = (index - page);
-                    double translateX = 0.0;
-                    double scale = 1.0;
+                  double value = (index - page);
+                  double translateX = 0.0;
+                  double scale = 1.0;
 
-                    if (value > 0.0) {
-                      value = page - index;
+                  if (value > 0.0) {
+                    value = page - index;
 
-                      scale = (1 - value.abs()).abs() * scaleConst;
-                    } else {
-                      value = 1.0;
-                      scale = scaleConst;
-                      translateX = (page - index).abs();
-                    }
-                    return Transform(
+                    scale = (1 - value.abs()).abs() * scaleConst;
+                  } else {
+                    value = 1.0;
+                    scale = scaleConst;
+                    translateX = (page - index).abs();
+                  }
+
+                  return Align(
+                    alignment: Alignment(0.0, 0.5),
+                    child: Transform(
                         transform: Matrix4.translationValues(
                             -offsetX + (-translateOffsetX * translateX),
-                            -translateOffsetY,
+                            -translateOffsetY - (100 * (scaleConst - scale)),
                             0.0)
                           ..scale(scale, scale),
-                        child: child);
-                  },
-                  child: Image.asset(
-                    _DummyData.sliderImgList[index],
-                    fit: BoxFit.contain,
-                  ),
+                        child: child),
+                  );
+                },
+                child: Image.asset(
+                  _DummyData.sliderImgList[index],
+                  fit: BoxFit.contain,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  _DummyData.sliderList[index],
-                  style: tsS32W600CFF,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      _DummyData.sliderList[index],
+                      style: tsS32W600CFF.copyWith(fontSize: 32.sp),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Text(
+                        _DummyData.sliderList[index],
+                        style: tsS18W400CFF.copyWith(fontSize: 18.sp),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ],

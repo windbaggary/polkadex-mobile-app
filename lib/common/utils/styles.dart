@@ -18,8 +18,14 @@ TextStyle get tsS16W500CFF => TextStyle(
       color: colorFFFFFF,
     );
 
-TextStyle get tsS16W400CABB2BC => TextStyle(
+TextStyle get tsS16W500C24252C => TextStyle(
       fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: color24252C,
+    );
+
+TextStyle get tsS14W400CABB2BC => TextStyle(
+      fontSize: 14,
       fontWeight: FontWeight.w400,
       color: colorABB2BC,
     );
@@ -34,6 +40,18 @@ TextStyle get tsS32W600CFF => TextStyle(
       fontSize: 32,
       fontWeight: FontWeight.w600,
       color: colorFFFFFF,
+    );
+
+TextStyle get tsS18W400CFF => TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      color: colorFFFFFF,
+    );
+
+TextStyle get tsS18W400C93949A => TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      color: color93949A,
     );
 
 TextStyle get tsS23W500CFF => TextStyle(
@@ -189,6 +207,13 @@ TextStyle get tsS13W600CFF => TextStyle(
       fontWeight: FontWeight.w600,
       color: colorFFFFFF,
     );
+
+TextStyle get tsS13W400CABB2BC => TextStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w400,
+      color: colorABB2BC,
+    );
+
 TextStyle get tsS12W700CFF => TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w700,
@@ -250,16 +275,25 @@ TextStyle get tsS26W500CFF => TextStyle(
       fontWeight: FontWeight.w500,
       color: colorFFFFFF,
     );
+
+TextStyle get tsS26W600CFF => TextStyle(
+      fontSize: 26,
+      fontWeight: FontWeight.w600,
+      color: colorFFFFFF,
+    );
+
 TextStyle get tsS22W500CFF => TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.w500,
       color: colorFFFFFF,
     );
+
 TextStyle get tsS25W500CFF => TextStyle(
       fontSize: 25,
       fontWeight: FontWeight.w500,
       color: colorFFFFFF,
     );
+
 TextStyle get tsS19W700CFF => TextStyle(
       fontSize: 19,
       fontWeight: FontWeight.w700,
@@ -271,26 +305,31 @@ TextStyle get tsS30W500CFF => TextStyle(
       fontWeight: FontWeight.w500,
       color: colorFFFFFF,
     );
+
 TextStyle get tsS28W500CFF => TextStyle(
       fontSize: 28,
       fontWeight: FontWeight.w500,
       color: colorFFFFFF,
     );
+
 TextStyle get tsS10W600CFF => TextStyle(
       fontSize: 10,
       fontWeight: FontWeight.w600,
       color: colorFFFFFF,
     );
+
 TextStyle get tsS7W600CFF => TextStyle(
       fontSize: 7,
       fontWeight: FontWeight.w600,
       color: colorFFFFFF,
     );
+
 TextStyle get tsS14W600CFF => TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w600,
       color: colorFFFFFF,
     );
+
 TextStyle get tsS13W400CFF => TextStyle(
       fontSize: 13,
       fontWeight: FontWeight.w400,
