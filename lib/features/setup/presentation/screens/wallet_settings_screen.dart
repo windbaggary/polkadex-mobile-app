@@ -279,17 +279,14 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
 
     await provider.importAccount(_passwordController.text);
 
-    Navigator.of(context).popUntil((route) => route.isFirst);
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-              opacity: CurvedAnimation(
-                  parent: animation, curve: Interval(0.500, 1.00)),
-              child: LandingScreen());
-        },
-      ),
-    );
+    Navigator.of(context).pushAndRemoveUntil(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: LandingScreen());
+      },
+    ), (route) => route.isFirst);
   }
 
   Future<bool> _onPop(BuildContext context) async {
