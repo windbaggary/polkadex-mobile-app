@@ -79,21 +79,20 @@ class MnemonicProvider extends ChangeNotifier {
     return true;
   }
 
-  void loadMnemonic() =>
-      Future.delayed(const Duration(seconds: 2)).then((_) async {
-        final result = await _generateMnemonicUseCase();
+  void loadMnemonic() async {
+    final result = await _generateMnemonicUseCase();
 
-        result.fold(
-          (l) => null,
-          (mnemonic) => _mnemonicWords = List.unmodifiable(
-            [...mnemonic],
-          ),
-        );
+    result.fold(
+      (l) => null,
+      (mnemonic) => _mnemonicWords = List.unmodifiable(
+        [...mnemonic],
+      ),
+    );
 
-        _shuffledMnemonicWords = [..._mnemonicWords];
+    _shuffledMnemonicWords = [..._mnemonicWords];
 
-        _loading = false;
-      });
+    _loading = false;
+  }
 
   Future<void> importAccount(String password) async {
     final result = await _importAccountUseCase(
