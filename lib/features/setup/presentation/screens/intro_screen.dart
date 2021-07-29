@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
@@ -11,8 +10,11 @@ import 'package:polkadex/common/widgets/app_slider_dots.dart';
 import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
+import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:polkadex/injection_container.dart';
 
 /// The dummy data for the screen
 ///
@@ -195,9 +197,15 @@ class _IntroScreenState extends State<IntroScreen>
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
         return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: MnemonicGeneratedScreen());
+          opacity:
+              CurvedAnimation(parent: animation, curve: Interval(0.500, 1.00)),
+          child: ChangeNotifierProvider(
+            create: (context) => dependency<MnemonicProvider>()..loadMnemonic(),
+            builder: (context, _) {
+              return MnemonicGeneratedScreen();
+            },
+          ),
+        );
       },
     ));
   }
