@@ -14,7 +14,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_list_animated_widget.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/utils/maps.dart';
+import 'package:polkadex/common/utils/maps.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
