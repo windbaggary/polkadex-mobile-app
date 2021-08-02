@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:polkadex/utils/enums.dart';
+import 'package:polkadex/common/utils/enums.dart';
 
 abstract class ITradeOpenOrderModel {
   String get iType;
@@ -15,69 +14,64 @@ abstract class ITradeOpenOrderModel {
 
 class TradeOpenOrderModel implements ITradeOpenOrderModel {
   final EnumBuySell type;
-  final String amount;
+  final String? amount;
   final String price;
   final DateTime dateTime;
-  final String amountCoin;
+  final String? amountCoin;
   final String priceCoin;
   final EnumOrderTypes orderType;
   final String tokenPairName;
 
   TradeOpenOrderModel({
-    @required this.type,
-    @required this.amount,
-    @required this.price,
-    @required this.dateTime,
-    @required this.amountCoin,
-    @required this.priceCoin,
-    @required this.orderType,
-    @required this.tokenPairName,
+    required this.type,
+    required this.amount,
+    required this.price,
+    required this.dateTime,
+    required this.amountCoin,
+    required this.priceCoin,
+    required this.orderType,
+    required this.tokenPairName,
   });
 
   @override
-  String get iAmount => "${this.amount ?? ""} ${this.amountCoin ?? ""}";
+  String get iAmount => "${amount ?? ""} ${amountCoin ?? ""}";
 
   @override
   String get iFormattedDate {
-    if (this.dateTime != null) {
-      return DateFormat("MMM dd, yyyy HH:mm:ss").format(this.dateTime);
-    }
-    return null;
+    return DateFormat("MMM dd, yyyy HH:mm:ss").format(dateTime);
   }
 
   @override
-  String get iPrice => "${this.price ?? ""} ${this.priceCoin ?? ""}";
+  String get iPrice => "$price $priceCoin";
 
   @override
   String get iType {
-    switch (this.type) {
-      case EnumBuySell.Buy:
+    switch (type) {
+      case EnumBuySell.buy:
         return "Buy";
-      case EnumBuySell.Sell:
+      case EnumBuySell.sell:
         return "Sell";
     }
-    return null;
   }
 
   @override
-  EnumBuySell get iEnumType => this.type;
+  EnumBuySell get iEnumType => type;
 
   @override
   String get iOrderTypeName {
-    switch (this.orderType) {
-      case EnumOrderTypes.Market:
+    switch (orderType) {
+      case EnumOrderTypes.market:
         return "Market";
-      case EnumOrderTypes.Limit:
+      case EnumOrderTypes.limit:
         return "Limit";
-      case EnumOrderTypes.Stop:
+      case EnumOrderTypes.stop:
         return "Stop";
     }
-    return null;
   }
 
   @override
-  String get iTokenPairName => this.tokenPairName;
+  String get iTokenPairName => tokenPairName;
 
   @override
-  EnumOrderTypes get iEnumOrderType => this.orderType;
+  EnumOrderTypes get iEnumOrderType => orderType;
 }

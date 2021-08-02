@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
 
 /// XD_PAGE: 40
 class AppSettingsAppearance extends StatelessWidget {
-  const AppSettingsAppearance({Key key}) : super(key: key);
+  const AppSettingsAppearance();
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,7 @@ class AppSettingsAppearance extends StatelessWidget {
 
 /// The top section of the screen
 class _ThisInterfaceWidget extends StatelessWidget {
-  const _ThisInterfaceWidget({
-    Key key,
-  }) : super(key: key);
+  const _ThisInterfaceWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -102,9 +100,7 @@ class _ThisInterfaceWidget extends StatelessWidget {
 
 /// The bottom section of the screen
 class _ThisStyleSettingWidget extends StatelessWidget {
-  const _ThisStyleSettingWidget({
-    Key key,
-  }) : super(key: key);
+  const _ThisStyleSettingWidget();
 
   @override
   Widget build(BuildContext context) {

@@ -3,19 +3,18 @@ import 'dart:io';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/providers/my_account_provider.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
-import 'package:polkadex/widgets/custom_app_bar.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 41
 class MyAccountScreen extends StatelessWidget {
   final _isCheckedNotifier = ValueNotifier<bool>(false);
-  MyAccountScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,17 +79,16 @@ class MyAccountScreen extends StatelessWidget {
                                     bottom: 0,
                                     child: Consumer<MyAccountProfileProvider>(
                                       builder: (context, provider, child) {
-                                        if (provider?.hasImg ?? false) {
+                                        if (provider.hasImg) {
                                           return CircleAvatar(
                                             backgroundImage: FileImage(
                                                 File(provider.imgFile)),
                                           );
                                         }
-                                        return child;
+                                        return Image.asset(
+                                          'user_avatar.png'.asAssetImg(),
+                                        );
                                       },
-                                      child: Image.asset(
-                                        'user_avatar.png'.asAssetImg(),
-                                      ),
                                     ),
                                   ),
                                   Positioned(
@@ -173,7 +171,7 @@ class MyAccountScreen extends StatelessWidget {
                                       SizedBox(height: 2),
                                       Consumer<MyAccountEditNameProvider>(
                                         builder: (context, provider, child) {
-                                          if (provider?.canEditName ?? false) {
+                                          if (provider.canEditName) {
                                             return TextField(
                                               controller: provider.controller,
                                               autofocus: true,
@@ -195,7 +193,7 @@ class MyAccountScreen extends StatelessWidget {
                                           }
 
                                           return Text(
-                                            provider?.name ?? "",
+                                            provider.name,
                                             style: tsS16W500CFF,
                                           );
                                         },
@@ -229,7 +227,7 @@ class MyAccountScreen extends StatelessWidget {
                                         ),
                                         Consumer<MyAccountEditNameProvider>(
                                           builder: (context, provider, child) {
-                                            if (provider.canEditName)
+                                            if (provider.canEditName) {
                                               return Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 4.0),
@@ -238,6 +236,7 @@ class MyAccountScreen extends StatelessWidget {
                                                   style: tsS11W600CFF,
                                                 ),
                                               );
+                                            }
                                             return Container();
                                           },
                                         )

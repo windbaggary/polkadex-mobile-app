@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_change_logs_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_help_screen.dart';
@@ -13,27 +13,26 @@ import 'package:polkadex/features/app_settings_info/screens/terms_conditions_scr
 import 'package:polkadex/features/landing/providers/notification_drawer_provider.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
-import 'package:polkadex/features/setup/screens/intro_screen.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 
 import 'package:provider/provider.dart';
 
 /// The left drawer width
-const double APP_DRAWER_WIDTH = 300;
+const double appDrawerWidth = 300;
 
 /// The right drawer width
 double getAppDrawerNotifWidth() {
-  print(AppConfigs.size.width);
   // double ratio = 0.300;
   // if (Platform.isIOS) {
   // ratio = 0.750;
   // }
   // return math.min<double>(AppConfigs.size.width * ratio, 350.0);
-  return AppConfigs.size.width - 40;
+  return AppConfigs.size!.width - 40;
 }
 
 /// XD_PAGE: 35
@@ -55,7 +54,7 @@ class AppDrawerWidget extends StatelessWidget {
       ),
       child: SizedBox(
         height: double.infinity,
-        width: APP_DRAWER_WIDTH,
+        width: appDrawerWidth,
         child: Container(
           decoration: BoxDecoration(
             color: color2E303C.withOpacity(0.30),
@@ -114,10 +113,10 @@ class AppDrawerWidget extends StatelessWidget {
   /// Build the heading style widget with [label]
   /// Also include the padding to the top and bottom
   ///
-  Widget _buildHeading({@required String label}) => Padding(
+  Widget _buildHeading({required String label}) => Padding(
         padding: const EdgeInsets.only(top: 49, bottom: 2),
         child: Text(
-          label ?? "",
+          label,
           style: tsS16W500CABB2BC,
         ),
       );
@@ -125,27 +124,27 @@ class AppDrawerWidget extends StatelessWidget {
   ///  This method will be invoked when user tap on app settings item
   void _onTapAppSettingsItem(EnumDrawerAppSettings e, BuildContext context) {
     switch (e) {
-      case EnumDrawerAppSettings.Notifications:
+      case EnumDrawerAppSettings.notifications:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsNotificationScreen(),
         ));
         break;
-      case EnumDrawerAppSettings.Appearance:
+      case EnumDrawerAppSettings.appearance:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsAppearance(),
         ));
         break;
-      case EnumDrawerAppSettings.LanguageCurrency:
+      case EnumDrawerAppSettings.languageCurrency:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsLangCurrScreen(),
         ));
         break;
-      case EnumDrawerAppSettings.PrivacySecurtiy:
+      case EnumDrawerAppSettings.privacySecurtiy:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AppSettingsSecurity(),
         ));
         break;
-      case EnumDrawerAppSettings.MyAccount:
+      case EnumDrawerAppSettings.myAccount:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MyAccountScreen(),
         ));
@@ -160,23 +159,23 @@ class AppDrawerWidget extends StatelessWidget {
     String label;
 
     switch (e) {
-      case EnumDrawerAppSettings.Notifications:
+      case EnumDrawerAppSettings.notifications:
         svg = 'drawer_notification'.asAssetSvg();
         label = 'Notifications';
         break;
-      case EnumDrawerAppSettings.Appearance:
+      case EnumDrawerAppSettings.appearance:
         svg = 'drawer_toggle'.asAssetSvg();
         label = 'Appearance';
         break;
-      case EnumDrawerAppSettings.LanguageCurrency:
+      case EnumDrawerAppSettings.languageCurrency:
         svg = 'drawer_flag'.asAssetSvg();
         label = 'Language & Currency';
         break;
-      case EnumDrawerAppSettings.PrivacySecurtiy:
+      case EnumDrawerAppSettings.privacySecurtiy:
         svg = 'drawer_finger-print'.asAssetSvg();
         label = 'Privacy & Security';
         break;
-      case EnumDrawerAppSettings.MyAccount:
+      case EnumDrawerAppSettings.myAccount:
         svg = 'drawer_avatar'.asAssetSvg();
         label = 'My Account';
         break;
@@ -201,19 +200,19 @@ class AppDrawerWidget extends StatelessWidget {
     String label;
 
     switch (e) {
-      case EnumDrawerAppInfo.TermsConditions:
+      case EnumDrawerAppInfo.termsConditions:
         label = 'Terms and Conditions';
         svg = 'drawer_terms'.asAssetSvg();
         break;
-      case EnumDrawerAppInfo.PrivacyPolicy:
+      case EnumDrawerAppInfo.privacyPolicy:
         label = 'Privacy Policy';
         svg = 'drawer_privacy'.asAssetSvg();
         break;
-      case EnumDrawerAppInfo.HelpSupport:
+      case EnumDrawerAppInfo.helpSupport:
         label = 'Help & Support';
         svg = 'drawer_chat'.asAssetSvg();
         break;
-      case EnumDrawerAppInfo.ChangeLog:
+      case EnumDrawerAppInfo.changeLog:
         label = 'Changelog';
         svg = 'drawer_news'.asAssetSvg();
         break;
@@ -234,19 +233,19 @@ class AppDrawerWidget extends StatelessWidget {
   /// This method will be invoked when user tap on [e] in drawer
   void _onTapAppInfoItem(EnumDrawerAppInfo e, BuildContext context) {
     switch (e) {
-      case EnumDrawerAppInfo.TermsConditions:
+      case EnumDrawerAppInfo.termsConditions:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => TermsConditionsScreen()));
         break;
-      case EnumDrawerAppInfo.PrivacyPolicy:
+      case EnumDrawerAppInfo.privacyPolicy:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => PrivacyPolicyScreen()));
         break;
-      case EnumDrawerAppInfo.HelpSupport:
+      case EnumDrawerAppInfo.helpSupport:
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => AppSettingsHelpScreen()));
         break;
-      case EnumDrawerAppInfo.ChangeLog:
+      case EnumDrawerAppInfo.changeLog:
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => AppSettingsChangeLogsScreen()));
         break;
@@ -313,11 +312,10 @@ class _ThisProfileWidget extends StatelessWidget {
 class _ThisDrawerItemWidget extends StatelessWidget {
   final String svgAsset;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _ThisDrawerItemWidget(
-      {Key key, @required this.svgAsset, @required this.label, this.onTap})
-      : super(key: key);
+      {required this.svgAsset, required this.label, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -340,7 +338,7 @@ class _ThisDrawerItemWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                label ?? "",
+                label,
                 style: tsS16W400CFF,
               ),
             ),
@@ -353,8 +351,8 @@ class _ThisDrawerItemWidget extends StatelessWidget {
 
 /// XD_PAGE: 37
 class NotificationDrawerWidget extends StatelessWidget {
-  final VoidCallback onClearTap;
-  const NotificationDrawerWidget({Key key, this.onClearTap}) : super(key: key);
+  final VoidCallback? onClearTap;
+  const NotificationDrawerWidget({this.onClearTap});
 
   @override
   Widget build(BuildContext context) {
@@ -435,9 +433,9 @@ class NotificationDrawerWidget extends StatelessWidget {
                                       builder: (context) => NotifDepositScreen(
                                         screenType: model.enumType ==
                                                 EnumDrawerNotificationTypes
-                                                    .TransactionWithdraw
-                                            ? EnumDepositScreenTypes.Withdraw
-                                            : EnumDepositScreenTypes.Deposit,
+                                                    .transactionWithdraw
+                                            ? EnumDepositScreenTypes.withdraw
+                                            : EnumDepositScreenTypes.deposit,
                                       ),
                                     ),
                                   );
@@ -491,12 +489,11 @@ class _ThisNotifItemWidget extends StatelessWidget {
   final String description;
   final double opacity;
   const _ThisNotifItemWidget({
-    Key key,
-    @required this.svgItem,
-    @required this.title,
-    @required this.description,
+    required this.svgItem,
+    required this.title,
+    required this.description,
     this.opacity = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -528,7 +525,7 @@ class _ThisNotifItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    title ?? "",
+                    title,
                     style: tsS14W500CFF,
                   ),
                   SizedBox(height: 4),

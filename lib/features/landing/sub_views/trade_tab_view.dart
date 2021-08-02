@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/models/trade_models.dart';
 import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
@@ -10,11 +10,11 @@ import 'package:polkadex/features/landing/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/trade/order_book_item_model.dart';
 import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
 
 /// The tab view of trade for Homescreen
@@ -28,8 +28,8 @@ class TradeTabView extends StatefulWidget {
 class _TradeTabViewState extends State<TradeTabView>
     with TickerProviderStateMixin {
   final _keyBuySellWidget = GlobalKey<__ThisBuySellWidgetState>();
-  TabController _buySellDotController;
-  ScrollController _scrollController;
+  late TabController _buySellDotController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
@@ -50,13 +50,12 @@ class _TradeTabViewState extends State<TradeTabView>
   /// Method to dispose the controller and set to null to avoid verify later
   void _disposeControllers() {
     _buySellDotController.dispose();
-    _buySellDotController = null;
   }
 
   @override
   Widget build(BuildContext context) {
     return _ThisInheritedWidget(
-      buySellTabController: this._buySellDotController,
+      buySellTabController: _buySellDotController,
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<TradeTabCoinProvider>(
@@ -91,7 +90,7 @@ class _TradeTabViewState extends State<TradeTabView>
   }
 
   void _onOrderBookItemClicked(OrderBookItemModel model, BuildContext context) {
-    _keyBuySellWidget.currentState.onOrderBookModelSelected(model);
+    _keyBuySellWidget.currentState?.onOrderBookModelSelected(model);
   }
 
   void _scrollListener() {
@@ -103,7 +102,7 @@ class _TradeTabViewState extends State<TradeTabView>
 /// The card includes buy sell tab controller
 class _ThisBuySellWidget extends StatefulWidget {
   _ThisBuySellWidget({
-    Key key,
+    required Key key,
   }) : super(key: key);
 
   @override
@@ -114,22 +113,23 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     with TickerProviderStateMixin {
   final _keyBuySellWidget = GlobalKey<BuyDotWidgetState>();
 
-  ValueNotifier<bool> _isOrdersExpanded;
-  ValueNotifier<EnumBuySell> _buySellNotifier;
-  ValueNotifier<EnumOrderTypes> _orderTypeSelNotifier;
-  ValueNotifier<EnumTradeOrdersDisplayType> _orderDisplayTypeNotifier;
+  late ValueNotifier<bool> _isOrdersExpanded;
+  late ValueNotifier<EnumBuySell> _buySellNotifier;
+  late ValueNotifier<EnumOrderTypes> _orderTypeSelNotifier;
+  late ValueNotifier<EnumTradeOrdersDisplayType?> _orderDisplayTypeNotifier;
 
   @override
   void initState() {
-    _orderTypeSelNotifier = ValueNotifier(EnumOrderTypes.Market);
+    _orderTypeSelNotifier = ValueNotifier(EnumOrderTypes.market);
     _isOrdersExpanded = ValueNotifier(false);
-    _orderDisplayTypeNotifier = ValueNotifier<EnumTradeOrdersDisplayType>(null);
-    _buySellNotifier = ValueNotifier(EnumBuySell.Buy);
+    _orderDisplayTypeNotifier =
+        ValueNotifier<EnumTradeOrdersDisplayType?>(null);
+    _buySellNotifier = ValueNotifier(EnumBuySell.buy);
     super.initState();
     Future.microtask(() {
       final tabController =
           _ThisInheritedWidget.of(context)?.buySellTabController;
-      tabController.addListener(() {
+      tabController?.addListener(() {
         _buySellNotifier.value = EnumBuySell.values[tabController.index];
       });
     });
@@ -172,12 +172,11 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                     builder: (context, buyOrSell, child) {
                       Color color;
                       switch (buyOrSell) {
-                        case EnumBuySell.Buy:
+                        case EnumBuySell.buy:
                           color = color0CA564;
                           break;
-                        case EnumBuySell.Sell:
+                        case EnumBuySell.sell:
                           color = colorE6007A;
-                          break;
                           break;
                       }
                       return TabBar(
@@ -231,14 +230,14 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             buySellNotifier: _buySellNotifier,
             onSwapTab: () => _onSwapBuySellTab(context),
             onBuy: (price, amount, total) => _onBuyOrSell(
-              EnumBuySell.Buy,
+              EnumBuySell.buy,
               price,
               amount,
               total,
               context,
             ),
             onSell: (price, amount, total) => _onBuyOrSell(
-              EnumBuySell.Sell,
+              EnumBuySell.sell,
               price,
               amount,
               total,
@@ -257,14 +256,15 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                 InkWell(
                   onTap: () {
                     if (_orderDisplayTypeNotifier.value ==
-                        EnumTradeOrdersDisplayType.Open) {
-                      if (_isOrdersExpanded.value ?? false)
+                        EnumTradeOrdersDisplayType.open) {
+                      if (_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = false;
-                      else
+                      } else {
                         _isOrdersExpanded.value = true;
+                      }
                     } else {
                       _orderDisplayTypeNotifier.value =
-                          EnumTradeOrdersDisplayType.Open;
+                          EnumTradeOrdersDisplayType.open;
                       if (!_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = true;
                       }
@@ -283,7 +283,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                                 : tsS15W600CABB2BC,
                           ),
                         ),
-                        if (thisProvider?.listOpenOrders?.isNotEmpty ?? false)
+                        if (thisProvider.listOpenOrders.isNotEmpty)
                           Container(
                             decoration: BoxDecoration(
                               color: colorE6007A,
@@ -292,8 +292,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                             padding: const EdgeInsets.all(4),
                             margin: const EdgeInsets.only(bottom: 4),
                             child: Text(
-                                thisProvider?.listOpenOrders?.length
-                                    ?.toString(),
+                                thisProvider.listOpenOrders.length.toString(),
                                 style: tsS10W500CFF),
                           ),
                       ],
@@ -304,14 +303,15 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                 InkWell(
                   onTap: () {
                     if (_orderDisplayTypeNotifier.value ==
-                        EnumTradeOrdersDisplayType.History) {
-                      if (_isOrdersExpanded.value ?? false)
+                        EnumTradeOrdersDisplayType.history) {
+                      if (_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = false;
-                      else
+                      } else {
                         _isOrdersExpanded.value = true;
+                      }
                     } else {
                       _orderDisplayTypeNotifier.value =
-                          EnumTradeOrdersDisplayType.History;
+                          EnumTradeOrdersDisplayType.history;
                       if (!_isOrdersExpanded.value) {
                         _isOrdersExpanded.value = true;
                       }
@@ -330,8 +330,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                                 : tsS15W600CABB2BC,
                           ),
                         ),
-                        if (thisProvider?.listOrdersHistory?.isNotEmpty ??
-                            false)
+                        if (thisProvider.listOrdersHistory.isNotEmpty)
                           Container(
                             decoration: BoxDecoration(
                               color: colorE6007A,
@@ -340,8 +339,8 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                             padding: const EdgeInsets.all(4),
                             margin: const EdgeInsets.only(bottom: 4),
                             child: Text(
-                                thisProvider?.listOrdersHistory?.length
-                                    ?.toString(),
+                                thisProvider.listOrdersHistory.length
+                                    .toString(),
                                 style: tsS10W500CFF),
                           ),
                       ],
@@ -362,10 +361,10 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
               duration: AppConfigs.animDurationSmall,
               vsync: this,
               alignment: Alignment.topCenter,
-              child: ValueListenableBuilder<EnumTradeOrdersDisplayType>(
+              child: ValueListenableBuilder<EnumTradeOrdersDisplayType?>(
                 valueListenable: _orderDisplayTypeNotifier,
                 builder: (context, orderDisplayType, child) {
-                  if (!(isShow ?? false)) return SizedBox(height: 15);
+                  if (!(isShow)) return SizedBox(height: 15);
                   return _ThisOpenOrderExpandedWidget(
                     type: orderDisplayType,
                   );
@@ -380,7 +379,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
 
   /// The callback listener when the order book item is selected
   void onOrderBookModelSelected(OrderBookItemModel model) {
-    _keyBuySellWidget.currentState.updatePrice(model.price);
+    _keyBuySellWidget.currentState?.updatePrice(model.price);
   }
 
   /// The callback listener for otder type selection
@@ -401,7 +400,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     BuildContext context,
   ) {
     final thisProvider = context.read<TradeTabViewProvider>();
-    if (price?.isEmpty ?? true) {
+    if (price.isEmpty) {
       price = amount;
     }
     thisProvider.addToListOrder(
@@ -418,20 +417,19 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     );
 
     buildAppToast(msg: "Purchase added to open orders", context: context);
-    _keyBuySellWidget?.currentState?.reset();
+    _keyBuySellWidget.currentState?.reset();
   }
 
   /// Returns the order type string from the [type]
   String _getOrderTypeName(EnumOrderTypes type) {
     switch (type) {
-      case EnumOrderTypes.Market:
+      case EnumOrderTypes.market:
         return "Market Order";
-      case EnumOrderTypes.Limit:
+      case EnumOrderTypes.limit:
         return "Limit Order";
-      case EnumOrderTypes.Stop:
+      case EnumOrderTypes.stop:
         return "Stop Order";
     }
-    return null;
   }
 
   /// Listener to handle the Buy sell tab change
@@ -439,27 +437,26 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     final tabController =
         _ThisInheritedWidget.of(context)?.buySellTabController;
     int newIndex = 0;
-    if (tabController.index == 0) {
+    if (tabController?.index == 0) {
       newIndex = 1;
     }
 
-    tabController.animateTo(newIndex);
+    tabController?.animateTo(newIndex);
   }
 }
 
 /// This widget will be shown when the user click on open orders
 class _ThisOpenOrderExpandedWidget extends StatelessWidget {
-  final EnumTradeOrdersDisplayType type;
+  final EnumTradeOrdersDisplayType? type;
   const _ThisOpenOrderExpandedWidget({
-    Key key,
-    @required this.type,
-  }) : super(key: key);
+    required this.type,
+  });
 
   @override
   Widget build(BuildContext context) {
     Alignment barAlignment = Alignment.centerLeft;
     double barWidth = 104;
-    if (type == EnumTradeOrdersDisplayType.History) {
+    if (type == EnumTradeOrdersDisplayType.history) {
       barAlignment = Alignment.centerRight;
       barWidth = 127;
     }
@@ -482,27 +479,26 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
         SizedBox(height: 8),
         Consumer<TradeTabViewProvider>(
           builder: (context, thisProvider, child) {
-            List<ITradeOpenOrderModel> list;
-            switch (this.type) {
-              case EnumTradeOrdersDisplayType.Open:
+            List<ITradeOpenOrderModel>? list;
+            switch (type) {
+              case EnumTradeOrdersDisplayType.open:
                 list = thisProvider.listOpenOrders;
                 break;
-              case EnumTradeOrdersDisplayType.History:
+              case EnumTradeOrdersDisplayType.history:
                 list = thisProvider.listOrdersHistory;
                 break;
+              default:
+                list = [];
             }
             return Column(
               children: list
-                      ?.map<Widget>((m) => _ThisOpenOrderItemWidget(
-                            iModel: m,
-                            onTapClose: () {
-                              context
-                                  .read<TradeTabViewProvider>()
-                                  .removeItem(m);
-                            },
-                          ))
-                      ?.toList() ??
-                  <Widget>[],
+                  .map<Widget>((m) => _ThisOpenOrderItemWidget(
+                        iModel: m,
+                        onTapClose: () {
+                          context.read<TradeTabViewProvider>().removeItem(m);
+                        },
+                      ))
+                  .toList(),
             );
           },
         ),
@@ -513,17 +509,16 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
 
 class _ThisOpenOrderItemWidget extends StatelessWidget {
   final ITradeOpenOrderModel iModel;
-  final VoidCallback onTapClose;
+  final VoidCallback? onTapClose;
   const _ThisOpenOrderItemWidget({
-    Key key,
-    @required this.iModel,
+    required this.iModel,
     this.onTapClose,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     Color colorBuySell = color0CA564;
-    if (iModel.iEnumType == EnumBuySell.Sell) {
+    if (iModel.iEnumType == EnumBuySell.sell) {
       colorBuySell = colorE6007A;
     }
     return Column(
@@ -565,7 +560,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
               ),
               Spacer(),
               InkWell(
-                onTap: this.onTapClose,
+                onTap: onTapClose,
                 child: SvgPicture.asset(
                   'close'.asAssetSvg(),
                   width: 10,
@@ -613,7 +608,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 4, vertical: 2),
                           child: Text(
-                            iModel?.iType ?? "",
+                            iModel.iType,
                             style: tsS16W500CFF.copyWith(
                               color: colorBuySell,
                             ),
@@ -632,7 +627,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          iModel?.iAmount ?? "",
+                          iModel.iAmount,
                           style: tsS16W500CFF,
                         )
                       ],
@@ -646,7 +641,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                         style: tsS14W400CFF.copyWith(color: colorABB2BC),
                       ),
                       Text(
-                        iModel?.iPrice ?? "",
+                        iModel.iPrice,
                         style: tsS16W500CFF,
                       )
                     ],
@@ -656,7 +651,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
-                  iModel?.iFormattedDate ?? "",
+                  iModel.iFormattedDate,
                   style: tsS14W400CFF.copyWith(color: colorABB2BC),
                 ),
               ),
@@ -671,10 +666,6 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
 /// The top widget of the screen
 /// The widget include the selection and percentage
 class _ThisTopRowSelectWidget extends StatelessWidget {
-  const _ThisTopRowSelectWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -686,14 +677,14 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
           Consumer<TradeTabCoinProvider>(
             builder: (context, coinProvider, child) => Container(
               decoration: BoxDecoration(
-                color: coinProvider?.tokenCoin?.color,
+                color: coinProvider.tokenCoin.color,
                 borderRadius: BorderRadius.circular(5),
               ),
               alignment: Alignment.center,
               padding: const EdgeInsets.all(3),
               margin: const EdgeInsets.only(right: 13.5),
               child: Text(
-                "${coinProvider?.tokenCoin?.percentage ?? ""}%",
+                "${coinProvider.tokenCoin.percentage}%",
                 style: tsS13W600CFF,
               ),
             ),
@@ -737,11 +728,10 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
 /// The widget to handle the ontap for picker
 ///
 class _ThisTopSelectableWidget extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   const _ThisTopSelectableWidget({
-    Key key,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -774,7 +764,7 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                           style: TextStyle(fontSize: 19),
                         ),
                         TextSpan(
-                          text: '/${coinProvider.pairCoin.code}',
+                          text: '/${coinProvider.pairCoin?.code}',
                           style: TextStyle(
                             fontFamily: 'WorkSans',
                           ),
@@ -805,16 +795,17 @@ class _ThisInheritedWidget extends InheritedWidget {
   final TabController buySellTabController;
 
   _ThisInheritedWidget({
-    @required this.buySellTabController,
-    @required Widget child,
-    Key key,
-  }) : super(child: child, key: key);
+    required this.buySellTabController,
+    required Widget child,
+  }) : super(
+          child: child,
+        );
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.buySellTabController != this.buySellTabController;
+    return oldWidget.buySellTabController != buySellTabController;
   }
 
-  static _ThisInheritedWidget of(BuildContext context) =>
+  static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 }

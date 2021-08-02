@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/app_buttons.dart';
-import 'package:polkadex/utils/extensions.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 /// XD_PAGE: 38
 class NotifDetailsScreen extends StatelessWidget {
-  const NotifDetailsScreen({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

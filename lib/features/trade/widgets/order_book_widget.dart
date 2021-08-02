@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/configs/app_config.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/widgets/order_book_chart_item.dart';
 import 'package:polkadex/features/trade/order_book_item_model.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
 
 typedef OnOrderBookItemClicked = void Function(OrderBookItemModel model);
 
 /// The order book widget
 class OrderBookWidget extends StatelessWidget {
-  final OnOrderBookItemClicked onOrderBookItemClicked;
+  final OnOrderBookItemClicked? onOrderBookItemClicked;
   const OrderBookWidget({
-    Key key,
     this.onOrderBookItemClicked,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,16 +90,12 @@ class OrderBookWidget extends StatelessWidget {
 
 /// The widget displays the chart on order book content
 class _ThisOrderBookChartWidget extends StatelessWidget {
-  const _ThisOrderBookChartWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrderBookWidgetFilterProvider>();
     Widget child = Container();
     switch (provider.enumBuySellAll) {
-      case EnumBuySellAll.Buy:
+      case EnumBuySellAll.buy:
         child = Column(
           key: ValueKey("buy"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -110,7 +105,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           ],
         );
         break;
-      case EnumBuySellAll.All:
+      case EnumBuySellAll.all:
         child = Column(
           key: ValueKey("all"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -140,7 +135,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           ],
         );
         break;
-      case EnumBuySellAll.Sell:
+      case EnumBuySellAll.sell:
         child = Column(
           key: ValueKey("sell"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -201,31 +196,23 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 }
 
 class _ThisOrderSellWidget extends StatelessWidget {
-  const _ThisOrderSellWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(_DUMMY_CHART_LIST.length,
-          (index) => _OrderSellItemWidget(model: _DUMMY_CHART_LIST[index])),
+      children: List.generate(dummyChartList.length,
+          (index) => _OrderSellItemWidget(model: dummyChartList[index])),
     );
   }
 }
 
 class _ThisOrderBuyWidget extends StatelessWidget {
-  const _ThisOrderBuyWidget({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(_DUMMY_CHART_LIST.length,
-          (index) => _OrderBuyItemWidget(model: _DUMMY_CHART_LIST[index])),
+      children: List.generate(dummyChartList.length,
+          (index) => _OrderBuyItemWidget(model: dummyChartList[index])),
     );
   }
 }
@@ -233,17 +220,17 @@ class _ThisOrderBuyWidget extends StatelessWidget {
 class _OrderBuyItemWidget extends StatelessWidget {
   final OrderBookItemModel model;
 
-  const _OrderBuyItemWidget({Key key, @required this.model}) : super(key: key);
+  const _OrderBuyItemWidget({required this.model});
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
       onTap: _ThisInheritedWidget.of(context)?.onOrderBookItemClicked == null
-          ? null
+          ? () {}
           : () =>
-              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked(model),
+              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked!(model),
       child: OrderBookChartItemWidget(
         percentage: model.percentage,
-        direction: EnumGradientDirection.Right,
+        direction: EnumGradientDirection.right,
         color: color0CA564,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 6, 6, 6),
@@ -251,12 +238,12 @@ class _OrderBuyItemWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  model?.price ?? "",
+                  model.price,
                   style: tsS14W500CFF,
                 ),
               ),
               Text(
-                model?.amount ?? "",
+                model.amount,
                 style: tsS14W500CFF.copyWith(color: color0CA564),
               ),
             ],
@@ -270,29 +257,29 @@ class _OrderBuyItemWidget extends StatelessWidget {
 class _OrderSellItemWidget extends StatelessWidget {
   final OrderBookItemModel model;
 
-  const _OrderSellItemWidget({Key key, @required this.model}) : super(key: key);
+  const _OrderSellItemWidget({required this.model});
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
       onTap: _ThisInheritedWidget.of(context)?.onOrderBookItemClicked == null
-          ? null
+          ? () {}
           : () =>
-              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked(model),
+              _ThisInheritedWidget.of(context)?.onOrderBookItemClicked!(model),
       child: OrderBookChartItemWidget(
         percentage: model.percentage,
         color: colorE6007A,
-        direction: EnumGradientDirection.Left,
+        direction: EnumGradientDirection.left,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(6.0, 6, 0, 6),
           child: Row(
             children: [
               Text(
-                model?.amount ?? "",
+                model.amount,
                 style: tsS14W500CFF.copyWith(color: colorE6007A),
               ),
               Expanded(
                 child: Text(
-                  model?.price ?? "",
+                  model.price,
                   style: tsS14W500CFF,
                   textAlign: TextAlign.end,
                 ),
@@ -309,9 +296,6 @@ class _OrderSellItemWidget extends StatelessWidget {
 class OrderBookHeadingWidget extends StatelessWidget {
   final _priceLengthNotifier = ValueNotifier<int>(0);
   final _dropDownValueNotifier = ValueNotifier<String>("Order Book");
-  OrderBookHeadingWidget({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -333,12 +317,12 @@ class OrderBookHeadingWidget extends StatelessWidget {
                           ),
                           value: e,
                         ))
-                    ?.toList(),
+                    .toList(),
                 value: dropDownValue,
                 style: tsS20W600CFF,
                 underline: Container(),
                 onChanged: (val) {
-                  _dropDownValueNotifier.value = val;
+                  _dropDownValueNotifier.value = val!;
                 },
                 isExpanded: false,
                 icon: Padding(
@@ -361,31 +345,31 @@ class OrderBookHeadingWidget extends StatelessWidget {
                     Color color = color2E303C;
 
                     switch (e) {
-                      case EnumBuySellAll.Buy:
+                      case EnumBuySellAll.buy:
                         svg = 'orderbookBuy'.asAssetSvg();
-                        if (provider?.enumBuySellAll == EnumBuySellAll.Buy) {
+                        if (provider.enumBuySellAll == EnumBuySellAll.buy) {
                           svg = 'orderbookBuySel'.asAssetSvg();
                         }
                         break;
-                      case EnumBuySellAll.All:
+                      case EnumBuySellAll.all:
                         svg = 'orderbookAll'.asAssetSvg();
 
                         break;
-                      case EnumBuySellAll.Sell:
+                      case EnumBuySellAll.sell:
                         svg = 'orderbookSell'.asAssetSvg();
-                        if (provider?.enumBuySellAll == EnumBuySellAll.Sell) {
+                        if (provider.enumBuySellAll == EnumBuySellAll.sell) {
                           svg = 'orderbookSellSel'.asAssetSvg();
                         }
                         break;
                     }
 
-                    if (provider?.enumBuySellAll == e) {
+                    if (provider.enumBuySellAll == e) {
                       padding = 5;
                       color = Colors.white;
                     }
                     return InkWell(
                       onTap: () {
-                        provider?.enumBuySellAll = e;
+                        provider.enumBuySellAll = e;
                       },
                       child: AnimatedContainer(
                         duration: AppConfigs.animDurationSmall,
@@ -426,8 +410,7 @@ class OrderBookHeadingWidget extends StatelessWidget {
                   child: ValueListenableBuilder<int>(
                     valueListenable: _priceLengthNotifier,
                     builder: (context, selectedPriceLenIndex, child) => Text(
-                      DUMMY_PRICE_LENGTH_DATA[selectedPriceLenIndex]?.price ??
-                          "",
+                      dummyPriceLengthData[selectedPriceLenIndex].price,
                       style: tsS15W600CFF.copyWith(
                           color: colorFFFFFF.withOpacity(0.30)),
                     ),
@@ -448,32 +431,32 @@ class OrderBookHeadingWidget extends StatelessWidget {
 }
 
 class OrderBookWidgetFilterProvider extends ChangeNotifier {
-  EnumBuySellAll _enumBuySellAll = EnumBuySellAll.All;
+  EnumBuySellAll _enumBuySellAll = EnumBuySellAll.all;
 
-  EnumBuySellAll get enumBuySellAll => this._enumBuySellAll;
+  EnumBuySellAll get enumBuySellAll => _enumBuySellAll;
   set enumBuySellAll(EnumBuySellAll val) {
-    this._enumBuySellAll = val;
+    _enumBuySellAll = val;
     notifyListeners();
   }
 }
 
 class _ThisInheritedWidget extends InheritedWidget {
-  final OnOrderBookItemClicked onOrderBookItemClicked;
+  final OnOrderBookItemClicked? onOrderBookItemClicked;
 
   _ThisInheritedWidget(
-      {@required this.onOrderBookItemClicked, @required Widget child, Key key})
-      : super(child: child, key: key);
+      {required this.onOrderBookItemClicked, required Widget child})
+      : super(child: child);
 
   @override
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.onOrderBookItemClicked != this.onOrderBookItemClicked;
+    return oldWidget.onOrderBookItemClicked != onOrderBookItemClicked;
   }
 
-  static _ThisInheritedWidget of(BuildContext context) =>
+  static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 }
 
-const _DUMMY_CHART_LIST = <OrderBookItemModel>[
+const dummyChartList = <OrderBookItemModel>[
   OrderBookItemModel(
     price: '55.0',
     amount: '0.7262',

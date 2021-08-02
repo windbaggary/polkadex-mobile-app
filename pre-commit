@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+printf "Staring pre-commit script. Running Flutter format.\n"
+
+flutter format . --set-exit-if-changed
+status=$?
+if [ $status -eq 1 ]; then
+    printf "\n${yellow}One or more files were modified by the script. Please check them and try again.${reset}\n"
+    exit 1
+fi
+
+printf "\n${yellow}Code formatting is ok. Running Flutter analyze.${reset}\n"
+flutter analyze .
+
+if [ $? -ne 0 ]; then
+        printf "\n${red}One or more files contains errors. Please solve them and try again.${reset}\n"
+        exit 1
+fi
+
+printf "Finished running pre-commit script. All ok :)"

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
 
 /// XD_PAGE: 46
 class AppSettingsChangeLogsScreen extends StatelessWidget {
-  const AppSettingsChangeLogsScreen({Key key}) : super(key: key);
+  const AppSettingsChangeLogsScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -219,10 +219,9 @@ class _ThisBulletItem extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
   const _ThisBulletItem({
-    Key key,
-    @required this.child,
+    required this.child,
     this.padding = const EdgeInsets.only(right: 8, top: 4.5),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -249,12 +248,11 @@ class _ThisItemWidget extends StatelessWidget {
   final String svgAsset, title, description;
   final EdgeInsets iconPadding;
   const _ThisItemWidget({
-    Key key,
-    @required this.svgAsset,
-    @required this.title,
-    @required this.description,
+    required this.svgAsset,
+    required this.title,
+    required this.description,
     this.iconPadding = const EdgeInsets.all(14),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -276,12 +274,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                title ?? "",
+                title,
                 style: tsS13W400CFFOP60,
               ),
               SizedBox(height: 3),
               Text(
-                description ?? "",
+                description,
                 style: tsS16W500CFF,
               ),
             ],

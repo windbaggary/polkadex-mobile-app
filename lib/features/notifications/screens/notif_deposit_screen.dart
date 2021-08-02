@@ -2,33 +2,32 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_help_screen.dart';
-import 'package:polkadex/utils/colors.dart';
-import 'package:polkadex/utils/enums.dart';
-import 'package:polkadex/utils/extensions.dart';
-import 'package:polkadex/utils/styles.dart';
-import 'package:polkadex/widgets/build_methods.dart';
-import 'package:polkadex/widgets/custom_app_bar.dart';
-import 'package:url_launcher/url_launcher.dart' as urlLauncher;
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// XD_PAGE: 43
 class NotifDepositScreen extends StatelessWidget {
   final EnumDepositScreenTypes screenType;
   const NotifDepositScreen({
-    Key key,
-    @required this.screenType,
-  }) : super(key: key);
+    required this.screenType,
+  });
 
   @override
   Widget build(BuildContext context) {
-    String title;
+    String? title;
     String titleSvg;
 
     switch (screenType) {
-      case EnumDepositScreenTypes.Withdraw:
+      case EnumDepositScreenTypes.withdraw:
         title = "Withdraw Successful";
         titleSvg = "Withdraw".asAssetSvg();
         break;
-      case EnumDepositScreenTypes.Deposit:
+      case EnumDepositScreenTypes.deposit:
         title = "Deposit Successful";
         titleSvg = 'Deposit'.asAssetSvg();
         break;
@@ -74,7 +73,7 @@ class NotifDepositScreen extends StatelessWidget {
                             bottom: 4,
                           ),
                           child: Text(
-                            title ?? "Deposit Successful",
+                            title,
                             style: tsS20W500CFF,
                           ),
                         ),
@@ -246,8 +245,8 @@ class NotifDepositScreen extends StatelessWidget {
                                 onTap: () async {
                                   try {
                                     final link = "https://www.polkadex.trade";
-                                    if (await urlLauncher.canLaunch(link)) {
-                                      urlLauncher.launch(link);
+                                    if (await url_launcher.canLaunch(link)) {
+                                      url_launcher.launch(link);
                                     }
                                   } catch (ex) {
                                     print(ex);
@@ -345,7 +344,7 @@ class NotifDepositScreen extends StatelessWidget {
   }
 
   /// Builds the common label value pair for the screen
-  Widget _buildLabelValue({@required String label, @required String value}) =>
+  Widget _buildLabelValue({required String? label, required String? value}) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
