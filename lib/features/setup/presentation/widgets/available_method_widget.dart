@@ -15,15 +15,15 @@ class AvailableMethodWidget extends StatelessWidget {
   final String title;
   final String description;
   final Widget iconWidget;
-  final VoidCallback? onTap;
+  final Function(TapUpDetails)? onTap;
   final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapUp: (_) => enabled ? onTap : null,
+      onTapUp: onTap,
       child: Opacity(
-        opacity: enabled ? 1.0 : 0.4,
+        opacity: enabled && onTap != null ? 1.0 : 0.4,
         child: Container(
           decoration: BoxDecoration(
             color: color1C1C26,

@@ -13,10 +13,10 @@ class MnemonicProvider extends ChangeNotifier {
   final ImportAccountUseCase _importAccountUseCase;
 
   bool _disposed = false;
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isButtonToBackupEnabled = false;
   bool _isButtonBackupVerificationEnabled = false;
-  late List<String> _mnemonicWords;
+  List<String> _mnemonicWords = List.generate(12, (_) => '');
   late List<String> _shuffledMnemonicWords;
 
   bool get isLoading => _isLoading;
@@ -80,6 +80,8 @@ class MnemonicProvider extends ChangeNotifier {
   }
 
   void loadMnemonic() async {
+    _loading = true;
+
     final result = await _generateMnemonicUseCase();
 
     result.fold(
