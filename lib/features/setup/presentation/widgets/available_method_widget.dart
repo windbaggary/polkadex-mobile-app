@@ -51,21 +51,24 @@ class AvailableMethodWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Text(
-                        title,
-                        style: tsS18W600CFF,
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text(
+                          title,
+                          style: tsS18W600CFF,
+                        ),
                       ),
-                    ),
-                    Text(
-                      description,
-                      style: tsS14W400CFF,
-                    )
-                  ],
+                      Text(
+                        description,
+                        style: tsS14W400CFF,
+                      )
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Align(
