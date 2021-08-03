@@ -212,7 +212,7 @@ class _IntroScreenState extends State<IntroScreen>
                 parent: animation, curve: Interval(0.500, 1.00)),
             child: ChangeNotifierProvider(
               create: (context) =>
-                  dependency<MnemonicProvider>()..loadMnemonic(),
+                  dependency<MnemonicProvider>()..generateMnemonic(),
               builder: (context, _) {
                 return MnemonicGeneratedScreen();
               },

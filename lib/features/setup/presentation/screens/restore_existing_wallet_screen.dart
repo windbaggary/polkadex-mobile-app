@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:polkadex/features/setup/presentation/widgets/editable_mnemonic_word_widget.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
+import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
+import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/setup/presentation/widgets/mnemonic_pages_input_widget.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 
 class RestoreExistingWalletScreen extends StatefulWidget {
@@ -20,12 +23,15 @@ class _RestoreExistingWalletScreenState
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
   late PageController _mnemonicPageController;
-  late int itemsPerPage;
-  final double mnemonicListHeight = (AppConfigs.size!.height * 0.5);
+  late int _itemsPerPage;
+  final double _mnemonicListHeight = (AppConfigs.size!.height * 0.5);
+  final Duration _transitionDuration = const Duration(milliseconds: 300);
+  final Cubic _pageTransition = Curves.ease;
+  final ValueNotifier<int> _currentPage = ValueNotifier<int>(0);
 
   @override
   void initState() {
-    itemsPerPage = ((AppConfigs.size!.height * 0.5) / 58).floor();
+    _itemsPerPage = (_mnemonicListHeight / 58).floor();
 
     _animationController = AnimationController(
       vsync: this,
@@ -140,35 +146,13 @@ class _RestoreExistingWalletScreenState
                                       SizedBox(
                                         height: 20,
                                       ),
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            maxHeight:
-                                                AppConfigs.size!.height * 0.5),
-                                        child: PageView.builder(
-                                          controller: _mnemonicPageController,
-                                          itemCount:
-                                              _pageMnemonicCount(provider),
-                                          itemBuilder: (context, position) {
-                                            return ListView.builder(
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              itemCount: _listMnemonicCount(
-                                                  provider, position),
-                                              itemBuilder: (context, index) =>
-                                                  Padding(
-                                                padding: EdgeInsets.only(
-                                                  bottom:
-                                                      index + 1 >= itemsPerPage
-                                                          ? 0
-                                                          : 10,
-                                                  right: 10,
-                                                ),
-                                                child:
-                                                    EditableMnemonicWordWidget(),
-                                              ),
-                                            );
-                                          }, // Can be null
-                                        ),
+                                      MnemonicPagesInputWidget(
+                                        pageController: _mnemonicPageController,
+                                        currentPage: _currentPage,
+                                        itemsPerPage: _itemsPerPage,
+                                        pageCount: _pageMnemonicCount(
+                                            context, provider),
+                                        pageHeight: _mnemonicListHeight,
                                       ),
                                     ],
                                   )
@@ -190,8 +174,46 @@ class _RestoreExistingWalletScreenState
                       alignment: Alignment.bottomCenter,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 28),
-                        child: AppButton(
-                          label: 'Next',
+                        child: ValueListenableBuilder(
+                          valueListenable: _currentPage,
+                          builder: (BuildContext context, int value, _) {
+                            return Row(
+                              mainAxisAlignment: value > 0
+                                  ? MainAxisAlignment.spaceBetween
+                                  : MainAxisAlignment.center,
+                              children: [
+                                if (value > 0)
+                                  AppButton(
+                                    label: 'Previous',
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 16,
+                                    ),
+                                    onTap: () {
+                                      if (_isInteger(
+                                          _mnemonicPageController.page!)) {
+                                        FocusScope.of(context).unfocus();
+                                        _mnemonicPageController.previousPage(
+                                          duration: _transitionDuration,
+                                          curve: _pageTransition,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                AppButton(
+                                  label: 'Next',
+                                  enabled: _isNextEnabled(context, provider),
+                                  onTap: () {
+                                    if (_isInteger(
+                                        _mnemonicPageController.page!)) {
+                                      FocusScope.of(context).unfocus();
+                                      _evalNextButtonAction(context, provider);
+                                    }
+                                  },
+                                )
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -205,35 +227,65 @@ class _RestoreExistingWalletScreenState
     );
   }
 
-  int _pageMnemonicCount(MnemonicProvider provider) {
-    return (provider.mnemonicWords.length / itemsPerPage).ceil();
+  void _evalNextButtonAction(
+      BuildContext context, MnemonicProvider provider) async {
+    if (_isLastPage(context, provider)) {
+      LoadingPopup.show(context: context);
+      final isMnemonicValid = await provider.checkMnemonicValid();
+      Navigator.of(context).pop();
+
+      isMnemonicValid
+          ? _onNavigateToWalletSettings(context, provider)
+          : showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(30),
+                ),
+              ),
+              builder: (_) => IncorrectMnemonicWidget(),
+            );
+    } else {
+      _mnemonicPageController.nextPage(
+        duration: _transitionDuration,
+        curve: _pageTransition,
+      );
+    }
   }
 
-  int _listMnemonicCount(
-    MnemonicProvider provider,
-    int pagePosition,
-  ) {
-    return pagePosition + 1 >=
-            (provider.mnemonicWords.length / itemsPerPage).ceil()
-        ? provider.mnemonicWords.length - (itemsPerPage * pagePosition)
-        : itemsPerPage;
+  void _onNavigateToWalletSettings(
+      BuildContext context, MnemonicProvider provider) {
+    Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return ChangeNotifierProvider.value(
+          value: provider,
+          child: FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: WalletSettingsScreen(),
+          ),
+        );
+      },
+    ));
   }
 
-  //void _onNavigateToWalletSettings(
-  //    BuildContext context, MnemonicProvider provider) async {
-  //  Navigator.of(context).push(PageRouteBuilder(
-  //    pageBuilder: (context, animation, secondaryAnimation) {
-  //      return ChangeNotifierProvider.value(
-  //        value: provider,
-  //        child: FadeTransition(
-  //          opacity: CurvedAnimation(
-  //              parent: animation, curve: Interval(0.500, 1.00)),
-  //          child: WalletSettingsScreen(),
-  //        ),
-  //      );
-  //    },
-  //  ));
-  //}
+  bool _isNextEnabled(BuildContext context, MnemonicProvider provider) {
+    return !_isLastPage(context, provider) ||
+        (_isLastPage(context, provider) && provider.isMnemonicComplete);
+  }
+
+  bool _isLastPage(BuildContext context, MnemonicProvider provider) {
+    return _currentPage.value + 1 >= _pageMnemonicCount(context, provider);
+  }
+
+  int _pageMnemonicCount(BuildContext context, MnemonicProvider provider) {
+    return (provider.mnemonicWords.length / _itemsPerPage).ceil();
+  }
+
+  bool _isInteger(double value) {
+    return value % 1 == 0;
+  }
 
   /// Handling the back button animation
   Future<bool> _onPop(BuildContext context) async {

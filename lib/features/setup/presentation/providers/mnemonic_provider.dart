@@ -23,6 +23,7 @@ class MnemonicProvider extends ChangeNotifier {
   bool get isButtonToBackupEnabled => _isButtonToBackupEnabled && !_isLoading;
   bool get isButtonBackupVerificationEnabled =>
       _isButtonBackupVerificationEnabled;
+  bool get isMnemonicComplete => !_mnemonicWords.contains('');
   List<String> get mnemonicWords => _mnemonicWords;
   List<String> get shuffledMnemonicWords => _shuffledMnemonicWords;
 
@@ -54,6 +55,15 @@ class MnemonicProvider extends ChangeNotifier {
     _shuffledMnemonicWords.shuffle();
   }
 
+  void changeMnemonicWord(int index, String newWord) {
+    bool isCompleteBefore = isMnemonicComplete;
+    _mnemonicWords[index] = newWord.trim();
+
+    if (isCompleteBefore != isMnemonicComplete) {
+      notifyListeners();
+    }
+  }
+
   void swapWordsFromShuffled(String firstWord, String secondWord) {
     _isButtonBackupVerificationEnabled = true;
 
@@ -79,7 +89,7 @@ class MnemonicProvider extends ChangeNotifier {
     return true;
   }
 
-  void loadMnemonic() async {
+  void generateMnemonic() async {
     _loading = true;
 
     final result = await _generateMnemonicUseCase();
@@ -96,6 +106,15 @@ class MnemonicProvider extends ChangeNotifier {
     _loading = false;
   }
 
+  Future<bool> checkMnemonicValid() async {
+    final result = await _importAccountUseCase(
+      mnemonic: _mnemonicWords.join(' '),
+      password: '',
+    );
+
+    return result.isRight();
+  }
+
   Future<void> importAccount(String password) async {
     final result = await _importAccountUseCase(
       mnemonic: _mnemonicWords.join(' '),
@@ -103,7 +122,7 @@ class MnemonicProvider extends ChangeNotifier {
     );
 
     result.fold(
-      (l) => null,
+      (_) {},
       (importedAcc) {
         //TODO: Use the imported in the app or store it
       },

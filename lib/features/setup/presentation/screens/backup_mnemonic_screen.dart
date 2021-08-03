@@ -170,7 +170,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
   }
 
   void _onNavigateToWalletSettings(
-      BuildContext context, MnemonicProvider provider) async {
+      BuildContext context, MnemonicProvider provider) {
     Navigator.of(context).push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
         return ChangeNotifierProvider.value(
