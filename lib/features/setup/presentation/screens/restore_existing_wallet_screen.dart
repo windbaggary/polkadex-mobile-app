@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/suggestions_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -23,16 +24,18 @@ class _RestoreExistingWalletScreenState
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
   late PageController _mnemonicPageController;
-  late int _itemsPerPage;
-  final double _mnemonicListHeight = (AppConfigs.size!.height * 0.5);
+
+  final List<TextEditingController> _editControllers = List.generate(
+    24,
+    (_) => TextEditingController(),
+  );
+  final int _itemsPerPage = 6;
   final Duration _transitionDuration = const Duration(milliseconds: 300);
   final Cubic _pageTransition = Curves.ease;
   final ValueNotifier<int> _currentPage = ValueNotifier<int>(0);
 
   @override
   void initState() {
-    _itemsPerPage = (_mnemonicListHeight / 58).floor();
-
     _animationController = AnimationController(
       vsync: this,
       duration: AppConfigs.animDuration,
@@ -147,12 +150,24 @@ class _RestoreExistingWalletScreenState
                                         height: 20,
                                       ),
                                       MnemonicPagesInputWidget(
-                                        pageController: _mnemonicPageController,
-                                        currentPage: _currentPage,
-                                        itemsPerPage: _itemsPerPage,
-                                        pageCount: _pageMnemonicCount(
-                                            context, provider),
-                                        pageHeight: _mnemonicListHeight,
+                                          pageController:
+                                              _mnemonicPageController,
+                                          currentPage: _currentPage,
+                                          itemsPerPage: _itemsPerPage,
+                                          pageCount: _pageMnemonicCount(
+                                              context, provider),
+                                          controllers: _editControllers),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 42,
+                                          top: 21,
+                                          right: 42,
+                                          bottom: 38,
+                                        ),
+                                        child: SuggestionsWidget(
+                                          suggestions:
+                                              provider.suggestionsMnemonicWords,
+                                        ),
                                       ),
                                     ],
                                   )
@@ -190,6 +205,7 @@ class _RestoreExistingWalletScreenState
                                       vertical: 16,
                                     ),
                                     onTap: () {
+                                      provider.indexWordEdited = null;
                                       if (_isInteger(
                                           _mnemonicPageController.page!)) {
                                         FocusScope.of(context).unfocus();
@@ -204,13 +220,14 @@ class _RestoreExistingWalletScreenState
                                   label: 'Next',
                                   enabled: _isNextEnabled(context, provider),
                                   onTap: () {
+                                    provider.indexWordEdited = null;
                                     if (_isInteger(
                                         _mnemonicPageController.page!)) {
                                       FocusScope.of(context).unfocus();
                                       _evalNextButtonAction(context, provider);
                                     }
                                   },
-                                )
+                                ),
                               ],
                             );
                           },

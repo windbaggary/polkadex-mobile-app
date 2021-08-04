@@ -3,13 +3,18 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
 class EditableMnemonicWordWidget extends StatelessWidget {
-  const EditableMnemonicWordWidget({
-    required this.wordNumber,
-    this.onChanged,
-  });
+  const EditableMnemonicWordWidget(
+      {required this.wordNumber,
+      this.initialText = '',
+      this.onChanged,
+      this.onTap,
+      this.controller});
 
   final int wordNumber;
+  final String initialText;
   final Function(String)? onChanged;
+  final VoidCallback? onTap;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +38,7 @@ class EditableMnemonicWordWidget extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(left: 12),
                 child: TextField(
+                  controller: controller,
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(
@@ -49,6 +55,7 @@ class EditableMnemonicWordWidget extends StatelessWidget {
                   cursorWidth: 1,
                   cursorColor: colorFFFFFF,
                   onChanged: onChanged,
+                  onTap: onTap,
                 ),
               ),
             )

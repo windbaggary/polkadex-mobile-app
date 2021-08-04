@@ -9,42 +9,55 @@ class MnemonicPagesInputWidget extends StatelessWidget {
     required this.currentPage,
     required this.itemsPerPage,
     required this.pageCount,
-    required this.pageHeight,
+    required this.controllers,
   });
 
   final PageController pageController;
   final ValueNotifier<int> currentPage;
   final int itemsPerPage;
   final int pageCount;
-  final double pageHeight;
+  final List<TextEditingController> controllers;
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MnemonicProvider>(context);
+
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: pageHeight),
+      constraints: BoxConstraints(maxHeight: 62.0 * itemsPerPage),
       child: PageView.builder(
-        onPageChanged: (nextPage) => currentPage.value = nextPage,
+        onPageChanged: (nextPage) {
+          currentPage.value = nextPage;
+          FocusScope.of(context).unfocus();
+          provider.indexWordEdited = null;
+        },
         controller: pageController,
         itemCount: pageCount,
         itemBuilder: (context, position) {
-          final provider = Provider.of<MnemonicProvider>(context);
-
           return ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             itemCount: _listMnemonicCount(context, position),
-            itemBuilder: (context, index) => Padding(
-              padding: EdgeInsets.only(
-                bottom: 10,
-                right: 10,
-              ),
-              child: EditableMnemonicWordWidget(
-                wordNumber: (itemsPerPage * position) + (index + 1),
-                onChanged: (newValue) {
-                  provider.changeMnemonicWord(
-                      (itemsPerPage * position) + index, newValue);
-                },
-              ),
-            ),
+            itemBuilder: (context, index) {
+              final wordIndex = (itemsPerPage * position) + index;
+
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: 10,
+                  right: 10,
+                ),
+                child: EditableMnemonicWordWidget(
+                  wordNumber: wordIndex + 1,
+                  initialText: provider.mnemonicWords[wordIndex],
+                  onChanged: (newValue) {
+                    provider.changeMnemonicWord(wordIndex, newValue);
+                    provider.searchSuggestions(newValue);
+                  },
+                  onTap: () {
+                    provider.indexWordEdited = wordIndex;
+                  },
+                  controller: controllers[wordIndex],
+                ),
+              );
+            },
           );
         }, // Can be null
       ),
