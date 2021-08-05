@@ -17,17 +17,14 @@ class MnemonicProvider extends ChangeNotifier {
 
   bool _disposed = false;
   bool _isLoading = false;
-  bool _isButtonToBackupEnabled = false;
-  bool _isButtonBackupVerificationEnabled = false;
+  bool _hasShuffledMnemonicChanged = false;
   int? indexWordEdited;
   List<String> _mnemonicWords;
   late List<String> _shuffledMnemonicWords;
   final List<String> _suggestionsMnemonicWords = [];
 
   bool get isLoading => _isLoading;
-  bool get isButtonToBackupEnabled => _isButtonToBackupEnabled && !_isLoading;
-  bool get isButtonBackupVerificationEnabled =>
-      _isButtonBackupVerificationEnabled;
+  bool get hasShuffledMnemonicChanged => _hasShuffledMnemonicChanged;
   bool get isMnemonicComplete => !_mnemonicWords.contains('');
   List<String> get mnemonicWords => _mnemonicWords;
   List<String> get shuffledMnemonicWords => _shuffledMnemonicWords;
@@ -51,13 +48,8 @@ class MnemonicProvider extends ChangeNotifier {
     }
   }
 
-  void changeButtonToBackupState() {
-    _isButtonToBackupEnabled = !_isButtonToBackupEnabled;
-    notifyListeners();
-  }
-
   void shuffleMnemonicWords() {
-    _isButtonBackupVerificationEnabled = false;
+    _hasShuffledMnemonicChanged = false;
     _shuffledMnemonicWords.shuffle();
   }
 
@@ -71,7 +63,7 @@ class MnemonicProvider extends ChangeNotifier {
   }
 
   void swapWordsFromShuffled(String firstWord, String secondWord) {
-    _isButtonBackupVerificationEnabled = true;
+    _hasShuffledMnemonicChanged = true;
 
     final int _indexFirst = _shuffledMnemonicWords.indexOf(firstWord);
     final int _indexSecond = _shuffledMnemonicWords.indexOf(secondWord);
@@ -85,7 +77,7 @@ class MnemonicProvider extends ChangeNotifier {
   bool verifyMnemonicOrder() {
     for (int i = 0; i < _mnemonicWords.length; i++) {
       if (_shuffledMnemonicWords[i] != _mnemonicWords[i]) {
-        _isButtonBackupVerificationEnabled = false;
+        _hasShuffledMnemonicChanged = false;
         notifyListeners();
 
         return false;

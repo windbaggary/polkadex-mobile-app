@@ -142,7 +142,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                       child: Padding(
                         padding: const EdgeInsets.only(top: 28),
                         child: AppButton(
-                          enabled: provider.isButtonBackupVerificationEnabled,
+                          enabled: provider.hasShuffledMnemonicChanged,
                           label: 'Next',
                           onTap: () => provider.verifyMnemonicOrder()
                               ? _onNavigateToWalletSettings(context, provider)

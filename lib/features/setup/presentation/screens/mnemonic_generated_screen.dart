@@ -22,6 +22,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
+  bool _isButtonToBackupEnabled = false;
 
   @override
   void initState() {
@@ -156,9 +157,10 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                                 CheckBoxWidget(
                                   checkColor: colorE6007A,
                                   backgroundColor: color3B4150,
-                                  isChecked: provider.isButtonToBackupEnabled,
-                                  onTap: (_) =>
-                                      provider.changeButtonToBackupState(),
+                                  isChecked: _isButtonToBackupEnabled,
+                                  onTap: (_) => setState(() =>
+                                      _isButtonToBackupEnabled =
+                                          !_isButtonToBackupEnabled),
                                 ),
                                 Flexible(
                                   child: Padding(
@@ -196,7 +198,8 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                         child: AppButton(
                           onTap: () =>
                               _onNavigateToBackupMnemonic(context, provider),
-                          enabled: provider.isButtonToBackupEnabled,
+                          enabled:
+                              _isButtonToBackupEnabled && !provider.isLoading,
                           label: 'Next',
                         ),
                       ),
