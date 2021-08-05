@@ -20,7 +20,7 @@ class MnemonicPagesInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<MnemonicProvider>(context);
+    final provider = context.read<MnemonicProvider>();
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: 62.0 * itemsPerPage),
@@ -28,7 +28,7 @@ class MnemonicPagesInputWidget extends StatelessWidget {
         onPageChanged: (nextPage) {
           currentPage.value = nextPage;
           FocusScope.of(context).unfocus();
-          provider.clearSuggestions();
+          context.read<MnemonicProvider>().clearSuggestions();
         },
         controller: pageController,
         itemCount: pageCount,
@@ -69,10 +69,10 @@ class MnemonicPagesInputWidget extends StatelessWidget {
     int pagePosition,
   ) {
     return pagePosition + 1 >=
-            (Provider.of<MnemonicProvider>(context).mnemonicWords.length /
+            (context.read<MnemonicProvider>().mnemonicWords.length /
                     itemsPerPage)
                 .ceil()
-        ? Provider.of<MnemonicProvider>(context).mnemonicWords.length -
+        ? context.read<MnemonicProvider>().mnemonicWords.length -
             (itemsPerPage * pagePosition)
         : itemsPerPage;
   }
