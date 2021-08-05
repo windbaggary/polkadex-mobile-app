@@ -167,6 +167,7 @@ class _RestoreExistingWalletScreenState
                                         child: SuggestionsWidget(
                                           suggestions:
                                               provider.suggestionsMnemonicWords,
+                                          controllers: _editControllers,
                                         ),
                                       ),
                                     ],
@@ -205,7 +206,7 @@ class _RestoreExistingWalletScreenState
                                       vertical: 16,
                                     ),
                                     onTap: () {
-                                      provider.indexWordEdited = null;
+                                      provider.clearSuggestions();
                                       if (_isInteger(
                                           _mnemonicPageController.page!)) {
                                         FocusScope.of(context).unfocus();
@@ -220,7 +221,7 @@ class _RestoreExistingWalletScreenState
                                   label: 'Next',
                                   enabled: _isNextEnabled(context, provider),
                                   onTap: () {
-                                    provider.indexWordEdited = null;
+                                    provider.clearSuggestions();
                                     if (_isInteger(
                                         _mnemonicPageController.page!)) {
                                       FocusScope.of(context).unfocus();

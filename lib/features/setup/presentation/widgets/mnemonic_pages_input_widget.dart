@@ -28,7 +28,7 @@ class MnemonicPagesInputWidget extends StatelessWidget {
         onPageChanged: (nextPage) {
           currentPage.value = nextPage;
           FocusScope.of(context).unfocus();
-          provider.indexWordEdited = null;
+          provider.clearSuggestions();
         },
         controller: pageController,
         itemCount: pageCount,

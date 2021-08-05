@@ -140,4 +140,11 @@ class MnemonicProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> clearSuggestions() async {
+    _suggestionsMnemonicWords.clear();
+    indexWordEdited = null;
+
+    notifyListeners();
+  }
 }
