@@ -5,9 +5,9 @@ import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 
 void main() {
-  MetaModel? tMeta;
-  EncodingModel? tEncoding;
-  ImportedAccountModel? tImportedAccount;
+  late MetaModel tMeta;
+  late EncodingModel tEncoding;
+  late ImportedAccountModel tImportedAccount;
 
   setUp(() {
     tMeta = MetaModel(name: 'userName');
@@ -23,9 +23,9 @@ void main() {
       mnemonic: "test",
       rawSeed: "",
       encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-      encoding: tEncoding!,
+      encoding: tEncoding,
       address: "k9o1dxJxQE8Zwm5Fy",
-      meta: tMeta!,
+      meta: tMeta,
     );
   });
 

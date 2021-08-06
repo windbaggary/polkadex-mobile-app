@@ -50,7 +50,7 @@ class MnemonicProvider extends ChangeNotifier {
 
   void shuffleMnemonicWords() {
     _hasShuffledMnemonicChanged = false;
-    _shuffledMnemonicWords.shuffle();
+    //_shuffledMnemonicWords.shuffle();
   }
 
   void changeMnemonicWord(int index, String newWord) {
@@ -87,7 +87,7 @@ class MnemonicProvider extends ChangeNotifier {
     return true;
   }
 
-  void generateMnemonic() async {
+  Future<void> generateMnemonic() async {
     _loading = true;
 
     final result = await _generateMnemonicUseCase();

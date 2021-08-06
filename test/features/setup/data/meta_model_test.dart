@@ -3,7 +3,7 @@ import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/entities/meta_entity.dart';
 
 void main() {
-  MetaModel? tMeta;
+  late MetaModel tMeta;
 
   setUp(() {
     tMeta = MetaModel(name: 'userName');

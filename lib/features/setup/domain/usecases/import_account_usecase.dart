@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/repositories/imnemonic_repository.dart';
 
 class ImportAccountUseCase {
   ImportAccountUseCase({
-    required MnemonicRepository mnemonicRepository,
+    required IMnemonicRepository mnemonicRepository,
   }) : _mnemonicRepository = mnemonicRepository;
 
-  final MnemonicRepository _mnemonicRepository;
+  final IMnemonicRepository _mnemonicRepository;
 
   Future<Either<ApiError, ImportedAccountEntity>> call({
     required String mnemonic,

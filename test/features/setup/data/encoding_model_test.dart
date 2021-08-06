@@ -3,7 +3,7 @@ import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
 
 void main() {
-  EncodingModel? tEncoding;
+  late EncodingModel tEncoding;
 
   setUp(() {
     tEncoding = EncodingModel(
@@ -14,6 +14,6 @@ void main() {
   });
 
   test('EncodingModel must be a EncodingEntity', () async {
-    expect(tEncoding, isA<EncondingEntity>());
+    expect(tEncoding, isA<EncodingEntity>());
   });
 }

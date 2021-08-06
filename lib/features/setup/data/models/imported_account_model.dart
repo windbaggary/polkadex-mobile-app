@@ -7,10 +7,10 @@ import 'package:polkadex/features/setup/domain/entities/meta_entity.dart';
 class ImportedAccountModel extends ImportedAccountEntity {
   const ImportedAccountModel({
     required String pubKey,
-    required String mnemonic,
+    required String? mnemonic,
     required String rawSeed,
     required String encoded,
-    required EncondingEntity encoding,
+    required EncodingEntity encoding,
     required String address,
     required MetaEntity meta,
   }) : super(
@@ -31,7 +31,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
       encoded: map['encoded'],
       encoding: EncodingModel.fromJson(map['encoding']),
       address: map['address'],
-      meta: MetaModel.fromJson(map),
+      meta: MetaModel.fromJson(map['meta']),
     );
   }
 
