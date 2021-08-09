@@ -13,6 +13,7 @@ import 'package:polkadex/common/utils/responsive_utils.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/select_country_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart';
 
@@ -195,38 +196,51 @@ class _IntroScreenState extends State<IntroScreen>
                       'logo_name.png'.asAssetImg(),
                       fit: BoxFit.contain,
                     ),
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: color8BA1BE.withOpacity(0.20),
-                            borderRadius: BorderRadius.circular(6),
+                    GestureDetector(
+                      onTapDown: (_) => showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(30),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 10,
+                        ),
+                        builder: (_) => SelectCountryWidget(),
+                      ),
+                      child: Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: color8BA1BE.withOpacity(0.20),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'England',
-                                  style: tsS16W600CFF,
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                RotatedBox(
-                                  quarterTurns: 1,
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: colorFFFFFF,
-                                    size: 10,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 10,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'England',
+                                    style: tsS16W600CFF,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  RotatedBox(
+                                    quarterTurns: 1,
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: colorFFFFFF,
+                                      size: 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
