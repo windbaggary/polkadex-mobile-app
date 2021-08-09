@@ -4,6 +4,7 @@ import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecas
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'features/setup/domain/repositories/imnemonic_repository.dart';
 import 'features/setup/domain/usecases/import_account_usecase.dart';
 import 'common/web_view_runner/web_view_runner.dart';
 import 'package:get_it/get_it.dart';
@@ -23,7 +24,7 @@ Future<void> init() async {
     () => MnemonicRemoteDatasource(),
   );
 
-  dependency.registerFactory(
+  dependency.registerFactory<IMnemonicRepository>(
     () => MnemonicRepository(
       mnemonicRemoteDatasource: dependency(),
     ),
