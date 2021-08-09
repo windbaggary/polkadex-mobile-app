@@ -178,13 +178,63 @@ class _IntroScreenState extends State<IntroScreen>
             ),
           ),
           // The polkadex logo
-          Positioned(
-            top: 36 + MediaQuery.of(context).padding.top,
-            left: 26,
-            height: 36,
-            child: Image.asset(
-              'logo_name.png'.asAssetImg(),
-              fit: BoxFit.contain,
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 26,
+                top: 36 + MediaQuery.of(context).padding.top,
+                right: 26,
+              ),
+              child: Container(
+                height: 36,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'logo_name.png'.asAssetImg(),
+                      fit: BoxFit.contain,
+                    ),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: color8BA1BE.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 10,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'England',
+                                  style: tsS16W600CFF,
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                RotatedBox(
+                                  quarterTurns: 1,
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: colorFFFFFF,
+                                    size: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
