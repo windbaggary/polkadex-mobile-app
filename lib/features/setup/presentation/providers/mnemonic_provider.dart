@@ -50,7 +50,7 @@ class MnemonicProvider extends ChangeNotifier {
 
   void shuffleMnemonicWords() {
     _hasShuffledMnemonicChanged = false;
-    //_shuffledMnemonicWords.shuffle();
+    _shuffledMnemonicWords.shuffle();
   }
 
   void changeMnemonicWord(int index, String newWord) {
