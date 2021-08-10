@@ -5,7 +5,7 @@ class ApiError {
 
   final String? message;
 
-  factory ApiError.fromJson(Map<String, dynamic> map) {
-    return ApiError(message: map['error']['message']);
+  factory ApiError.fromJson(String message) {
+    return ApiError(message: message);
   }
 }

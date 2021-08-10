@@ -32,7 +32,7 @@ class MnemonicRepository implements IMnemonicRepository {
     if (result['error'] == null) {
       return Right(ImportedAccountModel.fromJson(result));
     } else {
-      return Left(ApiError.fromJson(result));
+      return Left(ApiError.fromJson(result['error']));
     }
   }
 }
