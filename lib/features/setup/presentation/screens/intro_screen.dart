@@ -196,25 +196,25 @@ class _IntroScreenState extends State<IntroScreen>
                       'logo_name.png'.asAssetImg(),
                       fit: BoxFit.contain,
                     ),
-                    GestureDetector(
-                      onTapDown: (_) => showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(30),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: color8BA1BE.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(6),
                           ),
-                        ),
-                        builder: (_) => SelectCountryWidget(),
-                      ),
-                      child: Flexible(
-                        child: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: color8BA1BE.withOpacity(0.20),
-                              borderRadius: BorderRadius.circular(6),
+                          child: GestureDetector(
+                            onTapDown: (_) => showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(30),
+                                ),
+                              ),
+                              builder: (_) => SelectCountryWidget(),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
