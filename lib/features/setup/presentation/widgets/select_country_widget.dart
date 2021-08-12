@@ -1,7 +1,9 @@
+import 'package:country_codes/country_codes.dart';
 import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 class SelectCountryWidget extends StatefulWidget {
   @override
@@ -9,8 +11,64 @@ class SelectCountryWidget extends StatefulWidget {
 }
 
 class _SelectCountryWidgetState extends State<SelectCountryWidget> {
+  List<Widget> _buildCountryListWidget() {
+    List<Locale> locales = S.delegate.supportedLocales
+        .where((locale) =>
+            locale.countryCode != null && locale.countryCode!.isNotEmpty)
+        .toList();
+
+    return List<Widget>.generate(
+      locales.length,
+      (index) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InkWell(
+            onTap: () {}, //TODO: Implement country store
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: Flag.fromString(
+                      locales[index].countryCode!,
+                      width: 24,
+                      height: 16,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+                  Text(
+                    CountryCodes.detailsForLocale(locales[index])
+                        .localizedName!,
+                    style: tsS18W600CFF,
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: colorFFFFFF,
+                        size: 8,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (index + 1 < locales.length)
+            Divider(
+              color: color8BA1BE.withOpacity(0.20),
+              height: 1,
+            ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    _buildCountryListWidget();
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.4,
@@ -60,295 +118,7 @@ class _SelectCountryWidgetState extends State<SelectCountryWidget> {
                             ),
                           ),
                           Column(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Flag.fromString(
-                                            'br',
-                                            width: 24,
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SizedBox(width: 18),
-                                        Text(
-                                          'Brazil',
-                                          style: tsS18W600CFF,
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: colorFFFFFF,
-                                              size: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: color8BA1BE.withOpacity(0.20),
-                                    height: 1,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Flag.fromString(
-                                            'gb',
-                                            width: 24,
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SizedBox(width: 18),
-                                        Text(
-                                          'England',
-                                          style: tsS18W600CFF,
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: colorFFFFFF,
-                                              size: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: color8BA1BE.withOpacity(0.20),
-                                    height: 1,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Flag.fromString(
-                                            'es',
-                                            width: 24,
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SizedBox(width: 18),
-                                        Text(
-                                          'Estonia',
-                                          style: tsS18W600CFF,
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: colorFFFFFF,
-                                              size: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: color8BA1BE.withOpacity(0.20),
-                                    height: 1,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Flag.fromString(
-                                            'in',
-                                            width: 24,
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SizedBox(width: 18),
-                                        Text(
-                                          'India',
-                                          style: tsS18W600CFF,
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: colorFFFFFF,
-                                              size: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: color8BA1BE.withOpacity(0.20),
-                                    height: 1,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Flag.fromString(
-                                            'jp',
-                                            width: 24,
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SizedBox(width: 18),
-                                        Text(
-                                          'Japan',
-                                          style: tsS18W600CFF,
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: colorFFFFFF,
-                                              size: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: color8BA1BE.withOpacity(0.20),
-                                    height: 1,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Flag.fromString(
-                                            'no',
-                                            width: 24,
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SizedBox(width: 18),
-                                        Text(
-                                          'Norway',
-                                          style: tsS18W600CFF,
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: colorFFFFFF,
-                                              size: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: color8BA1BE.withOpacity(0.20),
-                                    height: 1,
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 24),
-                                    child: Row(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                          child: Flag.fromString(
-                                            'tr',
-                                            width: 24,
-                                            height: 16,
-                                          ),
-                                        ),
-                                        SizedBox(width: 18),
-                                        Text(
-                                          'Turkey',
-                                          style: tsS18W600CFF,
-                                        ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: colorFFFFFF,
-                                              size: 8,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(
-                                    color: color8BA1BE.withOpacity(0.20),
-                                    height: 1,
-                                  ),
-                                ],
-                              )
-                            ],
+                            children: _buildCountryListWidget(),
                           )
                         ],
                       ),
