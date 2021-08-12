@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:country_codes/country_codes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
@@ -225,7 +226,9 @@ class _IntroScreenState extends State<IntroScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'England',
+                                    CountryCodes.detailsForLocale(
+                                            Localizations.localeOf(context))
+                                        .localizedName!,
                                     style: tsS16W600CFF,
                                   ),
                                   SizedBox(

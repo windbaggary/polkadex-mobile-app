@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,8 +14,13 @@ import 'package:polkadex/generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await CountryCodes.init();
   await injection.init();
+  CountryCodes.init(
+    Locale(
+      Platform.localeName.split('_')[0],
+      Platform.localeName.split('_')[1],
+    ),
+  );
 
   // A 2 seconds delay to show the splash screen
   await Future.delayed(const Duration(seconds: 2));
