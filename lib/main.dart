@@ -15,10 +15,10 @@ import 'package:polkadex/generated/l10n.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await injection.init();
-  CountryCodes.init(
-    Locale(
-      Platform.localeName.split('_')[0],
-      Platform.localeName.split('_')[1],
+  await CountryCodes.init(
+    S.delegate.supportedLocales.firstWhere(
+      (locale) => locale.countryCode == Platform.localeName.split('_')[1],
+      orElse: () => Locale('en', 'US'),
     ),
   );
 
