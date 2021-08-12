@@ -1,5 +1,7 @@
+import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
@@ -7,9 +9,11 @@ import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
+import 'package:polkadex/generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CountryCodes.init();
   await injection.init();
 
   // A 2 seconds delay to show the splash screen
@@ -30,6 +34,15 @@ class MyApp extends StatelessWidget {
             create: (_) => BottomNavigationProvider()),
       ],
       builder: (context, _) => MaterialApp(
+        localizationsDelegates: [
+          // 1
+          S.delegate,
+          // 2
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
         title: 'Polkadex',
         theme: ThemeData(
             splashColor: Colors.transparent,
