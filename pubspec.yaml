@@ -106,5 +106,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 flutter_intl:
-  main_locale: en_US
+  main_locale: en
   enabled: true
