@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:country_codes/country_codes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -14,7 +14,7 @@ import 'package:polkadex/common/utils/responsive_utils.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
-import 'package:polkadex/features/setup/presentation/widgets/select_country_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart';
 
@@ -215,7 +215,7 @@ class _IntroScreenState extends State<IntroScreen>
                                   top: Radius.circular(30),
                                 ),
                               ),
-                              builder: (_) => SelectCountryWidget(),
+                              builder: (_) => SelectLanguageWidget(),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
@@ -226,9 +226,9 @@ class _IntroScreenState extends State<IntroScreen>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    CountryCodes.detailsForLocale(
-                                            Localizations.localeOf(context))
-                                        .localizedName!,
+                                    LocaleNames.of(context)!.nameOf(
+                                        Localizations.localeOf(context)
+                                            .languageCode)!,
                                     style: tsS16W600CFF,
                                   ),
                                   SizedBox(

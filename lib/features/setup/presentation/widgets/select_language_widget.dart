@@ -1,21 +1,17 @@
-import 'package:country_codes/country_codes.dart';
-import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/generated/l10n.dart';
 
-class SelectCountryWidget extends StatefulWidget {
+class SelectLanguageWidget extends StatefulWidget {
   @override
-  _SelectCountryWidgetState createState() => _SelectCountryWidgetState();
+  _SelectLanguageWidgetState createState() => _SelectLanguageWidgetState();
 }
 
-class _SelectCountryWidgetState extends State<SelectCountryWidget> {
-  List<Widget> _buildCountryListWidget() {
-    List<Locale> locales = S.delegate.supportedLocales
-        .where((locale) =>
-            locale.countryCode != null && locale.countryCode!.isNotEmpty)
-        .toList();
+class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
+  List<Widget> _buildLanguageListWidget() {
+    List<Locale> locales = S.delegate.supportedLocales;
 
     return List<Widget>.generate(
       locales.length,
@@ -28,18 +24,8 @@ class _SelectCountryWidgetState extends State<SelectCountryWidget> {
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Flag.fromString(
-                      locales[index].countryCode!,
-                      width: 24,
-                      height: 16,
-                    ),
-                  ),
-                  SizedBox(width: 18),
                   Text(
-                    CountryCodes.detailsForLocale(locales[index])
-                        .localizedName!,
+                    LocaleNames.of(context)!.nameOf(locales[index].toString())!,
                     style: tsS18W600CFF,
                   ),
                   Expanded(
@@ -68,7 +54,6 @@ class _SelectCountryWidgetState extends State<SelectCountryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _buildCountryListWidget();
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.4,
@@ -106,19 +91,19 @@ class _SelectCountryWidgetState extends State<SelectCountryWidget> {
                           Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              'Select your country',
+                              'Choose a language',
                               style: tsS26W600CFF,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 21),
                             child: Text(
-                              'In some countries, due legal restrictions, some functionalities are not available or are limited.',
+                              'Select the language you would like to use while running Polkadex Mobile App',
                               style: tsS18W400CFF,
                             ),
                           ),
                           Column(
-                            children: _buildCountryListWidget(),
+                            children: _buildLanguageListWidget(),
                           )
                         ],
                       ),

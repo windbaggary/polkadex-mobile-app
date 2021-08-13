@@ -1,8 +1,7 @@
-import 'dart:io';
-import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
@@ -15,12 +14,6 @@ import 'package:polkadex/generated/l10n.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await injection.init();
-  await CountryCodes.init(
-    S.delegate.supportedLocales.firstWhere(
-      (locale) => locale.countryCode == Platform.localeName.split('_')[1],
-      orElse: () => Locale('en', 'US'),
-    ),
-  );
 
   // A 2 seconds delay to show the splash screen
   await Future.delayed(const Duration(seconds: 2));
@@ -41,9 +34,8 @@ class MyApp extends StatelessWidget {
       ],
       builder: (context, _) => MaterialApp(
         localizationsDelegates: [
-          // 1
           S.delegate,
-          // 2
+          LocaleNamesLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
