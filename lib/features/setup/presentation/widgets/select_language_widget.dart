@@ -42,11 +42,10 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
               ),
             ),
           ),
-          if (index + 1 < locales.length)
-            Divider(
-              color: color8BA1BE.withOpacity(0.20),
-              height: 1,
-            ),
+          Divider(
+            color: color8BA1BE.withOpacity(0.20),
+            height: 1,
+          ),
         ],
       ),
     );
