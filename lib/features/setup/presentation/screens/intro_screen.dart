@@ -14,6 +14,7 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
+import 'package:polkadex/features/setup/presentation/screens/import_wallet_methods_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart';
 
