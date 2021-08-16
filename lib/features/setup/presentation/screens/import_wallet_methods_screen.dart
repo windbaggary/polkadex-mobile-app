@@ -1,21 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/features/setup/presentation/screens/restore_existing_wallet_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/setup/presentation/widgets/available_method_widget.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
-import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
-import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/injection_container.dart';
 
-class BackupMnemonicScreen extends StatefulWidget {
+class ImportWalletMethodsScreen extends StatefulWidget {
   @override
-  _BackupMnemonicScreenState createState() => _BackupMnemonicScreenState();
+  _ImportWalletMethodsScreenState createState() =>
+      _ImportWalletMethodsScreenState();
 }
 
-class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
+class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
@@ -48,7 +51,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
             backgroundColor: color1C2023,
             appBar: AppBar(
               title: Text(
-                'Create Wallet',
+                'Import Wallet',
                 style: tsS19W600CFF,
               ),
               leading: SizedBox(
@@ -104,23 +107,51 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Backup mnemonic phrases',
+                                      'Available import wallet methods',
                                       style: tsS26W600CFF,
                                     ),
                                     SizedBox(
                                       height: 16,
                                     ),
                                     Text(
-                                      'Please enter the 12-24 words in the correct order.',
+                                      'Type your secret phrase to restore your existing wallet.',
                                       style: tsS18W400CFF,
+                                    ),
+                                    SizedBox(
+                                      height: 25,
+                                    ),
+                                    AvailableMethodWidget(
+                                      title: 'Mnemonic Phrase',
+                                      description:
+                                          'Add a wallet by importing recovery phase',
+                                      iconWidget: SvgPicture.asset(
+                                        'mnemonicIcon'.asAssetSvg(),
+                                      ),
+                                      onTap: (_) =>
+                                          _onNavigateToRestoreExistingWallet(
+                                              context),
                                     ),
                                     SizedBox(
                                       height: 14,
                                     ),
-                                    MnemonicGridWidget(
-                                      mnemonicWords:
-                                          provider.shuffledMnemonicWords,
-                                      isDragEnabled: true,
+                                    AvailableMethodWidget(
+                                      title: 'Json File',
+                                      description:
+                                          'Import wallet from backup JSON file',
+                                      iconWidget: SvgPicture.asset(
+                                        'jsonIcon'.asAssetSvg(),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 14,
+                                    ),
+                                    AvailableMethodWidget(
+                                      title: 'Ledger Device',
+                                      description:
+                                          'Connect ledger device for import your wallet',
+                                      iconWidget: SvgPicture.asset(
+                                        'ledgerIcon'.asAssetSvg(),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -133,34 +164,6 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                     childCount: 1,
                   ),
                 ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 28),
-                        child: AppButton(
-                          enabled: provider.hasShuffledMnemonicChanged,
-                          label: 'Next',
-                          onTap: () => provider.verifyMnemonicOrder()
-                              ? _onNavigateToWalletSettings(context, provider)
-                              : showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(30),
-                                    ),
-                                  ),
-                                  builder: (_) => IncorrectMnemonicWidget(),
-                                ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
               ],
             ),
           ),
@@ -169,20 +172,23 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
     );
   }
 
-  void _onNavigateToWalletSettings(
-      BuildContext context, MnemonicProvider provider) {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return ChangeNotifierProvider.value(
-          value: provider,
-          child: FadeTransition(
+  void _onNavigateToRestoreExistingWallet(BuildContext context) async {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
             opacity: CurvedAnimation(
                 parent: animation, curve: Interval(0.500, 1.00)),
-            child: WalletSettingsScreen(),
-          ),
-        );
-      },
-    ));
+            child: ChangeNotifierProvider(
+              create: (context) => dependency<MnemonicProvider>(),
+              builder: (context, _) {
+                return RestoreExistingWalletScreen();
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 
   /// Handling the back button animation

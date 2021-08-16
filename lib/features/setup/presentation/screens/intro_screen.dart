@@ -9,7 +9,6 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
 import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
@@ -121,15 +120,7 @@ class _IntroScreenState extends State<IntroScreen>
                       text: 'Import Wallet',
                       backgroundColor: colorE6007A,
                       textStyle: tsS16W500CFF,
-                      onTap: () => Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return FadeTransition(
-                              opacity: CurvedAnimation(
-                                  parent: animation,
-                                  curve: Interval(0.500, 1.00)),
-                              child: LandingScreen());
-                        },
-                      )),
+                      onTap: () => _onNavigateToImportWallet(context),
                     ),
                   ),
                 ),
@@ -259,22 +250,43 @@ class _IntroScreenState extends State<IntroScreen>
     );
   }
 
-  /// Navigate to terms and condition screen
+  void _onNavigateToImportWallet(BuildContext context) async {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: ChangeNotifierProvider(
+              create: (context) => dependency<MnemonicProvider>(),
+              builder: (context, _) {
+                return ImportWalletMethodsScreen();
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   void _onNavigateToGenerateWallet(BuildContext context) async {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(
-          opacity:
-              CurvedAnimation(parent: animation, curve: Interval(0.500, 1.00)),
-          child: ChangeNotifierProvider(
-            create: (context) => dependency<MnemonicProvider>()..loadMnemonic(),
-            builder: (context, _) {
-              return MnemonicGeneratedScreen();
-            },
-          ),
-        );
-      },
-    ));
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: ChangeNotifierProvider(
+              create: (context) =>
+                  dependency<MnemonicProvider>()..generateMnemonic(),
+              builder: (context, _) {
+                return MnemonicGeneratedScreen();
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 

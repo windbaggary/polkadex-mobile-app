@@ -1,6 +1,6 @@
 import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
 
-class EncodingModel extends EncondingEntity {
+class EncodingModel extends EncodingEntity {
   const EncodingModel({
     required List<String> content,
     required List<String> type,
