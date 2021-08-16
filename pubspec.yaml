@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -50,6 +52,8 @@ dependencies:
   get_it: ^7.2.0
   dartz: ^0.10.0-nullsafety.2
   flutter_secure_storage: ^4.2.0
+  flutter_localized_locales: ^2.0.3
+
 
 dev_dependencies:
   flutter_test:
@@ -102,3 +106,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  main_locale: en
+  enabled: true

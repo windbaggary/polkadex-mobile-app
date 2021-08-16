@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -12,6 +13,7 @@ import 'package:polkadex/common/utils/responsive_utils.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
 import 'package:polkadex/features/setup/presentation/screens/import_wallet_methods_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart';
@@ -170,13 +172,78 @@ class _IntroScreenState extends State<IntroScreen>
             ),
           ),
           // The polkadex logo
-          Positioned(
-            top: 36 + MediaQuery.of(context).padding.top,
-            left: 26,
-            height: 36,
-            child: Image.asset(
-              'logo_name.png'.asAssetImg(),
-              fit: BoxFit.contain,
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 26,
+                top: 36 + MediaQuery.of(context).padding.top,
+                right: 26,
+              ),
+              child: Container(
+                height: 36,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'logo_name.png'.asAssetImg(),
+                      fit: BoxFit.contain,
+                    ),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: color8BA1BE.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: GestureDetector(
+                            onTapDown: (_) => showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(30),
+                                ),
+                              ),
+                              builder: (_) => SelectLanguageWidget(),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 10,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    LocaleNames.of(context)!.nameOf(
+                                        Localizations.localeOf(context)
+                                            .languageCode)!,
+                                    style: tsS16W600CFF,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  RotatedBox(
+                                    quarterTurns: 1,
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: colorFFFFFF,
+                                      size: 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
