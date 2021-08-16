@@ -275,7 +275,10 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
 
   void _onNextTap(MnemonicProvider provider) async {
     FocusScope.of(context).unfocus();
-    LoadingPopup.show(context: context);
+    LoadingPopup.show(
+      context: context,
+      text: 'We are almost there...',
+    );
 
     await provider.importAccount(_passwordController.text);
 

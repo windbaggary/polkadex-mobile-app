@@ -6,6 +6,7 @@ import 'package:polkadex/common/utils/styles.dart';
 abstract class LoadingPopup {
   static void show({
     required BuildContext context,
+    required String text,
   }) {
     showDialog(
       context: context,
@@ -30,7 +31,7 @@ abstract class LoadingPopup {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                      'We are almost there...',
+                      text,
                       style: tsS20W500CFF,
                     ),
                   ),
