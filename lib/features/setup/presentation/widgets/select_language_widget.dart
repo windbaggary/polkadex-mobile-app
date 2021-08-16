@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/generated/l10n.dart';
+import 'package:polkadex/injection_container.dart';
 
 class SelectLanguageWidget extends StatefulWidget {
   @override
@@ -19,7 +22,17 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           InkWell(
-            onTap: () {}, //TODO: Implement country store
+            onTap: () async {
+              LoadingPopup.show(
+                context: context,
+                text: 'Changing the language...',
+              );
+              await dependency<FlutterSecureStorage>().write(
+                key: 'language',
+                value: locales[index].toString(),
+              );
+              Navigator.of(context).pop();
+            },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Row(
