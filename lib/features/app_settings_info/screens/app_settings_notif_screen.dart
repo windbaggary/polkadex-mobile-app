@@ -6,6 +6,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// XD_PAGE: 45
 class AppSettingsNotificationScreen extends StatefulWidget {
@@ -61,8 +62,8 @@ class _AppSettingsNotificationScreenState
           // animationController: _animationController,
           onBack: () =>
               _onWillPop().then((value) => Navigator.of(context).pop()),
-          subTitle: 'Notifications',
-          mainTitle: 'Notifications',
+          subTitle: S.of(context).notifications,
+          mainTitle: S.of(context).notifications,
           isShowSubTitle: false,
           contentChild: Padding(
             padding: const EdgeInsets.only(
@@ -93,16 +94,16 @@ class _AppSettingsNotificationScreenState
     switch (e) {
       case EnumNotificationsMenu.withdraw:
         lockedMenu = [EnumNotificationAlert.email];
-        title = "Withdraw";
-        description = 'Notify when a withdrawal is requested.';
+        title = S.of(context).withdraw;
+        description = S.of(context).notifyWhenAWithdrawal;
         break;
       case EnumNotificationsMenu.deposit:
         title = "Deposit";
-        description = 'Notify when a funds are received.';
+        description = S.of(context).notifyWhenAFunds;
         break;
       case EnumNotificationsMenu.filledOrder:
         title = "Filled order";
-        description = 'Notify when an order is filled.';
+        description = S.of(context).notifyWhenAnOrder;
         break;
     }
 
@@ -172,7 +173,7 @@ class _ThisMenuItemWidget extends StatelessWidget {
           ),
           Row(
             children: EnumNotificationAlert.values
-                .map((e) => _buildAlertWidget(e))
+                .map((e) => _buildAlertWidget(e, context))
                 .toList(),
           ),
         ],
@@ -180,24 +181,24 @@ class _ThisMenuItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAlertWidget(EnumNotificationAlert e) {
+  Widget _buildAlertWidget(EnumNotificationAlert e, BuildContext context) {
     String? label;
     String svgAsset;
 
     // double _deltaX;
     switch (e) {
       case EnumNotificationAlert.email:
-        label = 'Email';
+        label = S.of(context).email;
         svgAsset = 'email'.asAssetSvg();
         // _deltaX = 0.0;
         break;
       case EnumNotificationAlert.phone:
-        label = 'Phone';
+        label = S.of(context).phone;
         svgAsset = 'message-text'.asAssetSvg();
         // _deltaX = 1.0;
         break;
       case EnumNotificationAlert.push:
-        label = 'Push';
+        label = S.of(context).push;
         svgAsset = 'phone'.asAssetSvg();
         // _deltaX = 2.0;
         break;

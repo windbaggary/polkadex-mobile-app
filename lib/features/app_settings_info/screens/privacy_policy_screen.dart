@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// XD_PAGE: 47
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -29,8 +31,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: color1C2023,
       body: AppSettingsLayout(
-        subTitle: 'Privacy Policy',
-        mainTitle: 'Privacy Policy',
+        subTitle: S.of(context).privacyPolicy,
+        mainTitle: S.of(context).privacyPolicy,
         isShowSubTitle: false,
         onBack: () => Navigator.of(context).pop(),
         contentChild: Container(
@@ -51,26 +53,23 @@ class PrivacyPolicyScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 20),
                 Text(
-                  'Last updated Feb 7, 2021',
+                  '${S.of(context).lastUpdated} ${DateFormat("MMM dd',' yyyy").format(DateTime(2021, 2, 7))}',
                   style: tsS13W400CFFOP60,
                 ),
                 SizedBox(height: 17),
                 _buildTitleContentWidget(
-                  title: 'Reservation of Rights',
-                  content:
-                      'We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amen these terms and conditions and it’s linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions.',
+                  title: S.of(context).reservationOfRights,
+                  content: S.of(context).weReserveTheRightTo,
                 ),
                 SizedBox(height: 17),
                 _buildTitleContentWidget(
-                  title: 'Removal of links from our website',
-                  content:
-                      'If you find any link on our Website that is offensive for any reason, you are free to contact and inform us any moment. We will consider requests to remove links but we are not obligated to or so or to respond to you directly.\n\nWe do not ensure that the information on this website is correct, we do not warrant its completeness or accuracy; nor do we promise to ensure that the website remains available or that the material on the website is kept up to date.',
+                  title: S.of(context).removalOfLinksFrom,
+                  content: S.of(context).ifYouFindAnyLink,
                 ),
                 SizedBox(height: 17),
                 _buildTitleContentWidget(
-                  title: 'Disclaimer',
-                  content:
-                      'The limitations and prohibitions of liability set in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer, including liabilities arising in contract, in tort and for breach of statutory duty.\n\nTo the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website. Nothing in this disclaimer will:',
+                  title: S.of(context).disclaimer,
+                  content: S.of(context).theLimitationsAndProhibitions,
                 ),
                 SizedBox(height: 17),
               ],

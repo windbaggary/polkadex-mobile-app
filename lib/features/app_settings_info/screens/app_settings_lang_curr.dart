@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// XD_PAGE: 44
 class AppSettingsLangCurrScreen extends StatelessWidget {
@@ -14,8 +16,8 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: color1C2023,
       body: AppSettingsLayout(
-        subTitle: 'Language & Currency',
-        mainTitle: 'Language & Currency',
+        subTitle: S.of(context).languageAndCurrency,
+        mainTitle: S.of(context).languageAndCurrency,
         isShowSubTitle: false,
         isExpanded: false,
         onBack: () => Navigator.of(context).pop(),
@@ -26,8 +28,9 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
             children: [
               _ThisItemWidget(
                 svgAsset: 'translate'.asAssetSvg(),
-                title: 'Polkadex Language',
-                description: 'English - EN',
+                title: S.of(context).polkadexLanguage,
+                description:
+                    '${LocaleNames.of(context)!.nameOf(Localizations.localeOf(context).toString())!} - ${Localizations.localeOf(context).languageCode.toUpperCase()}',
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 6.0),
@@ -38,7 +41,7 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
               ),
               _ThisItemWidget(
                 svgAsset: 'alarm-clock'.asAssetSvg(),
-                title: 'Timezone',
+                title: S.of(context).timezone,
                 description: 'Chicago (GTM-06:00)',
               ),
               Padding(
@@ -50,7 +53,7 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
               ),
               _ThisItemWidget(
                 svgAsset: 'currency'.asAssetSvg(),
-                title: 'Currency',
+                title: S.of(context).currency,
                 description: 'USD',
               ),
             ],

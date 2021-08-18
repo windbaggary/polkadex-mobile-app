@@ -4,6 +4,7 @@ import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// XD_PAGE: 36
 class AppSettingsHelpScreen extends StatelessWidget {
@@ -16,8 +17,8 @@ class AppSettingsHelpScreen extends StatelessWidget {
       body: AppSettingsLayout(
         onBack: () => Navigator.of(context).pop(),
         childAlignment: null,
-        mainTitle: 'Help & Support',
-        subTitle: 'Help & Support',
+        mainTitle: S.of(context).helpAndSupport,
+        subTitle: S.of(context).helpAndSupport,
         isShowSubTitle: false,
         contentChild: Padding(
           padding: const EdgeInsets.fromLTRB(22.0, 18.0, 17.0, 11.0),
@@ -27,29 +28,29 @@ class AppSettingsHelpScreen extends StatelessWidget {
               _buildItem(
                 isShowActive: true,
                 svgIcon: 'wifi'.asAssetSvg(),
-                description: 'Polkadex Status',
-                title: 'Online',
+                description: S.of(context).polkadexStatus,
+                title: S.of(context).online,
                 padding: EdgeInsets.all(16),
               ),
               _buildItem(
                 svgIcon: 'support'.asAssetSvg(),
-                description: 'Get in touch with us',
-                title: 'Contact',
+                description: S.of(context).getInTouch,
+                title: S.of(context).contact,
               ),
               _buildItem(
                 svgIcon: 'thumb-up'.asAssetSvg(),
-                description: 'Help make Polkadex Better',
-                title: 'Leave us feedback',
+                description: S.of(context).helpMakePolkadex,
+                title: S.of(context).leaveUsFeedback,
               ),
               _buildItem(
                 svgIcon: 'contact-mobile'.asAssetSvg(),
-                description: 'Polkadex interface tour',
-                title: 'Start Tour',
+                description: S.of(context).polkadexInterfaceTour,
+                title: S.of(context).startTour,
               ),
               _buildItem(
                 svgIcon: 'question'.asAssetSvg(),
-                description: 'Common questions and support docs',
-                title: 'Frequently Asked Questions',
+                description: S.of(context).commonQuestionsAnd,
+                title: S.of(context).frequentlyAsked,
                 isShowBorder: false,
               ),
             ],

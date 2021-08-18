@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -60,7 +61,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Last updated Feb 7, 2021 - Version 0.0.100.1',
+                    '${S.of(context).lastUpdated} ${DateFormat("MMM dd',' yyyy").format(DateTime(2021, 2, 7))} - ${S.of(context).version} 0.0.100.1',
                     style: tsS13W400CFFOP60,
                   ),
                   SizedBox(height: 26),

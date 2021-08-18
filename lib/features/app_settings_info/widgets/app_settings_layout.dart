@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// The base screen for the apps settings from the drawer selection
 ///
 /// XD_PAGE: 45
 class AppSettingsLayout extends StatelessWidget {
-  final String mainTitle;
+  final String? mainTitle;
   final String subTitle;
   final Widget contentChild;
   // final AnimationController animationController;
@@ -20,7 +21,7 @@ class AppSettingsLayout extends StatelessWidget {
   const AppSettingsLayout({
     required this.subTitle,
     required this.contentChild,
-    this.mainTitle = 'App Settings',
+    this.mainTitle,
     this.childAlignment = Alignment.topCenter,
     // @required this.animationController,
     required this.onBack,
@@ -37,7 +38,7 @@ class AppSettingsLayout extends StatelessWidget {
       child: SafeArea(
         child: CustomAppBar(
           isExpanded: true,
-          title: mainTitle,
+          title: mainTitle ?? S.of(context).appSettings,
           // animationController: this.animationController,
           onTapBack: onBack,
           child: _ThisSubTitleWidget(

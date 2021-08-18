@@ -4,6 +4,7 @@ import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 42
@@ -32,9 +33,8 @@ class AppSettingsSecurity extends StatelessWidget {
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
                     svgAsset: "finger-print".asAssetSvg(),
-                    title: "Secure with FingerPrint",
-                    description:
-                        "Secure your access without typing your Pin Code.",
+                    title: S.of(context).secureWithFingerPrint,
+                    description: S.of(context).secureYourAccessWithout,
                     isChecked: thisProvider.isFingerPrint,
                     onSwitchChanged: (value) {
                       thisProvider.isFingerPrint = value;
@@ -52,8 +52,8 @@ class AppSettingsSecurity extends StatelessWidget {
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
                     svgAsset: "keypad".asAssetSvg(),
-                    title: "Secure with Pin Code",
-                    description: "Your access are kept safe by Pin Code.",
+                    title: S.of(context).secureWithPinCode,
+                    description: S.of(context).yourAccessAreKept,
                     isChecked: thisProvider.isPinCode,
                     onSwitchChanged: (value) {
                       thisProvider.isPinCode = value;
@@ -71,9 +71,8 @@ class AppSettingsSecurity extends StatelessWidget {
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
                     svgAsset: "security".asAssetSvg(),
-                    title: "Two-Factor Authentication (2FA)",
-                    description:
-                        "Use the Google Authentication or Authy app to generate one time security codes.",
+                    title: S.of(context).twoFactorAuth,
+                    description: S.of(context).useTheGoogleAuth,
                     isChecked: thisProvider.isTwoFactor,
                     onSwitchChanged: (value) {
                       thisProvider.isTwoFactor = value;
@@ -91,8 +90,8 @@ class AppSettingsSecurity extends StatelessWidget {
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
                     svgAsset: "tracker".asAssetSvg(),
-                    title: "Tracking IP",
-                    description: "Block access to suspicious IPs.",
+                    title: S.of(context).trackingIp,
+                    description: S.of(context).blockAccess,
                     isChecked: thisProvider.isIp,
                     onSwitchChanged: (value) {
                       thisProvider.isIp = value;
@@ -103,8 +102,8 @@ class AppSettingsSecurity extends StatelessWidget {
               ],
             ),
           ),
-          subTitle: 'Privacy & Security',
-          mainTitle: 'Privacy & Security',
+          subTitle: S.of(context).privacyAndSecurity,
+          mainTitle: S.of(context).privacyAndSecurity,
           isShowSubTitle: false,
           onBack: () => Navigator.of(context).pop(),
           bottomChild: Padding(
@@ -115,7 +114,7 @@ class AppSettingsSecurity extends StatelessWidget {
               36,
             ),
             child: Text(
-              "Polkadex does not store any data , by security, Polkadex only enable withdrawals by confirmation via Two-Factor Authentication (2FA).",
+              S.of(context).polkadexOnlyEnable,
               style: tsS14W400CFF,
               textAlign: TextAlign.center,
             ),

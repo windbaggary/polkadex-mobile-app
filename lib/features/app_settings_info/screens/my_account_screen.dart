@@ -10,6 +10,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 41
@@ -30,7 +31,7 @@ class MyAccountScreen extends StatelessWidget {
         body: SafeArea(
           child: CustomAppBar(
             onTapBack: () => Navigator.of(context).pop(),
-            title: 'App Settings',
+            title: S.of(context).appSettings,
             child: Container(
               decoration: BoxDecoration(
                 color: color1C2023,
@@ -123,8 +124,7 @@ class MyAccountScreen extends StatelessWidget {
                             onTap: () {
                               FlutterClipboard.copy('18592080').then((value) =>
                                   buildAppToast(
-                                      msg:
-                                          'The referral id is copied to the clipboard',
+                                      msg: S.of(context).theReferralId,
                                       context: context));
                             },
                             child: Container(
@@ -138,7 +138,7 @@ class MyAccountScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Text(
-                                    'Referral ID',
+                                    '${S.of(context).referral} ID',
                                     style: tsS13W400CFFOP60,
                                   ),
                                   SizedBox(height: 2),
@@ -165,7 +165,7 @@ class MyAccountScreen extends StatelessWidget {
                                         CrossAxisAlignment.stretch,
                                     children: [
                                       Text(
-                                        'Account Name',
+                                        S.of(context).accountName,
                                         style: tsS13W400CFFOP60,
                                       ),
                                       SizedBox(height: 2),
@@ -232,7 +232,7 @@ class MyAccountScreen extends StatelessWidget {
                                                 padding: const EdgeInsets.only(
                                                     left: 4.0),
                                                 child: Text(
-                                                  "Save",
+                                                  S.of(context).save,
                                                   style: tsS11W600CFF,
                                                 ),
                                               );
@@ -268,12 +268,12 @@ class MyAccountScreen extends StatelessWidget {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
-                                      'Use DEX to pay fees',
+                                      S.of(context).useDEXtoPayFees,
                                       style: tsS16W400CFF,
                                     ),
                                     SizedBox(height: 2),
                                     Text(
-                                      'Enjoy 25% discount when trading.',
+                                      S.of(context).enjoy25DiscountWhen,
                                       style: tsS13W400CFFOP60,
                                     ),
                                   ],
@@ -314,7 +314,7 @@ class MyAccountScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  'Current trading fee',
+                                  S.of(context).currentTradingFee,
                                   style: tsS16W400CFF.copyWith(
                                     color: colorFFFFFF.withOpacity(0.5),
                                   ),
@@ -337,7 +337,7 @@ class MyAccountScreen extends StatelessWidget {
                         36,
                       ),
                       child: Text(
-                        'Polkadex does not store any data , this is just a temporary data, if you uninstall the Polkadex App your name and referral ID will be removed.',
+                        S.of(context).polkadexIfYouUninstall,
                         style: tsS14W400CFF,
                         textAlign: TextAlign.center,
                       ),
