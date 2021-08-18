@@ -113,6 +113,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                         color: Colors.grey.shade400,
                                       ),
                                     ),
+                                    context: context,
                                   ),
                                 ),
                               ),

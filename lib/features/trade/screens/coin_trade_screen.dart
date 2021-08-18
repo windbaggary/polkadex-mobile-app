@@ -410,6 +410,7 @@ class _ThisGrpahCard extends StatelessWidget {
                             ],
                           ),
                         ),
+                        context: context,
                       ),
                     ),
                   ),

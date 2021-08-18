@@ -4,6 +4,7 @@ import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// XD_PAGE: 46
 class AppSettingsChangeLogsScreen extends StatelessWidget {
@@ -14,8 +15,8 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: color1C2023,
       body: AppSettingsLayout(
-        subTitle: 'Changelog',
-        mainTitle: 'Changelog',
+        subTitle: S.of(context).changelog,
+        mainTitle: S.of(context).changelog,
         isShowSubTitle: false,
         onBack: () => Navigator.of(context).pop(),
         isExpanded: false,
@@ -26,7 +27,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
             children: [
               _ThisItemWidget(
                 svgAsset: 'wifi'.asAssetSvg(),
-                title: 'Version Update',
+                title: S.of(context).versionUpdate,
                 description: 'polkadex_app_0.0.100.1',
                 iconPadding: const EdgeInsets.all(16),
               ),
@@ -39,7 +40,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
               ),
               _ThisItemWidget(
                 svgAsset: 'support'.asAssetSvg(),
-                title: 'Device ID',
+                title: S.of(context).deviceID,
                 description: '6e90ad80a80e88a10',
               ),
             ],
@@ -54,7 +55,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'What’s new in Polkadex',
+                    S.of(context).whatsNew,
                     style: tsS20W500CFF,
                   ),
                   SizedBox(height: 4),
@@ -64,7 +65,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 26),
                   Text(
-                    'We spend a lot time working on big features. This time we set time aside to tackle small changes as we cleaning, shining and polishing Polkadex:',
+                    S.of(context).weSpendALot,
                     style: tsS14W400CFF.copyWith(height: 1.5),
                   ),
                 ],
@@ -93,7 +94,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 7),
                       child: Text(
-                        'We added',
+                        S.of(context).weAdded,
                         style: tsS13W500CFF,
                       ),
                     ),
@@ -102,7 +103,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 10.85, bottom: 36),
                     child: _ThisBulletItem(
                       child: Text(
-                        'Notification Settings',
+                        S.of(context).notificationSettings,
                         style: tsS14W400CFF,
                       ),
                     ),
@@ -117,7 +118,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 7),
                       child: Text(
-                        'We Fixed',
+                        S.of(context).weFixed,
                         style: tsS13W500CFF,
                       ),
                     ),
@@ -133,7 +134,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                           ),
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'Optimize',
+                              text: S.of(context).optimize,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'WorkSans',
@@ -141,7 +142,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                                text: ' the function of creating alerts',
+                                text: ' ${S.of(context).theFunctionOf}',
                                 style: TextStyle(
                                   fontFamily: 'WorkSans',
                                   fontSize: 13,
@@ -159,7 +160,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                           style: tsS14W400CFF,
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'Optimize',
+                              text: S.of(context).optimize,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'WorkSans',
@@ -167,7 +168,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                                text: ' the user interface of balance',
+                                text: ' ${S.of(context).theUserInterface}',
                                 style: TextStyle(
                                   fontFamily: 'WorkSans',
                                   fontSize: 13,
@@ -186,7 +187,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                           style: tsS14W400CFF.copyWith(height: 1.5),
                           children: <TextSpan>[
                             TextSpan(
-                              text: 'Some major updates',
+                              text: S.of(context).someMajorUpdates,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontFamily: 'WorkSans',
@@ -194,8 +195,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                                text:
-                                    ' have been made to the User Center interface to make it more intuitive',
+                                text: ' ${S.of(context).haveBeenMade}',
                                 style: TextStyle(
                                   fontFamily: 'WorkSans',
                                   fontSize: 13,

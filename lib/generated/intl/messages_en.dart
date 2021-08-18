@@ -20,5 +20,42 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "aFullyDecentralized": MessageLookupByLibrary.simpleMessage(
+            "A fully decentralized, peer-peer, orderbook based cryptocurrency exchange"),
+        "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+        "byContinuingIAllow": MessageLookupByLibrary.simpleMessage(
+            "By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our "),
+        "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
+        "date": MessageLookupByLibrary.simpleMessage("date"),
+        "deviceID": MessageLookupByLibrary.simpleMessage("Device ID"),
+        "generateWallet":
+            MessageLookupByLibrary.simpleMessage("Generate Wallet"),
+        "haveBeenMade": MessageLookupByLibrary.simpleMessage(
+            "have been made to the User Center interface to make it more intuitive"),
+        "importWallet": MessageLookupByLibrary.simpleMessage("Import Wallet"),
+        "interface": MessageLookupByLibrary.simpleMessage("Interface"),
+        "lastUpdate": MessageLookupByLibrary.simpleMessage("Last Updated"),
+        "notificationSettings":
+            MessageLookupByLibrary.simpleMessage("Notification Settings"),
+        "optimize": MessageLookupByLibrary.simpleMessage("Optimize"),
+        "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "someMajorUpdates":
+            MessageLookupByLibrary.simpleMessage("Some major updates"),
+        "styleSettings": MessageLookupByLibrary.simpleMessage("Style Settings"),
+        "theFunctionOf": MessageLookupByLibrary.simpleMessage(
+            "the function of creating alerts"),
+        "theUserInterface": MessageLookupByLibrary.simpleMessage(
+            "the user interface of balance"),
+        "useDevice":
+            MessageLookupByLibrary.simpleMessage("Use Device Settings"),
+        "version": MessageLookupByLibrary.simpleMessage("Version"),
+        "versionUpdate": MessageLookupByLibrary.simpleMessage("Version Update"),
+        "weAdded": MessageLookupByLibrary.simpleMessage("We added"),
+        "weFixed": MessageLookupByLibrary.simpleMessage("We Fixed"),
+        "weSpendALot": MessageLookupByLibrary.simpleMessage(
+            "We spend a lot of time working on big features. This time we set time aside to tackle small changes as we cleaning, shining and polishing Polkadex:"),
+        "whatsNew":
+            MessageLookupByLibrary.simpleMessage("What’s new in Polkadex")
+      };
 }

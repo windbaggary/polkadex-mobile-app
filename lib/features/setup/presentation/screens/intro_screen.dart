@@ -15,6 +15,7 @@ import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
 import 'package:polkadex/features/setup/presentation/screens/import_wallet_methods_screen.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart';
 
@@ -22,17 +23,18 @@ import 'package:polkadex/injection_container.dart';
 ///
 /// Delete the class on API integration
 class _DummyData {
-  static final sliderList = List.generate(
-    3,
-    (index) =>
-        "A fully decentralized, peer-peer, orderbook based cryptocurrency exchange",
-  );
-
   static final sliderImgList = <String>[
     'slider_img_1.png'.asAssetImg(),
     'slider_img_2.png'.asAssetImg(),
     'slider_img_3.png'.asAssetImg(),
   ];
+
+  static List<String> sliderList(BuildContext context) {
+    return List.generate(
+      3,
+      (index) => S.of(context).aFullyDecentralized,
+    );
+  }
 }
 
 /// This screen will be displayed on the first app opened.
@@ -96,7 +98,7 @@ class _IntroScreenState extends State<IntroScreen>
                 Expanded(
                   child: _ThisPageView(
                       key: _keyPageView,
-                      length: _DummyData.sliderList.length,
+                      length: _DummyData.sliderList(context).length,
                       pageviewIndexNotifier: _pageviewIndexNotifier),
                 ),
                 Padding(
@@ -105,7 +107,7 @@ class _IntroScreenState extends State<IntroScreen>
                   child: ValueListenableBuilder<int>(
                     valueListenable: _pageviewIndexNotifier,
                     builder: (context, pageIndex, child) => AppSliderDots(
-                      length: _DummyData.sliderList.length,
+                      length: _DummyData.sliderList(context).length,
                       selectedIndex: pageIndex,
                       onDotSelected: (dotSelectedIndex) {
                         _keyPageView.currentState?.animateTo(dotSelectedIndex);
@@ -118,7 +120,7 @@ class _IntroScreenState extends State<IntroScreen>
                   child: SizedBox(
                     height: 54,
                     child: LoginButtonWidget(
-                      text: 'Import Wallet',
+                      text: S.of(context).importWallet,
                       backgroundColor: colorE6007A,
                       textStyle: tsS16W500CFF,
                       onTap: () => _onNavigateToImportWallet(context),
@@ -130,7 +132,7 @@ class _IntroScreenState extends State<IntroScreen>
                   child: SizedBox(
                     height: 54,
                     child: LoginButtonWidget(
-                      text: 'Generate Wallet',
+                      text: S.of(context).generateWallet,
                       backgroundColor: colorFFFFFF,
                       textStyle: tsS16W500C24252C,
                       onTap: () => _onNavigateToGenerateWallet(context),
@@ -149,13 +151,12 @@ class _IntroScreenState extends State<IntroScreen>
                       children: [
                         TextSpan(
                             style: tsS13W400CABB2BC,
-                            text:
-                                'By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our '),
+                            text: S.of(context).byContinuingIAllow),
                         TextSpan(
                           style: tsS13W400CABB2BC.copyWith(
                             decoration: TextDecoration.underline,
                           ),
-                          text: 'Privacy Policy',
+                          text: S.of(context).privacyPolicy,
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -421,13 +422,13 @@ class __ThisPageViewState extends State<_ThisPageView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      _DummyData.sliderList[index],
+                      _DummyData.sliderList(context)[index],
                       style: tsS32W600CFF.copyWith(fontSize: 32.sp),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Text(
-                        _DummyData.sliderList[index],
+                        _DummyData.sliderList(context)[index],
                         style: tsS18W400CFF.copyWith(fontSize: 18.sp),
                       ),
                     )
@@ -437,7 +438,7 @@ class __ThisPageViewState extends State<_ThisPageView> {
             ],
           );
         },
-        itemCount: _DummyData.sliderList.length,
+        itemCount: _DummyData.sliderList(context).length,
         onPageChanged: (index) {
           widget._pageviewIndexNotifier.value = index;
         },

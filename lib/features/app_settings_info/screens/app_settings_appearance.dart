@@ -4,6 +4,7 @@ import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// XD_PAGE: 40
 class AppSettingsAppearance extends StatelessWidget {
@@ -15,8 +16,8 @@ class AppSettingsAppearance extends StatelessWidget {
       backgroundColor: color1C2023,
       body: AppSettingsLayout(
         onBack: () => Navigator.of(context).pop(),
-        subTitle: 'Appearance',
-        mainTitle: 'Appearance',
+        subTitle: S.of(context).appearance,
+        mainTitle: S.of(context).appearance,
         isShowSubTitle: false,
         childAlignment: null,
         contentChild: Padding(
@@ -70,7 +71,7 @@ class _ThisInterfaceWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Interface',
+                  S.of(context).interface,
                   style: tsS13W400CFFOP60,
                 ),
                 SizedBox(height: 3),
@@ -78,7 +79,7 @@ class _ThisInterfaceWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'Use device Settings',
+                        S.of(context).useDevice,
                         style: tsS16W500CFF,
                       ),
                     ),
@@ -125,7 +126,7 @@ class _ThisStyleSettingWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Style Settings',
+                  S.of(context).styleSettings,
                   style: tsS13W400CFFOP60,
                 ),
                 SizedBox(height: 3),

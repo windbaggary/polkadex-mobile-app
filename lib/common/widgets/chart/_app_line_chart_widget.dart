@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:polkadex/generated/l10n.dart';
 import '_chart_options.dart';
 import 'chart_models.dart';
 
@@ -14,10 +15,13 @@ export '_chart_options.dart';
 /// Use [AppLineChartOptions] to customise the chart colors and all
 class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
   final AppLineChartOptions options;
+  final BuildContext context;
 
-  AppLineChartWidget(
-      {required List<LineChartModel> data, required this.options})
-      : super(parentData: data);
+  AppLineChartWidget({
+    required List<LineChartModel> data,
+    required this.options,
+    required this.context,
+  }) : super(parentData: data);
 
   List<LineChartModel> get data => super.parentData;
 
@@ -221,7 +225,7 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
     TextSpan ts = TextSpan(
       children: <TextSpan>[
         TextSpan(
-          text: "DATE ",
+          text: "${S.of(context).date.toUpperCase()} ",
           style: TextStyle(
             fontSize: 12,
             fontFamily: 'WorkSans',
