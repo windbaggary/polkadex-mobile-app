@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
@@ -15,14 +16,49 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await injection.init();
 
+  List<String>? localeParams =
+      (await injection.dependency<FlutterSecureStorage>().read(key: 'language'))
+          ?.split('_');
+
   // A 2 seconds delay to show the splash screen
   await Future.delayed(const Duration(seconds: 2));
 
-  runApp(MyApp());
+  runApp(
+    MyApp(
+      locale: localeParams != null
+          ? Locale(localeParams[0], localeParams.asMap()[1])
+          : null,
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  MyApp({this.locale});
+
+  final Locale? locale;
+
+  @override
+  _MyAppState createState() => _MyAppState();
+
+  static _MyAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale? currentLocale;
+
+  @override
+  void initState() {
+    super.initState();
+    currentLocale = widget.locale;
+  }
+
+  void setLocale(Locale locale) {
+    setState(() {
+      currentLocale = widget.locale;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -33,6 +69,7 @@ class MyApp extends StatelessWidget {
             create: (_) => BottomNavigationProvider()),
       ],
       builder: (context, _) => MaterialApp(
+        locale: widget.locale,
         localizationsDelegates: [
           S.delegate,
           LocaleNamesLocalizationsDelegate(),
