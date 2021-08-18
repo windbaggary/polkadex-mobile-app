@@ -248,7 +248,10 @@ class _RestoreExistingWalletScreenState
   void _evalNextButtonAction(
       BuildContext context, MnemonicProvider provider) async {
     if (_isLastPage(context, provider)) {
-      LoadingPopup.show(context: context);
+      LoadingPopup.show(
+        context: context,
+        text: 'We are almost there...',
+      );
       final isMnemonicValid = await provider.checkMnemonicValid();
       Navigator.of(context).pop();
 
