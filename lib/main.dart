@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
 
   void setLocale(Locale locale) {
     setState(() {
-      currentLocale = widget.locale;
+      currentLocale = locale;
     });
   }
 
@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
             create: (_) => BottomNavigationProvider()),
       ],
       builder: (context, _) => MaterialApp(
-        locale: widget.locale,
+        locale: currentLocale,
         localizationsDelegates: [
           S.delegate,
           LocaleNamesLocalizationsDelegate(),
