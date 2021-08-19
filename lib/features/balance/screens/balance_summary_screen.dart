@@ -5,6 +5,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// XD_PAGE: 30
 /// XD_PAGE: 32
@@ -16,7 +17,7 @@ class BalanceSummaryScreen extends StatelessWidget {
       backgroundColor: color1C2023,
       body: SafeArea(
         child: CustomAppBar(
-          title: 'Summary',
+          title: S.of(context).summary,
           titleStyle: tsS19W700CFF,
           onTapBack: () => Navigator.of(context).pop(),
           child: Column(
@@ -284,7 +285,7 @@ class _ThisSummaryTopWidget extends StatelessWidget {
         ),
         SizedBox(height: 4),
         Text(
-          'Tokens',
+          S.of(context).tokens,
           style: tsS15W500CFF.copyWith(color: colorABB2BC),
           textAlign: TextAlign.center,
         ),

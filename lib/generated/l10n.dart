@@ -849,6 +849,316 @@ class S {
       args: [],
     );
   }
+
+  /// `Trade Pairs`
+  String get tradePairs {
+    return Intl.message(
+      'Trade Pairs',
+      name: 'tradePairs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `History`
+  String get history {
+    return Intl.message(
+      'History',
+      name: 'history',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There are no transactions`
+  String get thereAreNoTransactions {
+    return Intl.message(
+      'There are no transactions',
+      name: 'thereAreNoTransactions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trade`
+  String get trade {
+    return Intl.message(
+      'Trade',
+      name: 'trade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price`
+  String get price {
+    return Intl.message(
+      'Price',
+      name: 'price',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Today`
+  String get today {
+    return Intl.message(
+      'Today',
+      name: 'today',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yesterday`
+  String get yesterday {
+    return Intl.message(
+      'Yesterday',
+      name: 'yesterday',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Market Price`
+  String get marketPrice {
+    return Intl.message(
+      'Market Price',
+      name: 'marketPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All`
+  String get all {
+    return Intl.message(
+      'All',
+      name: 'all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Summary`
+  String get summary {
+    return Intl.message(
+      'Summary',
+      name: 'summary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network`
+  String get network {
+    return Intl.message(
+      'Network',
+      name: 'network',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chain`
+  String get chain {
+    return Intl.message(
+      'Chain',
+      name: 'chain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan or share`
+  String get scanOrShare {
+    return Intl.message(
+      'Scan or share',
+      name: 'scanOrShare',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The address is copied to the clipboard`
+  String get theAddressIsCopied {
+    return Intl.message(
+      'The address is copied to the clipboard',
+      name: 'theAddressIsCopied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deposit Polkadex (DEX)`
+  String get depositPolkadex {
+    return Intl.message(
+      'Deposit Polkadex (DEX)',
+      name: 'depositPolkadex',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your DEX Address`
+  String get yourDexAddres {
+    return Intl.message(
+      'Your DEX Address',
+      name: 'yourDexAddres',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Polkadex DEX Address`
+  String get polkadexDexAddress {
+    return Intl.message(
+      'Polkadex DEX Address',
+      name: 'polkadexDexAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DOT Chain {number}`
+  String dotChain(Object number) {
+    return Intl.message(
+      'DOT Chain $number',
+      name: 'dotChain',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `Tap`
+  String get tap {
+    return Intl.message(
+      'Tap',
+      name: 'tap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Address`
+  String get address {
+    return Intl.message(
+      'Address',
+      name: 'address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `to copy`
+  String get toCopy {
+    return Intl.message(
+      'to copy',
+      name: 'toCopy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Attention: Sending token other than DEX to this address may result in the loss of your deposit.`
+  String get attentionSendingToken {
+    return Intl.message(
+      'Attention: Sending token other than DEX to this address may result in the loss of your deposit.',
+      name: 'attentionSendingToken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `share`
+  String get share {
+    return Intl.message(
+      'share',
+      name: 'share',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available`
+  String get available {
+    return Intl.message(
+      'Available',
+      name: 'available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tokens`
+  String get tokens {
+    return Intl.message(
+      'Tokens',
+      name: 'tokens',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw Polkadex (DEX)`
+  String get withdrawPolkadex {
+    return Intl.message(
+      'Withdraw Polkadex (DEX)',
+      name: 'withdrawPolkadex',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Dex address`
+  String get enterDexAddress {
+    return Intl.message(
+      'Enter Dex address',
+      name: 'enterDexAddress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw Fee`
+  String get withdrawFee {
+    return Intl.message(
+      'Withdraw Fee',
+      name: 'withdrawFee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Slide to withdraw`
+  String get slideToWithdraw {
+    return Intl.message(
+      'Slide to withdraw',
+      name: 'slideToWithdraw',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Amount`
+  String get enterAmount {
+    return Intl.message(
+      'Enter Amount',
+      name: 'enterAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter`
+  String get enter {
+    return Intl.message(
+      'Enter',
+      name: 'enter',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -8,6 +8,7 @@ import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/qr_code_screen.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 21
@@ -95,7 +96,9 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                               decoration: InputDecoration(
                                                 isDense: true,
                                                 contentPadding: EdgeInsets.zero,
-                                                hintText: 'Enter Dex address',
+                                                hintText: S
+                                                    .of(context)
+                                                    .enterDexAddress,
                                                 hintStyle:
                                                     tsS16W500CFF.copyWith(
                                                   color: colorFFFFFF
@@ -167,7 +170,9 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   width: 100,
                                                   child: DropdownButton<String>(
                                                     items: [
-                                                      'DOT Chain',
+                                                      S
+                                                          .of(context)
+                                                          .dotChain(''),
                                                       'DOT 1',
                                                       'DOT 2'
                                                     ]
@@ -182,7 +187,9 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                               value: e,
                                                             ))
                                                         .toList(),
-                                                    value: 'DOT Chain',
+                                                    value: S
+                                                        .of(context)
+                                                        .dotChain(''),
                                                     style: tsS16W600CFF,
                                                     underline: Container(),
                                                     onChanged: (val) {},
@@ -211,7 +218,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    'Withdraw Fee',
+                                                    S.of(context).withdrawFee,
                                                     style: tsS13W400CFFOP60
                                                         .copyWith(
                                                             color: colorFFFFFF
@@ -266,7 +273,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                         child: AppSlideButton(
                                           height: 60,
                                           onComplete: () {},
-                                          label: 'Slide to withdraw',
+                                          label: S.of(context).slideToWithdraw,
                                           icon: Container(
                                             decoration: BoxDecoration(
                                               color: color1C2023,
@@ -354,7 +361,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
             ),
             Expanded(
               child: Text(
-                "Withdraw Polkadex (DEX)",
+                S.of(context).withdrawPolkadex,
                 style: tsS19W700CFF,
                 textAlign: TextAlign.center,
               ),
@@ -409,7 +416,7 @@ class _ThisAmountWidget extends StatelessWidget {
             ),
             SizedBox(height: 4),
             Text(
-              'Enter amount',
+              S.of(context).enterAmount,
               style: tsS16W400CFF.copyWith(
                 color: Colors.white.withOpacity(0.50),
               ),
@@ -447,7 +454,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Available',
+                  S.of(context).available,
                   style: tsS16W400CFF.copyWith(
                     color: colorFFFFFF.withOpacity(0.50),
                   ),
@@ -817,7 +824,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                           ),
                           alignment: Alignment.center,
                           child: Text(
-                            'Enter',
+                            S.of(context).enter,
                             style:
                                 tsS17W600C0CA564.copyWith(color: colorFFFFFF),
                           ),

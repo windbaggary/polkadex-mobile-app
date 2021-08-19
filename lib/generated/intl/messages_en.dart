@@ -19,17 +19,25 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(number) => "DOT Chain ${number}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aFullyDecentralized": MessageLookupByLibrary.simpleMessage(
             "A fully decentralized, peer-peer, orderbook based cryptocurrency exchange"),
         "accountName": MessageLookupByLibrary.simpleMessage("Account Name"),
+        "address": MessageLookupByLibrary.simpleMessage("Address"),
+        "all": MessageLookupByLibrary.simpleMessage("All"),
         "appSettings": MessageLookupByLibrary.simpleMessage("App Settings"),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+        "attentionSendingToken": MessageLookupByLibrary.simpleMessage(
+            "Attention: Sending token other than DEX to this address may result in the loss of your deposit."),
+        "available": MessageLookupByLibrary.simpleMessage("Available"),
         "blockAccess": MessageLookupByLibrary.simpleMessage(
             "Block access to suspicious IPs."),
         "byContinuingIAllow": MessageLookupByLibrary.simpleMessage(
             "By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our "),
+        "chain": MessageLookupByLibrary.simpleMessage("Chain"),
         "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
         "commonQuestionsAnd": MessageLookupByLibrary.simpleMessage(
             "Common questions and support docs"),
@@ -39,11 +47,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Current trading fee"),
         "date": MessageLookupByLibrary.simpleMessage("date"),
         "deposit": MessageLookupByLibrary.simpleMessage("Deposit"),
+        "depositPolkadex":
+            MessageLookupByLibrary.simpleMessage("Deposit Polkadex (DEX)"),
         "deviceID": MessageLookupByLibrary.simpleMessage("Device ID"),
         "disclaimer": MessageLookupByLibrary.simpleMessage("Disclaimer"),
+        "dotChain": m0,
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "enjoy25DiscountWhen": MessageLookupByLibrary.simpleMessage(
             "Enjoy 25% discount when trading."),
+        "enter": MessageLookupByLibrary.simpleMessage("Enter"),
+        "enterAmount": MessageLookupByLibrary.simpleMessage("Enter Amount"),
+        "enterDexAddress":
+            MessageLookupByLibrary.simpleMessage("Enter Dex address"),
         "filledOrder": MessageLookupByLibrary.simpleMessage("Filled Order"),
         "frequentlyAsked":
             MessageLookupByLibrary.simpleMessage("Frequently Asked Questions"),
@@ -57,6 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Help & Support"),
         "helpMakePolkadex":
             MessageLookupByLibrary.simpleMessage("Help make Polkadex Better"),
+        "history": MessageLookupByLibrary.simpleMessage("History"),
         "ifYouFindAnyLink": MessageLookupByLibrary.simpleMessage(
             "If you find any link on our Website that is offensive for any reason, you are free to contact and inform us any moment. We will consider requests to remove links but we are not obligated to or so or to respond to you directly.\n\nWe do not ensure that the information on this website is correct, we do not warrant its completeness or accuracy; nor do we promise to ensure that the website remains available or that the material on the website is kept up to date."),
         "importWallet": MessageLookupByLibrary.simpleMessage("Import Wallet"),
@@ -67,6 +83,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "leaveUsFeedback":
             MessageLookupByLibrary.simpleMessage("Leave us feedback"),
         "license": MessageLookupByLibrary.simpleMessage("License"),
+        "marketPrice": MessageLookupByLibrary.simpleMessage("Market Price"),
+        "network": MessageLookupByLibrary.simpleMessage("Network"),
         "notificationSettings":
             MessageLookupByLibrary.simpleMessage("Notification Settings"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
@@ -79,6 +97,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "online": MessageLookupByLibrary.simpleMessage("Online"),
         "optimize": MessageLookupByLibrary.simpleMessage("Optimize"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
+        "polkadexDexAddress":
+            MessageLookupByLibrary.simpleMessage("Polkadex DEX Address"),
         "polkadexIfYouUninstall": MessageLookupByLibrary.simpleMessage(
             "Polkadex does not store any data , this is just a temporary data, if you uninstall the Polkadex App your name and referral ID will be removed."),
         "polkadexInterfaceTour":
@@ -89,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Polkadex does not store any data , by security, Polkadex only enable withdrawals by confirmation via Two-Factor Authentication (2FA)."),
         "polkadexStatus":
             MessageLookupByLibrary.simpleMessage("Polkadex Status"),
+        "price": MessageLookupByLibrary.simpleMessage("Price"),
         "privacyAndSecurity":
             MessageLookupByLibrary.simpleMessage("Privacy & Security"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
@@ -99,18 +120,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "reservationOfRights":
             MessageLookupByLibrary.simpleMessage("Reservation of Rights"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "scanOrShare": MessageLookupByLibrary.simpleMessage("Scan or share"),
         "secureWithFingerPrint":
             MessageLookupByLibrary.simpleMessage("Secure with FingerPrint"),
         "secureWithPinCode":
             MessageLookupByLibrary.simpleMessage("Secure with Pin Code"),
         "secureYourAccessWithout": MessageLookupByLibrary.simpleMessage(
             "Secure your access without typing your Pin Code."),
+        "share": MessageLookupByLibrary.simpleMessage("share"),
+        "slideToWithdraw":
+            MessageLookupByLibrary.simpleMessage("Slide to withdraw"),
         "someMajorUpdates":
             MessageLookupByLibrary.simpleMessage("Some major updates"),
         "startTour": MessageLookupByLibrary.simpleMessage("Start Tour"),
         "styleSettings": MessageLookupByLibrary.simpleMessage("Style Settings"),
+        "summary": MessageLookupByLibrary.simpleMessage("Summary"),
+        "tap": MessageLookupByLibrary.simpleMessage("Tap"),
         "termsAndConditions":
             MessageLookupByLibrary.simpleMessage("Terms and Conditions"),
+        "theAddressIsCopied": MessageLookupByLibrary.simpleMessage(
+            "The address is copied to the clipboard"),
         "theFunctionOf": MessageLookupByLibrary.simpleMessage(
             "the function of creating alerts"),
         "theLimitationsAndProhibitions": MessageLookupByLibrary.simpleMessage(
@@ -119,10 +148,17 @@ class MessageLookup extends MessageLookupByLibrary {
             "The referral id is copied to the clipboard"),
         "theUserInterface": MessageLookupByLibrary.simpleMessage(
             "the user interface of balance"),
+        "thereAreNoTransactions":
+            MessageLookupByLibrary.simpleMessage("There are no transactions"),
         "theseTermsAndConditionsOutline": MessageLookupByLibrary.simpleMessage(
             "These terms and conditions outline the rules and regulations for the use of Polkadex’s Website, located at https:://polkadex.trade.\n\nBy accessing this website we assume you accept these terms and conditions. Do not continue to use Polkadex.trade if you do not agree to take all of the terms and conditions stated on this page.\n\nThe following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: “Client”, “You” and “Your” refers to you, the person log on this website and compliant to the Company’s terms and conditions. “The Company”, “Ourselves”, “We”, “Our” and “Us”, refers to our Company. “Party”, “Parties”, or “Us”, refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client’s needs in respect of provision of the Company’s stated services, in accordance with and subject to, prevailing law of Netherlands. Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same."),
         "timezone": MessageLookupByLibrary.simpleMessage("Timezone"),
+        "toCopy": MessageLookupByLibrary.simpleMessage("to copy"),
+        "today": MessageLookupByLibrary.simpleMessage("Today"),
+        "tokens": MessageLookupByLibrary.simpleMessage("Tokens"),
         "trackingIp": MessageLookupByLibrary.simpleMessage("Tracking IP"),
+        "trade": MessageLookupByLibrary.simpleMessage("Trade"),
+        "tradePairs": MessageLookupByLibrary.simpleMessage("Trade Pairs"),
         "twoFactorAuth": MessageLookupByLibrary.simpleMessage(
             "Two-Factor Authentication (2FA)"),
         "unlessOtherwiseStatedPolkadex": MessageLookupByLibrary.simpleMessage(
@@ -146,7 +182,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "whatsNew":
             MessageLookupByLibrary.simpleMessage("What’s new in Polkadex"),
         "withdraw": MessageLookupByLibrary.simpleMessage("Withdraw"),
+        "withdrawFee": MessageLookupByLibrary.simpleMessage("Withdraw Fee"),
+        "withdrawPolkadex":
+            MessageLookupByLibrary.simpleMessage("Withdraw Polkadex (DEX)"),
+        "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
         "yourAccessAreKept": MessageLookupByLibrary.simpleMessage(
-            "Your access are kept safe by Pin Code.")
+            "Your access are kept safe by Pin Code."),
+        "yourDexAddres":
+            MessageLookupByLibrary.simpleMessage("Your DEX Address")
       };
 }

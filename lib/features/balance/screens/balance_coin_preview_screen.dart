@@ -15,6 +15,7 @@ import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
@@ -44,7 +45,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<_ThisListDataProvider>(
-          create: (_) => _ThisListDataProvider(),
+          create: (_) => _ThisListDataProvider(context),
         ),
         ChangeNotifierProvider<BalanceChartDummyProvider>(
           create: (_) => BalanceChartDummyProvider(),
@@ -183,7 +184,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                       padding:
                           const EdgeInsets.only(left: 21, bottom: 12, top: 42),
                       child: Text(
-                        "Trade Pairs",
+                        S.of(context).tradePairs,
                         style: tsS20W600CFF,
                       ),
                     ),
@@ -203,7 +204,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                       child: Row(
                         children: [
                           Text(
-                            "History",
+                            S.of(context).history,
                             style: tsS20W600CFF,
                           ),
                           Spacer(),
@@ -356,7 +357,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                     padding: const EdgeInsets.only(
                                         top: 36, bottom: 36),
                                     child: Text(
-                                      "There are no transactions",
+                                      S.of(context).thereAreNoTransactions,
                                       style: tsS16W500CABB2BC,
                                       textAlign: TextAlign.center,
                                     ),
@@ -413,11 +414,11 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
     if (date.day == today.day &&
         date.month == today.month &&
         date.year == today.year) {
-      return "Today";
+      return S.of(context).today;
     } else if (date.day == today.day - 1 &&
         date.month == today.month &&
         date.year == today.year) {
-      return "Yesterday";
+      return S.of(context).yesterday;
     } else {
       return DateFormat("dd MMMM, yyyy").format(date);
     }
@@ -474,7 +475,9 @@ class _ThisItemWidget extends StatelessWidget {
 
     if (dateTitle?.isNotEmpty ?? false) {
       final double topPadding =
-          ['Today', 'Yesterday'].contains(dateTitle) ? 7.0 : 26.0;
+          [S.of(context).today, S.of(context).yesterday].contains(dateTitle)
+              ? 7.0
+              : 26.0;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -760,16 +763,16 @@ class _ThisMenuItemWidget extends StatelessWidget {
     String svgAssets;
     switch (menu) {
       case _EnumMenus.deposit:
-        text = "Deposit";
+        text = S.of(context).deposit;
         svgAssets = "Deposit".asAssetSvg();
 
         break;
       case _EnumMenus.withdraw:
-        text = "Withdraw";
+        text = S.of(context).withdraw;
         svgAssets = "Withdraw".asAssetSvg();
         break;
       case _EnumMenus.trade:
-        text = "Trade";
+        text = S.of(context).trade;
         svgAssets = "trade_selected".asAssetSvg();
         break;
     }
@@ -847,7 +850,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Price',
+                          S.of(context).price,
                           style: tsS14W400CFFOP50,
                         ),
                         SizedBox(height: 4),
@@ -863,7 +866,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Price',
+                          S.of(context).price,
                           style: tsS14W400CFFOP50,
                         ),
                         SizedBox(height: 4),
@@ -985,7 +988,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
               ),
               SizedBox(height: 02),
               Text(
-                'Market Price',
+                S.of(context).marketPrice,
                 style: tsS13W500CFF.copyWith(color: colorABB2BC),
               ),
             ],
@@ -1027,7 +1030,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         text = "1y";
                         break;
                       case EnumBalanceChartDataTypes.all:
-                        text = "All";
+                        text = S.of(context).all;
                         break;
                     }
                     return InkWell(
@@ -1115,134 +1118,146 @@ class _ThisSellModel extends _IBaseModel {
 class _ThisDepositModel extends _IBaseModel {
   final String? unit;
   final String? amount;
+  final BuildContext context;
 
   const _ThisDepositModel({
     required this.unit,
     required this.amount,
     required DateTime dateTime,
+    required this.context,
   }) : super(
           date: dateTime,
           type: _EnumListTypes.deposit,
         );
 
-  String? get name => "Deposit";
+  String? get name => S.of(context).deposit;
 }
 
 class _ThisWithdrawModel extends _IBaseModel {
   final String? unit;
   final String? amount;
+  final BuildContext context;
 
   const _ThisWithdrawModel({
     required this.unit,
     required this.amount,
     required DateTime dateTime,
+    required this.context,
   }) : super(
           date: dateTime,
           type: _EnumListTypes.withdraw,
         );
 
-  String? get name => "Withdraw";
+  String? get name => S.of(context).withdraw;
 }
-
-final _dummyList = <_IBaseModel>[
-  _ThisDepositModel(
-    unit: '+ 1.0000 DOT',
-    amount: '~\$42.50',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-      ),
-    ),
-  ),
-  _ThisWithdrawModel(
-    unit: '- 1.0000 DOT',
-    amount: '~\$42.50',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-      ),
-    ),
-  ),
-  _ThisBuyModel(
-    name: 'DOT/BTC',
-    fromUnit: '0.431 DOT',
-    toUnit: '0.486 BTC',
-    point: '0.036820',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-      ),
-    ),
-  ),
-  _ThisSellModel(
-    name: 'DOT/BTC',
-    fromUnit: '0.451 DOT',
-    toUnit: '0.436 BTC',
-    point: '0.0320',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-      ),
-    ),
-  ),
-  _ThisDepositModel(
-    unit: '+ 1.000 DOT',
-    amount: '~\$42.50',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-        days: -1,
-        minutes: -10,
-      ),
-    ),
-  ),
-  _ThisWithdrawModel(
-    unit: '- 1.000 DOT',
-    amount: '~\$42.50',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-        days: -1,
-        minutes: -10,
-      ),
-    ),
-  ),
-  _ThisBuyModel(
-    name: 'DOT/BTC',
-    fromUnit: '0.431 DOT',
-    toUnit: '0.486 BTC',
-    point: '0.6820',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-        days: -2,
-        minutes: -10,
-      ),
-    ),
-  ),
-  _ThisSellModel(
-    name: 'DOT/BTC',
-    fromUnit: '0.461 DOT',
-    toUnit: '0.896 BTC',
-    point: '0.0820',
-    dateTime: DateTime.now().add(
-      const Duration(
-        hours: -1,
-        days: -2,
-        minutes: -10,
-      ),
-    ),
-  ),
-]..sort((c, p) => p.date.toIso8601String().compareTo(c.date.toIso8601String()));
 
 /// The provider handle the bottom list.
 class _ThisListDataProvider extends ChangeNotifier {
+  _ThisListDataProvider(this.context);
+
   DateTime? _filterStartDate, _filterEndDate;
   _EnumListTypes? _filterType;
+  final BuildContext context;
 
   _EnumListTypes? get filterType => _filterType;
   DateTime? get filterStartDate => _filterStartDate;
   DateTime? get filterEndDate => _filterEndDate;
+
+  List<_IBaseModel> get _dummyList => <_IBaseModel>[
+        _ThisDepositModel(
+          unit: '+ 1.0000 DOT',
+          amount: '~\$42.50',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+            ),
+          ),
+          context: context,
+        ),
+        _ThisWithdrawModel(
+          unit: '- 1.0000 DOT',
+          amount: '~\$42.50',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+            ),
+          ),
+          context: context,
+        ),
+        _ThisBuyModel(
+          name: 'DOT/BTC',
+          fromUnit: '0.431 DOT',
+          toUnit: '0.486 BTC',
+          point: '0.036820',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+            ),
+          ),
+        ),
+        _ThisSellModel(
+          name: 'DOT/BTC',
+          fromUnit: '0.451 DOT',
+          toUnit: '0.436 BTC',
+          point: '0.0320',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+            ),
+          ),
+        ),
+        _ThisDepositModel(
+          unit: '+ 1.000 DOT',
+          amount: '~\$42.50',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+              days: -1,
+              minutes: -10,
+            ),
+          ),
+          context: context,
+        ),
+        _ThisWithdrawModel(
+          unit: '- 1.000 DOT',
+          amount: '~\$42.50',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+              days: -1,
+              minutes: -10,
+            ),
+          ),
+          context: context,
+        ),
+        _ThisBuyModel(
+          name: 'DOT/BTC',
+          fromUnit: '0.431 DOT',
+          toUnit: '0.486 BTC',
+          point: '0.6820',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+              days: -2,
+              minutes: -10,
+            ),
+          ),
+        ),
+        _ThisSellModel(
+          name: 'DOT/BTC',
+          fromUnit: '0.461 DOT',
+          toUnit: '0.896 BTC',
+          point: '0.0820',
+          dateTime: DateTime.now().add(
+            const Duration(
+              hours: -1,
+              days: -2,
+              minutes: -10,
+            ),
+          ),
+        ),
+      ]..sort((c, p) =>
+          p.date.toIso8601String().compareTo(c.date.toIso8601String()));
 
   bool get hasFilterDate =>
       (filterStartDate != null) && (filterEndDate != null);

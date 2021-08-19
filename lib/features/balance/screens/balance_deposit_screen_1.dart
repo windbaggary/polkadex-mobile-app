@@ -6,6 +6,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 
@@ -38,7 +39,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                 ),
                 Expanded(
                   child: Text(
-                    "Deposit Polkadex (DEX)",
+                    S.of(context).depositPolkadex,
                     style: tsS19W700CFF,
                     textAlign: TextAlign.center,
                   ),
@@ -81,7 +82,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Network:',
+                                  '${S.of(context).network}:',
                                   style: tsS16W600CFF,
                                 ),
                                 SizedBox(width: 36),
@@ -95,9 +96,9 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                                         const EdgeInsets.fromLTRB(27, 8, 24, 8),
                                     child: DropdownButton<String>(
                                       items: [
-                                        'DOT Chain',
-                                        'DOT Chain 2',
-                                        'DOT  3'
+                                        S.of(context).dotChain(''),
+                                        S.of(context).dotChain('2'),
+                                        'DOT 3'
                                       ]
                                           .map((e) => DropdownMenuItem<String>(
                                                 child: Text(
@@ -107,7 +108,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                                                 value: e,
                                               ))
                                           .toList(),
-                                      value: 'DOT Chain',
+                                      value: S.of(context).dotChain(''),
                                       style: tsS16W600CFF,
                                       underline: Container(),
                                       onChanged: (value) {},
@@ -130,7 +131,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                           Padding(
                             padding: const EdgeInsets.only(top: 10, bottom: 14),
                             child: Text(
-                              'Scan or share',
+                              S.of(context).scanOrShare,
                               style: tsS20W600CFF,
                               textAlign: TextAlign.center,
                             ),
@@ -148,8 +149,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                                 FlutterClipboard.copy(
                                         '3P3QsMVK89JBNqZQv5zMAKG8FK3k')
                                     .then((value) => buildAppToast(
-                                        msg:
-                                            'The address is copied to the clipboard',
+                                        msg: S.of(context).theAddressIsCopied,
                                         context: context));
                               },
                               borderRadius: BorderRadius.circular(20),
@@ -165,7 +165,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     Text(
-                                      'Your DEX Address',
+                                      S.of(context).yourDexAddres,
                                       style: tsS16W600CFF,
                                     ),
                                     SizedBox(height: 7.3),
@@ -186,19 +186,19 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                               style: tsS14W400CFFOP50,
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: 'Tap ',
+                                    text: '${S.of(context).tap} ',
                                     style: TextStyle(
                                       fontFamily: 'WorkSans',
                                     )),
                                 TextSpan(
-                                  text: 'Address',
+                                  text: S.of(context).address,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'WorkSans',
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' to copy',
+                                  text: ' ${S.of(context).toCopy}',
                                   style: TextStyle(
                                     fontFamily: 'WorkSans',
                                   ),
@@ -213,7 +213,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(26, 30, 26, 48),
                       child: Text(
-                        'Attention: Sending token other than DEX to this address may result in the loss of your deposit.',
+                        S.of(context).attentionSendingToken,
                         style: tsS13W400CFFOP60.copyWith(color: colorFFFFFF),
                         textAlign: TextAlign.center,
                       ),
@@ -240,7 +240,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                             ),
                           ),
                           Text(
-                            'Share',
+                            S.of(context).share,
                             style: tsS16W600CFF,
                           )
                         ],
@@ -281,7 +281,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
     Share.shareFiles(
       [path],
       subject: 'Polkadex',
-      text: 'Polkadex DEX Address: 3P3QsMVK89JBNqZQv5zMAKG8FK3k',
+      text: '${S.of(context).polkadexDexAddress}: 3P3QsMVK89JBNqZQv5zMAKG8FK3k',
       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
       mimeTypes: ["image/png"],
     );
@@ -322,7 +322,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Available',
+                  S.of(context).available,
                   style: tsS16W400CFF,
                 ),
                 SizedBox(height: 2),
