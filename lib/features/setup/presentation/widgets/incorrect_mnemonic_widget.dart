@@ -4,6 +4,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 class IncorrectMnemonicWidget extends StatefulWidget {
   @override
@@ -91,12 +92,12 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Text(
-                        'Incorrect mnemonic phrase',
+                        S.of(context).incorrectMnemonicPhrase,
                         style: tsS26W600CFF,
                       ),
                     ),
                     Text(
-                      'Please enter again.',
+                      S.of(context).pleaseEnterAgain,
                       style: tsS18W400C93949A,
                     ),
                     Padding(
@@ -113,7 +114,7 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
                               ),
                             ),
                             Text(
-                              'More details',
+                              S.of(context).moreDetails,
                               style: tsS16W400CFF,
                             ),
                           ],
@@ -132,7 +133,7 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 26),
                             child: Text(
-                              'One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.',
+                              S.of(context).oneOrMoreOfYour1224Words,
                               style: tsS18W400CFF,
                             ),
                           ),

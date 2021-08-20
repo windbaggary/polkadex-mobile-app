@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
@@ -19,7 +20,7 @@ class SuggestionsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'Suggestions',
+          S.of(context).suggestions,
           style: tsS15W600CFF,
         ),
         Padding(

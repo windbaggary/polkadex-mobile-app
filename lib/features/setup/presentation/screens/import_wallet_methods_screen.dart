@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/features/setup/presentation/screens/restore_existing_wallet_screen.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -51,7 +52,7 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
             backgroundColor: color1C2023,
             appBar: AppBar(
               title: Text(
-                'Import Wallet',
+                S.of(context).importWallet,
                 style: tsS19W600CFF,
               ),
               leading: SizedBox(
@@ -107,23 +108,23 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Available import wallet methods',
+                                      S.of(context).availableImportWallet,
                                       style: tsS26W600CFF,
                                     ),
                                     SizedBox(
                                       height: 16,
                                     ),
                                     Text(
-                                      'Type your secret phrase to restore your existing wallet.',
+                                      S.of(context).typeYourSecretPhrase,
                                       style: tsS18W400CFF,
                                     ),
                                     SizedBox(
                                       height: 25,
                                     ),
                                     AvailableMethodWidget(
-                                      title: 'Mnemonic Phrase',
+                                      title: S.of(context).mnemonicPhrase,
                                       description:
-                                          'Add a wallet by importing recovery phase',
+                                          S.of(context).addAWalletByImporting,
                                       iconWidget: SvgPicture.asset(
                                         'mnemonicIcon'.asAssetSvg(),
                                       ),
@@ -135,9 +136,9 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
                                       height: 14,
                                     ),
                                     AvailableMethodWidget(
-                                      title: 'Json File',
+                                      title: S.of(context).jsonFile,
                                       description:
-                                          'Import wallet from backup JSON file',
+                                          S.of(context).importWalletFromBackup,
                                       iconWidget: SvgPicture.asset(
                                         'jsonIcon'.asAssetSvg(),
                                       ),
@@ -146,9 +147,9 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
                                       height: 14,
                                     ),
                                     AvailableMethodWidget(
-                                      title: 'Ledger Device',
+                                      title: S.of(context).ledgerDevice,
                                       description:
-                                          'Connect ledger device for import your wallet',
+                                          S.of(context).connectLedgerDeviceFor,
                                       iconWidget: SvgPicture.asset(
                                         'ledgerIcon'.asAssetSvg(),
                                       ),

@@ -12,6 +12,7 @@ import 'package:polkadex/features/setup/presentation/providers/wallet_settings_p
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +57,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
           backgroundColor: color1C2023,
           appBar: AppBar(
             title: Text(
-              'Wallet Settings',
+              S.of(context).walletSettings,
               style: tsS19W600CFF,
             ),
             leading: SizedBox(
@@ -126,7 +127,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                             padding: const EdgeInsets.only(
                                                 bottom: 16),
                                             child: Text(
-                                              'Wallet Settings',
+                                              S.of(context).walletSettings,
                                               style: tsS26W600CFF,
                                             ),
                                           ),
@@ -134,7 +135,9 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                             padding: const EdgeInsets.only(
                                                 bottom: 14),
                                             child: Text(
-                                              'Security password is used for transfers, create orders, mnemonics backups, applications authorization, etc.',
+                                              S
+                                                  .of(context)
+                                                  .securityPasswordIsUsedFor,
                                               style: tsS18W400CFF,
                                             ),
                                           ),
@@ -142,8 +145,9 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                             padding: const EdgeInsets.only(
                                                 bottom: 12),
                                             child: WalletInputWidget(
-                                              title: 'Wallet Name',
-                                              description: 'Set wallet name',
+                                              title: S.of(context).walletName,
+                                              description:
+                                                  S.of(context).setWalletName,
                                               controller: _nameController,
                                               onChanged: (password) =>
                                                   settingProvider.evalNextEnabled(
@@ -157,8 +161,9 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                             padding: const EdgeInsets.only(
                                                 bottom: 12),
                                             child: WalletInputWidget(
-                                              title: 'Password',
-                                              description: 'Set password',
+                                              title: S.of(context).password,
+                                              description:
+                                                  S.of(context).setPassword,
                                               controller: _passwordController,
                                               obscureText: true,
                                               onChanged: (password) =>
@@ -173,9 +178,11 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                             padding: const EdgeInsets.only(
                                                 bottom: 26),
                                             child: WalletInputWidget(
-                                              title: 'Repeat Password',
-                                              description:
-                                                  'Repeat your password',
+                                              title:
+                                                  S.of(context).repeatPassword,
+                                              description: S
+                                                  .of(context)
+                                                  .repeatYourPassword,
                                               controller:
                                                   _passwordRepeatController,
                                               obscureText: true,
@@ -194,23 +201,29 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                             crossAxisCount: 2,
                                             children: [
                                               PasswordValidationWidget(
-                                                title: 'At least 8 characters',
+                                                title: S
+                                                    .of(context)
+                                                    .atLeast8Characters,
                                                 isValid: settingProvider
                                                     .hasLeast8Characters,
                                               ),
                                               PasswordValidationWidget(
-                                                title: 'At least 1 lowercase',
+                                                title: S
+                                                    .of(context)
+                                                    .atLeast1Lowercase,
                                                 isValid: settingProvider
                                                     .hasLeast1LowercaseLetter,
                                               ),
                                               PasswordValidationWidget(
-                                                title:
-                                                    'At least 1 uppercase letter',
+                                                title: S
+                                                    .of(context)
+                                                    .atLeast1Uppercase,
                                                 isValid: settingProvider
                                                     .hasLeast1Uppercase,
                                               ),
                                               PasswordValidationWidget(
-                                                title: 'At least 1 digit',
+                                                title:
+                                                    S.of(context).atLeast1Digit,
                                                 isValid: settingProvider
                                                     .hasLeast1Digit,
                                               ),
@@ -219,9 +232,12 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                           OptionTabSwitchWidget(
                                             svgAsset:
                                                 "finger-print".asAssetSvg(),
-                                            title: "Secure with FingerPrint",
-                                            description:
-                                                "Secure your access without typing your Pin Code.",
+                                            title: S
+                                                .of(context)
+                                                .secureWithFingerPrint,
+                                            description: S
+                                                .of(context)
+                                                .secureYourAccessWithout,
                                             isChecked: settingProvider
                                                 .isFingerPrintEnabled,
                                             onSwitchChanged: (value) {
@@ -248,7 +264,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Polkadex Exchange eApp does not keep it, if you forget the password, you cannot restore it.',
+                                S.of(context).polkadexExchangeAppDoesNot,
                                 textAlign: TextAlign.center,
                                 style: tsS13W400CABB2BC,
                               ),
@@ -257,7 +273,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                     _nameController.text.isNotEmpty &&
                                     _passwordController.text ==
                                         _passwordRepeatController.text,
-                                label: 'Next',
+                                label: S.of(context).next,
                                 onTap: () => _onNextTap(provider),
                               ),
                             ],
@@ -277,7 +293,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     FocusScope.of(context).unfocus();
     LoadingPopup.show(
       context: context,
-      text: 'We are almost there...',
+      text: S.of(context).weAreAlmostThere,
     );
 
     await provider.importAccount(_passwordController.text);

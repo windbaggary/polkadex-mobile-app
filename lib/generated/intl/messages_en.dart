@@ -46,6 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "aStopOrderIsAnOrder": MessageLookupByLibrary.simpleMessage(
             "A stop order is an order to buy or sell a stock at the market price once the stock has traded at or through a specified price."),
         "accountName": MessageLookupByLibrary.simpleMessage("Account Name"),
+        "addAWalletByImporting": MessageLookupByLibrary.simpleMessage(
+            "Add a wallet by importing recovery phase"),
         "address": MessageLookupByLibrary.simpleMessage("Address"),
         "all": MessageLookupByLibrary.simpleMessage("All"),
         "allMarkets": MessageLookupByLibrary.simpleMessage("All Markets"),
@@ -57,9 +59,21 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("App Information"),
         "appSettings": MessageLookupByLibrary.simpleMessage("App Settings"),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+        "atLeast1Digit":
+            MessageLookupByLibrary.simpleMessage("At least 1 digit"),
+        "atLeast1Lowercase":
+            MessageLookupByLibrary.simpleMessage("At least 1 lowercase"),
+        "atLeast1Uppercase":
+            MessageLookupByLibrary.simpleMessage("At least 1 uppercase letter"),
+        "atLeast8Characters":
+            MessageLookupByLibrary.simpleMessage("At least 8 characters"),
         "attentionSendingToken": MessageLookupByLibrary.simpleMessage(
             "Attention: Sending token other than DEX to this address may result in the loss of your deposit."),
         "available": MessageLookupByLibrary.simpleMessage("Available"),
+        "availableImportWallet": MessageLookupByLibrary.simpleMessage(
+            "Available import wallet methods"),
+        "backupMnemonicPhrases":
+            MessageLookupByLibrary.simpleMessage("Backup mnemonic phrases"),
         "barrier": MessageLookupByLibrary.simpleMessage("Barrier"),
         "blockAccess": MessageLookupByLibrary.simpleMessage(
             "Block access to suspicious IPs."),
@@ -72,10 +86,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "chain": MessageLookupByLibrary.simpleMessage("Chain"),
         "change": MessageLookupByLibrary.simpleMessage("Change"),
         "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
+        "changingTheLanguage":
+            MessageLookupByLibrary.simpleMessage("Changing the language..."),
+        "chooseALanguage":
+            MessageLookupByLibrary.simpleMessage("Choose a language"),
         "commonQuestionsAnd": MessageLookupByLibrary.simpleMessage(
             "Common questions and support docs"),
         "completed": MessageLookupByLibrary.simpleMessage("Completed"),
+        "connectLedgerDeviceFor": MessageLookupByLibrary.simpleMessage(
+            "Connect ledger device for import your wallet"),
         "contact": MessageLookupByLibrary.simpleMessage("Contact"),
+        "createAnAccount":
+            MessageLookupByLibrary.simpleMessage("Create an account"),
+        "createWallet": MessageLookupByLibrary.simpleMessage("Create Wallet"),
         "currency": MessageLookupByLibrary.simpleMessage("Currency"),
         "currentTradingFee":
             MessageLookupByLibrary.simpleMessage("Current trading fee"),
@@ -120,16 +143,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "holding": MessageLookupByLibrary.simpleMessage("Holding"),
         "hour24": MessageLookupByLibrary.simpleMessage("24 hour"),
+        "iHaveSavedMyMnemonic": MessageLookupByLibrary.simpleMessage(
+            "I have saved my mnemonic seed safely."),
         "ifYouFindAnyLink": MessageLookupByLibrary.simpleMessage(
             "If you find any link on our Website that is offensive for any reason, you are free to contact and inform us any moment. We will consider requests to remove links but we are not obligated to or so or to respond to you directly.\n\nWe do not ensure that the information on this website is correct, we do not warrant its completeness or accuracy; nor do we promise to ensure that the website remains available or that the material on the website is kept up to date."),
         "importWallet": MessageLookupByLibrary.simpleMessage("Import Wallet"),
+        "importWalletFromBackup": MessageLookupByLibrary.simpleMessage(
+            "Import wallet from backup JSON file"),
         "inFiat": MessageLookupByLibrary.simpleMessage("In Fiat"),
+        "incorrectMnemonicPhrase":
+            MessageLookupByLibrary.simpleMessage("Incorrect mnemonic phrase"),
         "interface": MessageLookupByLibrary.simpleMessage("Interface"),
+        "jsonFile": MessageLookupByLibrary.simpleMessage("Json File"),
         "languageAndCurrency":
             MessageLookupByLibrary.simpleMessage("Language & Currency"),
         "lastUpdated": MessageLookupByLibrary.simpleMessage("Last Updated"),
         "leaveUsFeedback":
             MessageLookupByLibrary.simpleMessage("Leave us feedback"),
+        "ledgerDevice": MessageLookupByLibrary.simpleMessage("Ledger Device"),
         "license": MessageLookupByLibrary.simpleMessage("License"),
         "limit": MessageLookupByLibrary.simpleMessage("Limit"),
         "limitOrder": MessageLookupByLibrary.simpleMessage("Limit Order"),
@@ -141,9 +172,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "marketOrder": MessageLookupByLibrary.simpleMessage("Market Order"),
         "marketPrice": MessageLookupByLibrary.simpleMessage("Market Price"),
         "markets": MessageLookupByLibrary.simpleMessage("Markets"),
+        "mnemonicPhrase":
+            MessageLookupByLibrary.simpleMessage("Mnemonic Phrase"),
         "month1": MessageLookupByLibrary.simpleMessage("1 month"),
+        "moreDetails": MessageLookupByLibrary.simpleMessage("More Details"),
         "myAccount": MessageLookupByLibrary.simpleMessage("My Account"),
         "network": MessageLookupByLibrary.simpleMessage("Network"),
+        "next": MessageLookupByLibrary.simpleMessage("Next"),
         "notificationDetails":
             MessageLookupByLibrary.simpleMessage("Notifications Details"),
         "notificationSettings":
@@ -157,6 +192,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Notify when a withdrawal is requested."),
         "notifyWhenAnOrder": MessageLookupByLibrary.simpleMessage(
             "Notify when an order is filled."),
+        "oneOrMoreOfYour1224Words": MessageLookupByLibrary.simpleMessage(
+            "One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error."),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
         "openOrders": MessageLookupByLibrary.simpleMessage("Open Orders"),
         "optimize": MessageLookupByLibrary.simpleMessage("Optimize"),
@@ -166,13 +203,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "pair": MessageLookupByLibrary.simpleMessage("Pair"),
         "participateInLuckyDraw": MessageLookupByLibrary.simpleMessage(
             "Participate in lucky draw and share 160 USDT prize poll!"),
+        "password": MessageLookupByLibrary.simpleMessage("Password"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "pleaseEnterAValidPrice":
             MessageLookupByLibrary.simpleMessage("Please enter a valid price"),
+        "pleaseEnterAgain":
+            MessageLookupByLibrary.simpleMessage("Please enter again."),
+        "pleaseEnterThe1224Words": MessageLookupByLibrary.simpleMessage(
+            "Please enter the 12-24 words in the correct order."),
         "pleaseEnterThePrice":
             MessageLookupByLibrary.simpleMessage("Please enter the price"),
+        "pleaseWriteDownYour": MessageLookupByLibrary.simpleMessage(
+            "Please write down your wallet’s mnemonic seed and keep it in a safe place."),
         "polkadexDexAddress":
             MessageLookupByLibrary.simpleMessage("Polkadex DEX Address"),
+        "polkadexExchangeAppDoesNot": MessageLookupByLibrary.simpleMessage(
+            "Polkadex Exchange eApp does not keep it, if you forget the password, you cannot restore it."),
         "polkadexIfYouUninstall": MessageLookupByLibrary.simpleMessage(
             "Polkadex does not store any data , this is just a temporary data, if you uninstall the Polkadex App your name and referral ID will be removed."),
         "polkadexInterfaceTour":
@@ -185,6 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Polkadex Status"),
         "polkadexSystemMessage":
             MessageLookupByLibrary.simpleMessage("Polkadex system message"),
+        "previous": MessageLookupByLibrary.simpleMessage("Previous"),
         "price": MessageLookupByLibrary.simpleMessage("Price"),
         "priceShouldBeGreater": MessageLookupByLibrary.simpleMessage(
             "Price should be greater than 0.00"),
@@ -202,22 +249,37 @@ class MessageLookup extends MessageLookupByLibrary {
         "referral": MessageLookupByLibrary.simpleMessage("Referral"),
         "removalOfLinksFrom": MessageLookupByLibrary.simpleMessage(
             "Removal of links from our website"),
+        "repeatPassword":
+            MessageLookupByLibrary.simpleMessage("Repeat Password"),
+        "repeatYourPassword":
+            MessageLookupByLibrary.simpleMessage("Repeat your password"),
         "reservationOfRights":
             MessageLookupByLibrary.simpleMessage("Reservation of Rights"),
+        "restoreExistingWallet":
+            MessageLookupByLibrary.simpleMessage("Restore existing wallet"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "scanOrShare": MessageLookupByLibrary.simpleMessage("Scan or share"),
         "searchNameOrTicket":
             MessageLookupByLibrary.simpleMessage("Search name or ticket"),
         "secureWithFingerPrint":
             MessageLookupByLibrary.simpleMessage("Secure with FingerPrint"),
+        "secureWithFingerprint":
+            MessageLookupByLibrary.simpleMessage("Secure with FingerPrint"),
         "secureWithPinCode":
             MessageLookupByLibrary.simpleMessage("Secure with Pin Code"),
         "secureYourAccessWithout": MessageLookupByLibrary.simpleMessage(
             "Secure your access without typing your Pin Code."),
+        "securityPasswordIsUsedFor": MessageLookupByLibrary.simpleMessage(
+            "Security password is used for transfers, create orders, mnemonics backups, applications authorization, etc."),
         "seeTheTokenPriceLike":
             MessageLookupByLibrary.simpleMessage("See the token price like:"),
+        "selectTheLanguageYouWould": MessageLookupByLibrary.simpleMessage(
+            "Select the language you would like to use while running Polkadex Mobile App"),
         "sell": MessageLookupByLibrary.simpleMessage("Sell"),
         "sellDot": MessageLookupByLibrary.simpleMessage("Sell DOT"),
+        "setPassword": MessageLookupByLibrary.simpleMessage("Set password"),
+        "setWalletName":
+            MessageLookupByLibrary.simpleMessage("Set wallet name"),
         "share": MessageLookupByLibrary.simpleMessage("share"),
         "slideToWithdraw":
             MessageLookupByLibrary.simpleMessage("Slide to withdraw"),
@@ -229,6 +291,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "stop": MessageLookupByLibrary.simpleMessage("Stop"),
         "stopOrder": MessageLookupByLibrary.simpleMessage("Stop Order"),
         "styleSettings": MessageLookupByLibrary.simpleMessage("Style Settings"),
+        "suggestions": MessageLookupByLibrary.simpleMessage("Suggestions"),
         "summary": MessageLookupByLibrary.simpleMessage("Summary"),
         "supportCenter": MessageLookupByLibrary.simpleMessage("Support Center"),
         "tap": MessageLookupByLibrary.simpleMessage("Tap"),
@@ -240,6 +303,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "the function of creating alerts"),
         "theLimitationsAndProhibitions": MessageLookupByLibrary.simpleMessage(
             "The limitations and prohibitions of liability set in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer, including liabilities arising in contract, in tort and for breach of statutory duty.\n\nTo the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website. Nothing in this disclaimer will:"),
+        "theMnemonicCanBeUsedTo": MessageLookupByLibrary.simpleMessage(
+            "The mnemonic can be used to restore your wallet. Keep it carefully to not lose your assets. Having the mnemonic phrases can have a full control over the assets."),
         "theReferralId": MessageLookupByLibrary.simpleMessage(
             "The referral id is copied to the clipboard"),
         "theTransactionIdIsCopied": MessageLookupByLibrary.simpleMessage(
@@ -269,6 +334,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "twoFactorAuth": MessageLookupByLibrary.simpleMessage(
             "Two-Factor Authentication (2FA)"),
         "type": MessageLookupByLibrary.simpleMessage("Type"),
+        "typeYourSecretMnemonicSeed": MessageLookupByLibrary.simpleMessage(
+            "Type your secret phrase to restore your existing wallet 12-24 words mnemonic seed."),
+        "typeYourSecretPhrase": MessageLookupByLibrary.simpleMessage(
+            "Type your secret phrase to restore your existing wallet."),
         "unlessOtherwiseStatedPolkadex": MessageLookupByLibrary.simpleMessage(
             "Unless otherwise stated, Polkadex and/or its licensors own the intellectual property rights for all material on Polkadex.trade. All intellectual property rights are reserved. You may access this from Polkadex.trade for your own personal use subjected to restrictions set in these terms and conditions.\n\nThis Agreement shall begin on the date hereof. Our Terms and Conditions were created with the help of the Terms And Conditions Generator and the Privacy Policy Generator.\n\nParts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. Polkadex does not filter, edit, publish or review Comments prior to their presence on the website. Comments do not reflect the views and opinions of Polkadex,its agents and/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. To the extent permitted by applicable laws, Polkadex shall not be liable for the Comments or for any liability, damages or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this website.\n\nPolkadex reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions."),
         "useDEXtoPayFees":
@@ -283,7 +352,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "View more details at Tokenview"),
         "vol": MessageLookupByLibrary.simpleMessage("Vol"),
         "volBTC": m1,
+        "walletName": MessageLookupByLibrary.simpleMessage("Wallet Name"),
+        "walletSettings":
+            MessageLookupByLibrary.simpleMessage("Wallet Settings"),
         "weAdded": MessageLookupByLibrary.simpleMessage("We added"),
+        "weAreAlmostThere":
+            MessageLookupByLibrary.simpleMessage("We are almost there..."),
         "weFixed": MessageLookupByLibrary.simpleMessage("We Fixed"),
         "weReserveTheRightTo": MessageLookupByLibrary.simpleMessage(
             "We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amen these terms and conditions and it’s linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions."),

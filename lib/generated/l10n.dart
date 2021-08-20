@@ -1979,6 +1979,426 @@ class S {
       args: [],
     );
   }
+
+  /// `Create Wallet`
+  String get createWallet {
+    return Intl.message(
+      'Create Wallet',
+      name: 'createWallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Backup mnemonic phrases`
+  String get backupMnemonicPhrases {
+    return Intl.message(
+      'Backup mnemonic phrases',
+      name: 'backupMnemonicPhrases',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter the 12-24 words in the correct order.`
+  String get pleaseEnterThe1224Words {
+    return Intl.message(
+      'Please enter the 12-24 words in the correct order.',
+      name: 'pleaseEnterThe1224Words',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Previous`
+  String get previous {
+    return Intl.message(
+      'Previous',
+      name: 'previous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next`
+  String get next {
+    return Intl.message(
+      'Next',
+      name: 'next',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Available import wallet methods`
+  String get availableImportWallet {
+    return Intl.message(
+      'Available import wallet methods',
+      name: 'availableImportWallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type your secret phrase to restore your existing wallet.`
+  String get typeYourSecretPhrase {
+    return Intl.message(
+      'Type your secret phrase to restore your existing wallet.',
+      name: 'typeYourSecretPhrase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mnemonic Phrase`
+  String get mnemonicPhrase {
+    return Intl.message(
+      'Mnemonic Phrase',
+      name: 'mnemonicPhrase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a wallet by importing recovery phase`
+  String get addAWalletByImporting {
+    return Intl.message(
+      'Add a wallet by importing recovery phase',
+      name: 'addAWalletByImporting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Json File`
+  String get jsonFile {
+    return Intl.message(
+      'Json File',
+      name: 'jsonFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import wallet from backup JSON file`
+  String get importWalletFromBackup {
+    return Intl.message(
+      'Import wallet from backup JSON file',
+      name: 'importWalletFromBackup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ledger Device`
+  String get ledgerDevice {
+    return Intl.message(
+      'Ledger Device',
+      name: 'ledgerDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connect ledger device for import your wallet`
+  String get connectLedgerDeviceFor {
+    return Intl.message(
+      'Connect ledger device for import your wallet',
+      name: 'connectLedgerDeviceFor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create an account`
+  String get createAnAccount {
+    return Intl.message(
+      'Create an account',
+      name: 'createAnAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please write down your wallet’s mnemonic seed and keep it in a safe place.`
+  String get pleaseWriteDownYour {
+    return Intl.message(
+      'Please write down your wallet’s mnemonic seed and keep it in a safe place.',
+      name: 'pleaseWriteDownYour',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I have saved my mnemonic seed safely.`
+  String get iHaveSavedMyMnemonic {
+    return Intl.message(
+      'I have saved my mnemonic seed safely.',
+      name: 'iHaveSavedMyMnemonic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The mnemonic can be used to restore your wallet. Keep it carefully to not lose your assets. Having the mnemonic phrases can have a full control over the assets.`
+  String get theMnemonicCanBeUsedTo {
+    return Intl.message(
+      'The mnemonic can be used to restore your wallet. Keep it carefully to not lose your assets. Having the mnemonic phrases can have a full control over the assets.',
+      name: 'theMnemonicCanBeUsedTo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore existing wallet`
+  String get restoreExistingWallet {
+    return Intl.message(
+      'Restore existing wallet',
+      name: 'restoreExistingWallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type your secret phrase to restore your existing wallet 12-24 words mnemonic seed.`
+  String get typeYourSecretMnemonicSeed {
+    return Intl.message(
+      'Type your secret phrase to restore your existing wallet 12-24 words mnemonic seed.',
+      name: 'typeYourSecretMnemonicSeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We are almost there...`
+  String get weAreAlmostThere {
+    return Intl.message(
+      'We are almost there...',
+      name: 'weAreAlmostThere',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wallet Settings`
+  String get walletSettings {
+    return Intl.message(
+      'Wallet Settings',
+      name: 'walletSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Security password is used for transfers, create orders, mnemonics backups, applications authorization, etc.`
+  String get securityPasswordIsUsedFor {
+    return Intl.message(
+      'Security password is used for transfers, create orders, mnemonics backups, applications authorization, etc.',
+      name: 'securityPasswordIsUsedFor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Wallet Name`
+  String get walletName {
+    return Intl.message(
+      'Wallet Name',
+      name: 'walletName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set wallet name`
+  String get setWalletName {
+    return Intl.message(
+      'Set wallet name',
+      name: 'setWalletName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get password {
+    return Intl.message(
+      'Password',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set password`
+  String get setPassword {
+    return Intl.message(
+      'Set password',
+      name: 'setPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Repeat Password`
+  String get repeatPassword {
+    return Intl.message(
+      'Repeat Password',
+      name: 'repeatPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Repeat your password`
+  String get repeatYourPassword {
+    return Intl.message(
+      'Repeat your password',
+      name: 'repeatYourPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `At least 8 characters`
+  String get atLeast8Characters {
+    return Intl.message(
+      'At least 8 characters',
+      name: 'atLeast8Characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `At least 1 lowercase`
+  String get atLeast1Lowercase {
+    return Intl.message(
+      'At least 1 lowercase',
+      name: 'atLeast1Lowercase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `At least 1 uppercase letter`
+  String get atLeast1Uppercase {
+    return Intl.message(
+      'At least 1 uppercase letter',
+      name: 'atLeast1Uppercase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `At least 1 digit`
+  String get atLeast1Digit {
+    return Intl.message(
+      'At least 1 digit',
+      name: 'atLeast1Digit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Secure with FingerPrint`
+  String get secureWithFingerprint {
+    return Intl.message(
+      'Secure with FingerPrint',
+      name: 'secureWithFingerprint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Polkadex Exchange eApp does not keep it, if you forget the password, you cannot restore it.`
+  String get polkadexExchangeAppDoesNot {
+    return Intl.message(
+      'Polkadex Exchange eApp does not keep it, if you forget the password, you cannot restore it.',
+      name: 'polkadexExchangeAppDoesNot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Incorrect mnemonic phrase`
+  String get incorrectMnemonicPhrase {
+    return Intl.message(
+      'Incorrect mnemonic phrase',
+      name: 'incorrectMnemonicPhrase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter again.`
+  String get pleaseEnterAgain {
+    return Intl.message(
+      'Please enter again.',
+      name: 'pleaseEnterAgain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `More Details`
+  String get moreDetails {
+    return Intl.message(
+      'More Details',
+      name: 'moreDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.`
+  String get oneOrMoreOfYour1224Words {
+    return Intl.message(
+      'One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.',
+      name: 'oneOrMoreOfYour1224Words',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Changing the language...`
+  String get changingTheLanguage {
+    return Intl.message(
+      'Changing the language...',
+      name: 'changingTheLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose a language`
+  String get chooseALanguage {
+    return Intl.message(
+      'Choose a language',
+      name: 'chooseALanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select the language you would like to use while running Polkadex Mobile App`
+  String get selectTheLanguageYouWould {
+    return Intl.message(
+      'Select the language you would like to use while running Polkadex Mobile App',
+      name: 'selectTheLanguageYouWould',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Suggestions`
+  String get suggestions {
+    return Intl.message(
+      'Suggestions',
+      name: 'suggestions',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -8,8 +8,8 @@ import 'package:polkadex/common/widgets/check_box_widget.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_shimmer_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
-
 import 'backup_mnemonic_screen.dart';
 
 class MnemonicGeneratedScreen extends StatefulWidget {
@@ -51,7 +51,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
           backgroundColor: color1C2023,
           appBar: AppBar(
             title: Text(
-              'Create Wallet',
+              S.of(context).createWallet,
               style: tsS19W600CFF,
             ),
             leading: SizedBox(
@@ -124,14 +124,14 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Create an account',
+                                          S.of(context).createAnAccount,
                                           style: tsS26W600CFF,
                                         ),
                                         SizedBox(
                                           height: 16,
                                         ),
                                         Text(
-                                          'Please write down your wallet’s mnemonic seed and keep it in a safe place.',
+                                          S.of(context).pleaseWriteDownYour,
                                           style: tsS18W400CFF,
                                         ),
                                         SizedBox(
@@ -166,7 +166,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 6),
                                     child: Text(
-                                      'I have saved my mnemonic seed safely.',
+                                      S.of(context).iHaveSavedMyMnemonic,
                                       style: tsS14W400CFF,
                                     ),
                                   ),
@@ -189,7 +189,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'The mnemonic can be used to restore your wallet. Keep it carefully to not lose your assets. Having the mnemonic phrases can have a full control over the assets.',
+                        S.of(context).theMnemonicCanBeUsedTo,
                         textAlign: TextAlign.center,
                         style: tsS13W400CABB2BC,
                       ),
@@ -200,7 +200,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                               _onNavigateToBackupMnemonic(context, provider),
                           enabled:
                               _isButtonToBackupEnabled && !provider.isLoading,
-                          label: 'Next',
+                          label: S.of(context).next,
                         ),
                       ),
                     ],

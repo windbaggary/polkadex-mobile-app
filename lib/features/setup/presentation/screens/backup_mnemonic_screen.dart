@@ -8,6 +8,7 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 class BackupMnemonicScreen extends StatefulWidget {
@@ -48,7 +49,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
             backgroundColor: color1C2023,
             appBar: AppBar(
               title: Text(
-                'Create Wallet',
+                S.of(context).createWallet,
                 style: tsS19W600CFF,
               ),
               leading: SizedBox(
@@ -104,14 +105,14 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Backup mnemonic phrases',
+                                      S.of(context).backupMnemonicPhrases,
                                       style: tsS26W600CFF,
                                     ),
                                     SizedBox(
                                       height: 16,
                                     ),
                                     Text(
-                                      'Please enter the 12-24 words in the correct order.',
+                                      S.of(context).pleaseEnterThe1224Words,
                                       style: tsS18W400CFF,
                                     ),
                                     SizedBox(
@@ -143,7 +144,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                         padding: const EdgeInsets.only(top: 28),
                         child: AppButton(
                           enabled: provider.hasShuffledMnemonicChanged,
-                          label: 'Next',
+                          label: S.of(context).next,
                           onTap: () => provider.verifyMnemonicOrder()
                               ? _onNavigateToWalletSettings(context, provider)
                               : showModalBottomSheet(

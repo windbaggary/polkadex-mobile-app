@@ -26,7 +26,7 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
             onTap: () async {
               LoadingPopup.show(
                 context: context,
-                text: 'Changing the language...',
+                text: S.of(context).changingTheLanguage,
               );
 
               MyApp.of(context)?.setLocale(locales[index]);
@@ -107,14 +107,14 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
                           Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
-                              'Choose a language',
+                              S.of(context).chooseALanguage,
                               style: tsS26W600CFF,
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 21),
                             child: Text(
-                              'Select the language you would like to use while running Polkadex Mobile App',
+                              S.of(context).selectTheLanguageYouWould,
                               style: tsS18W400CFF,
                             ),
                           ),

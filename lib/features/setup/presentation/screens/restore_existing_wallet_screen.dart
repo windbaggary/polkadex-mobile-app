@@ -4,6 +4,7 @@ import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/suggestions_widget.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -67,7 +68,7 @@ class _RestoreExistingWalletScreenState
             backgroundColor: color1C2023,
             appBar: AppBar(
               title: Text(
-                'Import Wallet',
+                S.of(context).importWallet,
                 style: tsS19W600CFF,
               ),
               leading: SizedBox(
@@ -129,7 +130,7 @@ class _RestoreExistingWalletScreenState
                                           top: 20,
                                         ),
                                         child: Text(
-                                          'Restore existing wallet',
+                                          S.of(context).restoreExistingWallet,
                                           style: tsS26W600CFF,
                                         ),
                                       ),
@@ -142,7 +143,9 @@ class _RestoreExistingWalletScreenState
                                           right: 20,
                                         ),
                                         child: Text(
-                                          'Type your secret phrase to restore your existing wallet 12-24 words mnemonic seed.',
+                                          S
+                                              .of(context)
+                                              .typeYourSecretMnemonicSeed,
                                           style: tsS18W400CFF,
                                         ),
                                       ),
@@ -200,7 +203,7 @@ class _RestoreExistingWalletScreenState
                               children: [
                                 if (value > 0)
                                   AppButton(
-                                    label: 'Previous',
+                                    label: S.of(context).previous,
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 12,
                                       vertical: 16,
@@ -218,7 +221,7 @@ class _RestoreExistingWalletScreenState
                                     },
                                   ),
                                 AppButton(
-                                  label: 'Next',
+                                  label: S.of(context).next,
                                   enabled: _isNextEnabled(context, provider),
                                   onTap: () {
                                     provider.clearSuggestions();
@@ -250,7 +253,7 @@ class _RestoreExistingWalletScreenState
     if (_isLastPage(context, provider)) {
       LoadingPopup.show(
         context: context,
-        text: 'We are almost there...',
+        text: S.of(context).weAreAlmostThere,
       );
       final isMnemonicValid = await provider.checkMnemonicValid();
       Navigator.of(context).pop();
