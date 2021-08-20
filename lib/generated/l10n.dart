@@ -1090,6 +1090,16 @@ class S {
     );
   }
 
+  /// `Token`
+  String get token {
+    return Intl.message(
+      'Token',
+      name: 'token',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tokens`
   String get tokens {
     return Intl.message(
@@ -1155,6 +1165,816 @@ class S {
     return Intl.message(
       'Enter',
       name: 'enter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Types`
+  String get orderTypes {
+    return Intl.message(
+      'Order Types',
+      name: 'orderTypes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Market Order`
+  String get marketOrder {
+    return Intl.message(
+      'Market Order',
+      name: 'marketOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A market order is an order to buy or sell a stock at the market’s current best available price.`
+  String get aMarketOrderIsAnOrder {
+    return Intl.message(
+      'A market order is an order to buy or sell a stock at the market’s current best available price.',
+      name: 'aMarketOrderIsAnOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Limit Order`
+  String get limitOrder {
+    return Intl.message(
+      'Limit Order',
+      name: 'limitOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A limit order is an order to buy or sell a stock with a restriction on the maximum price to be paid or the minimum price to be received.`
+  String get aLimitOrderIsAnOrder {
+    return Intl.message(
+      'A limit order is an order to buy or sell a stock with a restriction on the maximum price to be paid or the minimum price to be received.',
+      name: 'aLimitOrderIsAnOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stop Order`
+  String get stopOrder {
+    return Intl.message(
+      'Stop Order',
+      name: 'stopOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A stop order is an order to buy or sell a stock at the market price once the stock has traded at or through a specified price.`
+  String get aStopOrderIsAnOrder {
+    return Intl.message(
+      'A stop order is an order to buy or sell a stock at the market price once the stock has traded at or through a specified price.',
+      name: 'aStopOrderIsAnOrder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Barrier`
+  String get barrier {
+    return Intl.message(
+      'Barrier',
+      name: 'barrier',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pricing Length`
+  String get pricingLength {
+    return Intl.message(
+      'Pricing Length',
+      name: 'pricingLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `See the token price like:`
+  String get seeTheTokenPriceLike {
+    return Intl.message(
+      'See the token price like:',
+      name: 'seeTheTokenPriceLike',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buy`
+  String get buy {
+    return Intl.message(
+      'Buy',
+      name: 'buy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sell`
+  String get sell {
+    return Intl.message(
+      'Sell',
+      name: 'sell',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Market`
+  String get market {
+    return Intl.message(
+      'Market',
+      name: 'market',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Markets`
+  String get markets {
+    return Intl.message(
+      'Markets',
+      name: 'markets',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Limit`
+  String get limit {
+    return Intl.message(
+      'Limit',
+      name: 'limit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stop`
+  String get stop {
+    return Intl.message(
+      'Stop',
+      name: 'stop',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pair`
+  String get pair {
+    return Intl.message(
+      'Pair',
+      name: 'pair',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deposit Successful`
+  String get depositSuccessful {
+    return Intl.message(
+      'Deposit Successful',
+      name: 'depositSuccessful',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw Successful`
+  String get withdrawSuccessful {
+    return Intl.message(
+      'Withdraw Successful',
+      name: 'withdrawSuccessful',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn with upcoming DeFi airdrops`
+  String get earnWithUpcomingDeFi {
+    return Intl.message(
+      'Earn with upcoming DeFi airdrops',
+      name: 'earnWithUpcomingDeFi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Polkadex system message`
+  String get polkadexSystemMessage {
+    return Intl.message(
+      'Polkadex system message',
+      name: 'polkadexSystemMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DEX/BTC Filled Successful`
+  String get dexBtcFilledSuccessful {
+    return Intl.message(
+      'DEX/BTC Filled Successful',
+      name: 'dexBtcFilledSuccessful',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have deposited 0.60000000 LTC at {dateTime}`
+  String youHaveDeposited(Object dateTime) {
+    return Intl.message(
+      'You have deposited 0.60000000 LTC at $dateTime',
+      name: 'youHaveDeposited',
+      desc: '',
+      args: [dateTime],
+    );
+  }
+
+  /// `You bought 1 DEX for 0.000545 BTC at {dateTime}`
+  String youHaveBought(Object dateTime) {
+    return Intl.message(
+      'You bought 1 DEX for 0.000545 BTC at $dateTime',
+      name: 'youHaveBought',
+      desc: '',
+      args: [dateTime],
+    );
+  }
+
+  /// `You have sold 0.0004124 BTC for 1 DEX at {dateTime}`
+  String youHaveSold(Object dateTime) {
+    return Intl.message(
+      'You have sold 0.0004124 BTC for 1 DEX at $dateTime',
+      name: 'youHaveSold',
+      desc: '',
+      args: [dateTime],
+    );
+  }
+
+  /// `You have withdraw 1.60000000 LTC at {dateTime}`
+  String youHaveWithdraw(Object dateTime) {
+    return Intl.message(
+      'You have withdraw 1.60000000 LTC at $dateTime',
+      name: 'youHaveWithdraw',
+      desc: '',
+      args: [dateTime],
+    );
+  }
+
+  /// `Search name or ticket`
+  String get searchNameOrTicket {
+    return Intl.message(
+      'Search name or ticket',
+      name: 'searchNameOrTicket',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction`
+  String get transaction {
+    return Intl.message(
+      'Transaction',
+      name: 'transaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount (LTC)`
+  String get amountLTC {
+    return Intl.message(
+      'Amount (LTC)',
+      name: 'amountLTC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In Fiat`
+  String get inFiat {
+    return Intl.message(
+      'In Fiat',
+      name: 'inFiat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction Fee`
+  String get transactionFee {
+    return Intl.message(
+      'Transaction Fee',
+      name: 'transactionFee',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Status`
+  String get status {
+    return Intl.message(
+      'Status',
+      name: 'status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get completed {
+    return Intl.message(
+      'Completed',
+      name: 'completed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From`
+  String get from {
+    return Intl.message(
+      'From',
+      name: 'from',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To`
+  String get to {
+    return Intl.message(
+      'To',
+      name: 'to',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction ID`
+  String get transactionID {
+    return Intl.message(
+      'Transaction ID',
+      name: 'transactionID',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The transaction id is copied to the clipboard`
+  String get theTransactionIdIsCopied {
+    return Intl.message(
+      'The transaction id is copied to the clipboard',
+      name: 'theTransactionIdIsCopied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View more details at Tokenview`
+  String get viewMoreDetaisAtTokenview {
+    return Intl.message(
+      'View more details at Tokenview',
+      name: 'viewMoreDetaisAtTokenview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Any problem with this transaction?`
+  String get anyProblemWithThis {
+    return Intl.message(
+      'Any problem with this transaction?',
+      name: 'anyProblemWithThis',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Support Center`
+  String get supportCenter {
+    return Intl.message(
+      'Support Center',
+      name: 'supportCenter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications Details`
+  String get notificationDetails {
+    return Intl.message(
+      'Notifications Details',
+      name: 'notificationDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `While DeFi is in its very early days, there are a number of ways in which investors can earn passive income. The entire reason for the existence of such platforms and products is to deliver liquidity to the DeFi space through incentivization.`
+  String get whileDeFiIsInItsVery {
+    return Intl.message(
+      'While DeFi is in its very early days, there are a number of ways in which investors can earn passive income. The entire reason for the existence of such platforms and products is to deliver liquidity to the DeFi space through incentivization.',
+      name: 'whileDeFiIsInItsVery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Main Wallet`
+  String get mainWallet {
+    return Intl.message(
+      'Main Wallet',
+      name: 'mainWallet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spot`
+  String get spot {
+    return Intl.message(
+      'Spot',
+      name: 'spot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Margin`
+  String get margin {
+    return Intl.message(
+      'Margin',
+      name: 'margin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide small balances`
+  String get hideSmallBalances {
+    return Intl.message(
+      'Hide small balances',
+      name: 'hideSmallBalances',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Holding`
+  String get holding {
+    return Intl.message(
+      'Holding',
+      name: 'holding',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `24 hour`
+  String get hour24 {
+    return Intl.message(
+      '24 hour',
+      name: 'hour24',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 week`
+  String get week1 {
+    return Intl.message(
+      '1 week',
+      name: 'week1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 month`
+  String get month1 {
+    return Intl.message(
+      '1 month',
+      name: 'month1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change`
+  String get change {
+    return Intl.message(
+      'Change',
+      name: 'change',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Others`
+  String get others {
+    return Intl.message(
+      'Others',
+      name: 'others',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Balance`
+  String get totalBalance {
+    return Intl.message(
+      'Total Balance',
+      name: 'totalBalance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tops Pairs`
+  String get topsPairs {
+    return Intl.message(
+      'Tops Pairs',
+      name: 'topsPairs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ranking List`
+  String get rankingList {
+    return Intl.message(
+      'Ranking List',
+      name: 'rankingList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All Markets`
+  String get allMarkets {
+    return Intl.message(
+      'All Markets',
+      name: 'allMarkets',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `BTC Market`
+  String get btcMarket {
+    return Intl.message(
+      'BTC Market',
+      name: 'btcMarket',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LTC Market`
+  String get ltcMarket {
+    return Intl.message(
+      'LTC Market',
+      name: 'ltcMarket',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gainers`
+  String get gainers {
+    return Intl.message(
+      'Gainers',
+      name: 'gainers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Losers`
+  String get losers {
+    return Intl.message(
+      'Losers',
+      name: 'losers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vol`
+  String get vol {
+    return Intl.message(
+      'Vol',
+      name: 'vol',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vol {volume} BTC`
+  String volBTC(Object volume) {
+    return Intl.message(
+      'Vol $volume BTC',
+      name: 'volBTC',
+      desc: '',
+      args: [volume],
+    );
+  }
+
+  /// `EVENT`
+  String get event {
+    return Intl.message(
+      'EVENT',
+      name: 'event',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Participate in lucky draw and share 160 USDT prize poll!`
+  String get participateInLuckyDraw {
+    return Intl.message(
+      'Participate in lucky draw and share 160 USDT prize poll!',
+      name: 'participateInLuckyDraw',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Buy DOT`
+  String get buyDot {
+    return Intl.message(
+      'Buy DOT',
+      name: 'buyDot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sell DOT`
+  String get sellDot {
+    return Intl.message(
+      'Sell DOT',
+      name: 'sellDot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Orders`
+  String get openOrders {
+    return Intl.message(
+      'Open Orders',
+      name: 'openOrders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Orders History`
+  String get ordersHistory {
+    return Intl.message(
+      'Orders History',
+      name: 'ordersHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Purchase added to open orders`
+  String get purchaseAddedToOpen {
+    return Intl.message(
+      'Purchase added to open orders',
+      name: 'purchaseAddedToOpen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Type`
+  String get type {
+    return Intl.message(
+      'Type',
+      name: 'type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amount`
+  String get amount {
+    return Intl.message(
+      'Amount',
+      name: 'amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App Information`
+  String get appInformation {
+    return Intl.message(
+      'App Information',
+      name: 'appInformation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Account`
+  String get myAccount {
+    return Intl.message(
+      'My Account',
+      name: 'myAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notifications Center`
+  String get notificationsCenter {
+    return Intl.message(
+      'Notifications Center',
+      name: 'notificationsCenter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recent`
+  String get recent {
+    return Intl.message(
+      'Recent',
+      name: 'recent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter the price`
+  String get pleaseEnterThePrice {
+    return Intl.message(
+      'Please enter the price',
+      name: 'pleaseEnterThePrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price should be greater than 0.00`
+  String get priceShouldBeGreater {
+    return Intl.message(
+      'Price should be greater than 0.00',
+      name: 'priceShouldBeGreater',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price should be less than wallet balance`
+  String get priceShouldBeLess {
+    return Intl.message(
+      'Price should be less than wallet balance',
+      name: 'priceShouldBeLess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter a valid price`
+  String get pleaseEnterAValidPrice {
+    return Intl.message(
+      'Please enter a valid price',
+      name: 'pleaseEnterAValidPrice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total`
+  String get total {
+    return Intl.message(
+      'Total',
+      name: 'total',
       desc: '',
       args: [],
     );

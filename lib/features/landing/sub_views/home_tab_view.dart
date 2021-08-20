@@ -11,6 +11,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -187,7 +188,7 @@ class _HomeTabViewState extends State<HomeTabView>
               //   child: SlideTransition(
               //     position: _topPairsHeadingAnimation,
               child: Text(
-                'Tops Pairs',
+                S.of(context).topsPairs,
                 style: tsS20W600CFF,
               ),
               //   ),
@@ -219,7 +220,7 @@ class _HomeTabViewState extends State<HomeTabView>
               //   child: SlideTransition(
               //     position: _rankingListHeadingAnimation,
               child: Text(
-                'Ranking List',
+                S.of(context).rankingList,
                 style: tsS20W600CFF,
               ),
             ),
@@ -265,7 +266,11 @@ class _ThisRankingListFilterWidget extends StatelessWidget {
       child: Row(
         children: [
           DropdownButton<String>(
-            items: ['All Markets', 'BTC Market', 'LTC Market']
+            items: [
+              S.of(context).allMarkets,
+              S.of(context).btcMarket,
+              S.of(context).ltcMarket
+            ]
                 .map((e) => DropdownMenuItem<String>(
                       child: Text(
                         e,
@@ -274,7 +279,7 @@ class _ThisRankingListFilterWidget extends StatelessWidget {
                       value: e,
                     ))
                 .toList(),
-            value: 'All Markets',
+            value: S.of(context).allMarkets,
             style: tsS15W600CABB2BC,
             underline: Container(),
             onChanged: null,
@@ -345,19 +350,19 @@ class _ThisRankingListSortItemWidget extends StatelessWidget {
 
     switch (item) {
       case EnumRankingListSorts.gainers:
-        label = 'Gainers';
+        label = S.of(context).gainers;
         if (isSelected) {
           containerColor = color0CA564;
         }
         break;
       case EnumRankingListSorts.losers:
-        label = 'Losers';
+        label = S.of(context).losers;
         if (isSelected) {
           containerColor = colorE6007A;
         }
         break;
       case EnumRankingListSorts.vol:
-        label = 'Vol';
+        label = S.of(context).vol;
         if (isSelected) {
           containerColor = colorE6007A;
         }
@@ -419,7 +424,7 @@ class _ThisSliderItemWidget extends StatelessWidget {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.fromLTRB(6, 1, 5, 3),
                     child: Text(
-                      "EVENT",
+                      S.of(context).event,
                       style: tsS13W600CFF,
                     ),
                   ),
@@ -430,7 +435,7 @@ class _ThisSliderItemWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 16, 25, 16),
             child: Text(
-              'Participate in lucky draw and share 160 USDT prize poll!',
+              S.of(context).participateInLuckyDraw,
               style: tsS16W500CFF,
             ),
           )
@@ -680,7 +685,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                     ),
                   ]),
                   Text(
-                    'VOL ${model.volume} BTC',
+                    S.of(context).volBTC(model.volume),
                     style: tsS12W400CFF.copyWith(
                       color: colorABB2BC.withOpacity(0.70),
                     ),

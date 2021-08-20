@@ -8,6 +8,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// The callback type for buy or sell
 typedef OnBuyOrSell = void Function(String price, String amount, double total);
@@ -205,15 +206,15 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                       builder: (context) => ValueListenableBuilder<EnumBuySell>(
                         valueListenable: widget.buySellNotifier,
                         builder: (context, enumBuySell, child) {
-                          String btnText = "Buy";
+                          String btnText = S.of(context).buyDot;
                           Color color;
                           switch (enumBuySell) {
                             case EnumBuySell.buy:
-                              btnText = "Buy";
+                              btnText = S.of(context).buyDot;
                               color = color0CA564;
                               break;
                             case EnumBuySell.sell:
-                              btnText = "Sell";
+                              btnText = S.of(context).sellDot;
                               color = colorE6007A;
                               break;
                           }
@@ -237,7 +238,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                               padding:
                                   const EdgeInsets.fromLTRB(56, 15, 63, 14),
                               child: Text(
-                                '$btnText DOT',
+                                btnText,
                                 style: tsS16W600CFF,
                               ),
                             ),
@@ -281,7 +282,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     // }
 
     if (price?.isEmpty ?? true) {
-      buildAppToast(msg: "Please enter the price", context: context);
+      buildAppToast(msg: S.of(context).pleaseEnterThePrice, context: context);
       return;
     }
 
@@ -290,13 +291,12 @@ class BuyDotWidgetState extends State<BuyDotWidget>
       if (priceInDouble == null) throw Exception();
       if (priceInDouble <= 0) {
         buildAppToast(
-            msg: "Price should be greater than 0.00", context: context);
+            msg: S.of(context).priceShouldBeGreater, context: context);
         return;
       }
 
       if (priceInDouble >= _walletBalance) {
-        buildAppToast(
-            msg: "Price should be less than wallet balance", context: context);
+        buildAppToast(msg: S.of(context).priceShouldBeLess, context: context);
         return;
       }
 
@@ -304,7 +304,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         widget.onBuy!(price, amount!, total!);
       }
     } catch (ex) {
-      buildAppToast(msg: "Please enter a valid price", context: context);
+      buildAppToast(
+          msg: S.of(context).pleaseEnterAValidPrice, context: context);
       print(ex);
     }
   }
@@ -324,7 +325,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
 
     if (price?.isEmpty ?? true) {
       buildAppToast(
-        msg: "Please enter the price",
+        msg: S.of(context).pleaseEnterThePrice,
         context: context,
       );
       return;
@@ -335,13 +336,12 @@ class BuyDotWidgetState extends State<BuyDotWidget>
       if (princeInDouble == null) throw Exception();
       if (princeInDouble <= 0) {
         buildAppToast(
-            msg: "Price should be greater than 0.00", context: context);
+            msg: S.of(context).priceShouldBeGreater, context: context);
         return;
       }
 
       if (princeInDouble >= _walletBalance) {
-        buildAppToast(
-            msg: "Price should be less than wallet balance", context: context);
+        buildAppToast(msg: S.of(context).priceShouldBeLess, context: context);
         return;
       }
 
@@ -349,7 +349,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         widget.onSell(price, amount!, total!);
       }
     } catch (ex) {
-      buildAppToast(msg: "Please enter a valid price", context: context);
+      buildAppToast(
+          msg: S.of(context).pleaseEnterAValidPrice, context: context);
       print(ex);
     }
   }
@@ -363,7 +364,7 @@ class _ThisAmountWidget extends StatelessWidget {
         children: [
           Expanded(
             child: _buildTextField(
-              hintText: 'Amount',
+              hintText: S.of(context).amount,
               controller: _ThisInheritedWidget.of(context)?.amountController,
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,
@@ -429,7 +430,7 @@ class _ThisPriceWidget extends StatelessWidget {
         children: [
           Expanded(
             child: _buildTextField(
-              hintText: "Price",
+              hintText: S.of(context).price,
               controller: _ThisInheritedWidget.of(context)?.priceController,
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,
@@ -510,10 +511,10 @@ class _ThisTotalWidget extends StatelessWidget {
                         print(ex);
                       }
                       if ((totalAmount?.isEmpty ?? true) || (progress == 0.0)) {
-                        totalAmount = "Total";
+                        totalAmount = S.of(context).total;
                       }
                       return Text(
-                        totalAmount ?? "Total",
+                        totalAmount ?? S.of(context).total,
                         style: tsS16W500CFF,
                       );
                     },

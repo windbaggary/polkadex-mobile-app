@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_change_logs_screen.dart';
@@ -19,7 +20,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 /// The left drawer width
@@ -89,13 +90,13 @@ class AppDrawerWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildHeading(label: 'App Settings'),
+                        _buildHeading(label: S.of(context).appSettings),
                         ...EnumDrawerAppSettings.values
-                            .map((e) => _buildAppSettingsItem(e))
+                            .map((e) => _buildAppSettingsItem(e, context))
                             .toList(),
-                        _buildHeading(label: 'App Information'),
+                        _buildHeading(label: S.of(context).appInformation),
                         ...EnumDrawerAppInfo.values
-                            .map((e) => _buildAppInfoItem(e))
+                            .map((e) => _buildAppInfoItem(e, context))
                             .toList(),
                         SizedBox(height: 16),
                       ],
@@ -154,30 +155,30 @@ class AppDrawerWidget extends StatelessWidget {
 
   /// Builds the widget for the app setting item
   /// The method also handle onTap event
-  Widget _buildAppSettingsItem(EnumDrawerAppSettings e) {
+  Widget _buildAppSettingsItem(EnumDrawerAppSettings e, BuildContext context) {
     String svg;
     String label;
 
     switch (e) {
       case EnumDrawerAppSettings.notifications:
         svg = 'drawer_notification'.asAssetSvg();
-        label = 'Notifications';
+        label = S.of(context).notifications;
         break;
       case EnumDrawerAppSettings.appearance:
         svg = 'drawer_toggle'.asAssetSvg();
-        label = 'Appearance';
+        label = S.of(context).appearance;
         break;
       case EnumDrawerAppSettings.languageCurrency:
         svg = 'drawer_flag'.asAssetSvg();
-        label = 'Language & Currency';
+        label = S.of(context).languageAndCurrency;
         break;
       case EnumDrawerAppSettings.privacySecurtiy:
         svg = 'drawer_finger-print'.asAssetSvg();
-        label = 'Privacy & Security';
+        label = S.of(context).privacyAndSecurity;
         break;
       case EnumDrawerAppSettings.myAccount:
         svg = 'drawer_avatar'.asAssetSvg();
-        label = 'My Account';
+        label = S.of(context).myAccount;
         break;
     }
 
@@ -195,25 +196,25 @@ class AppDrawerWidget extends StatelessWidget {
 
   /// The method returns the widget of [e]
   /// The method also handle onTap event
-  Widget _buildAppInfoItem(EnumDrawerAppInfo e) {
+  Widget _buildAppInfoItem(EnumDrawerAppInfo e, BuildContext context) {
     String svg;
     String label;
 
     switch (e) {
       case EnumDrawerAppInfo.termsConditions:
-        label = 'Terms and Conditions';
+        label = S.of(context).termsAndConditions;
         svg = 'drawer_terms'.asAssetSvg();
         break;
       case EnumDrawerAppInfo.privacyPolicy:
-        label = 'Privacy Policy';
+        label = S.of(context).privacyPolicy;
         svg = 'drawer_privacy'.asAssetSvg();
         break;
       case EnumDrawerAppInfo.helpSupport:
-        label = 'Help & Support';
+        label = S.of(context).helpAndSupport;
         svg = 'drawer_chat'.asAssetSvg();
         break;
       case EnumDrawerAppInfo.changeLog:
-        label = 'Changelog';
+        label = S.of(context).changelog;
         svg = 'drawer_news'.asAssetSvg();
         break;
     }
@@ -381,7 +382,7 @@ class NotificationDrawerWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 30, bottom: 30),
               child: Text(
-                'Notifications Center',
+                S.of(context).notificationsCenter,
                 style: tsS21W600CFF,
                 textAlign: TextAlign.center,
               ),
@@ -396,7 +397,7 @@ class NotificationDrawerWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Recent',
+                            S.of(context).recent,
                             style: tsS18W500CFF,
                           ),
                         ),
@@ -448,7 +449,10 @@ class NotificationDrawerWidget extends StatelessWidget {
                     SizedBox(height: 20),
                     Opacity(
                       opacity: 0.50,
-                      child: Text('20 February, 2021', style: tsS18W500CFF),
+                      child: Text(
+                          DateFormat("dd MMMM',' yyyy")
+                              .format(DateTime(2021, 2, 20)),
+                          style: tsS18W500CFF),
                     ),
                     SizedBox(height: 11),
                     Consumer<NotificationDrawerProvider>(

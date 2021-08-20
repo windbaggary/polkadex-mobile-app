@@ -15,6 +15,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_list_animated_widget.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/utils/maps.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -456,20 +457,20 @@ class _ThisHeaderWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 22),
             child: Text(
-              "Pair",
+              S.of(context).pair,
               style: tsS13W500CFFOP40,
             ),
           ),
           Spacer(),
           Text(
-            "Price",
+            S.of(context).price,
             style: tsS13W500CFFOP40,
           ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.07),
           Padding(
             padding: const EdgeInsets.only(right: 56, left: 30),
             child: Text(
-              "Change",
+              S.of(context).change,
               style: tsS13W500CFFOP40,
             ),
           ),

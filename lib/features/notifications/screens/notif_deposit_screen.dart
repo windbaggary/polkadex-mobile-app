@@ -1,6 +1,7 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_help_screen.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -8,6 +9,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// XD_PAGE: 43
@@ -24,11 +26,11 @@ class NotifDepositScreen extends StatelessWidget {
 
     switch (screenType) {
       case EnumDepositScreenTypes.withdraw:
-        title = "Withdraw Successful";
+        title = S.of(context).withdrawSuccessful;
         titleSvg = "Withdraw".asAssetSvg();
         break;
       case EnumDepositScreenTypes.deposit:
-        title = "Deposit Successful";
+        title = S.of(context).depositSuccessful;
         titleSvg = 'Deposit'.asAssetSvg();
         break;
     }
@@ -37,7 +39,7 @@ class NotifDepositScreen extends StatelessWidget {
       body: SafeArea(
         child: CustomAppBar(
           onTapBack: () => Navigator.of(context).pop(),
-          title: 'Transaction',
+          title: S.of(context).transaction,
           child: Container(
             decoration: BoxDecoration(
               color: color1C2023,
@@ -78,7 +80,8 @@ class NotifDepositScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Feb 09, 2020 10:52:03",
+                          DateFormat("MMM dd',' yyyy Hms")
+                              .format(DateTime(2021, 2, 7, 10, 52, 3)),
                           style: tsS15W400CFFOP50,
                         ),
                       ],
@@ -104,13 +107,13 @@ class NotifDepositScreen extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: _buildLabelValue(
-                                      label: "Amount (LTC)",
+                                      label: S.of(context).amountLTC,
                                       value: "0.321 LTC",
                                     ),
                                   ),
                                   Expanded(
                                     child: _buildLabelValue(
-                                      label: "In Fiat",
+                                      label: S.of(context).inFiat,
                                       value: "\$116.57",
                                     ),
                                   ),
@@ -128,7 +131,7 @@ class NotifDepositScreen extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: _buildLabelValue(
-                                      label: "Transaction Fee",
+                                      label: S.of(context).transactionFee,
                                       value: "0.321 DEX",
                                     ),
                                   ),
@@ -138,7 +141,7 @@ class NotifDepositScreen extends StatelessWidget {
                                         CrossAxisAlignment.stretch,
                                     children: [
                                       Text(
-                                        "Status",
+                                        S.of(context).status,
                                         style: tsS15W400CFFOP50,
                                       ),
                                       SizedBox(height: 4),
@@ -163,7 +166,7 @@ class NotifDepositScreen extends StatelessWidget {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              "Completed",
+                                              S.of(context).completed,
                                               style: tsS15W400CFF,
                                             ),
                                           ),
@@ -186,12 +189,11 @@ class NotifDepositScreen extends StatelessWidget {
                                   FlutterClipboard.copy(
                                           '3P3QsMVK89JBNqZQv5zMAKG8FK3kJM4rjt')
                                       .then((value) => buildAppToast(
-                                          msg:
-                                              'The address is copied to the clipboard',
+                                          msg: S.of(context).theAddressIsCopied,
                                           context: context));
                                 },
                                 child: _buildLabelValue(
-                                  label: 'From',
+                                  label: S.of(context).from,
                                   value: '3P3QsMVK89JBNqZQv5zMAKG8FK3kJM4rjt',
                                 ),
                               ),
@@ -208,12 +210,11 @@ class NotifDepositScreen extends StatelessWidget {
                                   FlutterClipboard.copy(
                                           '3P3QsMVK89JBNqZQv5zMAKG8FK3kJM4rjt')
                                       .then((value) => buildAppToast(
-                                          msg:
-                                              'The address is copied to the clipboard',
+                                          msg: S.of(context).theAddressIsCopied,
                                           context: context));
                                 },
                                 child: _buildLabelValue(
-                                  label: 'To',
+                                  label: S.of(context).to,
                                   value: '5C4CbBT01HPPHJv4zPQKFrY04lM6ya1Grqx',
                                 ),
                               ),
@@ -230,12 +231,13 @@ class NotifDepositScreen extends StatelessWidget {
                                   FlutterClipboard.copy(
                                           'K89JBNqZQv5zMAKG8FK3kJM4CbBT01HPM6ya1GrqxG8FK3kJ')
                                       .then((value) => buildAppToast(
-                                          msg:
-                                              'The transaction id is copied to the clipboard',
+                                          msg: S
+                                              .of(context)
+                                              .theTransactionIdIsCopied,
                                           context: context));
                                 },
                                 child: _buildLabelValue(
-                                  label: 'Transaction ID',
+                                  label: S.of(context).transactionID,
                                   value:
                                       'K89JBNqZQv5zMAKG8FK3kJM4CbBT01HPM6ya1GrqxG8FK3kJ',
                                 ),
@@ -255,7 +257,7 @@ class NotifDepositScreen extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Text(
-                                      'View more details at Tokenview',
+                                      S.of(context).viewMoreDetaisAtTokenview,
                                       style: tsS15W400CFF,
                                     ),
                                     SizedBox(width: 14),
@@ -316,12 +318,12 @@ class NotifDepositScreen extends StatelessWidget {
                                         CrossAxisAlignment.stretch,
                                     children: [
                                       Text(
-                                        'Any problem with this transaction?',
+                                        S.of(context).anyProblemWithThis,
                                         style: tsS15W400CFF,
                                       ),
                                       SizedBox(height: 1),
                                       Text(
-                                        'Support Center',
+                                        S.of(context).supportCenter,
                                         style: tsS15W400CFFOP50,
                                       ),
                                     ],

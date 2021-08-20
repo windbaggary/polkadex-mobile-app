@@ -5,6 +5,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// The callback listener for the Order type item selection
 typedef OnItemSelected = void Function(int index);
@@ -43,7 +44,7 @@ class _OrderTypeDialogWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Order Types',
+                  S.of(context).orderTypes,
                   style: tsS22W600CFF,
                 ),
                 InkWell(
@@ -66,7 +67,7 @@ class _OrderTypeDialogWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 7.82),
                           child: Text(
-                            'Cancel',
+                            S.of(context).cancel,
                             style: tsS14W400CFF,
                           ),
                         ),
@@ -128,19 +129,16 @@ class _ThisOrderTypeItemWidget extends StatelessWidget {
     String description;
     switch (orderTypeModel) {
       case EnumOrderTypes.market:
-        title = "Market Order";
-        description =
-            "A market order is an order to buy or sell a stock at the market’s current best available price.";
+        title = S.of(context).marketOrder;
+        description = S.of(context).aMarketOrderIsAnOrder;
         break;
       case EnumOrderTypes.limit:
-        title = "Limit Order";
-        description =
-            "A limit order is an order to buy or sell a stock with a restriction on the maximum price to be paid or the minimum price to be received.";
+        title = S.of(context).limitOrder;
+        description = S.of(context).aLimitOrderIsAnOrder;
         break;
       case EnumOrderTypes.stop:
-        title = "Stop Order";
-        description =
-            "A stop order is an order to buy or sell a stock at the market price once the stock has traded at or through a specified price.";
+        title = S.of(context).stopOrder;
+        description = S.of(context).aStopOrderIsAnOrder;
         break;
     }
 
@@ -194,7 +192,7 @@ void showOrderTypeDialog({
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
-    barrierLabel: 'Barrier',
+    barrierLabel: S.of(context).barrier,
     transitionDuration: AppConfigs.animDurationSmall,
     transitionBuilder: (context, animation, secondaryAnimation, child) =>
         SlideTransition(
@@ -241,7 +239,7 @@ class _PriceLengthDialogWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Pricing Length',
+                  S.of(context).pricingLength,
                   style: tsS22W600CFF,
                 ),
                 InkWell(
@@ -264,7 +262,7 @@ class _PriceLengthDialogWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 7.82),
                           child: Text(
-                            'Cancel',
+                            S.of(context).cancel,
                             style: tsS14W400CFF,
                           ),
                         ),
@@ -345,7 +343,7 @@ class _ThisPriceLengthWidget extends StatelessWidget {
                 style: tsS14W400CFF.copyWith(color: textColor),
                 children: <TextSpan>[
                   TextSpan(
-                    text: 'See the token price like: ',
+                    text: '${S.of(context).seeTheTokenPriceLike} ',
                     style: TextStyle(
                       fontFamily: 'WorkSans',
                     ),
@@ -389,7 +387,7 @@ void showPriceLengthDialog({
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
-    barrierLabel: 'Barrier',
+    barrierLabel: S.of(context).barrier,
     transitionDuration: AppConfigs.animDurationSmall,
     transitionBuilder: (context, animation, secondaryAnimation, child) =>
         SlideTransition(

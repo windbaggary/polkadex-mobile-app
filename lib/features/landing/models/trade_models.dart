@@ -1,15 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 abstract class ITradeOpenOrderModel {
-  String get iType;
   EnumBuySell get iEnumType;
   EnumOrderTypes get iEnumOrderType;
   String get iAmount;
   String get iPrice;
   String get iFormattedDate;
-  String get iOrderTypeName;
   String get iTokenPairName;
+  String iType(BuildContext context);
+  String iOrderTypeName(BuildContext context);
 }
 
 class TradeOpenOrderModel implements ITradeOpenOrderModel {
@@ -45,12 +47,12 @@ class TradeOpenOrderModel implements ITradeOpenOrderModel {
   String get iPrice => "$price $priceCoin";
 
   @override
-  String get iType {
+  String iType(BuildContext context) {
     switch (type) {
       case EnumBuySell.buy:
-        return "Buy";
+        return S.of(context).buy;
       case EnumBuySell.sell:
-        return "Sell";
+        return S.of(context).sell;
     }
   }
 
@@ -58,14 +60,14 @@ class TradeOpenOrderModel implements ITradeOpenOrderModel {
   EnumBuySell get iEnumType => type;
 
   @override
-  String get iOrderTypeName {
+  String iOrderTypeName(BuildContext context) {
     switch (orderType) {
       case EnumOrderTypes.market:
-        return "Market";
+        return S.of(context).market;
       case EnumOrderTypes.limit:
-        return "Limit";
+        return S.of(context).limit;
       case EnumOrderTypes.stop:
-        return "Stop";
+        return S.of(context).stop;
     }
   }
 

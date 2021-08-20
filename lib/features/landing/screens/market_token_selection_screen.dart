@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
@@ -10,6 +9,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 /// The width of the shrink widget for token and pairs
@@ -83,7 +83,7 @@ class _MarketTokenSelectionScreenState extends State<MarketTokenSelectionScreen>
           ),
           body: SafeArea(
             child: CustomAppBar(
-              title: 'Markets',
+              title: S.of(context).market,
               // animationController: _entryAnimationController,
               onTapBack: () => _onBack(context),
               child: Container(
@@ -224,7 +224,7 @@ class _ThisPairLayoutWidget extends AnimatedWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  'Pair',
+                  S.of(context).pair,
                   style: tsS18W600CFF,
                 ),
               ),
@@ -294,7 +294,7 @@ class _ThisTokenLayoutWidget extends AnimatedWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Token',
+                    S.of(context).token,
                     style: tsS18W600CFF,
                   ),
                 ),
@@ -591,7 +591,7 @@ class _ThisSearchBarWidget extends StatelessWidget {
             decoration: InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.zero,
-              hintText: 'Search name or ticket',
+              hintText: S.of(context).searchNameOrTicket,
               hintStyle: tsS14W400CFF.copyWith(color: colorABB2BC),
               border: InputBorder.none,
               errorBorder: InputBorder.none,

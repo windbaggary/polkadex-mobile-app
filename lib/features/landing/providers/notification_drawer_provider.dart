@@ -3,12 +3,69 @@ import 'package:intl/intl.dart';
 import 'package:polkadex/features/landing/models/drawer_notification_model.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/generated/l10n.dart';
 
 /// The provider to list the notifications on the right drawer and handles
 /// its seen functionality
 class NotificationDrawerProvider extends ChangeNotifier {
-  final List<DrawerNotificationModel> _list = _dummyList;
-  List<DrawerNotificationModel> get recentList => _list
+  NotificationDrawerProvider(this.context)
+      : _dummyList = <DrawerNotificationModel>[
+          DrawerNotificationModel(
+            dateTime: DateTime.now(),
+            enumType: EnumDrawerNotificationTypes.transactionDeposit,
+            svgAsset: 'Deposit'.asAssetSvg(),
+            title: S.of(context).depositSuccessful,
+            description: S.of(context).youHaveDeposited(
+                DateFormat("MMM dd',' yyyy Hms")
+                    .format(DateTime(2021, 2, 7, 10, 52, 3))
+                    .toString()),
+          ),
+          DrawerNotificationModel(
+            dateTime: DateTime.now(),
+            enumType: EnumDrawerNotificationTypes.transactionWithdraw,
+            svgAsset: 'Withdraw'.asAssetSvg(),
+            title: S.of(context).withdrawSuccessful,
+            description: S.of(context).youHaveWithdraw(
+                DateFormat("MMM dd',' yyyy Hms")
+                    .format(DateTime(2021, 2, 7, 12, 19, 22))
+                    .toString()),
+          ),
+          DrawerNotificationModel(
+            dateTime: DateTime.now().add(const Duration(days: -2)),
+            enumType: EnumDrawerNotificationTypes.normal,
+            svgAsset: 'smiling-face-with-smile-eyes'.asAssetSvg(),
+            title: S.of(context).earnWithUpcomingDeFi,
+            description: S.of(context).polkadexSystemMessage,
+            isSeen: true,
+          ),
+          DrawerNotificationModel(
+            dateTime: DateTime.now().add(const Duration(days: -2)),
+            enumType: EnumDrawerNotificationTypes.normal,
+            svgAsset: 'buy'.asAssetSvg(),
+            title: S.of(context).dexBtcFilledSuccessful,
+            description: S.of(context).youHaveBought(
+                DateFormat("MMM dd',' yyyy Hms")
+                    .format(DateTime(2021, 2, 7, 10, 52, 3))
+                    .toString()),
+            isSeen: true,
+          ),
+          DrawerNotificationModel(
+            dateTime: DateTime.now().add(const Duration(days: -2)),
+            enumType: EnumDrawerNotificationTypes.normal,
+            svgAsset: 'sell'.asAssetSvg(),
+            title: S.of(context).dexBtcFilledSuccessful,
+            description: S.of(context).youHaveSold(
+                DateFormat("MMM dd',' yyyy Hms")
+                    .format(DateTime(2021, 2, 7, 10, 52, 3))
+                    .toString()),
+            isSeen: true,
+          ),
+        ];
+
+  final BuildContext context;
+  final List<DrawerNotificationModel> _dummyList;
+
+  List<DrawerNotificationModel> get recentList => _dummyList
       .where((e) =>
           DateFormat.yMd().format(e.dateTime) ==
           DateFormat.yMd().format(DateTime.now()))
@@ -17,7 +74,7 @@ class NotificationDrawerProvider extends ChangeNotifier {
   String get oldDate => DateFormat("dd MMMM, yyyy")
       .format(DateTime.now().add(const Duration(days: -2)));
 
-  List<DrawerNotificationModel> get oldList => _list
+  List<DrawerNotificationModel> get oldList => _dummyList
       .where((e) =>
           DateFormat.yMd().format(e.dateTime) !=
           DateFormat.yMd().format(DateTime.now()))
@@ -26,51 +83,9 @@ class NotificationDrawerProvider extends ChangeNotifier {
   /// Call this method to set the [isSeen] to true for all list items
   /// and notify
   void seenAll() {
-    for (var model in _list) {
+    for (var model in _dummyList) {
       model.isSeen = true;
     }
     notifyListeners();
   }
 }
-
-List<DrawerNotificationModel> _dummyList = <DrawerNotificationModel>[
-  DrawerNotificationModel(
-    dateTime: DateTime.now(),
-    enumType: EnumDrawerNotificationTypes.transactionDeposit,
-    svgAsset: 'Deposit'.asAssetSvg(),
-    title: 'Deposit Successful',
-    description: 'You have deposited 0.60000000 LTC at Fev 09, 2020 10:52:03',
-  ),
-  DrawerNotificationModel(
-    dateTime: DateTime.now(),
-    enumType: EnumDrawerNotificationTypes.transactionWithdraw,
-    svgAsset: 'Withdraw'.asAssetSvg(),
-    title: 'Withdraw Successful',
-    description: 'You have withdraw 1.60000000 LTC at Fev 09, 2020 12:19:22',
-  ),
-  DrawerNotificationModel(
-    dateTime: DateTime.now().add(const Duration(days: -2)),
-    enumType: EnumDrawerNotificationTypes.normal,
-    svgAsset: 'smiling-face-with-smile-eyes'.asAssetSvg(),
-    title: 'Earn with upcoming DeFi airdrops',
-    description: 'Polkadex system message',
-    isSeen: true,
-  ),
-  DrawerNotificationModel(
-    dateTime: DateTime.now().add(const Duration(days: -2)),
-    enumType: EnumDrawerNotificationTypes.normal,
-    svgAsset: 'buy'.asAssetSvg(),
-    title: 'DEX/BTC Filled Successful',
-    description: 'You bought 1 DEX for 0.000545 BTC at Fev 09, 2020 10:52:03',
-    isSeen: true,
-  ),
-  DrawerNotificationModel(
-    dateTime: DateTime.now().add(const Duration(days: -2)),
-    enumType: EnumDrawerNotificationTypes.normal,
-    svgAsset: 'sell'.asAssetSvg(),
-    title: 'BTC/DEX Filled Successful',
-    description:
-        'You have sold 0.0004124 BTC for 1 DEX at Fev 09, 2020 10:52:03',
-    isSeen: true,
-  ),
-];

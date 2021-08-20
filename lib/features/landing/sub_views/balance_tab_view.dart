@@ -11,6 +11,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 18
@@ -168,7 +169,11 @@ class _BalanceTabViewState extends State<BalanceTabView>
                           child: SizedBox(
                             height: 35,
                             child: DropdownButton<String>(
-                              items: ['Main Wallet', 'Spot', 'Margin']
+                              items: [
+                                S.of(context).mainWallet,
+                                S.of(context).spot,
+                                S.of(context).margin
+                              ]
                                   .map((e) => DropdownMenuItem<String>(
                                         child: Text(
                                           e,
@@ -177,7 +182,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                         value: e,
                                       ))
                                   .toList(),
-                              value: 'Main Wallet',
+                              value: S.of(context).mainWallet,
                               style: tsS20W600CFF,
                               underline: Container(),
                               onChanged: (value) {},
@@ -212,7 +217,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               ),
                               SizedBox(width: 8),
                               Text(
-                                'Hide small balances',
+                                S.of(context).hideSmallBalances,
                                 style: tsS14W400CFF,
                               ),
                               Spacer(),
@@ -304,13 +309,17 @@ class _ThisHoldingWidget extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Holding: ',
+            '${S.of(context).holding}: ',
             style: tsS13W500CFF.copyWith(
               color: colorABB2BC,
             ),
           ),
           DropdownButton<String>(
-            items: ['24 hour', '1 week', '1 month']
+            items: [
+              S.of(context).hour24,
+              S.of(context).week1,
+              S.of(context).month1
+            ]
                 .map((e) => DropdownMenuItem<String>(
                       child: Text(
                         e,
@@ -319,7 +328,7 @@ class _ThisHoldingWidget extends StatelessWidget {
                       value: e,
                     ))
                 .toList(),
-            value: '24 hour',
+            value: S.of(context).hour24,
             style: tsS13W500CFF,
             underline: Container(),
             onChanged: (value) {},
@@ -336,7 +345,7 @@ class _ThisHoldingWidget extends StatelessWidget {
           // ),
           Spacer(),
           Text(
-            'Change ',
+            '${S.of(context).change} ',
             style: tsS13W500CFF.copyWith(
               color: colorABB2BC,
             ),
@@ -428,7 +437,7 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Summary",
+            S.of(context).summary,
             style: tsS20W500CFF,
           ),
           SizedBox(height: 20),
@@ -472,7 +481,9 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
                         Expanded(
                             flex: 5,
                             child: _buildItemWidget(
-                                imgAsset: null, title: 'Others', value: "8%")),
+                                imgAsset: null,
+                                title: S.of(context).others,
+                                value: "8%")),
                         Spacer(),
                       ],
                     ),
@@ -589,7 +600,7 @@ class _ThisTopBalanceWidget extends StatelessWidget {
           ),
         ),
         Text(
-          'Total Balance',
+          S.of(context).totalBalance,
           style: tsS15W400CFF.copyWith(color: colorABB2BC),
           textAlign: TextAlign.center,
         ),
@@ -700,7 +711,6 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         break;
                       case EnumBalanceChartDataTypes.threeMonth:
                         text = "3m";
-
                         break;
                       case EnumBalanceChartDataTypes.sixMonth:
                         text = "6m";
@@ -709,7 +719,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         text = "1y";
                         break;
                       case EnumBalanceChartDataTypes.all:
-                        text = "All";
+                        text = S.of(context).all;
                         break;
                     }
                     return InkWell(

@@ -21,26 +21,60 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(number) => "DOT Chain ${number}";
 
+  static String m1(volume) => "Vol ${volume} BTC";
+
+  static String m2(dateTime) =>
+      "You bought 1 DEX for 0.000545 BTC at ${dateTime}";
+
+  static String m3(dateTime) =>
+      "You have deposited 0.60000000 LTC at ${dateTime}";
+
+  static String m4(dateTime) =>
+      "You have sold 0.0004124 BTC for 1 DEX at ${dateTime}";
+
+  static String m5(dateTime) =>
+      "You have withdraw 1.60000000 LTC at ${dateTime}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aFullyDecentralized": MessageLookupByLibrary.simpleMessage(
             "A fully decentralized, peer-peer, orderbook based cryptocurrency exchange"),
+        "aLimitOrderIsAnOrder": MessageLookupByLibrary.simpleMessage(
+            "A limit order is an order to buy or sell a stock with a restriction on the maximum price to be paid or the minimum price to be received."),
+        "aMarketOrderIsAnOrder": MessageLookupByLibrary.simpleMessage(
+            "A market order is an order to buy or sell a stock at the market’s current best available price."),
+        "aStopOrderIsAnOrder": MessageLookupByLibrary.simpleMessage(
+            "A stop order is an order to buy or sell a stock at the market price once the stock has traded at or through a specified price."),
         "accountName": MessageLookupByLibrary.simpleMessage("Account Name"),
         "address": MessageLookupByLibrary.simpleMessage("Address"),
         "all": MessageLookupByLibrary.simpleMessage("All"),
+        "allMarkets": MessageLookupByLibrary.simpleMessage("All Markets"),
+        "amount": MessageLookupByLibrary.simpleMessage("Amount"),
+        "amountLTC": MessageLookupByLibrary.simpleMessage("Amount (LTC)"),
+        "anyProblemWithThis": MessageLookupByLibrary.simpleMessage(
+            "Any problem with this transaction?"),
+        "appInformation":
+            MessageLookupByLibrary.simpleMessage("App Information"),
         "appSettings": MessageLookupByLibrary.simpleMessage("App Settings"),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
         "attentionSendingToken": MessageLookupByLibrary.simpleMessage(
             "Attention: Sending token other than DEX to this address may result in the loss of your deposit."),
         "available": MessageLookupByLibrary.simpleMessage("Available"),
+        "barrier": MessageLookupByLibrary.simpleMessage("Barrier"),
         "blockAccess": MessageLookupByLibrary.simpleMessage(
             "Block access to suspicious IPs."),
+        "btcMarket": MessageLookupByLibrary.simpleMessage("BTC Market"),
+        "buy": MessageLookupByLibrary.simpleMessage("Buy"),
+        "buyDot": MessageLookupByLibrary.simpleMessage("Buy DOT"),
         "byContinuingIAllow": MessageLookupByLibrary.simpleMessage(
             "By continuing, I allow Polkadex App to collect data on how I use the app, which will be used to improve the Polkadex App. For more details. refer to our "),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "chain": MessageLookupByLibrary.simpleMessage("Chain"),
+        "change": MessageLookupByLibrary.simpleMessage("Change"),
         "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
         "commonQuestionsAnd": MessageLookupByLibrary.simpleMessage(
             "Common questions and support docs"),
+        "completed": MessageLookupByLibrary.simpleMessage("Completed"),
         "contact": MessageLookupByLibrary.simpleMessage("Contact"),
         "currency": MessageLookupByLibrary.simpleMessage("Currency"),
         "currentTradingFee":
@@ -49,9 +83,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "deposit": MessageLookupByLibrary.simpleMessage("Deposit"),
         "depositPolkadex":
             MessageLookupByLibrary.simpleMessage("Deposit Polkadex (DEX)"),
+        "depositSuccessful":
+            MessageLookupByLibrary.simpleMessage("Deposit Successful"),
         "deviceID": MessageLookupByLibrary.simpleMessage("Device ID"),
+        "dexBtcFilledSuccessful":
+            MessageLookupByLibrary.simpleMessage("DEX/BTC Filled Successful"),
         "disclaimer": MessageLookupByLibrary.simpleMessage("Disclaimer"),
         "dotChain": m0,
+        "earnWithUpcomingDeFi": MessageLookupByLibrary.simpleMessage(
+            "Earn with upcoming DeFi airdrops"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "enjoy25DiscountWhen": MessageLookupByLibrary.simpleMessage(
             "Enjoy 25% discount when trading."),
@@ -59,9 +99,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterAmount": MessageLookupByLibrary.simpleMessage("Enter Amount"),
         "enterDexAddress":
             MessageLookupByLibrary.simpleMessage("Enter Dex address"),
+        "event": MessageLookupByLibrary.simpleMessage("EVENT"),
         "filledOrder": MessageLookupByLibrary.simpleMessage("Filled Order"),
         "frequentlyAsked":
             MessageLookupByLibrary.simpleMessage("Frequently Asked Questions"),
+        "from": MessageLookupByLibrary.simpleMessage("From"),
+        "gainers": MessageLookupByLibrary.simpleMessage("Gainers"),
         "generateWallet":
             MessageLookupByLibrary.simpleMessage("Generate Wallet"),
         "getInTouch":
@@ -72,10 +115,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Help & Support"),
         "helpMakePolkadex":
             MessageLookupByLibrary.simpleMessage("Help make Polkadex Better"),
+        "hideSmallBalances":
+            MessageLookupByLibrary.simpleMessage("Hide small balances"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
+        "holding": MessageLookupByLibrary.simpleMessage("Holding"),
+        "hour24": MessageLookupByLibrary.simpleMessage("24 hour"),
         "ifYouFindAnyLink": MessageLookupByLibrary.simpleMessage(
             "If you find any link on our Website that is offensive for any reason, you are free to contact and inform us any moment. We will consider requests to remove links but we are not obligated to or so or to respond to you directly.\n\nWe do not ensure that the information on this website is correct, we do not warrant its completeness or accuracy; nor do we promise to ensure that the website remains available or that the material on the website is kept up to date."),
         "importWallet": MessageLookupByLibrary.simpleMessage("Import Wallet"),
+        "inFiat": MessageLookupByLibrary.simpleMessage("In Fiat"),
         "interface": MessageLookupByLibrary.simpleMessage("Interface"),
         "languageAndCurrency":
             MessageLookupByLibrary.simpleMessage("Language & Currency"),
@@ -83,11 +131,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "leaveUsFeedback":
             MessageLookupByLibrary.simpleMessage("Leave us feedback"),
         "license": MessageLookupByLibrary.simpleMessage("License"),
+        "limit": MessageLookupByLibrary.simpleMessage("Limit"),
+        "limitOrder": MessageLookupByLibrary.simpleMessage("Limit Order"),
+        "losers": MessageLookupByLibrary.simpleMessage("Losers"),
+        "ltcMarket": MessageLookupByLibrary.simpleMessage("LTC Market"),
+        "mainWallet": MessageLookupByLibrary.simpleMessage("Main Wallet"),
+        "margin": MessageLookupByLibrary.simpleMessage("Margin"),
+        "market": MessageLookupByLibrary.simpleMessage("Market"),
+        "marketOrder": MessageLookupByLibrary.simpleMessage("Market Order"),
         "marketPrice": MessageLookupByLibrary.simpleMessage("Market Price"),
+        "markets": MessageLookupByLibrary.simpleMessage("Markets"),
+        "month1": MessageLookupByLibrary.simpleMessage("1 month"),
+        "myAccount": MessageLookupByLibrary.simpleMessage("My Account"),
         "network": MessageLookupByLibrary.simpleMessage("Network"),
+        "notificationDetails":
+            MessageLookupByLibrary.simpleMessage("Notifications Details"),
         "notificationSettings":
             MessageLookupByLibrary.simpleMessage("Notification Settings"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "notificationsCenter":
+            MessageLookupByLibrary.simpleMessage("Notifications Center"),
         "notifyWhenAFunds": MessageLookupByLibrary.simpleMessage(
             "Notify when a funds are received."),
         "notifyWhenAWithdrawal": MessageLookupByLibrary.simpleMessage(
@@ -95,8 +158,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "notifyWhenAnOrder": MessageLookupByLibrary.simpleMessage(
             "Notify when an order is filled."),
         "online": MessageLookupByLibrary.simpleMessage("Online"),
+        "openOrders": MessageLookupByLibrary.simpleMessage("Open Orders"),
         "optimize": MessageLookupByLibrary.simpleMessage("Optimize"),
+        "orderTypes": MessageLookupByLibrary.simpleMessage("Order Types"),
+        "ordersHistory": MessageLookupByLibrary.simpleMessage("Orders History"),
+        "others": MessageLookupByLibrary.simpleMessage("Others"),
+        "pair": MessageLookupByLibrary.simpleMessage("Pair"),
+        "participateInLuckyDraw": MessageLookupByLibrary.simpleMessage(
+            "Participate in lucky draw and share 160 USDT prize poll!"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
+        "pleaseEnterAValidPrice":
+            MessageLookupByLibrary.simpleMessage("Please enter a valid price"),
+        "pleaseEnterThePrice":
+            MessageLookupByLibrary.simpleMessage("Please enter the price"),
         "polkadexDexAddress":
             MessageLookupByLibrary.simpleMessage("Polkadex DEX Address"),
         "polkadexIfYouUninstall": MessageLookupByLibrary.simpleMessage(
@@ -109,11 +183,22 @@ class MessageLookup extends MessageLookupByLibrary {
             "Polkadex does not store any data , by security, Polkadex only enable withdrawals by confirmation via Two-Factor Authentication (2FA)."),
         "polkadexStatus":
             MessageLookupByLibrary.simpleMessage("Polkadex Status"),
+        "polkadexSystemMessage":
+            MessageLookupByLibrary.simpleMessage("Polkadex system message"),
         "price": MessageLookupByLibrary.simpleMessage("Price"),
+        "priceShouldBeGreater": MessageLookupByLibrary.simpleMessage(
+            "Price should be greater than 0.00"),
+        "priceShouldBeLess": MessageLookupByLibrary.simpleMessage(
+            "Price should be less than wallet balance"),
+        "pricingLength": MessageLookupByLibrary.simpleMessage("Pricing Length"),
         "privacyAndSecurity":
             MessageLookupByLibrary.simpleMessage("Privacy & Security"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "purchaseAddedToOpen": MessageLookupByLibrary.simpleMessage(
+            "Purchase added to open orders"),
         "push": MessageLookupByLibrary.simpleMessage("Push"),
+        "rankingList": MessageLookupByLibrary.simpleMessage("Ranking List"),
+        "recent": MessageLookupByLibrary.simpleMessage("Recent"),
         "referral": MessageLookupByLibrary.simpleMessage("Referral"),
         "removalOfLinksFrom": MessageLookupByLibrary.simpleMessage(
             "Removal of links from our website"),
@@ -121,20 +206,31 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reservation of Rights"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "scanOrShare": MessageLookupByLibrary.simpleMessage("Scan or share"),
+        "searchNameOrTicket":
+            MessageLookupByLibrary.simpleMessage("Search name or ticket"),
         "secureWithFingerPrint":
             MessageLookupByLibrary.simpleMessage("Secure with FingerPrint"),
         "secureWithPinCode":
             MessageLookupByLibrary.simpleMessage("Secure with Pin Code"),
         "secureYourAccessWithout": MessageLookupByLibrary.simpleMessage(
             "Secure your access without typing your Pin Code."),
+        "seeTheTokenPriceLike":
+            MessageLookupByLibrary.simpleMessage("See the token price like:"),
+        "sell": MessageLookupByLibrary.simpleMessage("Sell"),
+        "sellDot": MessageLookupByLibrary.simpleMessage("Sell DOT"),
         "share": MessageLookupByLibrary.simpleMessage("share"),
         "slideToWithdraw":
             MessageLookupByLibrary.simpleMessage("Slide to withdraw"),
         "someMajorUpdates":
             MessageLookupByLibrary.simpleMessage("Some major updates"),
+        "spot": MessageLookupByLibrary.simpleMessage("Spot"),
         "startTour": MessageLookupByLibrary.simpleMessage("Start Tour"),
+        "status": MessageLookupByLibrary.simpleMessage("Status"),
+        "stop": MessageLookupByLibrary.simpleMessage("Stop"),
+        "stopOrder": MessageLookupByLibrary.simpleMessage("Stop Order"),
         "styleSettings": MessageLookupByLibrary.simpleMessage("Style Settings"),
         "summary": MessageLookupByLibrary.simpleMessage("Summary"),
+        "supportCenter": MessageLookupByLibrary.simpleMessage("Support Center"),
         "tap": MessageLookupByLibrary.simpleMessage("Tap"),
         "termsAndConditions":
             MessageLookupByLibrary.simpleMessage("Terms and Conditions"),
@@ -146,6 +242,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "The limitations and prohibitions of liability set in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer, including liabilities arising in contract, in tort and for breach of statutory duty.\n\nTo the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website. Nothing in this disclaimer will:"),
         "theReferralId": MessageLookupByLibrary.simpleMessage(
             "The referral id is copied to the clipboard"),
+        "theTransactionIdIsCopied": MessageLookupByLibrary.simpleMessage(
+            "The transaction id is copied to the clipboard"),
         "theUserInterface": MessageLookupByLibrary.simpleMessage(
             "the user interface of balance"),
         "thereAreNoTransactions":
@@ -153,14 +251,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "theseTermsAndConditionsOutline": MessageLookupByLibrary.simpleMessage(
             "These terms and conditions outline the rules and regulations for the use of Polkadex’s Website, located at https:://polkadex.trade.\n\nBy accessing this website we assume you accept these terms and conditions. Do not continue to use Polkadex.trade if you do not agree to take all of the terms and conditions stated on this page.\n\nThe following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: “Client”, “You” and “Your” refers to you, the person log on this website and compliant to the Company’s terms and conditions. “The Company”, “Ourselves”, “We”, “Our” and “Us”, refers to our Company. “Party”, “Parties”, or “Us”, refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client’s needs in respect of provision of the Company’s stated services, in accordance with and subject to, prevailing law of Netherlands. Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same."),
         "timezone": MessageLookupByLibrary.simpleMessage("Timezone"),
+        "to": MessageLookupByLibrary.simpleMessage("To"),
         "toCopy": MessageLookupByLibrary.simpleMessage("to copy"),
         "today": MessageLookupByLibrary.simpleMessage("Today"),
+        "token": MessageLookupByLibrary.simpleMessage("Token"),
         "tokens": MessageLookupByLibrary.simpleMessage("Tokens"),
+        "topsPairs": MessageLookupByLibrary.simpleMessage("Tops Pairs"),
+        "total": MessageLookupByLibrary.simpleMessage("Total"),
+        "totalBalance": MessageLookupByLibrary.simpleMessage("Total Balance"),
         "trackingIp": MessageLookupByLibrary.simpleMessage("Tracking IP"),
         "trade": MessageLookupByLibrary.simpleMessage("Trade"),
         "tradePairs": MessageLookupByLibrary.simpleMessage("Trade Pairs"),
+        "transaction": MessageLookupByLibrary.simpleMessage("Transaction"),
+        "transactionFee":
+            MessageLookupByLibrary.simpleMessage("Transaction Fee"),
+        "transactionID": MessageLookupByLibrary.simpleMessage("Transaction ID"),
         "twoFactorAuth": MessageLookupByLibrary.simpleMessage(
             "Two-Factor Authentication (2FA)"),
+        "type": MessageLookupByLibrary.simpleMessage("Type"),
         "unlessOtherwiseStatedPolkadex": MessageLookupByLibrary.simpleMessage(
             "Unless otherwise stated, Polkadex and/or its licensors own the intellectual property rights for all material on Polkadex.trade. All intellectual property rights are reserved. You may access this from Polkadex.trade for your own personal use subjected to restrictions set in these terms and conditions.\n\nThis Agreement shall begin on the date hereof. Our Terms and Conditions were created with the help of the Terms And Conditions Generator and the Privacy Policy Generator.\n\nParts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. Polkadex does not filter, edit, publish or review Comments prior to their presence on the website. Comments do not reflect the views and opinions of Polkadex,its agents and/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. To the extent permitted by applicable laws, Polkadex shall not be liable for the Comments or for any liability, damages or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this website.\n\nPolkadex reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions."),
         "useDEXtoPayFees":
@@ -171,21 +279,34 @@ class MessageLookup extends MessageLookupByLibrary {
             "Use the Google Authentication or Authy app to generate one time security codes."),
         "version": MessageLookupByLibrary.simpleMessage("Version"),
         "versionUpdate": MessageLookupByLibrary.simpleMessage("Version Update"),
+        "viewMoreDetaisAtTokenview": MessageLookupByLibrary.simpleMessage(
+            "View more details at Tokenview"),
+        "vol": MessageLookupByLibrary.simpleMessage("Vol"),
+        "volBTC": m1,
         "weAdded": MessageLookupByLibrary.simpleMessage("We added"),
         "weFixed": MessageLookupByLibrary.simpleMessage("We Fixed"),
         "weReserveTheRightTo": MessageLookupByLibrary.simpleMessage(
             "We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amen these terms and conditions and it’s linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions."),
         "weSpendALot": MessageLookupByLibrary.simpleMessage(
             "We spend a lot of time working on big features. This time we set time aside to tackle small changes as we cleaning, shining and polishing Polkadex:"),
+        "week1": MessageLookupByLibrary.simpleMessage("1 week"),
         "welcomeToPolkadexTrade":
             MessageLookupByLibrary.simpleMessage("Welcome to Polkadex.trade!"),
         "whatsNew":
             MessageLookupByLibrary.simpleMessage("What’s new in Polkadex"),
+        "whileDeFiIsInItsVery": MessageLookupByLibrary.simpleMessage(
+            "While DeFi is in its very early days, there are a number of ways in which investors can earn passive income. The entire reason for the existence of such platforms and products is to deliver liquidity to the DeFi space through incentivization."),
         "withdraw": MessageLookupByLibrary.simpleMessage("Withdraw"),
         "withdrawFee": MessageLookupByLibrary.simpleMessage("Withdraw Fee"),
         "withdrawPolkadex":
             MessageLookupByLibrary.simpleMessage("Withdraw Polkadex (DEX)"),
+        "withdrawSuccessful":
+            MessageLookupByLibrary.simpleMessage("Withdraw Successful"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
+        "youHaveBought": m2,
+        "youHaveDeposited": m3,
+        "youHaveSold": m4,
+        "youHaveWithdraw": m5,
         "yourAccessAreKept": MessageLookupByLibrary.simpleMessage(
             "Your access are kept safe by Pin Code."),
         "yourDexAddres":

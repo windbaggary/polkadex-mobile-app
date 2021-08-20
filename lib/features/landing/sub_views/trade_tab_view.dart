@@ -15,6 +15,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 /// The tab view of trade for Homescreen
@@ -187,10 +188,10 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                         indicatorSize: TabBarIndicatorSize.tab,
                         tabs: <Tab>[
                           Tab(
-                            text: 'Buy DOT',
+                            text: S.of(context).buyDot,
                           ),
                           Tab(
-                            text: 'Sell DOT',
+                            text: S.of(context).sellDot,
                           ),
                         ],
                         controller: _ThisInheritedWidget.of(context)
@@ -208,7 +209,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                         child: ValueListenableBuilder<EnumOrderTypes>(
                           valueListenable: _orderTypeSelNotifier,
                           builder: (context, type, _) => Text(
-                            _getOrderTypeName(type),
+                            _getOrderTypeName(type, context),
                             style: tsS15W600CFF,
                           ),
                         ),
@@ -421,14 +422,14 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
   }
 
   /// Returns the order type string from the [type]
-  String _getOrderTypeName(EnumOrderTypes type) {
+  String _getOrderTypeName(EnumOrderTypes type, BuildContext context) {
     switch (type) {
       case EnumOrderTypes.market:
-        return "Market Order";
+        return S.of(context).marketOrder;
       case EnumOrderTypes.limit:
-        return "Limit Order";
+        return S.of(context).limitOrder;
       case EnumOrderTypes.stop:
-        return "Stop Order";
+        return S.of(context).stopOrder;
     }
   }
 
@@ -550,7 +551,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                 margin: const EdgeInsets.only(right: 9),
                 child: Text(
-                  'Limit',
+                  S.of(context).limit,
                   style: tsS16W500CFF,
                 ),
               ),
@@ -596,7 +597,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Type',
+                          S.of(context).type,
                           style: tsS14W400CFF.copyWith(color: colorABB2BC),
                         ),
                         Container(
@@ -608,7 +609,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 4, vertical: 2),
                           child: Text(
-                            iModel.iType,
+                            iModel.iType(context),
                             style: tsS16W500CFF.copyWith(
                               color: colorBuySell,
                             ),
@@ -622,7 +623,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Amount',
+                          S.of(context).amount,
                           style: tsS14W400CFF.copyWith(color: colorABB2BC),
                         ),
                         SizedBox(height: 4),
@@ -637,7 +638,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Price',
+                        S.of(context).price,
                         style: tsS14W400CFF.copyWith(color: colorABB2BC),
                       ),
                       Text(
