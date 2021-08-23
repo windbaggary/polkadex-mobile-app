@@ -2639,6 +2639,16 @@ class S {
       args: [coin],
     );
   }
+
+  /// `USD`
+  String get usd {
+    return Intl.message(
+      'USD',
+      name: 'usd',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

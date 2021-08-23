@@ -258,5 +258,6 @@
   "latestTransaction": "Latest transaction",
   "orderBook": "Order Book",
   "deepMarket": "Deep Market",
-  "priceCoin": "Price ({coin})"
+  "priceCoin": "Price ({coin})",
+  "usd": "USD"
 }

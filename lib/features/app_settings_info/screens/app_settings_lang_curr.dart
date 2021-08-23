@@ -54,7 +54,7 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
               _ThisItemWidget(
                 svgAsset: 'currency'.asAssetSvg(),
                 title: S.of(context).currency,
-                description: 'USD',
+                description: S.of(context).usd,
               ),
             ],
           ),
