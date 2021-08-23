@@ -113,8 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "date": MessageLookupByLibrary.simpleMessage("date"),
         "deepMarket": MessageLookupByLibrary.simpleMessage("Deep Market"),
         "deposit": MessageLookupByLibrary.simpleMessage("Deposit"),
-        "depositPolkadex":
-            MessageLookupByLibrary.simpleMessage("Deposit Polkadex (DEX)"),
+        "depositPolkadex": MessageLookupByLibrary.simpleMessage("Deposit PDEX"),
         "depositSuccessful":
             MessageLookupByLibrary.simpleMessage("Deposit Successful"),
         "deviceID": MessageLookupByLibrary.simpleMessage("Device ID"),
@@ -404,7 +403,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "withdraw": MessageLookupByLibrary.simpleMessage("Withdraw"),
         "withdrawFee": MessageLookupByLibrary.simpleMessage("Withdraw Fee"),
         "withdrawPolkadex":
-            MessageLookupByLibrary.simpleMessage("Withdraw Polkadex (DEX)"),
+            MessageLookupByLibrary.simpleMessage("Withdraw PDEX"),
         "withdrawSuccessful":
             MessageLookupByLibrary.simpleMessage("Withdraw Successful"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),

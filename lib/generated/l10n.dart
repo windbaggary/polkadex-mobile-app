@@ -990,10 +990,10 @@ class S {
     );
   }
 
-  /// `Deposit Polkadex (DEX)`
+  /// `Deposit PDEX`
   String get depositPolkadex {
     return Intl.message(
-      'Deposit Polkadex (DEX)',
+      'Deposit PDEX',
       name: 'depositPolkadex',
       desc: '',
       args: [],
@@ -1110,10 +1110,10 @@ class S {
     );
   }
 
-  /// `Withdraw Polkadex (DEX)`
+  /// `Withdraw PDEX`
   String get withdrawPolkadex {
     return Intl.message(
-      'Withdraw Polkadex (DEX)',
+      'Withdraw PDEX',
       name: 'withdrawPolkadex',
       desc: '',
       args: [],
