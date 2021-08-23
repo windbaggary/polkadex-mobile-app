@@ -78,7 +78,7 @@ class _TradeTabViewState extends State<TradeTabView>
               _ThisBuySellWidget(
                 key: _keyBuySellWidget,
               ),
-              OrderBookHeadingWidget(),
+              OrderBookHeadingWidget(context),
               OrderBookWidget(
                 onOrderBookItemClicked: (model) =>
                     _onOrderBookItemClicked(model, context),

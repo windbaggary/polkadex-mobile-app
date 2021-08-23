@@ -19,20 +19,24 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(number) => "DOT Chain ${number}";
+  static String m0(coin) => "Amount (${coin})";
 
-  static String m1(volume) => "Vol ${volume} BTC";
+  static String m1(number) => "DOT Chain ${number}";
 
-  static String m2(dateTime) =>
-      "You bought 1 DEX for 0.000545 BTC at ${dateTime}";
+  static String m2(coin) => "Price (${coin})";
 
-  static String m3(dateTime) =>
-      "You have deposited 0.60000000 LTC at ${dateTime}";
+  static String m3(volume) => "Vol ${volume} BTC";
 
   static String m4(dateTime) =>
-      "You have sold 0.0004124 BTC for 1 DEX at ${dateTime}";
+      "You bought 1 DEX for 0.000545 BTC at ${dateTime}";
 
   static String m5(dateTime) =>
+      "You have deposited 0.60000000 LTC at ${dateTime}";
+
+  static String m6(dateTime) =>
+      "You have sold 0.0004124 BTC for 1 DEX at ${dateTime}";
+
+  static String m7(dateTime) =>
       "You have withdraw 1.60000000 LTC at ${dateTime}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -45,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "A market order is an order to buy or sell a stock at the market’s current best available price."),
         "aStopOrderIsAnOrder": MessageLookupByLibrary.simpleMessage(
             "A stop order is an order to buy or sell a stock at the market price once the stock has traded at or through a specified price."),
+        "aboutPolkadex": MessageLookupByLibrary.simpleMessage("About Polkadex"),
         "accountName": MessageLookupByLibrary.simpleMessage("Account Name"),
         "addAWalletByImporting": MessageLookupByLibrary.simpleMessage(
             "Add a wallet by importing recovery phase"),
@@ -52,7 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "all": MessageLookupByLibrary.simpleMessage("All"),
         "allMarkets": MessageLookupByLibrary.simpleMessage("All Markets"),
         "amount": MessageLookupByLibrary.simpleMessage("Amount"),
-        "amountLTC": MessageLookupByLibrary.simpleMessage("Amount (LTC)"),
+        "amountCoin": m0,
         "anyProblemWithThis": MessageLookupByLibrary.simpleMessage(
             "Any problem with this transaction?"),
         "appInformation":
@@ -90,6 +95,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Changing the language..."),
         "chooseALanguage":
             MessageLookupByLibrary.simpleMessage("Choose a language"),
+        "circulationSupply":
+            MessageLookupByLibrary.simpleMessage("Circulation Supply"),
+        "coinInfo": MessageLookupByLibrary.simpleMessage("Coin Info"),
         "commonQuestionsAnd": MessageLookupByLibrary.simpleMessage(
             "Common questions and support docs"),
         "completed": MessageLookupByLibrary.simpleMessage("Completed"),
@@ -103,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "currentTradingFee":
             MessageLookupByLibrary.simpleMessage("Current trading fee"),
         "date": MessageLookupByLibrary.simpleMessage("date"),
+        "deepMarket": MessageLookupByLibrary.simpleMessage("Deep Market"),
         "deposit": MessageLookupByLibrary.simpleMessage("Deposit"),
         "depositPolkadex":
             MessageLookupByLibrary.simpleMessage("Deposit Polkadex (DEX)"),
@@ -112,7 +121,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "dexBtcFilledSuccessful":
             MessageLookupByLibrary.simpleMessage("DEX/BTC Filled Successful"),
         "disclaimer": MessageLookupByLibrary.simpleMessage("Disclaimer"),
-        "dotChain": m0,
+        "discord": MessageLookupByLibrary.simpleMessage("Discord"),
+        "dotChain": m1,
         "earnWithUpcomingDeFi": MessageLookupByLibrary.simpleMessage(
             "Earn with upcoming DeFi airdrops"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
@@ -140,6 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Help make Polkadex Better"),
         "hideSmallBalances":
             MessageLookupByLibrary.simpleMessage("Hide small balances"),
+        "high": MessageLookupByLibrary.simpleMessage("HIGH"),
         "history": MessageLookupByLibrary.simpleMessage("History"),
         "holding": MessageLookupByLibrary.simpleMessage("Holding"),
         "hour24": MessageLookupByLibrary.simpleMessage("24 hour"),
@@ -158,20 +169,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "languageAndCurrency":
             MessageLookupByLibrary.simpleMessage("Language & Currency"),
         "lastUpdated": MessageLookupByLibrary.simpleMessage("Last Updated"),
+        "latestTransaction":
+            MessageLookupByLibrary.simpleMessage("Latest transaction"),
         "leaveUsFeedback":
             MessageLookupByLibrary.simpleMessage("Leave us feedback"),
         "ledgerDevice": MessageLookupByLibrary.simpleMessage("Ledger Device"),
         "license": MessageLookupByLibrary.simpleMessage("License"),
         "limit": MessageLookupByLibrary.simpleMessage("Limit"),
         "limitOrder": MessageLookupByLibrary.simpleMessage("Limit Order"),
+        "links": MessageLookupByLibrary.simpleMessage("Links"),
         "losers": MessageLookupByLibrary.simpleMessage("Losers"),
+        "low": MessageLookupByLibrary.simpleMessage("LOW"),
         "ltcMarket": MessageLookupByLibrary.simpleMessage("LTC Market"),
         "mainWallet": MessageLookupByLibrary.simpleMessage("Main Wallet"),
         "margin": MessageLookupByLibrary.simpleMessage("Margin"),
         "market": MessageLookupByLibrary.simpleMessage("Market"),
         "marketOrder": MessageLookupByLibrary.simpleMessage("Market Order"),
         "marketPrice": MessageLookupByLibrary.simpleMessage("Market Price"),
+        "marketStats": MessageLookupByLibrary.simpleMessage("market stats"),
+        "marketcap": MessageLookupByLibrary.simpleMessage("Marketcap"),
         "markets": MessageLookupByLibrary.simpleMessage("Markets"),
+        "maxSupply": MessageLookupByLibrary.simpleMessage("Max Supply"),
         "mnemonicPhrase":
             MessageLookupByLibrary.simpleMessage("Mnemonic Phrase"),
         "month1": MessageLookupByLibrary.simpleMessage("1 month"),
@@ -197,6 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "online": MessageLookupByLibrary.simpleMessage("Online"),
         "openOrders": MessageLookupByLibrary.simpleMessage("Open Orders"),
         "optimize": MessageLookupByLibrary.simpleMessage("Optimize"),
+        "orderBook": MessageLookupByLibrary.simpleMessage("Order Book"),
         "orderTypes": MessageLookupByLibrary.simpleMessage("Order Types"),
         "ordersHistory": MessageLookupByLibrary.simpleMessage("Orders History"),
         "others": MessageLookupByLibrary.simpleMessage("Others"),
@@ -233,6 +252,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Polkadex system message"),
         "previous": MessageLookupByLibrary.simpleMessage("Previous"),
         "price": MessageLookupByLibrary.simpleMessage("Price"),
+        "priceCoin": m2,
         "priceShouldBeGreater": MessageLookupByLibrary.simpleMessage(
             "Price should be greater than 0.00"),
         "priceShouldBeLess": MessageLookupByLibrary.simpleMessage(
@@ -244,8 +264,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "purchaseAddedToOpen": MessageLookupByLibrary.simpleMessage(
             "Purchase added to open orders"),
         "push": MessageLookupByLibrary.simpleMessage("Push"),
+        "rank": MessageLookupByLibrary.simpleMessage("Rank"),
         "rankingList": MessageLookupByLibrary.simpleMessage("Ranking List"),
         "recent": MessageLookupByLibrary.simpleMessage("Recent"),
+        "reddit": MessageLookupByLibrary.simpleMessage("Reddit"),
         "referral": MessageLookupByLibrary.simpleMessage("Referral"),
         "removalOfLinksFrom": MessageLookupByLibrary.simpleMessage(
             "Removal of links from our website"),
@@ -295,6 +317,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "summary": MessageLookupByLibrary.simpleMessage("Summary"),
         "supportCenter": MessageLookupByLibrary.simpleMessage("Support Center"),
         "tap": MessageLookupByLibrary.simpleMessage("Tap"),
+        "telegram": MessageLookupByLibrary.simpleMessage("Telegram"),
         "termsAndConditions":
             MessageLookupByLibrary.simpleMessage("Terms and Conditions"),
         "theAddressIsCopied": MessageLookupByLibrary.simpleMessage(
@@ -326,11 +349,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "totalBalance": MessageLookupByLibrary.simpleMessage("Total Balance"),
         "trackingIp": MessageLookupByLibrary.simpleMessage("Tracking IP"),
         "trade": MessageLookupByLibrary.simpleMessage("Trade"),
+        "trade1": MessageLookupByLibrary.simpleMessage("Trade 1"),
+        "trade3": MessageLookupByLibrary.simpleMessage("Trade 3"),
         "tradePairs": MessageLookupByLibrary.simpleMessage("Trade Pairs"),
+        "trading": MessageLookupByLibrary.simpleMessage("Trading"),
         "transaction": MessageLookupByLibrary.simpleMessage("Transaction"),
         "transactionFee":
             MessageLookupByLibrary.simpleMessage("Transaction Fee"),
         "transactionID": MessageLookupByLibrary.simpleMessage("Transaction ID"),
+        "twitter": MessageLookupByLibrary.simpleMessage("Twitter"),
         "twoFactorAuth": MessageLookupByLibrary.simpleMessage(
             "Two-Factor Authentication (2FA)"),
         "type": MessageLookupByLibrary.simpleMessage("Type"),
@@ -351,7 +378,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "viewMoreDetaisAtTokenview": MessageLookupByLibrary.simpleMessage(
             "View more details at Tokenview"),
         "vol": MessageLookupByLibrary.simpleMessage("Vol"),
-        "volBTC": m1,
+        "vol24h": MessageLookupByLibrary.simpleMessage("VOL(24h)"),
+        "volBTC": m3,
         "walletName": MessageLookupByLibrary.simpleMessage("Wallet Name"),
         "walletSettings":
             MessageLookupByLibrary.simpleMessage("Wallet Settings"),
@@ -359,10 +387,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "weAreAlmostThere":
             MessageLookupByLibrary.simpleMessage("We are almost there..."),
         "weFixed": MessageLookupByLibrary.simpleMessage("We Fixed"),
+        "weIntroducePolkadexFSP": MessageLookupByLibrary.simpleMessage(
+            "We introduce Polkadex’s FSP (Fluid Switch Protocol). Polkadex is a hybrid DEX with an orderbook supported by an AMM pool. The first of its kind in the industry. Someone had to innovate. We are happy to do the dirty work. It may not be perfect, but we are sure that once implemented, it can solve the problem faced by DEXs paving the way for near-boundless liquidity and high guarantee of trades if supported by an efficient trading engine. The trading engine itself needs a separate look and it is a whole dedicated project in itself; hence it is covered in another medium article. Let’s stick to the core protocol here."),
         "weReserveTheRightTo": MessageLookupByLibrary.simpleMessage(
             "We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amen these terms and conditions and it’s linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions."),
         "weSpendALot": MessageLookupByLibrary.simpleMessage(
             "We spend a lot of time working on big features. This time we set time aside to tackle small changes as we cleaning, shining and polishing Polkadex:"),
+        "website": MessageLookupByLibrary.simpleMessage("Website"),
         "week1": MessageLookupByLibrary.simpleMessage("1 week"),
         "welcomeToPolkadexTrade":
             MessageLookupByLibrary.simpleMessage("Welcome to Polkadex.trade!"),
@@ -377,10 +408,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "withdrawSuccessful":
             MessageLookupByLibrary.simpleMessage("Withdraw Successful"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
-        "youHaveBought": m2,
-        "youHaveDeposited": m3,
-        "youHaveSold": m4,
-        "youHaveWithdraw": m5,
+        "youHaveBought": m4,
+        "youHaveDeposited": m5,
+        "youHaveSold": m6,
+        "youHaveWithdraw": m7,
         "yourAccessAreKept": MessageLookupByLibrary.simpleMessage(
             "Your access are kept safe by Pin Code."),
         "yourDexAddres":

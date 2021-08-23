@@ -107,7 +107,7 @@ class NotifDepositScreen extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: _buildLabelValue(
-                                      label: S.of(context).amountLTC,
+                                      label: S.of(context).amountCoin('LTC'),
                                       value: "0.321 LTC",
                                     ),
                                   ),

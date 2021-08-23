@@ -1460,13 +1460,13 @@ class S {
     );
   }
 
-  /// `Amount (LTC)`
-  String get amountLTC {
+  /// `Amount ({coin})`
+  String amountCoin(Object coin) {
     return Intl.message(
-      'Amount (LTC)',
-      name: 'amountLTC',
+      'Amount ($coin)',
+      name: 'amountCoin',
       desc: '',
-      args: [],
+      args: [coin],
     );
   }
 
@@ -2397,6 +2397,246 @@ class S {
       name: 'suggestions',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `About Polkadex`
+  String get aboutPolkadex {
+    return Intl.message(
+      'About Polkadex',
+      name: 'aboutPolkadex',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We introduce Polkadex’s FSP (Fluid Switch Protocol). Polkadex is a hybrid DEX with an orderbook supported by an AMM pool. The first of its kind in the industry. Someone had to innovate. We are happy to do the dirty work. It may not be perfect, but we are sure that once implemented, it can solve the problem faced by DEXs paving the way for near-boundless liquidity and high guarantee of trades if supported by an efficient trading engine. The trading engine itself needs a separate look and it is a whole dedicated project in itself; hence it is covered in another medium article. Let’s stick to the core protocol here.`
+  String get weIntroducePolkadexFSP {
+    return Intl.message(
+      'We introduce Polkadex’s FSP (Fluid Switch Protocol). Polkadex is a hybrid DEX with an orderbook supported by an AMM pool. The first of its kind in the industry. Someone had to innovate. We are happy to do the dirty work. It may not be perfect, but we are sure that once implemented, it can solve the problem faced by DEXs paving the way for near-boundless liquidity and high guarantee of trades if supported by an efficient trading engine. The trading engine itself needs a separate look and it is a whole dedicated project in itself; hence it is covered in another medium article. Let’s stick to the core protocol here.',
+      name: 'weIntroducePolkadexFSP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `market stats`
+  String get marketStats {
+    return Intl.message(
+      'market stats',
+      name: 'marketStats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Marketcap`
+  String get marketcap {
+    return Intl.message(
+      'Marketcap',
+      name: 'marketcap',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Circulation Supply`
+  String get circulationSupply {
+    return Intl.message(
+      'Circulation Supply',
+      name: 'circulationSupply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max Supply`
+  String get maxSupply {
+    return Intl.message(
+      'Max Supply',
+      name: 'maxSupply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rank`
+  String get rank {
+    return Intl.message(
+      'Rank',
+      name: 'rank',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Links`
+  String get links {
+    return Intl.message(
+      'Links',
+      name: 'links',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Website`
+  String get website {
+    return Intl.message(
+      'Website',
+      name: 'website',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Twitter`
+  String get twitter {
+    return Intl.message(
+      'Twitter',
+      name: 'twitter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Telegram`
+  String get telegram {
+    return Intl.message(
+      'Telegram',
+      name: 'telegram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discord`
+  String get discord {
+    return Intl.message(
+      'Discord',
+      name: 'discord',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reddit`
+  String get reddit {
+    return Intl.message(
+      'Reddit',
+      name: 'reddit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Coin Info`
+  String get coinInfo {
+    return Intl.message(
+      'Coin Info',
+      name: 'coinInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trading`
+  String get trading {
+    return Intl.message(
+      'Trading',
+      name: 'trading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trade 1`
+  String get trade1 {
+    return Intl.message(
+      'Trade 1',
+      name: 'trade1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trade 3`
+  String get trade3 {
+    return Intl.message(
+      'Trade 3',
+      name: 'trade3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `HIGH`
+  String get high {
+    return Intl.message(
+      'HIGH',
+      name: 'high',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LOW`
+  String get low {
+    return Intl.message(
+      'LOW',
+      name: 'low',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VOL(24h)`
+  String get vol24h {
+    return Intl.message(
+      'VOL(24h)',
+      name: 'vol24h',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Latest transaction`
+  String get latestTransaction {
+    return Intl.message(
+      'Latest transaction',
+      name: 'latestTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Order Book`
+  String get orderBook {
+    return Intl.message(
+      'Order Book',
+      name: 'orderBook',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deep Market`
+  String get deepMarket {
+    return Intl.message(
+      'Deep Market',
+      name: 'deepMarket',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Price ({coin})`
+  String priceCoin(Object coin) {
+    return Intl.message(
+      'Price ($coin)',
+      name: 'priceCoin',
+      desc: '',
+      args: [coin],
     );
   }
 }

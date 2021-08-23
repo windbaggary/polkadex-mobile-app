@@ -9,6 +9,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 typedef OnOrderBookItemClicked = void Function(OrderBookItemModel model);
@@ -49,7 +50,7 @@ class OrderBookWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Latest transaction',
+                  S.of(context).latestTransaction,
                   style: tsS15W400CFF,
                 ),
                 Padding(
@@ -100,7 +101,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("buy"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildBuyHeadingWidget(),
+            _buildBuyHeadingWidget(context),
             _buildBuyWidget(),
           ],
         );
@@ -113,11 +114,11 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildBuyHeadingWidget(),
+                  child: _buildBuyHeadingWidget(context),
                 ),
                 SizedBox(width: 7),
                 Expanded(
-                  child: _buildSellHeadingWidget(),
+                  child: _buildSellHeadingWidget(context),
                 ),
               ],
             ),
@@ -140,7 +141,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("sell"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildSellHeadingWidget(),
+            _buildSellHeadingWidget(context),
             _buildSellWidget(),
           ],
         );
@@ -156,18 +157,18 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 
   Widget _buildBuyWidget() => _ThisOrderBuyWidget();
 
-  Widget _buildSellHeadingWidget() => Padding(
+  Widget _buildSellHeadingWidget(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 16, bottom: 10),
         child: Row(
           children: [
             Expanded(
               child: Text(
-                'Amount (BTC)',
+                S.of(context).amountCoin('BTC'),
                 style: tsS13W500CFFOP40,
               ),
             ),
             Text(
-              'Price (USD)',
+              S.of(context).priceCoin('USD'),
               style: tsS13W500CFFOP40,
               textAlign: TextAlign.end,
             )
@@ -175,18 +176,18 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildBuyHeadingWidget() => Padding(
+  Widget _buildBuyHeadingWidget(BuildContext context) => Padding(
         padding: const EdgeInsets.only(top: 16, bottom: 10),
         child: Row(
           children: [
             Expanded(
               child: Text(
-                'Amount (DOT)',
+                S.of(context).amountCoin('DOT'),
                 style: tsS13W500CFFOP40,
               ),
             ),
             Text(
-              'Price (BTC)',
+              S.of(context).priceCoin('BTC'),
               style: tsS13W500CFFOP40,
               textAlign: TextAlign.end,
             )
@@ -294,8 +295,11 @@ class _OrderSellItemWidget extends StatelessWidget {
 
 /// The heading widget for the order book
 class OrderBookHeadingWidget extends StatelessWidget {
+  OrderBookHeadingWidget(BuildContext context)
+      : _dropDownValueNotifier = ValueNotifier<String>(S.of(context).orderBook);
+
   final _priceLengthNotifier = ValueNotifier<int>(0);
-  final _dropDownValueNotifier = ValueNotifier<String>("Order Book");
+  final ValueNotifier<String> _dropDownValueNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -309,7 +313,10 @@ class OrderBookHeadingWidget extends StatelessWidget {
               valueListenable: _dropDownValueNotifier,
               builder: (context, dropDownValue, child) =>
                   DropdownButton<String>(
-                items: ['Order Book', 'Deep Market']
+                items: [
+                  S.of(context).orderBook,
+                  S.of(context).deepMarket,
+                ]
                     .map((e) => DropdownMenuItem<String>(
                           child: Text(
                             e,

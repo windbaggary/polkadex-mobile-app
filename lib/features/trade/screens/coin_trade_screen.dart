@@ -12,6 +12,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
+import 'package:polkadex/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'dart:math' as math;
@@ -138,7 +139,7 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                             ),
                           ),
                         ),
-                        OrderBookHeadingWidget(),
+                        OrderBookHeadingWidget(context),
                         OrderBookWidget(),
                       ],
                     ),
@@ -189,14 +190,14 @@ class _ThisDetailCard extends StatelessWidget {
                     bottom: 8,
                   ),
                   child: Text(
-                    'About Polkadex'.toUpperCase(),
+                    S.of(context).aboutPolkadex.toUpperCase(),
                     style: tsS12W500CFF.copyWith(
                       color: colorFFFFFF.withOpacity(0.6),
                     ),
                   ),
                 ),
                 Text(
-                  'We introduce Polkadex’s FSP (Fluid Switch Protocol). Polkadex is a hybrid DEX with an orderbook supported by an AMM pool. The first of its kind in the industry. Someone had to innovate. We are happy to do the dirty work. It may not be perfect, but we are sure that once implemented, it can solve the problem faced by DEXs paving the way for near-boundless liquidity and high guarantee of trades if supported by an efficient trading engine. The trading engine itself needs a separate look and it is a whole dedicated project in itself; hence it is covered in another medium article. Let’s stick to the core protocol here.',
+                  S.of(context).weIntroducePolkadexFSP,
                   style: tsS14W400CFF.copyWith(height: 1.5),
                 ),
                 Padding(
@@ -205,26 +206,27 @@ class _ThisDetailCard extends StatelessWidget {
                     bottom: 12,
                   ),
                   child: Text(
-                    'market stats'.toUpperCase(),
+                    S.of(context).marketcap.toUpperCase(),
                     style: tsS12W500CFF.copyWith(
                       color: colorFFFFFF.withOpacity(0.6),
                     ),
                   ),
                 ),
-                _buildItem(title: "Marketcap", value: "\$1.78 Bn"),
+                _buildItem(title: S.of(context).marketcap, value: "\$1.78 Bn"),
                 SizedBox(height: 12),
-                _buildItem(title: "Circulation Supply", value: "\$1.8 mi"),
+                _buildItem(
+                    title: S.of(context).circulationSupply, value: "\$1.8 mi"),
                 SizedBox(height: 12),
-                _buildItem(title: "Max Supply", value: "\$20 mi"),
+                _buildItem(title: S.of(context).maxSupply, value: "\$20 mi"),
                 SizedBox(height: 12),
-                _buildItem(title: "Rank", value: "5"),
+                _buildItem(title: S.of(context).rank, value: "5"),
                 Padding(
                   padding: const EdgeInsets.only(
                     top: 29.0,
                     bottom: 9,
                   ),
                   child: Text(
-                    'Links'.toUpperCase(),
+                    S.of(context).links.toUpperCase(),
                     style: tsS12W500CFF.copyWith(
                       color: colorFFFFFF.withOpacity(0.6),
                     ),
@@ -233,32 +235,32 @@ class _ThisDetailCard extends StatelessWidget {
                 Row(
                   children: [
                     _buildLinkItem(
-                      title: "Website",
+                      title: S.of(context).website,
                       svgIcon: "browser".asAssetSvg(),
                       onTap: () =>
                           _navigateToLink("https://www.polkadex.trade"),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
-                      title: "Twitter",
+                      title: S.of(context).twitter,
                       svgIcon: "twitter".asAssetSvg(),
                       onTap: () => _navigateToLink('http://twitter.com'),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
-                      title: "Telegram",
+                      title: S.of(context).telegram,
                       svgIcon: "telegram".asAssetSvg(),
                       onTap: () => _navigateToLink('https://telegram.org'),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
-                      title: "Discord",
+                      title: S.of(context).discord,
                       svgIcon: "discord".asAssetSvg(),
                       onTap: () => _navigateToLink('http://discord.com/'),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
-                      title: "Reddit",
+                      title: S.of(context).reddit,
                       svgIcon: "reddit".asAssetSvg(),
                       onTap: () => _navigateToLink('http://reddit.com/'),
                     ),
@@ -284,7 +286,7 @@ class _ThisDetailCard extends StatelessWidget {
                     color: colorE6007A,
                   ),
                   child: Text(
-                    "Coin Info",
+                    S.of(context).coinInfo,
                     style: tsS15W500CFF,
                   ),
                 ),
@@ -435,7 +437,7 @@ class _ThisGrpahCard extends StatelessWidget {
                     color: color8BA1BE.withOpacity(0.3),
                   ),
                   child: Text(
-                    "Coin Info",
+                    S.of(context).coinInfo,
                     style: tsS15W500CFF,
                   ),
                 ),
@@ -567,7 +569,11 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         child: ButtonTheme(
                           alignedDropdown: false,
                           child: DropdownButton<String>(
-                            items: ['Trading', 'Trade 1', 'Trade 3']
+                            items: [
+                              S.of(context).trading,
+                              S.of(context).trade1,
+                              S.of(context).trade3,
+                            ]
                                 .map((e) => DropdownMenuItem<String>(
                                       child: Text(
                                         e,
@@ -577,7 +583,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                       value: e,
                                     ))
                                 .toList(),
-                            value: 'Trading',
+                            value: S.of(context).trading,
                             style: tsS13W400CFF,
                             underline: Container(),
                             onChanged: (val) {},
@@ -708,7 +714,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      "Buy",
+                      S.of(context).buy,
                       style: tsS16W500CFF,
                     ),
                     Spacer(flex: 2),
@@ -760,7 +766,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                       ),
                       Spacer(),
                       Text(
-                        "Sell",
+                        S.of(context).sell,
                         style: tsS16W500CFF,
                       ),
                       Spacer(flex: 2),
@@ -928,7 +934,7 @@ class _TopCoinWidget extends StatelessWidget {
                         color: colorFFFFFF.withOpacity(0.6)),
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'HIGH ',
+                        text: '${S.of(context).high} ',
                         style: TextStyle(
                           fontFamily: 'WorkSans',
                         ),
@@ -954,7 +960,7 @@ class _TopCoinWidget extends StatelessWidget {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'LOW ',
+                        text: '${S.of(context).low} ',
                         style: TextStyle(
                           fontFamily: 'WorkSans',
                         ),
@@ -1013,7 +1019,7 @@ class _TopCoinWidget extends StatelessWidget {
                 style: tsS12W500CFF,
                 children: [
                   TextSpan(
-                    text: 'VOL(24h) ',
+                    text: '${S.of(context).vol24h} ',
                     style: TextStyle(
                       color: colorFFFFFF.withOpacity(0.6),
                       fontFamily: 'WorkSans',
