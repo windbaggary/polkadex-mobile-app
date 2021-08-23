@@ -99,7 +99,8 @@ class _LandingScreenState extends State<LandingScreen>
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<NotificationDrawerProvider>(
-            create: (context) => NotificationDrawerProvider(context)),
+            create: (_) =>
+                NotificationDrawerProvider()..initDummyList(context)),
         ChangeNotifierProvider<HomeScrollNotifProvider>(
             create: (_) => HomeScrollNotifProvider()),
       ],
