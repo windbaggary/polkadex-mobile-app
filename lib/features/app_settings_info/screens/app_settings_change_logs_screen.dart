@@ -61,7 +61,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    '${S.of(context).lastUpdated} ${DateFormat("MMM dd',' yyyy").format(DateTime(2021, 2, 7))} - ${S.of(context).version} 0.0.100.1',
+                    '${S.of(context).lastUpdated} ${DateFormat.yMMMd().format(DateTime(2021, 2, 7))} - ${S.of(context).version} 0.0.100.1',
                     style: tsS13W400CFFOP60,
                   ),
                   SizedBox(height: 26),

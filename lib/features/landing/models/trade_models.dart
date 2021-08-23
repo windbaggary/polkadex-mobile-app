@@ -40,7 +40,7 @@ class TradeOpenOrderModel implements ITradeOpenOrderModel {
 
   @override
   String get iFormattedDate {
-    return DateFormat("MMM dd, yyyy HH:mm:ss").format(dateTime);
+    return DateFormat.yMMMd().add_jms().format(dateTime);
   }
 
   @override

@@ -80,7 +80,8 @@ class NotifDepositScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          DateFormat("MMM dd',' yyyy Hms")
+                          DateFormat.yMMMd()
+                              .add_jms()
                               .format(DateTime(2021, 2, 7, 10, 52, 3)),
                           style: tsS15W400CFFOP50,
                         ),

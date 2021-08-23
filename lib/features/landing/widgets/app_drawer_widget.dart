@@ -450,8 +450,7 @@ class NotificationDrawerWidget extends StatelessWidget {
                     Opacity(
                       opacity: 0.50,
                       child: Text(
-                          DateFormat("dd MMMM',' yyyy")
-                              .format(DateTime(2021, 2, 20)),
+                          DateFormat.yMMMMd().format(DateTime(2021, 2, 20)),
                           style: tsS18W500CFF),
                     ),
                     SizedBox(height: 11),

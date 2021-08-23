@@ -19,20 +19,20 @@ class NotificationDrawerProvider extends ChangeNotifier {
         enumType: EnumDrawerNotificationTypes.transactionDeposit,
         svgAsset: 'Deposit'.asAssetSvg(),
         title: S.of(context).depositSuccessful,
-        description: S.of(context).youHaveDeposited(
-            DateFormat("MMM dd',' yyyy Hms")
-                .format(DateTime(2021, 2, 7, 10, 52, 3))
-                .toString()),
+        description: S.of(context).youHaveDeposited(DateFormat.yMMMd()
+            .add_jms()
+            .format(DateTime(2021, 2, 7, 10, 52, 3))
+            .toString()),
       ),
       DrawerNotificationModel(
         dateTime: DateTime.now(),
         enumType: EnumDrawerNotificationTypes.transactionWithdraw,
         svgAsset: 'Withdraw'.asAssetSvg(),
         title: S.of(context).withdrawSuccessful,
-        description: S.of(context).youHaveWithdraw(
-            DateFormat("MMM dd',' yyyy Hms")
-                .format(DateTime(2021, 2, 7, 12, 19, 22))
-                .toString()),
+        description: S.of(context).youHaveWithdraw(DateFormat.yMMMd()
+            .add_jms()
+            .format(DateTime(2021, 2, 7, 12, 19, 22))
+            .toString()),
       ),
       DrawerNotificationModel(
         dateTime: DateTime.now().add(const Duration(days: -2)),
@@ -47,10 +47,10 @@ class NotificationDrawerProvider extends ChangeNotifier {
         enumType: EnumDrawerNotificationTypes.normal,
         svgAsset: 'buy'.asAssetSvg(),
         title: S.of(context).dexBtcFilledSuccessful,
-        description: S.of(context).youHaveBought(
-            DateFormat("MMM dd',' yyyy Hms")
-                .format(DateTime(2021, 2, 7, 10, 52, 3))
-                .toString()),
+        description: S.of(context).youHaveBought(DateFormat.yMMMd()
+            .add_jms()
+            .format(DateTime(2021, 2, 7, 10, 52, 3))
+            .toString()),
         isSeen: true,
       ),
       DrawerNotificationModel(
@@ -58,7 +58,8 @@ class NotificationDrawerProvider extends ChangeNotifier {
         enumType: EnumDrawerNotificationTypes.normal,
         svgAsset: 'sell'.asAssetSvg(),
         title: S.of(context).dexBtcFilledSuccessful,
-        description: S.of(context).youHaveSold(DateFormat("MMM dd',' yyyy Hms")
+        description: S.of(context).youHaveSold(DateFormat.yMMMd()
+            .add_jms()
             .format(DateTime(2021, 2, 7, 10, 52, 3))
             .toString()),
         isSeen: true,
@@ -72,8 +73,8 @@ class NotificationDrawerProvider extends ChangeNotifier {
           DateFormat.yMd().format(DateTime.now()))
       .toList();
 
-  String get oldDate => DateFormat("dd MMMM, yyyy")
-      .format(DateTime.now().add(const Duration(days: -2)));
+  String get oldDate =>
+      DateFormat.yMMMMd().format(DateTime.now().add(const Duration(days: -2)));
 
   List<DrawerNotificationModel> get oldList => _dummyList
       .where((e) =>

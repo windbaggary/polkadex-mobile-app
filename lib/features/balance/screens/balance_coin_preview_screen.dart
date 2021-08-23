@@ -341,7 +341,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           if (provider.filterStartDate != null &&
                               provider.filterEndDate != null) {
                             fromToDate =
-                                "${DateFormat("MMM dd, yyyy").format(provider.filterStartDate!)} to ${DateFormat("MMM dd, yyyy").format(provider.filterEndDate!)}";
+                                "${DateFormat.yMMMd().format(provider.filterStartDate!)} to ${DateFormat.yMMMd().format(provider.filterEndDate!)}";
                           }
                           if (provider.dummyList.isEmpty) {
                             return Padding(
@@ -420,7 +420,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
         date.year == today.year) {
       return S.of(context).yesterday;
     } else {
-      return DateFormat("dd MMMM, yyyy").format(date);
+      return DateFormat.yMMMMd().format(date);
     }
   }
 }
@@ -522,7 +522,7 @@ class _ThisItemWidget extends StatelessWidget {
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
+                DateFormat.jms().format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -594,7 +594,7 @@ class _ThisItemWidget extends StatelessWidget {
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
+                DateFormat.jms().format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -666,7 +666,7 @@ class _ThisItemWidget extends StatelessWidget {
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
+                DateFormat.jms().format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],
@@ -719,7 +719,7 @@ class _ThisItemWidget extends StatelessWidget {
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
+                DateFormat.jms().format(iModel.date).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
               ),
             ],

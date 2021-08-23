@@ -122,8 +122,8 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
     if (lineOnPath != null && selectedModelIndex != null) {
       // Creating the textpainter for the selected model so the grid line
       // can be make on top
-      String date = intl.DateFormat("yyyy/MM/dd HH:mm")
-          .format(data[selectedModelIndex].date);
+      String date =
+          intl.DateFormat.yMd().add_jm().format(data[selectedModelIndex].date);
       final tp = _createDatePainter(date);
 
       drawPointerMarkerAxis(

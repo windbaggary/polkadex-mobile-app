@@ -53,7 +53,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 20),
                 Text(
-                  '${S.of(context).lastUpdated} ${DateFormat("MMM dd',' yyyy").format(DateTime(2021, 2, 7))}',
+                  '${S.of(context).lastUpdated} ${DateFormat.yMMMd().format(DateTime(2021, 2, 7))}',
                   style: tsS13W400CFFOP60,
                 ),
                 SizedBox(height: 17),
