@@ -23,21 +23,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(number) => "DOT Chain ${number}";
 
-  static String m2(coin) => "Price (${coin})";
+  static String m2(discountPercent) =>
+      "Enjoy ${discountPercent}% discount when trading.";
 
-  static String m3(volume) => "Vol ${volume} BTC";
+  static String m3(prizeAmount) =>
+      "Participate in lucky draw and share ${prizeAmount} USDT prize poll!";
 
-  static String m4(dateTime) =>
-      "You bought 1 DEX for 0.000545 BTC at ${dateTime}";
+  static String m4(coin) => "Price (${coin})";
 
-  static String m5(dateTime) =>
-      "You have deposited 0.60000000 LTC at ${dateTime}";
+  static String m5(volume) => "Vol ${volume} BTC";
 
-  static String m6(dateTime) =>
-      "You have sold 0.0004124 BTC for 1 DEX at ${dateTime}";
+  static String m6(amountBought, amountGiven, dateTime) =>
+      "You bought ${amountBought} DEX for ${amountGiven} BTC at ${dateTime}";
 
-  static String m7(dateTime) =>
-      "You have withdraw 1.60000000 LTC at ${dateTime}";
+  static String m7(amount, dateTime) =>
+      "You have deposited ${amount} LTC at ${dateTime}";
+
+  static String m8(amountSold, amountReceived, dateTime) =>
+      "You have sold ${amountSold} BTC for ${amountReceived} DEX at ${dateTime}";
+
+  static String m9(amountWithdraw, dateTime) =>
+      "You have withdraw ${amountWithdraw} LTC at ${dateTime}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -125,8 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "earnWithUpcomingDeFi": MessageLookupByLibrary.simpleMessage(
             "Earn with upcoming DeFi airdrops"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
-        "enjoy25DiscountWhen": MessageLookupByLibrary.simpleMessage(
-            "Enjoy 25% discount when trading."),
+        "enjoyDiscountWhen": m2,
         "enter": MessageLookupByLibrary.simpleMessage("Enter"),
         "enterAmount": MessageLookupByLibrary.simpleMessage("Enter Amount"),
         "enterDexAddress":
@@ -219,8 +224,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "ordersHistory": MessageLookupByLibrary.simpleMessage("Orders History"),
         "others": MessageLookupByLibrary.simpleMessage("Others"),
         "pair": MessageLookupByLibrary.simpleMessage("Pair"),
-        "participateInLuckyDraw": MessageLookupByLibrary.simpleMessage(
-            "Participate in lucky draw and share 160 USDT prize poll!"),
+        "participateInLuckyDraw": m3,
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "pleaseEnterAValidPrice":
@@ -251,7 +255,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Polkadex system message"),
         "previous": MessageLookupByLibrary.simpleMessage("Previous"),
         "price": MessageLookupByLibrary.simpleMessage("Price"),
-        "priceCoin": m2,
+        "priceCoin": m4,
         "priceShouldBeGreater": MessageLookupByLibrary.simpleMessage(
             "Price should be greater than 0.00"),
         "priceShouldBeLess": MessageLookupByLibrary.simpleMessage(
@@ -379,7 +383,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "View more details at Tokenview"),
         "vol": MessageLookupByLibrary.simpleMessage("Vol"),
         "vol24h": MessageLookupByLibrary.simpleMessage("VOL(24h)"),
-        "volBTC": m3,
+        "volBTC": m5,
         "walletName": MessageLookupByLibrary.simpleMessage("Wallet Name"),
         "walletSettings":
             MessageLookupByLibrary.simpleMessage("Wallet Settings"),
@@ -408,10 +412,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "withdrawSuccessful":
             MessageLookupByLibrary.simpleMessage("Withdraw Successful"),
         "yesterday": MessageLookupByLibrary.simpleMessage("Yesterday"),
-        "youHaveBought": m4,
-        "youHaveDeposited": m5,
-        "youHaveSold": m6,
-        "youHaveWithdraw": m7,
+        "youHaveBought": m6,
+        "youHaveDeposited": m7,
+        "youHaveSold": m8,
+        "youHaveWithdraw": m9,
         "yourAccessAreKept": MessageLookupByLibrary.simpleMessage(
             "Your access are kept safe by Pin Code."),
         "yourDexAddres":

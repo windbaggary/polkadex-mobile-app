@@ -273,7 +273,7 @@ class MyAccountScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: 2),
                                     Text(
-                                      S.of(context).enjoy25DiscountWhen,
+                                      S.of(context).enjoyDiscountWhen(25),
                                       style: tsS13W400CFFOP60,
                                     ),
                                   ],

@@ -435,7 +435,7 @@ class _ThisSliderItemWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 16, 25, 16),
             child: Text(
-              S.of(context).participateInLuckyDraw,
+              S.of(context).participateInLuckyDraw(160),
               style: tsS16W500CFF,
             ),
           )

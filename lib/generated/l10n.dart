@@ -710,13 +710,13 @@ class S {
     );
   }
 
-  /// `Enjoy 25% discount when trading.`
-  String get enjoy25DiscountWhen {
+  /// `Enjoy {discountPercent}% discount when trading.`
+  String enjoyDiscountWhen(Object discountPercent) {
     return Intl.message(
-      'Enjoy 25% discount when trading.',
-      name: 'enjoy25DiscountWhen',
+      'Enjoy $discountPercent% discount when trading.',
+      name: 'enjoyDiscountWhen',
       desc: '',
-      args: [],
+      args: [discountPercent],
     );
   }
 
@@ -1400,43 +1400,45 @@ class S {
     );
   }
 
-  /// `You have deposited 0.60000000 LTC at {dateTime}`
-  String youHaveDeposited(Object dateTime) {
+  /// `You have deposited {amount} LTC at {dateTime}`
+  String youHaveDeposited(Object amount, Object dateTime) {
     return Intl.message(
-      'You have deposited 0.60000000 LTC at $dateTime',
+      'You have deposited $amount LTC at $dateTime',
       name: 'youHaveDeposited',
       desc: '',
-      args: [dateTime],
+      args: [amount, dateTime],
     );
   }
 
-  /// `You bought 1 DEX for 0.000545 BTC at {dateTime}`
-  String youHaveBought(Object dateTime) {
+  /// `You bought {amountBought} DEX for {amountGiven} BTC at {dateTime}`
+  String youHaveBought(
+      Object amountBought, Object amountGiven, Object dateTime) {
     return Intl.message(
-      'You bought 1 DEX for 0.000545 BTC at $dateTime',
+      'You bought $amountBought DEX for $amountGiven BTC at $dateTime',
       name: 'youHaveBought',
       desc: '',
-      args: [dateTime],
+      args: [amountBought, amountGiven, dateTime],
     );
   }
 
-  /// `You have sold 0.0004124 BTC for 1 DEX at {dateTime}`
-  String youHaveSold(Object dateTime) {
+  /// `You have sold {amountSold} BTC for {amountReceived} DEX at {dateTime}`
+  String youHaveSold(
+      Object amountSold, Object amountReceived, Object dateTime) {
     return Intl.message(
-      'You have sold 0.0004124 BTC for 1 DEX at $dateTime',
+      'You have sold $amountSold BTC for $amountReceived DEX at $dateTime',
       name: 'youHaveSold',
       desc: '',
-      args: [dateTime],
+      args: [amountSold, amountReceived, dateTime],
     );
   }
 
-  /// `You have withdraw 1.60000000 LTC at {dateTime}`
-  String youHaveWithdraw(Object dateTime) {
+  /// `You have withdraw {amountWithdraw} LTC at {dateTime}`
+  String youHaveWithdraw(Object amountWithdraw, Object dateTime) {
     return Intl.message(
-      'You have withdraw 1.60000000 LTC at $dateTime',
+      'You have withdraw $amountWithdraw LTC at $dateTime',
       name: 'youHaveWithdraw',
       desc: '',
-      args: [dateTime],
+      args: [amountWithdraw, dateTime],
     );
   }
 
@@ -1810,13 +1812,13 @@ class S {
     );
   }
 
-  /// `Participate in lucky draw and share 160 USDT prize poll!`
-  String get participateInLuckyDraw {
+  /// `Participate in lucky draw and share {prizeAmount} USDT prize poll!`
+  String participateInLuckyDraw(Object prizeAmount) {
     return Intl.message(
-      'Participate in lucky draw and share 160 USDT prize poll!',
+      'Participate in lucky draw and share $prizeAmount USDT prize poll!',
       name: 'participateInLuckyDraw',
       desc: '',
-      args: [],
+      args: [prizeAmount],
     );
   }
 
