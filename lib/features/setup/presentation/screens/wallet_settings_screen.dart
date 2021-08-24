@@ -234,7 +234,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                                 "finger-print".asAssetSvg(),
                                             title: S
                                                 .of(context)
-                                                .secureWithFingerPrint,
+                                                .secureWithBiometric,
                                             description: S
                                                 .of(context)
                                                 .secureYourAccessWithout,

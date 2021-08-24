@@ -550,11 +550,11 @@ class S {
     );
   }
 
-  /// `Secure with FingerPrint`
-  String get secureWithFingerPrint {
+  /// `Secure with Biometric login`
+  String get secureWithBiometric {
     return Intl.message(
-      'Secure with FingerPrint',
-      name: 'secureWithFingerPrint',
+      'Secure with Biometric login',
+      name: 'secureWithBiometric',
       desc: '',
       args: [],
     );
@@ -2002,10 +2002,10 @@ class S {
     );
   }
 
-  /// `Please enter the 12-24 words in the correct order.`
+  /// `Please rearrange the 12-24 words in the correct order.`
   String get pleaseEnterThe1224Words {
     return Intl.message(
-      'Please enter the 12-24 words in the correct order.',
+      'Please rearrange the 12-24 words in the correct order.',
       name: 'pleaseEnterThe1224Words',
       desc: '',
       args: [],
@@ -2297,16 +2297,6 @@ class S {
     return Intl.message(
       'At least 1 digit',
       name: 'atLeast1Digit',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Secure with FingerPrint`
-  String get secureWithFingerprint {
-    return Intl.message(
-      'Secure with FingerPrint',
-      name: 'secureWithFingerprint',
       desc: '',
       args: [],
     );

@@ -33,7 +33,7 @@ class AppSettingsSecurity extends StatelessWidget {
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
                     svgAsset: "finger-print".asAssetSvg(),
-                    title: S.of(context).secureWithFingerPrint,
+                    title: S.of(context).secureWithBiometric,
                     description: S.of(context).secureYourAccessWithout,
                     isChecked: thisProvider.isFingerPrint,
                     onSwitchChanged: (value) {

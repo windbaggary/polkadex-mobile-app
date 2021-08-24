@@ -232,7 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pleaseEnterAgain":
             MessageLookupByLibrary.simpleMessage("Please enter again."),
         "pleaseEnterThe1224Words": MessageLookupByLibrary.simpleMessage(
-            "Please enter the 12-24 words in the correct order."),
+            "Please rearrange the 12-24 words in the correct order."),
         "pleaseEnterThePrice":
             MessageLookupByLibrary.simpleMessage("Please enter the price"),
         "pleaseWriteDownYour": MessageLookupByLibrary.simpleMessage(
@@ -286,10 +286,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "scanOrShare": MessageLookupByLibrary.simpleMessage("Scan or share"),
         "searchNameOrTicket":
             MessageLookupByLibrary.simpleMessage("Search name or ticket"),
-        "secureWithFingerPrint":
-            MessageLookupByLibrary.simpleMessage("Secure with FingerPrint"),
-        "secureWithFingerprint":
-            MessageLookupByLibrary.simpleMessage("Secure with FingerPrint"),
+        "secureWithBiometric":
+            MessageLookupByLibrary.simpleMessage("Secure with Biometric login"),
         "secureWithPinCode":
             MessageLookupByLibrary.simpleMessage("Secure with Pin Code"),
         "secureYourAccessWithout": MessageLookupByLibrary.simpleMessage(
