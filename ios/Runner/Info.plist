@@ -56,6 +56,8 @@
 <key>NSMicrophoneUsageDescription</key>
 <string>This app needs microphone to record profile picture</string>
 <key>LSApplicationQueriesSchemes</key>
+<key>NSFaceIDUsageDescription</key>
+<string>$This app needs TouchID or FaceID for authentication</string>
 <array>
   <string>https</string>
   <string>http</string>
