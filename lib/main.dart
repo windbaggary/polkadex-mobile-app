@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:biometric_storage/biometric_storage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
@@ -16,9 +16,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await injection.init();
 
-  List<String>? localeParams =
-      (await injection.dependency<FlutterSecureStorage>().read(key: 'language'))
-          ?.split('_');
+  final languageStorage = await BiometricStorage().getStorage('language',
+      options: StorageFileInitOptions(
+        authenticationRequired: false,
+      ));
+  List<String>? localeParams = (await languageStorage.read())?.split('_');
 
   // A 2 seconds delay to show the splash screen
   await Future.delayed(const Duration(seconds: 2));
