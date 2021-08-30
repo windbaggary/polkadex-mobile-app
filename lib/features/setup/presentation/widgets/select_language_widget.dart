@@ -1,4 +1,3 @@
-import 'package:biometric_storage/biometric_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -28,14 +27,6 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
                 text: S.of(context).changingTheLanguage,
               );
               MyApp.of(context)?.setLocale(locales[index]);
-
-              final languageStorage =
-                  await BiometricStorage().getStorage('language',
-                      options: StorageFileInitOptions(
-                        authenticationRequired: false,
-                      ));
-              await languageStorage.write(locales[index].toString());
-
               Navigator.of(context).pop();
             },
             child: Padding(

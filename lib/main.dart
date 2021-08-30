@@ -27,6 +27,7 @@ void main() async {
 
   runApp(
     MyApp(
+      languageStorage: languageStorage,
       locale: localeParams != null
           ? Locale(localeParams[0], localeParams.asMap()[1])
           : null,
@@ -35,8 +36,9 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({this.locale});
+  MyApp({this.languageStorage, this.locale});
 
+  final BiometricStorageFile? languageStorage;
   final Locale? locale;
 
   @override
@@ -55,7 +57,8 @@ class _MyAppState extends State<MyApp> {
     currentLocale = widget.locale;
   }
 
-  void setLocale(Locale locale) {
+  void setLocale(Locale locale) async {
+    await widget.languageStorage?.write(locale.toString());
     setState(() {
       currentLocale = locale;
     });
