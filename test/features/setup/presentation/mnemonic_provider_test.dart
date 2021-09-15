@@ -43,9 +43,6 @@ void main() {
       type: ["none"],
     );
     tImportedAccount = ImportedAccountModel(
-      pubKey: "0xe5639b03f86257d187b00b667ae58",
-      mnemonic: tMnemonic,
-      rawSeed: "",
       encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
       encoding: tEncoding,
       address: "k9o1dxJxQE8Zwm5Fy",

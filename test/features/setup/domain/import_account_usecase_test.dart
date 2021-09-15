@@ -16,7 +16,6 @@ class _MnemonicRepositoryMock extends Mock implements IMnemonicRepository {}
 void main() {
   late ImportAccountUseCase _usecase;
   late _MnemonicRepositoryMock _repository;
-  late String tMnemonic;
   late MetaEntity tMeta;
   late EncodingEntity tEncoding;
   late ImportedAccountEntity tImportedAccount;
@@ -24,8 +23,6 @@ void main() {
   setUp(() {
     _repository = _MnemonicRepositoryMock();
     _usecase = ImportAccountUseCase(mnemonicRepository: _repository);
-    tMnemonic =
-        "correct gather fork rent problem ocean train pretty dinosaur captain myself rent";
     tMeta = MetaModel(name: 'userName');
     tEncoding = EncodingModel(
       content: ["sr25519"],
@@ -33,9 +30,6 @@ void main() {
       type: ["none"],
     );
     tImportedAccount = ImportedAccountModel(
-      pubKey: "0xe5639b03f86257d187b00b667ae58",
-      mnemonic: tMnemonic,
-      rawSeed: "",
       encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
       encoding: tEncoding,
       address: "k9o1dxJxQE8Zwm5Fy",
