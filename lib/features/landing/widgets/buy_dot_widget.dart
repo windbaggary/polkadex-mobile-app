@@ -190,7 +190,6 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                       // }
                       return AnimatedSize(
                         duration: AppConfigs.animDurationSmall,
-                        vsync: this,
                         child: contentChild,
                       );
                     },

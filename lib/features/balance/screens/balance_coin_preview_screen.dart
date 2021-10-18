@@ -123,7 +123,6 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                         }
                         return AnimatedSize(
                           duration: AppConfigs.animDurationSmall,
-                          vsync: this,
                           child: child,
                         );
                       },

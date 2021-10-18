@@ -359,7 +359,6 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             valueListenable: _isOrdersExpanded,
             builder: (context, isShow, child) => AnimatedSize(
               duration: AppConfigs.animDurationSmall,
-              vsync: this,
               alignment: Alignment.topCenter,
               child: ValueListenableBuilder<EnumTradeOrdersDisplayType?>(
                 valueListenable: _orderDisplayTypeNotifier,
