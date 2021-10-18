@@ -4,12 +4,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
-import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
 import 'package:polkadex/generated/l10n.dart';
+
+import 'features/setup/presentation/screens/auth_logout_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +69,7 @@ class MyApp extends StatelessWidget {
         home: Builder(
           builder: (context) {
             AppConfigs.size = MediaQuery.of(context).size;
-            return IntroScreen();
+            return AuthLogoutScreen();
           },
         ),
         onGenerateRoute: (settings) {
