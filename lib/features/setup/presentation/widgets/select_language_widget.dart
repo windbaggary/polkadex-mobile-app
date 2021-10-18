@@ -1,11 +1,11 @@
+import 'package:biometric_storage/biometric_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/generated/l10n.dart';
-import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/main.dart';
 
 class SelectLanguageWidget extends StatefulWidget {
   @override
@@ -27,10 +27,14 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
                 context: context,
                 text: 'Changing the language...',
               );
-              await dependency<FlutterSecureStorage>().write(
-                key: 'language',
-                value: locales[index].toString(),
-              );
+
+              final languageStorage =
+                  await BiometricStorage().getStorage('language',
+                      options: StorageFileInitOptions(
+                        authenticationRequired: false,
+                      ));
+              await languageStorage.write(locales[index].toString());
+
               Navigator.of(context).pop();
             },
             child: Padding(
