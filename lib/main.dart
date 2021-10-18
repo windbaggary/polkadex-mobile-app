@@ -43,19 +43,21 @@ class MyApp extends StatelessWidget {
         supportedLocales: S.delegate.supportedLocales,
         title: 'Polkadex',
         theme: ThemeData(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            hoverColor: Colors.transparent,
-            focusColor: Colors.transparent,
-            buttonColor: Colors.transparent,
-            primaryColor: color2E303C,
-            canvasColor: color2E303C,
-            fontFamily: 'WorkSans',
-            accentColor: colorE6007A,
-            backgroundColor: color3B4150,
-            dialogTheme: DialogTheme(
-              backgroundColor: color2E303C,
-            )).copyWith(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                buttonTheme: ButtonThemeData(buttonColor: color1C2023),
+                primaryColor: color2E303C,
+                canvasColor: color2E303C,
+                fontFamily: 'WorkSans',
+                backgroundColor: color3B4150,
+                dialogTheme: DialogTheme(
+                  backgroundColor: color2E303C,
+                ),
+                colorScheme:
+                    ColorScheme.fromSwatch().copyWith(secondary: colorE6007A))
+            .copyWith(
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
               TargetPlatform.android: CupertinoPageTransitionsBuilder(),

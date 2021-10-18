@@ -278,9 +278,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           SizedBox(width: 14),
                           Theme(
                             data: Theme.of(context).copyWith(
-                                accentColor: colorE6007A,
                                 primaryColor: color1C2023,
                                 cardColor: Colors.red,
+                                colorScheme: ColorScheme.fromSwatch()
+                                    .copyWith(secondary: colorE6007A),
                                 buttonTheme: ButtonThemeData(
                                     highlightColor: Colors.green,
                                     buttonColor: Colors.green,
