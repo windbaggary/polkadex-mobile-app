@@ -39,7 +39,7 @@ class _LandingScreenState extends State<LandingScreen>
   late Animation<double> _leftDrawerWidthAnimation;
   late Animation<double> _rightDrawerWidthAnimation;
   late Animation<Color?> _drawerContentColorAnimation;
-  late Animation<BorderRadius> _drawerContentRadiusAnimation;
+  late Animation<BorderRadius?> _drawerContentRadiusAnimation;
 
   bool _isDrawerVisible = false;
   bool _isNotifDrawerVisible = false;
