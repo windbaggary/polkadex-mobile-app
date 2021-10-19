@@ -101,12 +101,11 @@ class AppButton extends StatelessWidget {
               ),
               child: Padding(
                 padding: padding,
-                child: Center(
-                  child: Text(
-                    label,
-                    style: tsS18W600CFF.copyWith(
-                        color: enabled ? textColor : colorFFFFFF),
-                  ),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: tsS18W600CFF.copyWith(
+                      color: enabled ? textColor : colorFFFFFF),
                 ),
               ),
             ),
