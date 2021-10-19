@@ -1,6 +1,10 @@
+import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
+import 'package:polkadex/features/setup/data/repositories/account_repository.dart';
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
+import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_account_storage_usecase.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
@@ -19,9 +23,19 @@ Future<void> init() async {
     () => MnemonicRemoteDatasource(),
   );
 
+  dependency.registerFactory(
+    () => AccountLocalDatasource(),
+  );
+
   dependency.registerFactory<IMnemonicRepository>(
     () => MnemonicRepository(
       mnemonicRemoteDatasource: dependency(),
+    ),
+  );
+
+  dependency.registerFactory<IAccountRepository>(
+    () => AccountRepository(
+      accountLocalDatasource: dependency(),
     ),
   );
 
@@ -38,9 +52,16 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => SaveAccountStorageUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
+      saveAccountStorageUseCase: dependency(),
     ),
   );
 

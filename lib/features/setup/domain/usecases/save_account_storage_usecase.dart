@@ -8,10 +8,10 @@ class SaveAccountStorageUseCase {
   final IAccountRepository _accountRepository;
 
   Future<void> call({
-    required String mnemonic,
+    required String keypairJson,
     String? password,
   }) async {
-    return await _accountRepository.saveAccountStorage(mnemonic,
+    return await _accountRepository.saveAccountStorage(keypairJson,
         password: password);
   }
 }

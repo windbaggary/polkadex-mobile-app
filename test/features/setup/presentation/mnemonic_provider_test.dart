@@ -1,4 +1,5 @@
 import 'package:polkadex/common/utils/bip39.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_account_storage_usecase.dart';
 import 'package:test/test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
@@ -17,9 +18,13 @@ class _MockGenerateUsecase extends Mock implements GenerateMnemonicUseCase {}
 
 class _MockImportUsecase extends Mock implements ImportAccountUseCase {}
 
+class _MockSaveAccountUseCase extends Mock
+    implements SaveAccountStorageUseCase {}
+
 void main() {
   late _MockGenerateUsecase _mockGenerateUsecase;
   late _MockImportUsecase _mockImportUsecase;
+  late _MockSaveAccountUseCase _mockSaveAccountUseCase;
   late MnemonicProvider _provider;
   late String tMnemonic;
   late String tMnemonicSwapped;
@@ -30,9 +35,11 @@ void main() {
   setUp(() {
     _mockGenerateUsecase = _MockGenerateUsecase();
     _mockImportUsecase = _MockImportUsecase();
+    _mockSaveAccountUseCase = _MockSaveAccountUseCase();
     _provider = MnemonicProvider(
       generateMnemonicUseCase: _mockGenerateUsecase,
       importAccountUseCase: _mockImportUsecase,
+      saveAccountStorageUseCase: _mockSaveAccountUseCase,
     );
     tMnemonic = "correct gather fork";
     tMnemonicSwapped = "gather correct fork";
