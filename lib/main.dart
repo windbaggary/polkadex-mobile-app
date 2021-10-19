@@ -43,21 +43,31 @@ class MyApp extends StatelessWidget {
         supportedLocales: S.delegate.supportedLocales,
         title: 'Polkadex',
         theme: ThemeData(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                buttonTheme: ButtonThemeData(buttonColor: color1C2023),
-                primaryColor: color2E303C,
-                canvasColor: color2E303C,
-                fontFamily: 'WorkSans',
-                backgroundColor: color3B4150,
-                dialogTheme: DialogTheme(
-                  backgroundColor: color2E303C,
-                ),
-                colorScheme:
-                    ColorScheme.fromSwatch().copyWith(secondary: colorE6007A))
-            .copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            buttonTheme: ButtonThemeData(buttonColor: color1C2023),
+            canvasColor: color2E303C,
+            fontFamily: 'WorkSans',
+            dialogTheme: DialogTheme(
+              backgroundColor: color2E303C,
+            ),
+            colorScheme: ColorScheme(
+              brightness: Brightness.light,
+              primary: color2E303C,
+              onPrimary: color2E303C,
+              surface: color2E303C,
+              onSurface: color2E303C,
+              primaryVariant: color2E303C,
+              secondary: Colors.grey,
+              secondaryVariant: Colors.grey,
+              onSecondary: Colors.grey,
+              background: color3B4150,
+              onBackground: color3B4150,
+              error: Colors.grey,
+              onError: Colors.grey,
+            )).copyWith(
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {
               TargetPlatform.android: CupertinoPageTransitionsBuilder(),
