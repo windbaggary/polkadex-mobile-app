@@ -1,19 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/bip39.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_account_storage_usecase.dart';
 
 class MnemonicProvider extends ChangeNotifier {
   MnemonicProvider({
     required GenerateMnemonicUseCase generateMnemonicUseCase,
     required ImportAccountUseCase importAccountUseCase,
+    required SaveAccountStorageUseCase saveAccountStorageUseCase,
     int phraseLenght = 12,
   })  : _generateMnemonicUseCase = generateMnemonicUseCase,
         _importAccountUseCase = importAccountUseCase,
+        _saveAccountStorageUseCase = saveAccountStorageUseCase,
         _mnemonicWords = List.generate(phraseLenght, (_) => '');
 
   final GenerateMnemonicUseCase _generateMnemonicUseCase;
   final ImportAccountUseCase _importAccountUseCase;
+  final SaveAccountStorageUseCase _saveAccountStorageUseCase;
 
   bool _disposed = false;
   bool _isLoading = false;
@@ -121,9 +127,8 @@ class MnemonicProvider extends ChangeNotifier {
 
     result.fold(
       (_) {},
-      (importedAcc) {
-        //TODO: Use the imported in the app or store it
-      },
+      (importedAcc) async => await _saveAccountStorageUseCase(
+          keypairJson: json.encode(importedAcc)),
     );
   }
 
