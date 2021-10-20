@@ -6,11 +6,13 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
 import 'package:polkadex/generated/l10n.dart';
 
-import 'features/setup/presentation/screens/auth_logout_screen.dart';
+import 'common/providers/account_provider.dart';
+import 'injection_container.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +34,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<BottomNavigationProvider>(
             create: (_) => BottomNavigationProvider()),
+        ChangeNotifierProvider<AccountProvider>(
+            create: (_) => dependency<AccountProvider>()),
       ],
       builder: (context, _) => MaterialApp(
         localizationsDelegates: [

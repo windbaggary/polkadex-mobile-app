@@ -1,3 +1,4 @@
+import 'package:polkadex/common/providers/account_provider.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/repositories/account_repository.dart';
@@ -69,6 +70,12 @@ Future<void> init() async {
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
       saveAccountStorageUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => AccountProvider(
+      getAccountStorageUseCase: dependency(),
     ),
   );
 
