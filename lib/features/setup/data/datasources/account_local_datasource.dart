@@ -18,4 +18,14 @@ class AccountLocalDatasource {
 
     return;
   }
+
+  Future<String?> getAccountStorage() async {
+    final BiometricStorageFile fileKeypair =
+        await BiometricStorage().getStorage(
+      'keypair',
+      options: StorageFileInitOptions(authenticationRequired: false),
+    );
+
+    return await fileKeypair.read();
+  }
 }
