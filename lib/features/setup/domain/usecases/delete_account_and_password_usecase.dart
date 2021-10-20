@@ -7,11 +7,7 @@ class DeleteAccountAndPasswordUseCase {
 
   final IAccountRepository _accountRepository;
 
-  Future<void> call({
-    required String keypairJson,
-    String? password,
-  }) async {
-    return await _accountRepository.saveAccountStorage(keypairJson,
-        password: password);
+  Future<void> call() async {
+    return await _accountRepository.deleteAccountAndPasswordStorage();
   }
 }
