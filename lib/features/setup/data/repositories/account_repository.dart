@@ -26,4 +26,9 @@ class AccountRepository implements IAccountRepository {
         ? ImportedAccountModel.fromJson(jsonDecode(result))
         : null;
   }
+
+  @override
+  Future<void> deleteAccountAndPasswordStorage() async {
+    return await _accountLocalDatasource.deleteAccountAndPasswordStorage();
+  }
 }

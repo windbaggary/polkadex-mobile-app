@@ -28,4 +28,19 @@ class AccountLocalDatasource {
 
     return await fileKeypair.read();
   }
+
+  Future<void> deleteAccountAndPasswordStorage() async {
+    final BiometricStorageFile fileKeypair =
+        await BiometricStorage().getStorage(
+      'keypair',
+      options: StorageFileInitOptions(authenticationRequired: false),
+    );
+    final BiometricStorageFile filePassword =
+        await BiometricStorage().getStorage('password');
+
+    await fileKeypair.delete();
+    await filePassword.delete();
+
+    return;
+  }
 }
