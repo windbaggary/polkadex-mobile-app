@@ -46,15 +46,6 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AccountProvider>(context).addListener(() {
-      final account = Provider.of<AccountProvider>(context).storeHasAccount;
-
-      print('foi');
-      if (!account) {
-        _onNavigateToIntro(context);
-      }
-    });
-
     return Scaffold(
       backgroundColor: color1C2023,
       body: Center(
