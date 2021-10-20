@@ -84,6 +84,12 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                 ),
                                 backgroundColor: colorFFFFFF,
                                 textColor: Colors.black,
+                                onTap: () async {
+                                  await Provider.of<AccountProvider>(context,
+                                          listen: false)
+                                      .logout();
+                                  _onNavigateToIntro(context);
+                                },
                               ),
                             ),
                             SizedBox(

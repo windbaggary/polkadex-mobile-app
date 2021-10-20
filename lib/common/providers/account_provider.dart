@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 
 class AccountProvider extends ChangeNotifier {
   AccountProvider({
     required GetAccountUseCase getAccountStorageUseCase,
-  }) : _getAccountStorageUseCase = getAccountStorageUseCase;
+    required DeleteAccountAndPasswordUseCase deleteAccountAndPasswordUseCase,
+  })  : _getAccountStorageUseCase = getAccountStorageUseCase,
+        _deleteAccountAndPasswordUseCase = deleteAccountAndPasswordUseCase;
 
   final GetAccountUseCase _getAccountStorageUseCase;
+  final DeleteAccountAndPasswordUseCase _deleteAccountAndPasswordUseCase;
 
   bool _storeHasAccount = false;
 
@@ -17,5 +21,9 @@ class AccountProvider extends ChangeNotifier {
 
     _storeHasAccount = account != null;
     notifyListeners();
+  }
+
+  Future<void> logout() async {
+    return await _deleteAccountAndPasswordUseCase();
   }
 }
