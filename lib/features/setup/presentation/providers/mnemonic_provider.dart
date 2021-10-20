@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/bip39.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/save_account_storage_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 
 class MnemonicProvider extends ChangeNotifier {
   MnemonicProvider({
     required GenerateMnemonicUseCase generateMnemonicUseCase,
     required ImportAccountUseCase importAccountUseCase,
-    required SaveAccountStorageUseCase saveAccountStorageUseCase,
+    required SaveAccountUseCase saveAccountStorageUseCase,
     int phraseLenght = 12,
   })  : _generateMnemonicUseCase = generateMnemonicUseCase,
         _importAccountUseCase = importAccountUseCase,
@@ -19,7 +19,7 @@ class MnemonicProvider extends ChangeNotifier {
 
   final GenerateMnemonicUseCase _generateMnemonicUseCase;
   final ImportAccountUseCase _importAccountUseCase;
-  final SaveAccountStorageUseCase _saveAccountStorageUseCase;
+  final SaveAccountUseCase _saveAccountStorageUseCase;
 
   bool _disposed = false;
   bool _isLoading = false;

@@ -1,5 +1,5 @@
 import 'package:polkadex/common/utils/bip39.dart';
-import 'package:polkadex/features/setup/domain/usecases/save_account_storage_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:test/test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
@@ -18,8 +18,7 @@ class _MockGenerateUsecase extends Mock implements GenerateMnemonicUseCase {}
 
 class _MockImportUsecase extends Mock implements ImportAccountUseCase {}
 
-class _MockSaveAccountUseCase extends Mock
-    implements SaveAccountStorageUseCase {}
+class _MockSaveAccountUseCase extends Mock implements SaveAccountUseCase {}
 
 void main() {
   late _MockGenerateUsecase _mockGenerateUsecase;

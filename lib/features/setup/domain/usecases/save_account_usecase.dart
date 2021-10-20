@@ -1,7 +1,7 @@
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 
-class SaveAccountStorageUseCase {
-  SaveAccountStorageUseCase({
+class SaveAccountUseCase {
+  SaveAccountUseCase({
     required IAccountRepository accountRepository,
   }) : _accountRepository = accountRepository;
 

@@ -5,8 +5,8 @@ import 'package:polkadex/features/setup/data/repositories/account_repository.dar
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/get_account_storage_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/save_account_storage_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
@@ -54,13 +54,13 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => SaveAccountStorageUseCase(
+    () => SaveAccountUseCase(
       accountRepository: dependency(),
     ),
   );
 
   dependency.registerFactory(
-    () => GetAccountStorageUseCase(
+    () => GetAccountUseCase(
       accountRepository: dependency(),
     ),
   );

@@ -1,8 +1,8 @@
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 
-class GetAccountStorageUseCase {
-  GetAccountStorageUseCase({
+class GetAccountUseCase {
+  GetAccountUseCase({
     required IAccountRepository accountRepository,
   }) : _accountRepository = accountRepository;
 

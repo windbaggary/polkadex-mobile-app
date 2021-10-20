@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/features/setup/domain/usecases/get_account_storage_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 
 class AccountProvider extends ChangeNotifier {
   AccountProvider({
-    required GetAccountStorageUseCase getAccountStorageUseCase,
+    required GetAccountUseCase getAccountStorageUseCase,
   }) : _getAccountStorageUseCase = getAccountStorageUseCase;
 
-  final GetAccountStorageUseCase _getAccountStorageUseCase;
+  final GetAccountUseCase _getAccountStorageUseCase;
 
   bool _storeHasAccount = false;
 
