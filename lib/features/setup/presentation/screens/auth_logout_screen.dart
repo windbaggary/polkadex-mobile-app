@@ -1,11 +1,37 @@
+import 'package:biometric_storage/biometric_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_account_storage_usecase.dart';
+import 'package:polkadex/injection_container.dart';
 
-class AuthLogoutScreen extends StatelessWidget {
+class AuthLogoutScreen extends StatefulWidget {
+  @override
+  State<AuthLogoutScreen> createState() => _AuthLogoutScreenState();
+}
+
+class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
+  late Image polkadexLogo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    polkadexLogo = Image.asset(
+      'logo_name.png'.asAssetImg(),
+      fit: BoxFit.contain,
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    precacheImage(polkadexLogo.image, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,10 +41,7 @@ class AuthLogoutScreen extends StatelessWidget {
           alignment: AlignmentDirectional.center,
           children: [
             Center(
-              child: SvgPicture.asset(
-                'logo_name'.asAssetSvg(),
-                fit: BoxFit.contain,
-              ),
+              child: polkadexLogo,
             ),
             Align(
               alignment: Alignment.bottomCenter,
