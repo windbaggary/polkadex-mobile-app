@@ -216,19 +216,22 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                               ),
                                             ],
                                           ),
-                                          OptionTabSwitchWidget(
-                                            svgAsset:
-                                                "finger-print".asAssetSvg(),
-                                            title: "Secure with FingerPrint",
-                                            description:
-                                                "Secure your access without typing your Pin Code.",
-                                            isChecked: settingProvider
-                                                .isFingerPrintEnabled,
-                                            onSwitchChanged: (value) {
-                                              settingProvider.fingerPrintAuth =
-                                                  value;
-                                            },
-                                          ),
+                                          if (dependency.get<bool>(
+                                              instanceName:
+                                                  'isBiometricAvailable'))
+                                            OptionTabSwitchWidget(
+                                              svgAsset:
+                                                  "finger-print".asAssetSvg(),
+                                              title: "Secure with FingerPrint",
+                                              description:
+                                                  "Secure your access without typing your Pin Code.",
+                                              isChecked: settingProvider
+                                                  .isFingerPrintEnabled,
+                                              onSwitchChanged: (value) {
+                                                settingProvider
+                                                    .fingerPrintAuth = value;
+                                              },
+                                            ),
                                         ],
                                       ),
                                     ),

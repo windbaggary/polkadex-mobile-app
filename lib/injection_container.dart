@@ -1,3 +1,4 @@
+import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/providers/account_provider.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
@@ -18,6 +19,15 @@ import 'package:get_it/get_it.dart';
 final dependency = GetIt.instance;
 
 Future<void> init() async {
+  final bool isBiometricAvailable =
+      (await BiometricStorage().canAuthenticate()) ==
+          CanAuthenticateResponse.success;
+
+  dependency.registerLazySingleton(
+    () => isBiometricAvailable,
+    instanceName: 'isBiometricAvailable',
+  );
+
   dependency.registerSingleton<WebViewRunner>(
     WebViewRunner()..launch(jsCode: 'assets/js/main.js'),
   );
