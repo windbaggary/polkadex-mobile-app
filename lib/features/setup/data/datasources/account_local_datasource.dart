@@ -43,4 +43,16 @@ class AccountLocalDatasource {
 
     return;
   }
+
+  Future<bool> savePasswordStorage(String password) async {
+    try {
+      final BiometricStorageFile filePassword =
+          await BiometricStorage().getStorage('password');
+      await filePassword.write(password);
+    } on AuthException {
+      return false;
+    }
+
+    return true;
+  }
 }

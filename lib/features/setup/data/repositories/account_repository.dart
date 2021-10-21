@@ -31,4 +31,9 @@ class AccountRepository implements IAccountRepository {
   Future<void> deleteAccountAndPasswordStorage() async {
     return await _accountLocalDatasource.deleteAccountAndPasswordStorage();
   }
+
+  @override
+  Future<bool> savePasswordStorage(String password) async {
+    return await _accountLocalDatasource.savePasswordStorage(password);
+  }
 }

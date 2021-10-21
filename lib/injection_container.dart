@@ -9,6 +9,7 @@ import 'package:polkadex/features/setup/domain/usecases/delete_account_and_passw
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
@@ -81,12 +82,18 @@ Future<void> init() async {
       accountRepository: dependency(),
     ),
   );
+  dependency.registerFactory(
+    () => SavePasswordUseCase(
+      accountRepository: dependency(),
+    ),
+  );
 
   dependency.registerFactory(
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
       saveAccountStorageUseCase: dependency(),
+      savePasswordUseCase: dependency(),
     ),
   );
 

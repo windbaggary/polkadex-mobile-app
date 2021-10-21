@@ -5,21 +5,25 @@ import 'package:polkadex/common/utils/bip39.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 
 class MnemonicProvider extends ChangeNotifier {
   MnemonicProvider({
     required GenerateMnemonicUseCase generateMnemonicUseCase,
     required ImportAccountUseCase importAccountUseCase,
     required SaveAccountUseCase saveAccountStorageUseCase,
+    required SavePasswordUseCase savePasswordUseCase,
     int phraseLenght = 12,
   })  : _generateMnemonicUseCase = generateMnemonicUseCase,
         _importAccountUseCase = importAccountUseCase,
         _saveAccountStorageUseCase = saveAccountStorageUseCase,
+        _savePasswordUseCase = savePasswordUseCase,
         _mnemonicWords = List.generate(phraseLenght, (_) => '');
 
   final GenerateMnemonicUseCase _generateMnemonicUseCase;
   final ImportAccountUseCase _importAccountUseCase;
   final SaveAccountUseCase _saveAccountStorageUseCase;
+  final SavePasswordUseCase _savePasswordUseCase;
 
   bool _disposed = false;
   bool _isLoading = false;
@@ -56,7 +60,7 @@ class MnemonicProvider extends ChangeNotifier {
 
   void shuffleMnemonicWords() {
     _hasShuffledMnemonicChanged = false;
-    _shuffledMnemonicWords.shuffle();
+    //_shuffledMnemonicWords.shuffle();
   }
 
   void changeMnemonicWord(int index, String newWord) {
@@ -119,17 +123,28 @@ class MnemonicProvider extends ChangeNotifier {
     return result.isRight();
   }
 
-  Future<void> importAccount(String password) async {
+  Future<bool> importAccount(String password, bool useBiometric) async {
+    if (useBiometric) {
+      final hasAuthenticated = await _savePasswordUseCase(password: password);
+
+      if (!hasAuthenticated) {
+        return false;
+      }
+    }
+
     final result = await _importAccountUseCase(
       mnemonic: _mnemonicWords.join(' '),
       password: password,
     );
 
     result.fold(
-      (_) {},
-      (importedAcc) async => await _saveAccountStorageUseCase(
-          keypairJson: json.encode(importedAcc)),
+      (_) => false,
+      (importedAcc) async {
+        await _saveAccountStorageUseCase(keypairJson: json.encode(importedAcc));
+      },
     );
+
+    return true;
   }
 
   Future<void> searchSuggestions(String inputWord) async {

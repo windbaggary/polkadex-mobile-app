@@ -261,7 +261,8 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                     _passwordController.text ==
                                         _passwordRepeatController.text,
                                 label: 'Next',
-                                onTap: () => _onNextTap(provider),
+                                onTap: () => _onNextTap(provider,
+                                    settingProvider.isFingerPrintEnabled),
                               ),
                             ],
                           ),
@@ -276,23 +277,28 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     });
   }
 
-  void _onNextTap(MnemonicProvider provider) async {
+  void _onNextTap(MnemonicProvider provider, bool useBiometric) async {
     FocusScope.of(context).unfocus();
     LoadingPopup.show(
       context: context,
       text: 'We are almost there...',
     );
 
-    await provider.importAccount(_passwordController.text);
+    final hasImported =
+        await provider.importAccount(_passwordController.text, useBiometric);
 
-    Navigator.of(context).pushAndRemoveUntil(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: LandingScreen());
-      },
-    ), (route) => route.isFirst);
+    if (hasImported) {
+      Navigator.of(context).pushAndRemoveUntil(PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+              opacity: CurvedAnimation(
+                  parent: animation, curve: Interval(0.500, 1.00)),
+              child: LandingScreen());
+        },
+      ), (route) => route.isFirst);
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   Future<bool> _onPop(BuildContext context) async {

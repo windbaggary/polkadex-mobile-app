@@ -4,4 +4,5 @@ abstract class IAccountRepository {
   Future<void> saveAccountStorage(String keypairJson, {String? password});
   Future<ImportedAccountEntity?> getAccountStorage();
   Future<void> deleteAccountAndPasswordStorage();
+  Future<bool> savePasswordStorage(String password);
 }

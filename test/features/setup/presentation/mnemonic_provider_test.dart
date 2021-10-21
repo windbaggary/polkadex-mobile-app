@@ -1,5 +1,6 @@
 import 'package:polkadex/common/utils/bip39.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:test/test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
@@ -20,10 +21,13 @@ class _MockImportUsecase extends Mock implements ImportAccountUseCase {}
 
 class _MockSaveAccountUseCase extends Mock implements SaveAccountUseCase {}
 
+class _MockSavePasswordUseCase extends Mock implements SavePasswordUseCase {}
+
 void main() {
   late _MockGenerateUsecase _mockGenerateUsecase;
   late _MockImportUsecase _mockImportUsecase;
   late _MockSaveAccountUseCase _mockSaveAccountUseCase;
+  late _MockSavePasswordUseCase _mockSavePasswordUseCase;
   late MnemonicProvider _provider;
   late String tMnemonic;
   late String tMnemonicSwapped;
@@ -35,10 +39,12 @@ void main() {
     _mockGenerateUsecase = _MockGenerateUsecase();
     _mockImportUsecase = _MockImportUsecase();
     _mockSaveAccountUseCase = _MockSaveAccountUseCase();
+    _mockSavePasswordUseCase = _MockSavePasswordUseCase();
     _provider = MnemonicProvider(
       generateMnemonicUseCase: _mockGenerateUsecase,
       importAccountUseCase: _mockImportUsecase,
       saveAccountStorageUseCase: _mockSaveAccountUseCase,
+      savePasswordUseCase: _mockSavePasswordUseCase,
     );
     tMnemonic = "correct gather fork";
     tMnemonicSwapped = "gather correct fork";
@@ -182,7 +188,7 @@ void main() {
           _provider.changeMnemonicWord(1, 'gather');
           _provider.changeMnemonicWord(2, 'fork');
           final resultCheck = await _provider.checkMnemonicValid();
-          await _provider.importAccount('passwordTest');
+          await _provider.importAccount('passwordTest', false);
           // assert
 
           expect(resultCheck, true);
@@ -204,7 +210,7 @@ void main() {
           );
           // act
           final resultCheck = await _provider.checkMnemonicValid();
-          await _provider.importAccount('passwordTest');
+          await _provider.importAccount('passwordTest', false);
           // assert
 
           expect(resultCheck, false);
