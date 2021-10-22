@@ -39,6 +39,6 @@ class AccountRepository implements IAccountRepository {
 
   @override
   Future<String?> getPasswordStorage() async {
-    await _accountLocalDatasource.getPasswordStorage();
+    return await _accountLocalDatasource.getPasswordStorage();
   }
 }

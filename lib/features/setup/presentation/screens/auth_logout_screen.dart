@@ -5,8 +5,10 @@ import 'package:polkadex/common/blocs/account_cubit.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:provider/provider.dart';
+import 'confirm_password_screen.dart';
 
 class AuthLogoutScreen extends StatefulWidget {
   @override
@@ -81,14 +83,18 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                   vertical: 16,
                                 ),
                                 onTap: () async {
-                                  //if (provider.isAuthBiometric) {
-                                  //  final authenticated = await provider.authenticateBiometric();
-                                  //  if (authenticated) {
-                                  //    _onNavigateToLanding(context);
-                                  //  }
-                                  //} else {
-                                  //  _onNavigateToConfirmPassword(context);
-                                  //}
+                                  if (state is AccountLoaded &&
+                                      state.account.biometricAccess) {
+                                    final authenticated = await context
+                                        .read<AccountCubit>()
+                                        .authenticateBiometric();
+                                    print(authenticated);
+                                    if (authenticated) {
+                                      _onNavigateToLanding(context);
+                                    } else {
+                                      _onNavigateToConfirmPassword(context);
+                                    }
+                                  }
                                 },
                               ),
                             ),
@@ -111,34 +117,34 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
     );
   }
 
-  //void _onNavigateToLanding(BuildContext context) {
-  //  Navigator.of(context).pushAndRemoveUntil(
-  //    PageRouteBuilder(
-  //      pageBuilder: (context, animation, secondaryAnimation) {
-  //        return FadeTransition(
-  //          opacity: CurvedAnimation(
-  //              parent: animation, curve: Interval(0.500, 1.00)),
-  //          child: LandingScreen(),
-  //        );
-  //      },
-  //    ),
-  //    (route) => route.isFirst,
-  //  );
-  //}
-//
-  //void _onNavigateToConfirmPassword(BuildContext context) {
-  //  Navigator.of(context).push(
-  //    PageRouteBuilder(
-  //      pageBuilder: (context, animation, secondaryAnimation) {
-  //        return FadeTransition(
-  //          opacity: CurvedAnimation(
-  //              parent: animation, curve: Interval(0.500, 1.00)),
-  //          child: ConfirmPasswordScreen(),
-  //        );
-  //      },
-  //    ),
-  //  );
-  //}
+  void _onNavigateToLanding(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: LandingScreen(),
+          );
+        },
+      ),
+      (route) => route.isFirst,
+    );
+  }
+
+  void _onNavigateToConfirmPassword(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: ConfirmPasswordScreen(),
+          );
+        },
+      ),
+    );
+  }
 
   void _onNavigateToIntro(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
