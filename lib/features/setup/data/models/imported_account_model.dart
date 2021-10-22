@@ -27,8 +27,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
       encoding: EncodingModel.fromJson(map['encoding']),
       address: map['address'],
       meta: MetaModel.fromJson(map['meta']),
-      name: map['name'],
-      biometricAccess: map['biometricAccess'],
+      name: map['name'] ?? '',
+      biometricAccess: map['biometricAccess'] ?? false,
     );
   }
 
