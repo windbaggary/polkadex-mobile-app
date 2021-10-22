@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:biometric_storage/biometric_storage.dart';
+import 'package:dartz/dartz.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
@@ -35,5 +37,10 @@ class AccountRepository implements IAccountRepository {
   @override
   Future<bool> savePasswordStorage(String password) async {
     return await _accountLocalDatasource.savePasswordStorage(password);
+  }
+
+  @override
+  Future<String?> getPasswordStorage() async {
+    final result = await _accountLocalDatasource.getPasswordStorage();
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
@@ -14,17 +16,20 @@ class AccountProvider extends ChangeNotifier {
     required ImportAccountUseCase importAccountUseCase,
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
+    required GetPasswordUseCase getPasswordUseCase,
   })  : _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountAndPasswordUseCase = deleteAccountAndPasswordUseCase,
         _importAccountUseCase = importAccountUseCase,
         _saveAccountUseCase = saveAccountUseCase,
-        _savePasswordUseCase = savePasswordUseCase;
+        _savePasswordUseCase = savePasswordUseCase,
+        _getPasswordUseCase = getPasswordUseCase;
 
   final GetAccountUseCase _getAccountStorageUseCase;
   final DeleteAccountAndPasswordUseCase _deleteAccountAndPasswordUseCase;
   final ImportAccountUseCase _importAccountUseCase;
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
+  final GetPasswordUseCase _getPasswordUseCase;
 
   bool _storeHasAccount = false;
 
@@ -43,6 +48,12 @@ class AccountProvider extends ChangeNotifier {
 
   Future<bool> savePassword(String password) async {
     return await _savePasswordUseCase(password: password);
+  }
+
+  Future<bool> authenticateBiometric() async {
+    final result = await _getPasswordUseCase();
+
+    return result != null;
   }
 
   Future<void> saveAccount(List<String> mnemonicWords, String password) async {

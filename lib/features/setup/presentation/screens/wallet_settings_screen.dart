@@ -283,12 +283,13 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     String password,
     bool useBiometric,
   ) async {
+    final accountProvider =
+        Provider.of<AccountProvider>(context, listen: false);
+
     FocusScope.of(context).unfocus();
 
     if (useBiometric) {
-      final hasImported =
-          await Provider.of<AccountProvider>(context, listen: false)
-              .savePassword(
+      final hasImported = await accountProvider.savePassword(
         password,
       );
 
@@ -302,7 +303,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       text: 'We are almost there...',
     );
 
-    await Provider.of<AccountProvider>(context, listen: false).saveAccount(
+    await accountProvider.saveAccount(
       mnemonicWords,
       password,
     );
