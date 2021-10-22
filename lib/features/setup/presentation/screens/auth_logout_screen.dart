@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:polkadex/common/providers/account_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:polkadex/common/blocs/account_cubit.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
-import 'package:polkadex/features/setup/presentation/screens/confirm_password_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -24,18 +23,6 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
     polkadexLogo = Image.asset(
       'logo_name.png'.asAssetImg(),
       fit: BoxFit.contain,
-    );
-
-    WidgetsBinding.instance?.addPostFrameCallback(
-      (_) async {
-        final provider = Provider.of<AccountProvider>(context, listen: false);
-
-        await provider.loadAccountData();
-
-        if (!provider.storeHasAccount) {
-          _onNavigateToIntro(context);
-        }
-      },
     );
   }
 
@@ -57,10 +44,10 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
             Center(
               child: polkadexLogo,
             ),
-            Consumer<AccountProvider>(
-              builder: (context, provider, child) {
+            BlocConsumer<AccountCubit, AccountState>(
+              builder: (_, state) {
                 return Visibility(
-                  visible: provider.storeHasAccount,
+                  visible: state is AccountLoaded,
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -78,9 +65,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                 backgroundColor: colorFFFFFF,
                                 textColor: Colors.black,
                                 onTap: () async {
-                                  await Provider.of<AccountProvider>(context,
-                                          listen: false)
-                                      .logout();
+                                  await context.read<AccountCubit>().logout();
                                   _onNavigateToIntro(context);
                                 },
                               ),
@@ -114,6 +99,11 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                   ),
                 );
               },
+              listener: (_, state) {
+                if (state is AccountNotLoaded) {
+                  _onNavigateToIntro(context);
+                }
+              },
             ),
           ],
         ),
@@ -121,34 +111,34 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
     );
   }
 
-  void _onNavigateToLanding(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: LandingScreen(),
-          );
-        },
-      ),
-      (route) => route.isFirst,
-    );
-  }
-
-  void _onNavigateToConfirmPassword(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: ConfirmPasswordScreen(),
-          );
-        },
-      ),
-    );
-  }
+  //void _onNavigateToLanding(BuildContext context) {
+  //  Navigator.of(context).pushAndRemoveUntil(
+  //    PageRouteBuilder(
+  //      pageBuilder: (context, animation, secondaryAnimation) {
+  //        return FadeTransition(
+  //          opacity: CurvedAnimation(
+  //              parent: animation, curve: Interval(0.500, 1.00)),
+  //          child: LandingScreen(),
+  //        );
+  //      },
+  //    ),
+  //    (route) => route.isFirst,
+  //  );
+  //}
+//
+  //void _onNavigateToConfirmPassword(BuildContext context) {
+  //  Navigator.of(context).push(
+  //    PageRouteBuilder(
+  //      pageBuilder: (context, animation, secondaryAnimation) {
+  //        return FadeTransition(
+  //          opacity: CurvedAnimation(
+  //              parent: animation, curve: Interval(0.500, 1.00)),
+  //          child: ConfirmPasswordScreen(),
+  //        );
+  //      },
+  //    ),
+  //  );
+  //}
 
   void _onNavigateToIntro(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(

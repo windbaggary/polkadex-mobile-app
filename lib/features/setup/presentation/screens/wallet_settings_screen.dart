@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/blocs/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/providers/account_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
@@ -285,13 +285,12 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     String name,
     bool useBiometric,
   ) async {
-    final accountProvider =
-        Provider.of<AccountProvider>(context, listen: false);
+    final accountCubit = context.read<AccountCubit>();
 
     FocusScope.of(context).unfocus();
 
     if (useBiometric) {
-      final hasImported = await accountProvider.savePassword(
+      final hasImported = await accountCubit.savePassword(
         password,
       );
 
@@ -305,7 +304,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       text: 'We are almost there...',
     );
 
-    await accountProvider.saveAccount(
+    await accountCubit.saveAccount(
       mnemonicWords,
       password,
       name,
