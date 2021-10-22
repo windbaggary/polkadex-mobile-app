@@ -264,6 +264,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                           listen: false)
                                       .mnemonicWords,
                                   _passwordController.text,
+                                  _nameController.text,
                                   settingProvider.isFingerPrintEnabled),
                             ),
                           ],
@@ -281,6 +282,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
   void _onNextTap(
     List<String> mnemonicWords,
     String password,
+    String name,
     bool useBiometric,
   ) async {
     final accountProvider =
@@ -306,6 +308,8 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     await accountProvider.saveAccount(
       mnemonicWords,
       password,
+      name,
+      useBiometric,
     );
 
     Navigator.of(context).pushAndRemoveUntil(PageRouteBuilder(

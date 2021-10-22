@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
@@ -56,7 +56,8 @@ class AccountProvider extends ChangeNotifier {
     return result != null;
   }
 
-  Future<void> saveAccount(List<String> mnemonicWords, String password) async {
+  Future<void> saveAccount(List<String> mnemonicWords, String password,
+      String name, bool useBiometric) async {
     final result = await _importAccountUseCase(
       mnemonic: mnemonicWords.join(' '),
       password: password,
@@ -64,8 +65,16 @@ class AccountProvider extends ChangeNotifier {
 
     result.fold(
       (_) {},
-      (importedAcc) async =>
-          await _saveAccountUseCase(keypairJson: json.encode(importedAcc)),
+      (importedAcc) async {
+        await _saveAccountUseCase(
+          keypairJson: json.encode(
+            (importedAcc as ImportedAccountModel).copyWith(
+              name: name,
+              biometricAccess: useBiometric,
+            ),
+          ),
+        );
+      },
     );
   }
 }
