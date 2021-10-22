@@ -92,8 +92,6 @@ Future<void> init() async {
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
-      saveAccountStorageUseCase: dependency(),
-      savePasswordUseCase: dependency(),
     ),
   );
 
@@ -101,6 +99,9 @@ Future<void> init() async {
     () => AccountProvider(
       getAccountStorageUseCase: dependency(),
       deleteAccountAndPasswordUseCase: dependency(),
+      savePasswordUseCase: dependency(),
+      saveAccountUseCase: dependency(),
+      importAccountUseCase: dependency(),
     ),
   );
 
