@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:polkadex/app_lifecycle_widget.dart';
 import 'package:polkadex/common/blocs/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
@@ -47,71 +48,74 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     AppConfigs.size = WidgetsBinding.instance!.window.physicalSize;
-    return KeyedSubtree(
-      key: key,
-      child: MultiProvider(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<BottomNavigationProvider>(
+            create: (_) => BottomNavigationProvider()),
+      ],
+      builder: (context, _) => MultiBlocProvider(
         providers: [
-          ChangeNotifierProvider<BottomNavigationProvider>(
-              create: (_) => BottomNavigationProvider()),
+          BlocProvider<AccountCubit>(
+            create: (_) =>
+                injection.dependency<AccountCubit>()..loadAccountData(),
+          ),
         ],
-        builder: (context, _) => MultiBlocProvider(
-          providers: [
-            BlocProvider<AccountCubit>(
-              create: (_) =>
-                  injection.dependency<AccountCubit>()..loadAccountData(),
-            ),
-          ],
-          child: MaterialApp(
-            localizationsDelegates: [
-              S.delegate,
-              LocaleNamesLocalizationsDelegate(),
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.delegate.supportedLocales,
-            title: 'Polkadex',
-            theme: ThemeData(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                buttonColor: Colors.transparent,
-                primaryColor: color2E303C,
-                canvasColor: color2E303C,
-                fontFamily: 'WorkSans',
-                accentColor: colorE6007A,
-                backgroundColor: color3B4150,
-                dialogTheme: DialogTheme(
-                  backgroundColor: color2E303C,
-                )).copyWith(
-              pageTransitionsTheme: PageTransitionsTheme(
-                builders: {
-                  TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        child: AppLifecycleWidget(
+          child: KeyedSubtree(
+            key: key,
+            child: MaterialApp(
+              localizationsDelegates: [
+                S.delegate,
+                LocaleNamesLocalizationsDelegate(),
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+              title: 'Polkadex',
+              theme: ThemeData(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  buttonColor: Colors.transparent,
+                  primaryColor: color2E303C,
+                  canvasColor: color2E303C,
+                  fontFamily: 'WorkSans',
+                  accentColor: colorE6007A,
+                  backgroundColor: color3B4150,
+                  dialogTheme: DialogTheme(
+                    backgroundColor: color2E303C,
+                  )).copyWith(
+                pageTransitionsTheme: PageTransitionsTheme(
+                  builders: {
+                    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                  },
+                ),
+              ),
+
+              // Set the initial route
+              home: Builder(
+                builder: (context) {
+                  AppConfigs.size = MediaQuery.of(context).size;
+                  return AuthLogoutScreen();
                 },
               ),
-            ),
+              onGenerateRoute: (settings) {
+                late Widget screen;
+                switch (settings.name) {
+                  case LandingScreen.routeName:
+                    screen = LandingScreen();
+                    break;
+                }
 
-            // Set the initial route
-            home: Builder(
-              builder: (context) {
-                AppConfigs.size = MediaQuery.of(context).size;
-                return AuthLogoutScreen();
+                return MaterialPageRoute(
+                    builder: (context) => screen, settings: settings);
               },
-            ),
-            onGenerateRoute: (settings) {
-              late Widget screen;
-              switch (settings.name) {
-                case LandingScreen.routeName:
-                  screen = LandingScreen();
-                  break;
-              }
 
-              return MaterialPageRoute(
-                  builder: (context) => screen, settings: settings);
-            },
-            debugShowCheckedModeBanner: false,
+              debugShowCheckedModeBanner: false,
+            ),
           ),
         ),
       ),

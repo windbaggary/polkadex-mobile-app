@@ -71,14 +71,14 @@ class AccountCubit extends Cubit<AccountState> {
     result.fold(
       (_) {},
       (importedAcc) async {
-        await _saveAccountUseCase(
-          keypairJson: json.encode(
-            (importedAcc as ImportedAccountModel).copyWith(
-              name: name,
-              biometricAccess: useBiometric,
-            ),
-          ),
+        final acc = (importedAcc as ImportedAccountModel).copyWith(
+          name: name,
+          biometricAccess: useBiometric,
         );
+
+        emit(AccountLoaded(account: acc));
+
+        await _saveAccountUseCase(keypairJson: json.encode(acc));
       },
     );
   }
