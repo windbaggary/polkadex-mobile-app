@@ -23,76 +23,96 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_MyAppState>()!.restartApp();
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     AppConfigs.size = WidgetsBinding.instance!.window.physicalSize;
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<BottomNavigationProvider>(
-            create: (_) => BottomNavigationProvider()),
-      ],
-      builder: (context, _) => MultiBlocProvider(
+    return KeyedSubtree(
+      key: key,
+      child: MultiProvider(
         providers: [
-          BlocProvider<AccountCubit>(
-            create: (_) =>
-                injection.dependency<AccountCubit>()..loadAccountData(),
-          ),
+          ChangeNotifierProvider<BottomNavigationProvider>(
+              create: (_) => BottomNavigationProvider()),
         ],
-        child: MaterialApp(
-          localizationsDelegates: [
-            S.delegate,
-            LocaleNamesLocalizationsDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+        builder: (context, _) => MultiBlocProvider(
+          providers: [
+            BlocProvider<AccountCubit>(
+              create: (_) =>
+                  injection.dependency<AccountCubit>()..loadAccountData(),
+            ),
           ],
-          supportedLocales: S.delegate.supportedLocales,
-          title: 'Polkadex',
-          theme: ThemeData(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              focusColor: Colors.transparent,
-              buttonColor: Colors.transparent,
-              primaryColor: color2E303C,
-              canvasColor: color2E303C,
-              fontFamily: 'WorkSans',
-              accentColor: colorE6007A,
-              backgroundColor: color3B4150,
-              dialogTheme: DialogTheme(
-                backgroundColor: color2E303C,
-              )).copyWith(
-            pageTransitionsTheme: PageTransitionsTheme(
-              builders: {
-                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          child: MaterialApp(
+            localizationsDelegates: [
+              S.delegate,
+              LocaleNamesLocalizationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+            title: 'Polkadex',
+            theme: ThemeData(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                buttonColor: Colors.transparent,
+                primaryColor: color2E303C,
+                canvasColor: color2E303C,
+                fontFamily: 'WorkSans',
+                accentColor: colorE6007A,
+                backgroundColor: color3B4150,
+                dialogTheme: DialogTheme(
+                  backgroundColor: color2E303C,
+                )).copyWith(
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders: {
+                  TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                },
+              ),
+            ),
+
+            // Set the initial route
+            home: Builder(
+              builder: (context) {
+                AppConfigs.size = MediaQuery.of(context).size;
+                return AuthLogoutScreen();
               },
             ),
-          ),
+            onGenerateRoute: (settings) {
+              late Widget screen;
+              switch (settings.name) {
+                case LandingScreen.routeName:
+                  screen = LandingScreen();
+                  break;
+              }
 
-          // Set the initial route
-          home: Builder(
-            builder: (context) {
-              AppConfigs.size = MediaQuery.of(context).size;
-              return AuthLogoutScreen();
+              return MaterialPageRoute(
+                  builder: (context) => screen, settings: settings);
             },
+            debugShowCheckedModeBanner: false,
           ),
-          onGenerateRoute: (settings) {
-            late Widget screen;
-            switch (settings.name) {
-              case LandingScreen.routeName:
-                screen = LandingScreen();
-                break;
-            }
-
-            return MaterialPageRoute(
-                builder: (context) => screen, settings: settings);
-          },
-
-          debugShowCheckedModeBanner: false,
         ),
       ),
     );
