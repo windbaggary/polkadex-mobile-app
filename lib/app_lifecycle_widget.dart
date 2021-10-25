@@ -26,11 +26,8 @@ class _AppLifecycleWidgetState extends State<AppLifecycleWidget>
     super.dispose();
   }
 
-  late AppLifecycleState _notification;
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(context.read<AccountCubit>().state);
     if (context.read<AccountCubit>().state is AccountLoaded &&
         state.index == 0) {
       MyApp.restartApp(context);

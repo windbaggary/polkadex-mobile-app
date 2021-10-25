@@ -88,7 +88,6 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                     final authenticated = await context
                                         .read<AccountCubit>()
                                         .authenticateBiometric();
-                                    print(authenticated);
                                     if (authenticated) {
                                       _onNavigateToLanding(context);
                                     }

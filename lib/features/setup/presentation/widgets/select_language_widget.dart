@@ -5,7 +5,6 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/generated/l10n.dart';
-import 'package:polkadex/main.dart';
 
 class SelectLanguageWidget extends StatefulWidget {
   @override
