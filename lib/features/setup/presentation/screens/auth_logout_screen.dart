@@ -91,9 +91,9 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                     print(authenticated);
                                     if (authenticated) {
                                       _onNavigateToLanding(context);
-                                    } else {
-                                      _onNavigateToConfirmPassword(context);
                                     }
+                                  } else {
+                                    _onNavigateToConfirmPassword(context);
                                   }
                                 },
                               ),
