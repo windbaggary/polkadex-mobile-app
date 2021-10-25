@@ -5,7 +5,10 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
+import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
+import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +23,8 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
   late Animation<double> _entryAnimation;
 
   final _passwordController = TextEditingController();
+
+  var _isConfirmEnabled = false;
 
   @override
   void initState() {
@@ -119,6 +124,8 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                                 description: '',
                                 controller: _passwordController,
                                 obscureText: true,
+                                onChanged: (password) => setState(() =>
+                                    _isConfirmEnabled = password.length >= 8),
                               ),
                             ],
                           ),
@@ -144,13 +151,26 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                       horizontal: 12,
                       vertical: 16,
                     ),
+                    enabled: _isConfirmEnabled,
                     onTap: () async {
                       final accState = context.read<AccountCubit>().state;
 
                       if (accState is AccountLoaded) {
-                        context.read<AccountCubit>().confirmPassword(
-                            (accState.account as ImportedAccountModel).toJson(),
-                            _passwordController.text);
+                        LoadingPopup.show(
+                          context: context,
+                          text: 'Checking Password...',
+                        );
+
+                        final isCorrect = await context
+                            .read<AccountCubit>()
+                            .confirmPassword(
+                                (accState.account as ImportedAccountModel)
+                                    .toJson(),
+                                _passwordController.text);
+
+                        isCorrect
+                            ? _onNavigateToLanding(context)
+                            : _onShowIncorrectPasswordModal(context);
                       }
                     },
                   ),
@@ -160,6 +180,35 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
           )
         ],
       ),
+    );
+  }
+
+  void _onShowIncorrectPasswordModal(BuildContext context) {
+    Navigator.of(context).pop();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(30),
+        ),
+      ),
+      builder: (_) => IncorrectMnemonicWidget(),
+    );
+  }
+
+  void _onNavigateToLanding(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+                parent: animation, curve: Interval(0.500, 1.00)),
+            child: LandingScreen(),
+          );
+        },
+      ),
+      (route) => route.isFirst,
     );
   }
 
