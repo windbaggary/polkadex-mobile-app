@@ -8,7 +8,7 @@ import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -193,7 +193,10 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
           top: Radius.circular(30),
         ),
       ),
-      builder: (_) => IncorrectMnemonicWidget(),
+      builder: (_) => WarningModalWidget(
+        title: 'Incorrect password',
+        subtitle: 'Please enter again.',
+      ),
     );
   }
 
