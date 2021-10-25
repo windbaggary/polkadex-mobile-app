@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
@@ -20,12 +21,14 @@ class AccountCubit extends Cubit<AccountState> {
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
+    required ConfirmPasswordUseCase confirmPasswordUseCase,
   })  : _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountAndPasswordUseCase = deleteAccountAndPasswordUseCase,
         _importAccountUseCase = importAccountUseCase,
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
+        _confirmPasswordUseCase = confirmPasswordUseCase,
         super(AccountInitial());
 
   final GetAccountUseCase _getAccountStorageUseCase;
@@ -34,6 +37,7 @@ class AccountCubit extends Cubit<AccountState> {
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
+  final ConfirmPasswordUseCase _confirmPasswordUseCase;
 
   Future<void> loadAccountData() async {
     final account = await _getAccountStorageUseCase();
@@ -77,5 +81,10 @@ class AccountCubit extends Cubit<AccountState> {
         );
       },
     );
+  }
+
+  Future<bool> confirmPassword(
+      Map<String, dynamic> account, String password) async {
+    return await _confirmPasswordUseCase(account: account, password: password);
   }
 }

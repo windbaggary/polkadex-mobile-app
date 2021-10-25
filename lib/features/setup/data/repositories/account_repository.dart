@@ -41,4 +41,10 @@ class AccountRepository implements IAccountRepository {
   Future<String?> getPasswordStorage() async {
     return await _accountLocalDatasource.getPasswordStorage();
   }
+
+  @override
+  Future<bool> confirmPassword(
+      Map<String, dynamic> account, String password) async {
+    return await _accountLocalDatasource.confirmPassword(account, password);
+  }
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/blocs/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmPasswordScreen extends StatefulWidget {
   @override
@@ -15,6 +18,8 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
+
+  final _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -112,6 +117,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                               WalletInputWidget(
                                 title: 'Repeat Password',
                                 description: '',
+                                controller: _passwordController,
                                 obscureText: true,
                               ),
                             ],
@@ -138,6 +144,15 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                       horizontal: 12,
                       vertical: 16,
                     ),
+                    onTap: () async {
+                      final accState = context.read<AccountCubit>().state;
+
+                      if (accState is AccountLoaded) {
+                        context.read<AccountCubit>().confirmPassword(
+                            (accState.account as ImportedAccountModel).toJson(),
+                            _passwordController.text);
+                      }
+                    },
                   ),
                 ],
               ),

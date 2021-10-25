@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:biometric_storage/biometric_storage.dart';
 
 class AccountLocalDatasource {
@@ -75,5 +77,20 @@ class AccountLocalDatasource {
     } on AuthException {
       return null;
     }
+  }
+
+  Future<bool> confirmPassword(
+      Map<String, dynamic> account, String password) async {
+    //final String _callImportAccount =
+    //    'polkadexWorker.importAccountFromMnemonic("$mnemonic", "ed25519", "$password")';
+//
+    //final Map<String, dynamic> result =
+    //await dependency<WebViewRunner>().evalJavascript(_callImportAccount);
+//
+    //return result;
+    print('password $password');
+    print(json.encode(account));
+
+    return true;
   }
 }
