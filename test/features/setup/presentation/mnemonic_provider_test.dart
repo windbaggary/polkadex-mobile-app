@@ -26,18 +26,6 @@ void main() {
     );
     tMnemonic = "correct gather fork";
     tMnemonicSwapped = "gather correct fork";
-    //tMeta = MetaModel(name: 'userName');
-    //tEncoding = EncodingModel(
-    //  content: ["sr25519"],
-    //  version: '3',
-    //  type: ["none"],
-    //);
-    //tImportedAccount = ImportedAccountModel(
-    //  encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-    //  encoding: tEncoding,
-    //  address: "k9o1dxJxQE8Zwm5Fy",
-    //  meta: tMeta,
-    //);
   });
 
   group(
@@ -153,53 +141,6 @@ void main() {
           expect(_mnemonicProvider.suggestionsMnemonicWords.length, 0);
         },
       );
-
-      //test(
-      //  'import account success',
-      //  () async {
-      //    // arrange
-      //    when(() => _mockImportUsecase(
-      //        mnemonic: any(named: "mnemonic"),
-      //        password: any(named: "password"))).thenAnswer(
-      //      (_) async => Right(tImportedAccount),
-      //    );
-      //    // act
-      //    _mnemonicProvider.changeMnemonicWord(0, 'correct');
-      //    _mnemonicProvider.changeMnemonicWord(1, 'gather');
-      //    _mnemonicProvider.changeMnemonicWord(2, 'fork');
-      //    final resultCheck = await _mnemonicProvider.checkMnemonicValid();
-      //    await _mnemonicProvider.importAccount('passwordTest', false);
-      //    // assert
-//
-      //    expect(resultCheck, true);
-      //    verify(() => _mockImportUsecase(
-      //        mnemonic: any(named: "mnemonic"),
-      //        password: any(named: "password"))).called(2);
-      //    verifyNoMoreInteractions(_mockImportUsecase);
-      //  },
-      //);
-//
-      //test(
-      //  'import account fail',
-      //  () async {
-      //    // arrange
-      //    when(() => _mockImportUsecase(
-      //        mnemonic: any(named: "mnemonic"),
-      //        password: any(named: "password"))).thenAnswer(
-      //      (_) async => Left(ApiError()),
-      //    );
-      //    // act
-      //    final resultCheck = await _mnemonicProvider.checkMnemonicValid();
-      //    await _mnemonicProvider('passwordTest', false);
-      //    // assert
-//
-      //    expect(resultCheck, false);
-      //    verify(() => _mockImportUsecase(
-      //        mnemonic: any(named: "mnemonic"),
-      //        password: any(named: "password"))).called(2);
-      //    verifyNoMoreInteractions(_mockImportUsecase);
-      //  },
-      //);
     },
   );
 }
