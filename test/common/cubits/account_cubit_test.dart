@@ -193,11 +193,25 @@ void main() {
         'Biometric verification success for account login',
         () async {
           when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccount,
+          );
+          when(
             () => _mockGetPasswordUseCase(),
           ).thenAnswer(
             (_) async => 'test',
           );
+          when(
+            () => _mockConfirmPasswordUseCase(
+              account: any(named: 'account'),
+              password: any(named: 'password'),
+            ),
+          ).thenAnswer(
+            (_) async => true,
+          );
 
+          await cubit.loadAccountData();
           final result = await cubit.authenticateBiometric();
 
           expect(result, true);
@@ -210,11 +224,25 @@ void main() {
         'Biometric verification fail for account login',
         () async {
           when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccount,
+          );
+          when(
             () => _mockGetPasswordUseCase(),
           ).thenAnswer(
-            (_) async => null,
+            (_) async => 'test',
+          );
+          when(
+            () => _mockConfirmPasswordUseCase(
+              account: any(named: 'account'),
+              password: any(named: 'password'),
+            ),
+          ).thenAnswer(
+            (_) async => false,
           );
 
+          await cubit.loadAccountData();
           final result = await cubit.authenticateBiometric();
 
           expect(result, false);
@@ -255,6 +283,11 @@ void main() {
         'Password verification success for account login',
         () async {
           when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccount,
+          );
+          when(
             () => _mockConfirmPasswordUseCase(
               account: any(named: 'account'),
               password: any(named: 'password'),
@@ -263,8 +296,8 @@ void main() {
             (_) async => true,
           );
 
-          final result =
-              await cubit.confirmPassword(tImportedAccount.toJson(), 'test');
+          await cubit.loadAccountData();
+          final result = await cubit.confirmPassword('test');
 
           expect(result, true);
           verify(() => _mockConfirmPasswordUseCase(
@@ -279,6 +312,11 @@ void main() {
         'Password verification fail for account login',
         () async {
           when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccount,
+          );
+          when(
             () => _mockConfirmPasswordUseCase(
               account: any(named: 'account'),
               password: any(named: 'password'),
@@ -287,8 +325,8 @@ void main() {
             (_) async => false,
           );
 
-          final result =
-              await cubit.confirmPassword(tImportedAccount.toJson(), 'test');
+          await cubit.loadAccountData();
+          final result = await cubit.confirmPassword('test');
 
           expect(result, false);
           verify(() => _mockConfirmPasswordUseCase(

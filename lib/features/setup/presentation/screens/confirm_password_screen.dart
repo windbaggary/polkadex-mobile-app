@@ -7,7 +7,6 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:provider/provider.dart';
@@ -163,10 +162,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
 
                         final isCorrect = await context
                             .read<AccountCubit>()
-                            .confirmPassword(
-                                (accState.account as ImportedAccountModel)
-                                    .toJson(),
-                                _passwordController.text);
+                            .confirmPassword(_passwordController.text);
 
                         isCorrect
                             ? _onNavigateToLanding(context)

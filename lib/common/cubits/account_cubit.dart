@@ -58,9 +58,20 @@ class AccountCubit extends Cubit<AccountState> {
   }
 
   Future<bool> authenticateBiometric() async {
-    final result = await _getPasswordUseCase();
+    final currentState = state;
 
-    return result != null;
+    if (currentState is AccountLoaded) {
+      final password = await _getPasswordUseCase();
+
+      final confirmationResult = await _confirmPasswordUseCase(
+        account: (currentState.account as ImportedAccountModel).toJson(),
+        password: password!,
+      );
+
+      return confirmationResult;
+    }
+
+    return false;
   }
 
   Future<void> saveAccount(List<String> mnemonicWords, String password,
@@ -85,8 +96,18 @@ class AccountCubit extends Cubit<AccountState> {
     );
   }
 
-  Future<bool> confirmPassword(
-      Map<String, dynamic> account, String password) async {
-    return await _confirmPasswordUseCase(account: account, password: password);
+  Future<bool> confirmPassword(String password) async {
+    final currentState = state;
+
+    if (currentState is AccountLoaded) {
+      final confirmationResult = await _confirmPasswordUseCase(
+        account: (currentState.account as ImportedAccountModel).toJson(),
+        password: password,
+      );
+
+      return confirmationResult;
+    }
+
+    return false;
   }
 }
