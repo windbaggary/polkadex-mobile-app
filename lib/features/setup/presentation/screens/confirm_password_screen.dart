@@ -152,22 +152,18 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                     ),
                     enabled: _isConfirmEnabled,
                     onTap: () async {
-                      final accState = context.read<AccountCubit>().state;
+                      LoadingPopup.show(
+                        context: context,
+                        text: 'Checking Password...',
+                      );
 
-                      if (accState is AccountLoaded) {
-                        LoadingPopup.show(
-                          context: context,
-                          text: 'Checking Password...',
-                        );
+                      final isCorrect = await context
+                          .read<AccountCubit>()
+                          .confirmPassword(_passwordController.text);
 
-                        final isCorrect = await context
-                            .read<AccountCubit>()
-                            .confirmPassword(_passwordController.text);
-
-                        isCorrect
-                            ? _onNavigateToLanding(context)
-                            : _onShowIncorrectPasswordModal(context);
-                      }
+                      isCorrect
+                          ? _onNavigateToLanding(context)
+                          : _onShowIncorrectPasswordModal(context);
                     },
                   ),
                 ],
