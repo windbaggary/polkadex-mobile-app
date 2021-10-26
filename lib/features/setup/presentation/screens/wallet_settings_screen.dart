@@ -220,7 +220,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                           OptionTabSwitchWidget(
                                             svgAsset:
                                                 "finger-print".asAssetSvg(),
-                                            title: "Secure with FingerPrint",
+                                            title: "Secure with Biometric",
                                             description:
                                                 "Secure your access without typing your Pin Code.",
                                             isChecked: settingProvider
