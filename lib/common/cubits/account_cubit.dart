@@ -48,6 +48,8 @@ class AccountCubit extends Cubit<AccountState> {
   }
 
   Future<void> logout() async {
+    emit(AccountNotLoaded());
+
     return await _deleteAccountAndPasswordUseCase();
   }
 
