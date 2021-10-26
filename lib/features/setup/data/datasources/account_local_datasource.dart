@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
-
-import '../../../../injection_container.dart';
+import 'package:polkadex/injection_container.dart';
 
 class AccountLocalDatasource {
   Future<BiometricStorageFile> _getKeypairFile() {
