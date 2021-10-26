@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/common/blocs/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_change_logs_screen.dart';

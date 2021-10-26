@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/blocs/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';

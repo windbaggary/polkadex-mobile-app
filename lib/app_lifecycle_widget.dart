@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'common/blocs/account_cubit.dart';
+import 'common/cubits/account_cubit.dart';
 import 'main.dart';
 
 class AppLifecycleWidget extends StatefulWidget {

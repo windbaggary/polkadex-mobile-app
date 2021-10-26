@@ -1,5 +1,5 @@
 import 'package:biometric_storage/biometric_storage.dart';
-import 'package:polkadex/common/blocs/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/repositories/account_repository.dart';
