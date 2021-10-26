@@ -71,7 +71,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   Consumer<_ThisIsChartVisibleProvider>(
                     builder: (context, isChartVisbileProvider, _) =>
                         AnimatedSize(
-                      vsync: this,
                       duration: AppConfigs.animDurationSmall,
                       alignment: Alignment.topCenter,
                       child: isChartVisbileProvider.isChartVisible

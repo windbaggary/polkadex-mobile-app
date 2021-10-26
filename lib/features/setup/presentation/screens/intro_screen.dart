@@ -363,8 +363,8 @@ class __ThisPageViewState extends State<_ThisPageView> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        accentColor: Colors.transparent,
-        buttonColor: Colors.transparent,
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: Colors.transparent),
       ),
       child: PageView.builder(
         pageSnapping: true,

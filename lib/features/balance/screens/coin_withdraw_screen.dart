@@ -244,7 +244,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                         return AnimatedSize(
                                           duration:
                                               AppConfigs.animDurationSmall,
-                                          vsync: this,
                                           child: SizedBox(
                                             height: height,
                                           ),
