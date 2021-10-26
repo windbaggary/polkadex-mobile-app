@@ -47,14 +47,26 @@ class MyApp extends StatelessWidget {
             highlightColor: Colors.transparent,
             hoverColor: Colors.transparent,
             focusColor: Colors.transparent,
-            buttonColor: Colors.transparent,
-            primaryColor: color2E303C,
+            buttonTheme: ButtonThemeData(buttonColor: color1C2023),
             canvasColor: color2E303C,
             fontFamily: 'WorkSans',
-            accentColor: colorE6007A,
-            backgroundColor: color3B4150,
             dialogTheme: DialogTheme(
               backgroundColor: color2E303C,
+            ),
+            colorScheme: ColorScheme(
+              brightness: Brightness.light,
+              primary: color2E303C,
+              onPrimary: color2E303C,
+              surface: color2E303C,
+              onSurface: color2E303C,
+              primaryVariant: color2E303C,
+              secondary: Colors.grey,
+              secondaryVariant: Colors.grey,
+              onSecondary: Colors.grey,
+              background: color3B4150,
+              onBackground: color3B4150,
+              error: Colors.grey,
+              onError: Colors.grey,
             )).copyWith(
           pageTransitionsTheme: PageTransitionsTheme(
             builders: {

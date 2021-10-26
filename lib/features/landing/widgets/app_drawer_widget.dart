@@ -50,7 +50,7 @@ class AppDrawerWidget extends StatelessWidget {
         hoverColor: color1C2023,
         highlightColor: color1C2023,
         focusColor: color1C2023,
-        buttonColor: color1C2023,
+        buttonTheme: ButtonThemeData(buttonColor: color1C2023),
       ),
       child: SizedBox(
         height: double.infinity,
