@@ -5,6 +5,7 @@ import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:provider/provider.dart';
@@ -37,80 +38,90 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: color1C2023,
-      body: Center(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            Center(
-              child: polkadexLogo,
-            ),
-            BlocConsumer<AccountCubit, AccountState>(
-              builder: (_, state) {
-                return Visibility(
-                  visible: state is AccountLoaded,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: AppButton(
-                                label: 'Logout',
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 16,
+    return BlocListener<AccountCubit, AccountState>(
+      listener: (_, state) {
+        if (state is AccountPasswordValidating) {
+          LoadingPopup.show(
+            context: context,
+            text: 'We are almost there...',
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: color1C2023,
+        body: Center(
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Center(
+                child: polkadexLogo,
+              ),
+              BlocConsumer<AccountCubit, AccountState>(
+                builder: (_, state) {
+                  return Visibility(
+                    visible: state is AccountLoaded,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: AppButton(
+                                  label: 'Logout',
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 16,
+                                  ),
+                                  backgroundColor: colorFFFFFF,
+                                  textColor: Colors.black,
+                                  onTap: () async {
+                                    await context.read<AccountCubit>().logout();
+                                    _onNavigateToIntro(context);
+                                  },
                                 ),
-                                backgroundColor: colorFFFFFF,
-                                textColor: Colors.black,
-                                onTap: () async {
-                                  await context.read<AccountCubit>().logout();
-                                  _onNavigateToIntro(context);
-                                },
                               ),
-                            ),
-                            SizedBox(
-                              width: 18,
-                            ),
-                            Expanded(
-                              child: AppButton(
-                                label: 'Authenticate',
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 16,
-                                ),
-                                onTap: () async {
-                                  if (state is AccountLoaded &&
-                                      state.account.biometricAccess) {
-                                    final authenticated = await context
-                                        .read<AccountCubit>()
-                                        .authenticateBiometric();
-                                    if (authenticated) {
-                                      _onNavigateToLanding(context);
+                              SizedBox(
+                                width: 18,
+                              ),
+                              Expanded(
+                                child: AppButton(
+                                  label: 'Authenticate',
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 16,
+                                  ),
+                                  onTap: () async {
+                                    if (state is AccountLoaded &&
+                                        state.account.biometricAccess) {
+                                      final authenticated = await context
+                                          .read<AccountCubit>()
+                                          .authenticateBiometric();
+                                      if (authenticated) {
+                                        _onNavigateToLanding(context);
+                                      }
+                                    } else {
+                                      _onNavigateToConfirmPassword(context);
                                     }
-                                  } else {
-                                    _onNavigateToConfirmPassword(context);
-                                  }
-                                },
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-              listener: (_, state) {
-                if (state is AccountNotLoaded) {
-                  _onNavigateToIntro(context);
-                }
-              },
-            ),
-          ],
+                  );
+                },
+                listener: (_, state) {
+                  if (state is AccountNotLoaded) {
+                    _onNavigateToIntro(context);
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

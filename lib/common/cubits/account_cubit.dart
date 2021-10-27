@@ -63,12 +63,7 @@ class AccountCubit extends Cubit<AccountState> {
     if (currentState is AccountLoaded) {
       final password = await _getPasswordUseCase();
 
-      final confirmationResult = await _confirmPasswordUseCase(
-        account: (currentState.account as ImportedAccountModel).toJson(),
-        password: password!,
-      );
-
-      return confirmationResult;
+      return await confirmPassword(password!);
     }
 
     return false;
@@ -100,10 +95,14 @@ class AccountCubit extends Cubit<AccountState> {
     final currentState = state;
 
     if (currentState is AccountLoaded) {
+      emit(AccountPasswordValidating(account: currentState.account));
+
       final confirmationResult = await _confirmPasswordUseCase(
         account: (currentState.account as ImportedAccountModel).toJson(),
         password: password,
       );
+
+      emit(AccountLoaded(account: currentState.account));
 
       return confirmationResult;
     }

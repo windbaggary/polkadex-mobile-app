@@ -19,3 +19,8 @@ class AccountLoaded extends AccountState {
   @override
   List<Object> get props => [account];
 }
+
+class AccountPasswordValidating extends AccountLoaded {
+  AccountPasswordValidating({required ImportedAccountEntity account})
+      : super(account: account);
+}
