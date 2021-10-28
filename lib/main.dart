@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
-import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
 import 'package:polkadex/generated/l10n.dart';
+
+import 'common/navigation/coordinator.dart';
+import 'common/navigation/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    AppConfigs.size = WidgetsBinding.instance!.window.physicalSize;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<BottomNavigationProvider>(
@@ -75,26 +74,9 @@ class MyApp extends StatelessWidget {
             },
           ),
         ),
-
-        // Set the initial route
-        home: Builder(
-          builder: (context) {
-            AppConfigs.size = MediaQuery.of(context).size;
-            return IntroScreen();
-          },
-        ),
-        onGenerateRoute: (settings) {
-          late Widget screen;
-          switch (settings.name) {
-            case LandingScreen.routeName:
-              screen = LandingScreen();
-              break;
-          }
-
-          return MaterialPageRoute(
-              builder: (context) => screen, settings: settings);
-        },
-
+        navigatorKey: Coordinator.navigationKey,
+        initialRoute: Routes.introScreen,
+        onGenerateRoute: Routes.onGenerateRoute,
         debugShowCheckedModeBanner: false,
       ),
     );

@@ -4,19 +4,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
 import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
-import 'package:polkadex/features/setup/presentation/screens/import_wallet_methods_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:polkadex/injection_container.dart';
 
 /// The dummy data for the screen
 ///
@@ -121,7 +117,7 @@ class _IntroScreenState extends State<IntroScreen>
                       text: 'Import Wallet',
                       backgroundColor: colorE6007A,
                       textStyle: tsS16W500CFF,
-                      onTap: () => _onNavigateToImportWallet(context),
+                      onTap: () => Coordinator.goToimportWalletMethods(),
                     ),
                   ),
                 ),
@@ -133,7 +129,7 @@ class _IntroScreenState extends State<IntroScreen>
                       text: 'Generate Wallet',
                       backgroundColor: colorFFFFFF,
                       textStyle: tsS16W500C24252C,
-                      onTap: () => _onNavigateToGenerateWallet(context),
+                      onTap: () => Coordinator.goToMnemonicGeneratedScreen(),
                     ),
                   ),
                 ),
@@ -247,45 +243,6 @@ class _IntroScreenState extends State<IntroScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _onNavigateToImportWallet(BuildContext context) async {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: ChangeNotifierProvider(
-              create: (context) => dependency<MnemonicProvider>(),
-              builder: (context, _) {
-                return ImportWalletMethodsScreen();
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _onNavigateToGenerateWallet(BuildContext context) async {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: ChangeNotifierProvider(
-              create: (context) =>
-                  dependency<MnemonicProvider>()..generateMnemonic(),
-              builder: (context, _) {
-                return MnemonicGeneratedScreen();
-              },
-            ),
-          );
-        },
       ),
     );
   }

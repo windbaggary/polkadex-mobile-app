@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
@@ -9,8 +10,6 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_shimmer_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
-
-import 'backup_mnemonic_screen.dart';
 
 class MnemonicGeneratedScreen extends StatefulWidget {
   @override
@@ -196,8 +195,8 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                       Padding(
                         padding: const EdgeInsets.only(top: 28),
                         child: AppButton(
-                          onTap: () =>
-                              _onNavigateToBackupMnemonic(context, provider),
+                          onTap: () => Coordinator.goToBackupMnemonic(
+                              provider..shuffleMnemonicWords()),
                           enabled:
                               _isButtonToBackupEnabled && !provider.isLoading,
                           label: 'Next',
@@ -212,22 +211,6 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
         ),
       );
     });
-  }
-
-  void _onNavigateToBackupMnemonic(
-      BuildContext context, MnemonicProvider provider) async {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return ChangeNotifierProvider.value(
-          value: provider..shuffleMnemonicWords(),
-          child: FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: BackupMnemonicScreen(),
-          ),
-        );
-      },
-    ));
   }
 
   /// Handling the back button animation
