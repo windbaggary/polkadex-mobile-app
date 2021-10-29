@@ -152,7 +152,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     AppButton(
                       label: 'Confirm',
