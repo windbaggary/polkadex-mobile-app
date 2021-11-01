@@ -129,6 +129,9 @@ abstract class Coordinator {
   }
 
   static void goToLandingScreen() {
-    _navigationKey.currentState?.pushNamedAndRemoveUntil(Routes.landingScreen);
+    _navigationKey.currentState?.pushNamedAndRemoveUntil(
+      Routes.landingScreen,
+      (route) => route.isFirst,
+    );
   }
 }

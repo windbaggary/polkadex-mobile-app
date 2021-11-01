@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
@@ -282,14 +282,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
 
     await provider.importAccount(_passwordController.text);
 
-    Navigator.of(context).pushAndRemoveUntil(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: LandingScreen());
-      },
-    ), (route) => route.isFirst);
+    Coordinator.goToLandingScreen();
   }
 
   Future<bool> _onPop(BuildContext context) async {
