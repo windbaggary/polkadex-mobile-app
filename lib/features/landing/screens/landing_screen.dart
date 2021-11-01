@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/providers/notification_drawer_provider.dart';
-import 'package:polkadex/features/landing/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/landing/sub_views/balance_tab_view.dart';
 import 'package:polkadex/features/landing/sub_views/exchange_tab_view.dart';
 import 'package:polkadex/features/landing/sub_views/home_tab_view.dart';
@@ -683,11 +682,7 @@ class _ThisAppBar extends StatelessWidget {
               title: title,
               actions: [
                 InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MarketTokenSelectionScreen(),
-                    ));
-                  },
+                  onTap: () => Coordinator.goToMarketTokenSelectionScreen(),
                   child: SizedBox(
                     width: 25,
                     height: 25,

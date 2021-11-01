@@ -9,7 +9,6 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
-import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
@@ -153,11 +152,8 @@ class _IntroScreenState extends State<IntroScreen>
                           ),
                           text: 'Privacy Policy',
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PrivacyPolicyScreen(),
-                                  ),
-                                ),
+                            ..onTap =
+                                () => Coordinator.goToPrivacyPolicyScreen(),
                         ),
                       ],
                     ),

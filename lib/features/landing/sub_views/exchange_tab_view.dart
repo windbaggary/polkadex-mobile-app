@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/models/home_models.dart';
 import 'package:polkadex/features/landing/providers/exchange_loading_provider.dart';
 import 'package:polkadex/features/landing/providers/exchange_tab_view_provider.dart';
 import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
-import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -489,13 +487,7 @@ class _ThisListItemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => CoinTradeScreen(
-              enumInitalCardFlipState: EnumCardFlipState.showFirst,
-            ),
-          ));
-        },
+        onTap: () => Coordinator.goToCoinTradeScreen(),
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(
@@ -629,11 +621,7 @@ class _ThisLoadingItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => BalanceCoinPreviewScreen(),
-          ));
-        },
+        onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(
