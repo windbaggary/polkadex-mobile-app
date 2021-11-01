@@ -61,6 +61,7 @@ abstract class Routes {
     switch (settings.name) {
       case backupMnemonicScreen:
         return PageRouteBuilder(
+          settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
             return ChangeNotifierProvider.value(
               value: settings.arguments as MnemonicProvider,
@@ -74,6 +75,7 @@ abstract class Routes {
         );
       case importWalletMethodsScreen:
         return PageRouteBuilder(
+          settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
               opacity: CurvedAnimation(
@@ -89,6 +91,7 @@ abstract class Routes {
         );
       case mnemonicGeneratedScreen:
         return PageRouteBuilder(
+          settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
               opacity: CurvedAnimation(
@@ -105,6 +108,7 @@ abstract class Routes {
         );
       case restoreExistingWalletScreen:
         return PageRouteBuilder(
+          settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
               opacity: CurvedAnimation(
@@ -120,6 +124,7 @@ abstract class Routes {
         );
       case walletSettingsScreen:
         return PageRouteBuilder(
+          settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
             return ChangeNotifierProvider.value(
               value: settings.arguments as MnemonicProvider,
@@ -221,6 +226,7 @@ abstract class Routes {
         break;
       case landingScreen:
         return PageRouteBuilder(
+          settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
                 opacity: CurvedAnimation(
