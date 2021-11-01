@@ -134,4 +134,10 @@ abstract class Coordinator {
       (route) => route.isFirst,
     );
   }
+
+  static void goBackToLandingScreen() {
+    _navigationKey.currentState?.popUntil(
+      (route) => route.settings.name == Routes.landingScreen,
+    );
+  }
 }

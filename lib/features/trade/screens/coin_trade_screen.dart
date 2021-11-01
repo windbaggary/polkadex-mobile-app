@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
@@ -676,8 +676,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
               onTap: () {
                 BottomNavigationProvider().enumBottomBarItem =
                     EnumBottonBarItem.trade;
-                Navigator.popUntil(
-                    context, ModalRoute.withName(LandingScreen.routeName));
+                Coordinator.goBackToLandingScreen();
               },
               child: Container(
                 width: math.max(MediaQuery.of(context).size.width * 0.30, 110),
@@ -727,8 +726,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                 onTap: () {
                   BottomNavigationProvider().enumBottomBarItem =
                       EnumBottonBarItem.trade;
-                  Navigator.popUntil(
-                      context, ModalRoute.withName(LandingScreen.routeName));
+                  Coordinator.goBackToLandingScreen();
                 },
                 child: Container(
                   width:
