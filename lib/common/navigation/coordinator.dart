@@ -57,7 +57,7 @@ abstract class Coordinator {
   static void goToCoinTradeScreen({EnumCardFlipState? enumCardFlipState}) {
     _navigationKey.currentState?.pushNamed(
       Routes.coinTradeScreen,
-      arguments: enumCardFlipState,
+      arguments: enumCardFlipState ?? EnumCardFlipState.showFirst,
     );
   }
 
@@ -66,7 +66,7 @@ abstract class Coordinator {
   }
 
   static void goToNotifDepositScreen(
-      {EnumDepositScreenTypes? enumDepositScreenTypes}) {
+      {required EnumDepositScreenTypes enumDepositScreenTypes}) {
     _navigationKey.currentState?.pushNamed(
       Routes.notifDepositScreen,
       arguments: enumDepositScreenTypes,
