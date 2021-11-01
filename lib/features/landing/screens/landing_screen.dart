@@ -21,7 +21,6 @@ import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34
 class LandingScreen extends StatefulWidget {
-  static const String routeName = '/landing_screen';
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
