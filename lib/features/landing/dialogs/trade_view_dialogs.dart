@@ -24,7 +24,7 @@ class _OrderTypeDialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color2E303C,
+        color: AppColors.color2E303C,
         boxShadow: <BoxShadow>[bsDefault],
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
@@ -53,7 +53,7 @@ class _OrderTypeDialogWidget extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: color8BA1BE.withOpacity(0.20),
+                      color: AppColors.color8BA1BE.withOpacity(0.20),
                     ),
                     padding: const EdgeInsets.fromLTRB(14, 12, 13, 12),
                     child: Row(
@@ -116,12 +116,12 @@ class _ThisOrderTypeItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double verticalMargin = 4.0;
     Color bgColor = Colors.black.withOpacity(0.20);
-    Color textColor = colorABB2BC;
+    Color textColor = AppColors.colorABB2BC;
 
     if (isSelected) {
       verticalMargin = 20;
-      bgColor = colorE6007A;
-      textColor = colorFFFFFF;
+      bgColor = AppColors.colorE6007A;
+      textColor = AppColors.colorFFFFFF;
     }
 
     String title;
@@ -222,7 +222,7 @@ class _PriceLengthDialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color2E303C,
+        color: AppColors.color2E303C,
         boxShadow: <BoxShadow>[bsDefault],
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
@@ -251,7 +251,7 @@ class _PriceLengthDialogWidget extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: color8BA1BE.withOpacity(0.20),
+                      color: AppColors.color8BA1BE.withOpacity(0.20),
                     ),
                     padding: const EdgeInsets.fromLTRB(14, 12, 13, 12),
                     child: Row(
@@ -314,11 +314,11 @@ class _ThisPriceLengthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color bgColor = Colors.black.withOpacity(0.20);
-    Color textColor = colorABB2BC;
+    Color textColor = AppColors.colorABB2BC;
 
     if (isSelected) {
-      bgColor = colorE6007A;
-      textColor = colorFFFFFF;
+      bgColor = AppColors.colorE6007A;
+      textColor = AppColors.colorFFFFFF;
     }
 
     return AnimatedContainer(

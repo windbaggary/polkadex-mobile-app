@@ -45,7 +45,7 @@ class SuggestionsWidget extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: color8BA1BE.withOpacity(0.2),
+                        color: AppColors.color8BA1BE.withOpacity(0.2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(6),

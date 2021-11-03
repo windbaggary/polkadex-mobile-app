@@ -17,7 +17,7 @@ class AppSettingsSecurity extends StatelessWidget {
         ),
       ],
       builder: (context, _) => Scaffold(
-        backgroundColor: color1C2023,
+        backgroundColor: AppColors.color1C2023,
         body: AppSettingsLayout(
           childAlignment: null,
           isExpanded: false,

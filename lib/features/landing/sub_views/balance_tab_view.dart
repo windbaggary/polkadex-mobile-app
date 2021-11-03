@@ -89,19 +89,21 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                         yAxisTopPaddingRatio: 0.05,
                                         yAxisBottomPaddingRatio: 0.15,
                                         chartScale: provider.chartScale,
-                                        lineColor: colorE6007A,
+                                        lineColor: AppColors.colorE6007A,
                                         yAxisLabelPrefix: "\$ ",
                                         areaGradient: LinearGradient(
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
                                           colors: <Color>[
-                                            colorE6007A.withOpacity(0.50),
-                                            color8BA1BE.withOpacity(0.0),
+                                            AppColors.colorE6007A
+                                                .withOpacity(0.50),
+                                            AppColors.color8BA1BE
+                                                .withOpacity(0.0),
                                           ],
                                           // stops: [0.0, 0.40],
                                         ),
-                                        gridColor:
-                                            color8BA1BE.withOpacity(0.15),
+                                        gridColor: AppColors.color8BA1BE
+                                            .withOpacity(0.15),
                                         gridStroke: 1,
                                         yLabelTextStyle: TextStyle(
                                           fontSize: 08,
@@ -129,7 +131,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
-            color: color2E303C,
+            color: AppColors.color2E303C,
             boxShadow: <BoxShadow>[
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -147,7 +149,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                 delegate: _SliverPersistentHeaderDelegate(
                   height: 115,
                   child: Container(
-                    color: color2E303C,
+                    color: AppColors.color2E303C,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -155,7 +157,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 13),
                             decoration: BoxDecoration(
-                              color: color1C2023,
+                              color: AppColors.color1C2023,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             height: 3,
@@ -182,7 +184,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               isExpanded: false,
                               icon: Icon(
                                 Icons.keyboard_arrow_down_rounded,
-                                color: colorFFFFFF,
+                                color: AppColors.colorFFFFFF,
                                 size: 16,
                               ),
                             ),
@@ -200,8 +202,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               Consumer<_ThisProvider>(
                                 builder: (context, thisProvider, child) =>
                                     CheckBoxWidget(
-                                  checkColor: colorFFFFFF,
-                                  backgroundColor: colorE6007A,
+                                  checkColor: AppColors.colorFFFFFF,
+                                  backgroundColor: AppColors.colorE6007A,
                                   isChecked: thisProvider.isHideSmallBalance,
                                   isBackTransparentOnUnchecked: true,
                                   onTap: (val) =>
@@ -304,7 +306,7 @@ class _ThisHoldingWidget extends StatelessWidget {
           Text(
             'Holding: ',
             style: tsS13W500CFF.copyWith(
-              color: colorABB2BC,
+              color: AppColors.colorABB2BC,
             ),
           ),
           DropdownButton<String>(
@@ -324,7 +326,7 @@ class _ThisHoldingWidget extends StatelessWidget {
             isExpanded: false,
             icon: Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
               size: 16,
             ),
           ),
@@ -336,7 +338,7 @@ class _ThisHoldingWidget extends StatelessWidget {
           Text(
             'Change ',
             style: tsS13W500CFF.copyWith(
-              color: colorABB2BC,
+              color: AppColors.colorABB2BC,
             ),
           ),
           Text(
@@ -346,7 +348,7 @@ class _ThisHoldingWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: color0CA564,
+              color: AppColors.color0CA564,
             ),
             margin: const EdgeInsets.only(left: 8),
             padding: const EdgeInsets.symmetric(
@@ -397,7 +399,7 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
           height: 23,
           decoration: BoxDecoration(
             color: (imgAsset == null)
-                ? color8BA1BE.withOpacity(0.20)
+                ? AppColors.color8BA1BE.withOpacity(0.20)
                 : Colors.white,
             borderRadius: BorderRadius.circular(8),
           ),
@@ -408,7 +410,7 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
         Expanded(
             child: Text(
           title,
-          style: tsS13W500CFF.copyWith(color: colorABB2BC),
+          style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
         )),
         Text(
           value,
@@ -487,7 +489,7 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: color8BA1BE.withOpacity(0.2),
+                    color: AppColors.color8BA1BE.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(10),
@@ -523,7 +525,7 @@ class _ThisItemWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
             ),
             width: 42,
             height: 42,
@@ -543,7 +545,7 @@ class _ThisItemWidget extends StatelessWidget {
               ),
               Text(
                 model.code,
-                style: tsS13W500CFF.copyWith(color: colorABB2BC),
+                style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -557,7 +559,7 @@ class _ThisItemWidget extends StatelessWidget {
               ),
               Text(
                 model.iPrice,
-                style: tsS13W500CFF.copyWith(color: colorABB2BC),
+                style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -580,7 +582,7 @@ class _ThisTopBalanceWidget extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 9),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: color8BA1BE.withOpacity(0.30),
+              color: AppColors.color8BA1BE.withOpacity(0.30),
             ),
             padding: const EdgeInsets.all(11),
             child: SvgPicture.asset('wallet_selected'.asAssetSvg()),
@@ -588,7 +590,7 @@ class _ThisTopBalanceWidget extends StatelessWidget {
         ),
         Text(
           'Total Balance',
-          style: tsS15W400CFF.copyWith(color: colorABB2BC),
+          style: tsS15W400CFF.copyWith(color: AppColors.colorABB2BC),
           textAlign: TextAlign.center,
         ),
         Padding(
@@ -721,14 +723,15 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: item == appChartProvider.balanceChartDataType
-                              ? colorE6007A
+                              ? AppColors.colorE6007A
                               : null,
                         ),
                         child: Text(
                           text,
                           style: item == appChartProvider.balanceChartDataType
                               ? tsS13W600CFF
-                              : tsS12W400CFF.copyWith(color: colorABB2BC),
+                              : tsS12W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
                         ),
                       ),
                     );

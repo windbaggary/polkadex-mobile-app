@@ -67,7 +67,7 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
         ),
       ],
       builder: (context, _) => Scaffold(
-        backgroundColor: color1C2023,
+        backgroundColor: AppColors.color1C2023,
         body: SafeArea(
           child: Stack(
             children: [
@@ -78,7 +78,7 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: color2E303C,
+                        color: AppColors.color2E303C,
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(40),
                         ),
@@ -92,7 +92,7 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: color2E303C,
+                            color: AppColors.color2E303C,
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(25),
                               bottomRight: Radius.circular(25),
@@ -165,7 +165,7 @@ class _ThisDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color2E303C,
+        color: AppColors.color2E303C,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(25),
           bottomRight: Radius.circular(25),
@@ -175,7 +175,7 @@ class _ThisDetailCard extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: color1C2023,
+              color: AppColors.color1C2023,
               borderRadius: BorderRadius.circular(35),
             ),
             padding: const EdgeInsets.fromLTRB(25, 22, 22, 14.0),
@@ -191,7 +191,7 @@ class _ThisDetailCard extends StatelessWidget {
                   child: Text(
                     'About Polkadex'.toUpperCase(),
                     style: tsS12W500CFF.copyWith(
-                      color: colorFFFFFF.withOpacity(0.6),
+                      color: AppColors.colorFFFFFF.withOpacity(0.6),
                     ),
                   ),
                 ),
@@ -207,7 +207,7 @@ class _ThisDetailCard extends StatelessWidget {
                   child: Text(
                     'market stats'.toUpperCase(),
                     style: tsS12W500CFF.copyWith(
-                      color: colorFFFFFF.withOpacity(0.6),
+                      color: AppColors.colorFFFFFF.withOpacity(0.6),
                     ),
                   ),
                 ),
@@ -226,7 +226,7 @@ class _ThisDetailCard extends StatelessWidget {
                   child: Text(
                     'Links'.toUpperCase(),
                     style: tsS12W500CFF.copyWith(
-                      color: colorFFFFFF.withOpacity(0.6),
+                      color: AppColors.colorFFFFFF.withOpacity(0.6),
                     ),
                   ),
                 ),
@@ -281,7 +281,7 @@ class _ThisDetailCard extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: colorE6007A,
+                    color: AppColors.colorE6007A,
                   ),
                   child: Text(
                     "Coin Info",
@@ -327,7 +327,7 @@ class _ThisDetailCard extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: color8BA1BE.withOpacity(0.2),
+                color: AppColors.color8BA1BE.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: const EdgeInsets.all(12),
@@ -337,7 +337,7 @@ class _ThisDetailCard extends StatelessWidget {
             Text(
               title ?? "",
               style: tsS12W400CFF.copyWith(
-                color: colorFFFFFF.withOpacity(0.60),
+                color: AppColors.colorFFFFFF.withOpacity(0.60),
               ),
             ),
           ],
@@ -363,7 +363,7 @@ class _ThisGrpahCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: color2E303C,
+        color: AppColors.color2E303C,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(25),
           bottomRight: Radius.circular(25),
@@ -373,7 +373,7 @@ class _ThisGrpahCard extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: color1C2023,
+              color: AppColors.color1C2023,
               borderRadius: BorderRadius.circular(35),
             ),
             padding: const EdgeInsets.only(top: 22, bottom: 8.0),
@@ -405,8 +405,8 @@ class _ThisGrpahCard extends StatelessWidget {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: <Color>[
-                              color8BA1BE.withOpacity(0.50),
-                              color8BA1BE.withOpacity(0.0710),
+                              AppColors.color8BA1BE.withOpacity(0.50),
+                              AppColors.color8BA1BE.withOpacity(0.0710),
                             ],
                           ),
                         ),
@@ -431,7 +431,7 @@ class _ThisGrpahCard extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: color8BA1BE.withOpacity(0.3),
+                    color: AppColors.color8BA1BE.withOpacity(0.3),
                   ),
                   child: Text(
                     "Coin Info",
@@ -472,7 +472,7 @@ class _GraphHeadingWidget extends StatelessWidget {
           Text(
             value ?? "",
             style: tsS12W500CFF.copyWith(
-              color: color0CA564,
+              color: AppColors.color0CA564,
             ),
           ),
         ],
@@ -528,7 +528,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: item == appChartProvider.chartDataType
-                                      ? colorE6007A
+                                      ? AppColors.colorE6007A
                                       : null,
                                 ),
                                 child: Text(
@@ -554,7 +554,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                   height: 36,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
+                    color: AppColors.color8BA1BE.withOpacity(0.2),
                   ),
                   padding: const EdgeInsets.only(left: 8),
                   child: Row(
@@ -585,7 +585,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                               padding: const EdgeInsets.only(left: 2.0),
                               child: Icon(
                                 Icons.keyboard_arrow_down_rounded,
-                                color: colorFFFFFF,
+                                color: AppColors.colorFFFFFF,
                                 size: 16,
                               ),
                             ),
@@ -601,7 +601,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                   height: 36,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
+                    color: AppColors.color8BA1BE.withOpacity(0.2),
                   ),
                   padding: const EdgeInsets.all(9),
                   child: SizedBox(
@@ -615,7 +615,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                   height: 36,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
+                    color: AppColors.color8BA1BE.withOpacity(0.2),
                   ),
                   padding: const EdgeInsets.all(11),
                   child: SizedBox(
@@ -650,7 +650,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color2E303C,
+        color: AppColors.color2E303C,
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
@@ -670,8 +670,8 @@ class _ThisBottomNavigationBar extends StatelessWidget {
           Spacer(flex: 2),
           Center(
             child: buildInkWell(
-              highlightColor: color0CA564,
-              splashColor: color0CA564,
+              highlightColor: AppColors.color0CA564,
+              splashColor: AppColors.color0CA564,
               borderRadius: BorderRadius.circular(17),
               onTap: () {
                 BottomNavigationProvider().enumBottomBarItem =
@@ -697,7 +697,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                       width: 47,
                       height: 47,
                       decoration: BoxDecoration(
-                        color: color8BA1BE.withOpacity(0.2),
+                        color: AppColors.color8BA1BE.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.all(12),
@@ -721,8 +721,8 @@ class _ThisBottomNavigationBar extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 7),
               child: buildInkWell(
-                highlightColor: colorE6007A,
-                splashColor: colorE6007A,
+                highlightColor: AppColors.colorE6007A,
+                splashColor: AppColors.colorE6007A,
                 borderRadius: BorderRadius.circular(17),
                 onTap: () {
                   BottomNavigationProvider().enumBottomBarItem =
@@ -749,7 +749,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                         width: 47,
                         height: 47,
                         decoration: BoxDecoration(
-                          color: color8BA1BE.withOpacity(0.2),
+                          color: AppColors.color8BA1BE.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         padding: const EdgeInsets.all(12),
@@ -816,7 +816,7 @@ class _ThisAppBar extends StatelessWidget {
         actions = [
           Icon(
             Icons.more_vert,
-            color: colorFFFFFF,
+            color: AppColors.colorFFFFFF,
           ),
           SizedBox(width: 8),
         ];
@@ -845,7 +845,7 @@ class _ThisAppBar extends StatelessWidget {
           SizedBox(width: 8),
           Icon(
             Icons.more_vert,
-            color: colorFFFFFF,
+            color: AppColors.colorFFFFFF,
           ),
           SizedBox(width: 8),
         ];
@@ -924,7 +924,7 @@ class _TopCoinWidget extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     style: tsS12W500CFF.copyWith(
-                        color: colorFFFFFF.withOpacity(0.6)),
+                        color: AppColors.colorFFFFFF.withOpacity(0.6)),
                     children: <TextSpan>[
                       TextSpan(
                         text: 'HIGH ',
@@ -936,7 +936,7 @@ class _TopCoinWidget extends StatelessWidget {
                           text: '\$34.31',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: color0CA564,
+                            color: AppColors.color0CA564,
                             fontFamily: 'WorkSans',
                           )),
                     ],
@@ -946,7 +946,7 @@ class _TopCoinWidget extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     style: tsS12W500CFF.copyWith(
-                      color: colorFFFFFF.withOpacity(
+                      color: AppColors.colorFFFFFF.withOpacity(
                         0.6,
                       ),
                       fontFamily: 'WorkSans',
@@ -962,7 +962,7 @@ class _TopCoinWidget extends StatelessWidget {
                           text: '\$27.31',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: colorE6007A,
+                            color: AppColors.colorE6007A,
                             fontFamily: 'WorkSans',
                           )),
                     ],
@@ -982,7 +982,8 @@ class _TopCoinWidget extends StatelessWidget {
             ),
             Container(
               decoration: BoxDecoration(
-                  color: color0CA564, borderRadius: BorderRadius.circular(4)),
+                  color: AppColors.color0CA564,
+                  borderRadius: BorderRadius.circular(4)),
               padding: const EdgeInsets.fromLTRB(4, 3, 6, 4),
               margin: const EdgeInsets.only(left: 4),
               child: RichText(
@@ -1014,7 +1015,7 @@ class _TopCoinWidget extends StatelessWidget {
                   TextSpan(
                     text: 'VOL(24h) ',
                     style: TextStyle(
-                      color: colorFFFFFF.withOpacity(0.6),
+                      color: AppColors.colorFFFFFF.withOpacity(0.6),
                       fontFamily: 'WorkSans',
                     ),
                   ),

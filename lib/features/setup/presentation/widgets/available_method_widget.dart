@@ -26,7 +26,7 @@ class AvailableMethodWidget extends StatelessWidget {
         opacity: enabled && onTap != null ? 1.0 : 0.4,
         child: Container(
           decoration: BoxDecoration(
-            color: color1C1C26,
+            color: AppColors.color1C1C26,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
@@ -41,7 +41,7 @@ class AvailableMethodWidget extends StatelessWidget {
                     height: 40,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: color8BA1BE.withOpacity(0.2),
+                        color: AppColors.color8BA1BE.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -75,7 +75,7 @@ class AvailableMethodWidget extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: colorFFFFFF,
+                      color: AppColors.colorFFFFFF,
                       size: 8,
                     ),
                   ),

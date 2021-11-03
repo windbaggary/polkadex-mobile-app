@@ -149,7 +149,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     return Container(
       margin: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
-        color: color24252C,
+        color: AppColors.color24252C,
         borderRadius: BorderRadius.circular(20),
         boxShadow: <BoxShadow>[
           BoxShadow(
@@ -173,16 +173,17 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                       Color color;
                       switch (buyOrSell) {
                         case EnumBuySell.buy:
-                          color = color0CA564;
+                          color = AppColors.color0CA564;
                           break;
                         case EnumBuySell.sell:
-                          color = colorE6007A;
+                          color = AppColors.colorE6007A;
                           break;
                       }
                       return TabBar(
                         isScrollable: true,
                         labelStyle: tsS15W600CFF,
-                        unselectedLabelColor: colorFFFFFF.withOpacity(0.30),
+                        unselectedLabelColor:
+                            AppColors.colorFFFFFF.withOpacity(0.30),
                         indicatorColor: color,
                         indicatorSize: TabBarIndicatorSize.tab,
                         tabs: <Tab>[
@@ -215,7 +216,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                       ),
                       Icon(
                         Icons.keyboard_arrow_down,
-                        color: colorFFFFFF,
+                        color: AppColors.colorFFFFFF,
                         size: 16,
                       ),
                     ],
@@ -286,7 +287,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                         if (thisProvider.listOpenOrders.isNotEmpty)
                           Container(
                             decoration: BoxDecoration(
-                              color: colorE6007A,
+                              color: AppColors.colorE6007A,
                               shape: BoxShape.circle,
                             ),
                             padding: const EdgeInsets.all(4),
@@ -333,7 +334,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                         if (thisProvider.listOrdersHistory.isNotEmpty)
                           Container(
                             decoration: BoxDecoration(
-                              color: colorE6007A,
+                              color: AppColors.colorE6007A,
                               shape: BoxShape.circle,
                             ),
                             padding: const EdgeInsets.all(4),
@@ -470,7 +471,7 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
             height: 4,
             margin: const EdgeInsets.only(bottom: 2.5, left: 40, right: 40),
             decoration: BoxDecoration(
-              color: colorE6007A,
+              color: AppColors.colorE6007A,
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -516,15 +517,15 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color colorBuySell = color0CA564;
+    Color colorBuySell = AppColors.color0CA564;
     if (iModel.iEnumType == EnumBuySell.sell) {
-      colorBuySell = colorE6007A;
+      colorBuySell = AppColors.colorE6007A;
     }
     return Column(
       children: [
         Container(
           decoration: BoxDecoration(
-            color: colorFFFFFF.withOpacity(0.05),
+            color: AppColors.colorFFFFFF.withOpacity(0.05),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
@@ -543,7 +544,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: color8BA1BE.withOpacity(0.20),
+                  color: AppColors.color8BA1BE.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
@@ -572,7 +573,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            color: color2E303C,
+            color: AppColors.color2E303C,
             borderRadius: BorderRadius.circular(16),
             boxShadow: <BoxShadow>[
               BoxShadow(
@@ -596,7 +597,8 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                       children: [
                         Text(
                           'Type',
-                          style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                          style: tsS14W400CFF.copyWith(
+                              color: AppColors.colorABB2BC),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -622,7 +624,8 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                       children: [
                         Text(
                           'Amount',
-                          style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                          style: tsS14W400CFF.copyWith(
+                              color: AppColors.colorABB2BC),
                         ),
                         SizedBox(height: 4),
                         Text(
@@ -637,7 +640,8 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                     children: [
                       Text(
                         'Price',
-                        style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                        style:
+                            tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
                       ),
                       Text(
                         iModel.iPrice,
@@ -651,7 +655,7 @@ class _ThisOpenOrderItemWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   iModel.iFormattedDate,
-                  style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                  style: tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
                 ),
               ),
             ],
@@ -699,7 +703,7 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
               height: 33,
               padding: const EdgeInsets.symmetric(vertical: 7),
               decoration: BoxDecoration(
-                color: color8BA1BE.withOpacity(0.20),
+                color: AppColors.color8BA1BE.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: SvgPicture.asset('trading'.asAssetSvg()),
@@ -773,7 +777,7 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                   ),
                   Text(
                     coinProvider.tokenCoin.name,
-                    style: tsS15W500CFF.copyWith(color: colorABB2BC),
+                    style: tsS15W500CFF.copyWith(color: AppColors.colorABB2BC),
                   )
                 ],
               ),
@@ -781,7 +785,7 @@ class _ThisTopSelectableWidget extends StatelessWidget {
           ),
           Icon(
             Icons.keyboard_arrow_down,
-            color: colorFFFFFF,
+            color: AppColors.colorFFFFFF,
           ),
         ],
       ),

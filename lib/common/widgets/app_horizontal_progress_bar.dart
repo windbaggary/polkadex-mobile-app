@@ -96,7 +96,7 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
         final child = Container(
           height: 8,
           decoration: BoxDecoration(
-            color: color8BA1BE.withOpacity(0.20),
+            color: AppColors.color8BA1BE.withOpacity(0.20),
             borderRadius: BorderRadius.circular(10),
           ),
           alignment: Alignment.centerLeft,
@@ -105,7 +105,7 @@ class _AppHorizontalProgressBarState extends State<AppHorizontalProgressBar>
             builder: (context, child) => Container(
               width: constraints.maxWidth * _progressAnimation.value,
               decoration: BoxDecoration(
-                color: colorE6007A,
+                color: AppColors.colorE6007A,
                 borderRadius: BorderRadius.circular(20),
               ),
             ),

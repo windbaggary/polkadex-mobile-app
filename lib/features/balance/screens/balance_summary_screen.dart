@@ -13,7 +13,7 @@ class BalanceSummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: SafeArea(
         child: CustomAppBar(
           title: 'Summary',
@@ -37,7 +37,7 @@ class BalanceSummaryScreen extends StatelessWidget {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: color1C2023,
+                    color: AppColors.color1C2023,
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(40),
                     ),
@@ -94,7 +94,7 @@ class _ThisProgressContentWidget extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              color: color1C2023,
+              color: AppColors.color1C2023,
               child: AnimatedSwitcher(
                 child: crossFadeState == CrossFadeState.showFirst
                     ? _ThisSummaryTopWidget()
@@ -142,13 +142,13 @@ class _ThisCummaryBottomSelWidget extends StatelessWidget {
         SizedBox(height: 2),
         Text(
           "DEX/BTC",
-          style: tsS13W500CFF.copyWith(color: colorABB2BC),
+          style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 2),
         Text(
           "0.7662",
-          style: tsS22W500CFF.copyWith(color: color0CA564),
+          style: tsS22W500CFF.copyWith(color: AppColors.color0CA564),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 4),
@@ -156,7 +156,7 @@ class _ThisCummaryBottomSelWidget extends StatelessWidget {
           alignment: Alignment.center,
           child: Container(
             decoration: BoxDecoration(
-              color: color0CA564,
+              color: AppColors.color0CA564,
               borderRadius: BorderRadius.circular(5),
             ),
             padding: const EdgeInsets.all(3),
@@ -201,7 +201,7 @@ class _ThisSummaryTopSelWidget extends StatelessWidget {
         SizedBox(height: 4),
         Text(
           "${iModel.unit ?? ""} ${iModel.code ?? ""}",
-          style: tsS14W500CFF.copyWith(color: colorABB2BC),
+          style: tsS14W500CFF.copyWith(color: AppColors.colorABB2BC),
           textAlign: TextAlign.center,
         ),
       ],
@@ -243,7 +243,7 @@ class _ThisSummaryBottomWidget extends StatelessWidget {
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            style: tsS14W400CFF.copyWith(color: colorABB2BC),
+            style: tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
             children: <TextSpan>[
               TextSpan(
                 text: '~437.50 ',
@@ -285,7 +285,7 @@ class _ThisSummaryTopWidget extends StatelessWidget {
         SizedBox(height: 4),
         Text(
           'Tokens',
-          style: tsS15W500CFF.copyWith(color: colorABB2BC),
+          style: tsS15W500CFF.copyWith(color: AppColors.colorABB2BC),
           textAlign: TextAlign.center,
         ),
       ],
@@ -304,11 +304,11 @@ class _ThisItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color bgColor = color1F1F1F.withOpacity(0.80);
-    Color codeColor = colorFFFFFF.withOpacity(0.5);
+    Color bgColor = AppColors.color1F1F1F.withOpacity(0.80);
+    Color codeColor = AppColors.colorFFFFFF.withOpacity(0.5);
     if (isSelected) {
-      bgColor = colorE6007A;
-      codeColor = colorFFFFFF;
+      bgColor = AppColors.colorE6007A;
+      codeColor = AppColors.colorFFFFFF;
     }
     return AnimatedContainer(
       duration: AppConfigs.animDurationSmall,
@@ -334,7 +334,7 @@ class _ThisItemWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
             ),
             width: 42,
             height: 42,
@@ -417,7 +417,7 @@ const dummyList = <_ThisModel>[
     code: 'ETH',
     unit: '0.8621',
     perc: 60,
-    color: Color(0xFFFFB100),
+    color: AppColors.colorFFB100,
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_2.png',
@@ -425,7 +425,7 @@ const dummyList = <_ThisModel>[
     code: 'DEX',
     unit: '2.0000',
     perc: 22,
-    color: Color(0xFF11A564),
+    color: AppColors.color11A564,
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_8.png',
@@ -433,7 +433,7 @@ const dummyList = <_ThisModel>[
     code: 'BTC',
     unit: '0.8621',
     perc: 10,
-    color: Color(0xFF2785F2),
+    color: AppColors.color2785F2,
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_6.png',
@@ -441,7 +441,7 @@ const dummyList = <_ThisModel>[
     code: 'LTC',
     unit: '0.7739',
     perc: 6,
-    color: Color(0xFF7B1EE8),
+    color: AppColors.color7B1EE8,
   ),
   _ThisModel(
     imgAsset: 'trade_open/trade_open_1.png',
@@ -449,6 +449,6 @@ const dummyList = <_ThisModel>[
     code: 'ETH',
     unit: '0.8621',
     perc: 2,
-    color: Color(0xFFABB2BC),
+    color: AppColors.colorABB2BC,
   ),
 ];

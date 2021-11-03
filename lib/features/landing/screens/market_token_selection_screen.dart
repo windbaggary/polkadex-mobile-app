@@ -69,12 +69,12 @@ class _MarketTokenSelectionScreenState extends State<MarketTokenSelectionScreen>
       builder: (context, _) => WillPopScope(
         onWillPop: () => _onBack(context),
         child: Scaffold(
-          backgroundColor: color2E303C,
+          backgroundColor: AppColors.color2E303C,
           floatingActionButton: Container(
             width: 62,
             height: 62,
             decoration: BoxDecoration(
-              color: color2E303C,
+              color: AppColors.color2E303C,
               borderRadius: BorderRadius.circular(18),
               boxShadow: <BoxShadow>[bsDefault],
             ),
@@ -88,7 +88,7 @@ class _MarketTokenSelectionScreenState extends State<MarketTokenSelectionScreen>
               onTapBack: () => _onBack(context),
               child: Container(
                 decoration: BoxDecoration(
-                  color: color1C2023,
+                  color: AppColors.color1C2023,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(40),
                   ),
@@ -379,7 +379,9 @@ class _ThisPairItemWidget extends AnimatedWidget {
     return AnimatedContainer(
       duration: AppConfigs.animDurationSmall,
       decoration: BoxDecoration(
-        color: isSelected ? colorE6007A : color2E303C.withOpacity(0.3),
+        color: isSelected
+            ? AppColors.colorE6007A
+            : AppColors.color2E303C.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
       ),
       padding: const EdgeInsets.fromLTRB(10, 15, 16, 16),
@@ -423,8 +425,8 @@ class _ThisPairItemWidget extends AnimatedWidget {
                       child: Text(
                         model.code,
                         style: tsS12W400CFF.copyWith(
-                          color:
-                              colorFFFFFF.withOpacity(isSelected ? 1.0 : 0.6),
+                          color: AppColors.colorFFFFFF
+                              .withOpacity(isSelected ? 1.0 : 0.6),
                         ),
                       ),
                     ),
@@ -447,7 +449,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                           Container(
                             margin: const EdgeInsets.only(top: 3),
                             decoration: BoxDecoration(
-                              color: color0CA564,
+                              color: AppColors.color0CA564,
                               borderRadius: BorderRadius.circular(5),
                             ),
                             padding: const EdgeInsets.symmetric(
@@ -503,7 +505,9 @@ class _ThisTokenItemWidget extends AnimatedWidget {
     return AnimatedContainer(
       duration: AppConfigs.animDurationSmall,
       decoration: BoxDecoration(
-        color: isSelected ? colorE6007A : color2E303C.withOpacity(0.3),
+        color: isSelected
+            ? AppColors.colorE6007A
+            : AppColors.color2E303C.withOpacity(0.3),
         borderRadius: BorderRadius.circular(16),
       ),
       padding: EdgeInsets.fromLTRB(10, 15, 16, 16),
@@ -545,7 +549,8 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                   child: Text(
                     model.code,
                     style: tsS12W400CFF.copyWith(
-                      color: colorFFFFFF.withOpacity(isSelected ? 1.0 : 0.6),
+                      color: AppColors.colorFFFFFF
+                          .withOpacity(isSelected ? 1.0 : 0.6),
                     ),
                     textAlign: TextAlign.start,
                   ),
@@ -579,7 +584,7 @@ class _ThisSearchBarWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(18, 21, 19, 22),
       decoration: BoxDecoration(
-        color: color2E303C.withOpacity(0.3),
+        color: AppColors.color2E303C.withOpacity(0.3),
         borderRadius: BorderRadius.circular(22),
       ),
       child: Row(
@@ -587,12 +592,12 @@ class _ThisSearchBarWidget extends StatelessWidget {
           // Expanded(child: Container()),
           Expanded(
               child: TextField(
-            style: tsS14W400CFF.copyWith(color: colorABB2BC),
+            style: tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
             decoration: InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.zero,
               hintText: 'Search name or ticket',
-              hintStyle: tsS14W400CFF.copyWith(color: colorABB2BC),
+              hintStyle: tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
               border: InputBorder.none,
               errorBorder: InputBorder.none,
               enabledBorder: InputBorder.none,

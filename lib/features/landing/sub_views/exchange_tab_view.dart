@@ -120,7 +120,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
                                 (31.0 * _altHeightAnimation.value) +
                                 (14.0 * scrollHideVal),
                             child: Container(
-                              color: color1C2023,
+                              color: AppColors.color1C2023,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
@@ -165,8 +165,8 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
                 builder: (context, provider, child) {
                   if (provider.isLoading) {
                     return Shimmer.fromColors(
-                      highlightColor: color8BA1BE,
-                      baseColor: color2E303C,
+                      highlightColor: AppColors.color8BA1BE,
+                      baseColor: AppColors.color2E303C,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12),
                         child: Column(
@@ -291,7 +291,7 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: color2E303C,
+            color: AppColors.color2E303C,
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(22),
               bottomLeft: Radius.circular(22),
@@ -389,7 +389,7 @@ class _ThisSubMenuFilterWidget extends StatelessWidget {
           bottomLeft: Radius.circular(20),
           bottomRight: Radius.circular(20),
         ),
-        color: color24252C,
+        color: AppColors.color24252C,
       ),
       margin: const EdgeInsets.symmetric(horizontal: 12),
       padding: const EdgeInsets.only(
@@ -431,7 +431,7 @@ class _ThisFilterItemWidget extends StatelessWidget {
         AnimatedContainer(
           duration: AppConfigs.animDurationSmall,
           decoration: BoxDecoration(
-            color: isSelected ? colorE6007A : Colors.transparent,
+            color: isSelected ? AppColors.colorE6007A : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
@@ -499,7 +499,7 @@ class _ThisListItemWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(
-            color: color2E303C.withOpacity(0.30),
+            color: AppColors.color2E303C.withOpacity(0.30),
             borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.fromLTRB(11, 17, 0, 16),
@@ -509,7 +509,7 @@ class _ThisListItemWidget extends StatelessWidget {
                 width: 43,
                 height: 43,
                 decoration: BoxDecoration(
-                  color: colorFFFFFF,
+                  color: AppColors.colorFFFFFF,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 padding: EdgeInsets.all(3),
@@ -551,7 +551,7 @@ class _ThisListItemWidget extends StatelessWidget {
                           child: Text(
                             'VOL \$${model.volume} BTC',
                             style: tsS12W400CFF.copyWith(
-                              color: colorABB2BC.withOpacity(0.70),
+                              color: AppColors.colorABB2BC.withOpacity(0.70),
                             ),
                           ),
                         ),
@@ -559,7 +559,7 @@ class _ThisListItemWidget extends StatelessWidget {
                         Text(
                           '1 BTC',
                           style: tsS12W400CFF.copyWith(
-                            color: colorABB2BC.withOpacity(0.70),
+                            color: AppColors.colorABB2BC.withOpacity(0.70),
                           ),
                         ),
                       ],
@@ -637,7 +637,7 @@ class _ThisLoadingItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(
-            color: color2E303C.withOpacity(0.30),
+            color: AppColors.color2E303C.withOpacity(0.30),
             borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.fromLTRB(11, 17, 0, 16),
@@ -647,7 +647,7 @@ class _ThisLoadingItem extends StatelessWidget {
                 width: 43,
                 height: 43,
                 decoration: BoxDecoration(
-                  color: colorFFFFFF,
+                  color: AppColors.colorFFFFFF,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 padding: EdgeInsets.all(3),

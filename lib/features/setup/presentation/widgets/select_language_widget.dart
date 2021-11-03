@@ -46,7 +46,7 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
                       alignment: Alignment.centerRight,
                       child: Icon(
                         Icons.arrow_forward_ios,
-                        color: colorFFFFFF,
+                        color: AppColors.colorFFFFFF,
                         size: 8,
                       ),
                     ),
@@ -56,7 +56,7 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
             ),
           ),
           Divider(
-            color: color8BA1BE.withOpacity(0.20),
+            color: AppColors.color8BA1BE.withOpacity(0.20),
             height: 1,
           ),
         ],
@@ -74,7 +74,7 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: color2E303C,
+            color: AppColors.color2E303C,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           ),
           child: Column(
@@ -83,7 +83,7 @@ class _SelectLanguageWidgetState extends State<SelectLanguageWidget> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: colorFFFFFF,
+                    color: AppColors.colorFFFFFF,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   width: 51,

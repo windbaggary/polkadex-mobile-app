@@ -48,7 +48,7 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
         return WillPopScope(
           onWillPop: () => _onPop(context),
           child: Scaffold(
-            backgroundColor: color1C2023,
+            backgroundColor: AppColors.color1C2023,
             appBar: AppBar(
               title: Text(
                 'Import Wallet',
@@ -83,7 +83,7 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
                     (BuildContext context, int index) {
                       return Container(
                         decoration: BoxDecoration(
-                          color: color2E303C,
+                          color: AppColors.color2E303C,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20.0),
                             bottomRight: Radius.circular(20.0),

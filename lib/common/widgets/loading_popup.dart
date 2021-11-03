@@ -41,7 +41,7 @@ abstract class LoadingPopup {
                       borderRadius: BorderRadius.circular(7),
                       child: LinearProgressIndicator(
                         minHeight: 9,
-                        color: colorE6007A,
+                        color: AppColors.colorE6007A,
                       ),
                     ),
                   ),

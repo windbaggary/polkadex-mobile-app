@@ -91,7 +91,9 @@ class AppButton extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: enabled ? colorE6007A : color8BA1BE.withOpacity(0.20),
+                color: enabled
+                    ? AppColors.colorE6007A
+                    : AppColors.color8BA1BE.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(

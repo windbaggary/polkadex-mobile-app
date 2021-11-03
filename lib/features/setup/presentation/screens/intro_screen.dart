@@ -73,7 +73,7 @@ class _IntroScreenState extends State<IntroScreen>
       //     _animationController.forward().orCancel;
       //   },
       // ),
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: Stack(
         children: [
           // // The background top image
@@ -119,7 +119,7 @@ class _IntroScreenState extends State<IntroScreen>
                     height: 54,
                     child: LoginButtonWidget(
                       text: 'Import Wallet',
-                      backgroundColor: colorE6007A,
+                      backgroundColor: AppColors.colorE6007A,
                       textStyle: tsS16W500CFF,
                       onTap: () => _onNavigateToImportWallet(context),
                     ),
@@ -131,7 +131,7 @@ class _IntroScreenState extends State<IntroScreen>
                     height: 54,
                     child: LoginButtonWidget(
                       text: 'Generate Wallet',
-                      backgroundColor: colorFFFFFF,
+                      backgroundColor: AppColors.colorFFFFFF,
                       textStyle: tsS16W500C24252C,
                       onTap: () => _onNavigateToGenerateWallet(context),
                     ),
@@ -194,7 +194,7 @@ class _IntroScreenState extends State<IntroScreen>
                         fit: BoxFit.fitWidth,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: color8BA1BE.withOpacity(0.20),
+                            color: AppColors.color8BA1BE.withOpacity(0.20),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: GestureDetector(
@@ -230,7 +230,7 @@ class _IntroScreenState extends State<IntroScreen>
                                     quarterTurns: 1,
                                     child: Icon(
                                       Icons.arrow_forward_ios,
-                                      color: colorFFFFFF,
+                                      color: AppColors.colorFFFFFF,
                                       size: 10,
                                     ),
                                   ),

@@ -109,7 +109,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
           builder: (context) => Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: color2E303C,
+              color: AppColors.color2E303C,
               boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Colors.black.withOpacity(0.17),
@@ -131,7 +131,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                         margin: const EdgeInsets.only(right: 9),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: color8BA1BE.withOpacity(0.30),
+                          color: AppColors.color8BA1BE.withOpacity(0.30),
                         ),
                         padding: const EdgeInsets.all(11),
                         child: SvgPicture.asset('wallet'.asAssetSvg()),
@@ -143,7 +143,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                             Text(
                               "My balance",
                               style: tsS14W500CFF.copyWith(
-                                  color: colorFFFFFF.withOpacity(0.70)),
+                                  color:
+                                      AppColors.colorFFFFFF.withOpacity(0.70)),
                             ),
                             Text(
                               '${_walletBalance.toStringAsFixed(2)} BTC',
@@ -209,11 +210,11 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                           switch (enumBuySell) {
                             case EnumBuySell.buy:
                               btnText = "Buy";
-                              color = color0CA564;
+                              color = AppColors.color0CA564;
                               break;
                             case EnumBuySell.sell:
                               btnText = "Sell";
-                              color = colorE6007A;
+                              color = AppColors.colorE6007A;
                               break;
                           }
                           return InkWell(
@@ -521,7 +522,7 @@ class _ThisTotalWidget extends StatelessWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: color8BA1BE.withOpacity(0.20),
+                  color: AppColors.color8BA1BE.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(13),
                 ),
                 child: ValueListenableBuilder<EnumAmountType>(
@@ -531,7 +532,7 @@ class _ThisTotalWidget extends StatelessWidget {
                   builder: (context, amountType, child) {
                     final selectedTextStyle = tsS13W600CFF;
                     final unSelectedTextStyle =
-                        tsS13W600CFF.copyWith(color: colorABB2BC);
+                        tsS13W600CFF.copyWith(color: AppColors.colorABB2BC);
                     TextStyle btcTextStyle = unSelectedTextStyle,
                         usdTextStyle = unSelectedTextStyle;
                     switch (amountType) {
@@ -589,10 +590,10 @@ class _ThisTotalWidget extends StatelessWidget {
                 Color color;
                 switch (buyOrSell) {
                   case EnumBuySell.buy:
-                    color = color0CA564;
+                    color = AppColors.color0CA564;
                     break;
                   case EnumBuySell.sell:
-                    color = colorE6007A;
+                    color = AppColors.colorE6007A;
                     break;
                 }
                 return ValueListenableBuilder<double>(

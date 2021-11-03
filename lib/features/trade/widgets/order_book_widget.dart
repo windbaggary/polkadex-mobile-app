@@ -31,7 +31,7 @@ class OrderBookWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 12),
             padding: const EdgeInsets.only(top: 15, bottom: 13),
             decoration: BoxDecoration(
-              color: color24252C,
+              color: AppColors.color24252C,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20),
                 topLeft: Radius.circular(20),
@@ -56,7 +56,7 @@ class OrderBookWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8, right: 4),
                   child: Text(
                     '0.0006673',
-                    style: tsS20W600CFF.copyWith(color: color0CA564),
+                    style: tsS20W600CFF.copyWith(color: AppColors.color0CA564),
                   ),
                 ),
                 Text(
@@ -68,7 +68,7 @@ class OrderBookWidget extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-              color: color2E303C,
+              color: AppColors.color2E303C,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20),
                 bottomLeft: Radius.circular(20),
@@ -231,7 +231,7 @@ class _OrderBuyItemWidget extends StatelessWidget {
       child: OrderBookChartItemWidget(
         percentage: model.percentage,
         direction: EnumGradientDirection.right,
-        color: color0CA564,
+        color: AppColors.color0CA564,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 6, 6, 6),
           child: Row(
@@ -244,7 +244,7 @@ class _OrderBuyItemWidget extends StatelessWidget {
               ),
               Text(
                 model.amount,
-                style: tsS14W500CFF.copyWith(color: color0CA564),
+                style: tsS14W500CFF.copyWith(color: AppColors.color0CA564),
               ),
             ],
           ),
@@ -267,7 +267,7 @@ class _OrderSellItemWidget extends StatelessWidget {
               _ThisInheritedWidget.of(context)?.onOrderBookItemClicked!(model),
       child: OrderBookChartItemWidget(
         percentage: model.percentage,
-        color: colorE6007A,
+        color: AppColors.colorE6007A,
         direction: EnumGradientDirection.left,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(6.0, 6, 0, 6),
@@ -275,7 +275,7 @@ class _OrderSellItemWidget extends StatelessWidget {
             children: [
               Text(
                 model.amount,
-                style: tsS14W500CFF.copyWith(color: colorE6007A),
+                style: tsS14W500CFF.copyWith(color: AppColors.colorE6007A),
               ),
               Expanded(
                 child: Text(
@@ -329,7 +329,7 @@ class OrderBookHeadingWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 0.0),
                   child: Icon(
                     Icons.keyboard_arrow_down_rounded,
-                    color: colorFFFFFF,
+                    color: AppColors.colorFFFFFF,
                     size: 16,
                   ),
                 ),
@@ -342,7 +342,7 @@ class OrderBookHeadingWidget extends StatelessWidget {
                   builder: (context, provider, child) {
                     String svg;
                     double padding = 8;
-                    Color color = color2E303C;
+                    Color color = AppColors.color2E303C;
 
                     switch (e) {
                       case EnumBuySellAll.buy:
@@ -412,13 +412,13 @@ class OrderBookHeadingWidget extends StatelessWidget {
                     builder: (context, selectedPriceLenIndex, child) => Text(
                       dummyPriceLengthData[selectedPriceLenIndex].price,
                       style: tsS15W600CFF.copyWith(
-                          color: colorFFFFFF.withOpacity(0.30)),
+                          color: AppColors.colorFFFFFF.withOpacity(0.30)),
                     ),
                   ),
                 ),
                 Icon(
                   Icons.keyboard_arrow_down,
-                  color: colorFFFFFF,
+                  color: AppColors.colorFFFFFF,
                   size: 16,
                 ),
               ],

@@ -18,7 +18,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -32,7 +32,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                     height: 50,
                     child: Icon(
                       Icons.close,
-                      color: colorFFFFFF,
+                      color: AppColors.colorFFFFFF,
                     ),
                   ),
                 ),
@@ -59,7 +59,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                     SizedBox(height: 16),
                     Container(
                       decoration: BoxDecoration(
-                        color: color2E303C,
+                        color: AppColors.color2E303C,
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(40),
                           bottomLeft: Radius.circular(40),
@@ -117,7 +117,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                                             const EdgeInsets.only(left: 4.0),
                                         child: Icon(
                                           Icons.keyboard_arrow_down_rounded,
-                                          color: colorFFFFFF,
+                                          color: AppColors.colorFFFFFF,
                                           size: 16,
                                         ),
                                       ),
@@ -172,7 +172,8 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                                     Text(
                                       '3P3QsMVK89JBNqZQv5zMAKG8FK3k',
                                       style: tsS15W400CFF.copyWith(
-                                        color: colorFFFFFF.withOpacity(0.70),
+                                        color: AppColors.colorFFFFFF
+                                            .withOpacity(0.70),
                                       ),
                                     ),
                                   ],
@@ -214,7 +215,8 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                       padding: const EdgeInsets.fromLTRB(26, 30, 26, 48),
                       child: Text(
                         'Attention: Sending token other than DEX to this address may result in the loss of your deposit.',
-                        style: tsS13W400CFFOP60.copyWith(color: colorFFFFFF),
+                        style: tsS13W400CFFOP60.copyWith(
+                            color: AppColors.colorFFFFFF),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -230,7 +232,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  color: color0CA564,
+                                  color: AppColors.color0CA564,
                                 ),
                                 width: 48,
                                 height: 48,
@@ -297,7 +299,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color0CA564,
+        color: AppColors.color0CA564,
         borderRadius: BorderRadius.circular(20),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 9),
@@ -306,7 +308,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
               borderRadius: BorderRadius.circular(16),
             ),
             margin: const EdgeInsets.only(right: 11),
@@ -331,7 +333,8 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                         text: '1.5000 DEX ',
-                        style: tsS17W600C0CA564.copyWith(color: colorFFFFFF),
+                        style: tsS17W600C0CA564.copyWith(
+                            color: AppColors.colorFFFFFF),
                       ),
                       TextSpan(text: '\$31.25', style: tsS17W400CFF),
                     ],

@@ -64,7 +64,7 @@ class _RestoreExistingWalletScreenState
         return WillPopScope(
           onWillPop: () => _onPop(context),
           child: Scaffold(
-            backgroundColor: color1C2023,
+            backgroundColor: AppColors.color1C2023,
             appBar: AppBar(
               title: Text(
                 'Import Wallet',
@@ -101,7 +101,7 @@ class _RestoreExistingWalletScreenState
                         builder: (_, constraints) {
                           return Container(
                             decoration: BoxDecoration(
-                              color: color2E303C,
+                              color: AppColors.color2E303C,
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(20.0),
                                 bottomRight: Radius.circular(20.0),

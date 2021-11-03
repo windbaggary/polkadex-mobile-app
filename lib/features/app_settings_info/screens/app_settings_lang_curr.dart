@@ -12,7 +12,7 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: AppSettingsLayout(
         subTitle: 'Language & Currency',
         mainTitle: 'Language & Currency',
@@ -80,7 +80,7 @@ class _ThisItemWidget extends StatelessWidget {
             width: 47,
             height: 47,
             decoration: BoxDecoration(
-              color: color8BA1BE.withOpacity(0.20),
+              color: AppColors.color8BA1BE.withOpacity(0.20),
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.all(13),

@@ -22,7 +22,7 @@ class WalletInputWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: color1C1C26,
+        color: AppColors.color1C1C26,
       ),
       child: Padding(
         padding: const EdgeInsets.all(18),
@@ -45,7 +45,7 @@ class WalletInputWidget extends StatelessWidget {
               obscuringCharacter: '*',
               style: tsS16W400CFF,
               cursorWidth: 1,
-              cursorColor: colorFFFFFF,
+              cursorColor: AppColors.colorFFFFFF,
               onChanged: onChanged,
             )
           ],

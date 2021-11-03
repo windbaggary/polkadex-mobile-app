@@ -57,7 +57,7 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Container(
             decoration: BoxDecoration(
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
               borderRadius: BorderRadius.circular(10),
             ),
             width: 51,
@@ -78,7 +78,7 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
                     Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: colorE6007A),
+                          color: AppColors.colorE6007A),
                       width: 60,
                       height: 60,
                       child: Padding(
@@ -109,7 +109,7 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
                               padding: const EdgeInsets.only(right: 6),
                               child: Icon(
                                 Icons.arrow_downward,
-                                color: colorFFFFFF,
+                                color: AppColors.colorFFFFFF,
                               ),
                             ),
                             Text(
