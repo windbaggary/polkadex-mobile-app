@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
+import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';

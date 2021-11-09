@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/landing/dialogs/trade_view_dialogs.dart';
-import 'package:polkadex/features/landing/widgets/order_book_chart_item.dart';
+import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
+import 'package:polkadex/features/landing/presentation/widgets/order_book_chart_item.dart';
 import 'package:polkadex/features/trade/order_book_item_model.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';

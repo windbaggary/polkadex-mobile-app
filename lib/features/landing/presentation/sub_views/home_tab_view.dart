@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
-import 'package:polkadex/features/landing/models/home_models.dart';
-import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/features/landing/providers/rank_list_provider.dart';
-import 'package:polkadex/features/landing/widgets/app_slider_widget.dart';
+import 'package:polkadex/features/landing/data/models/home_models.dart';
+import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/rank_list_provider.dart';
+import 'package:polkadex/features/landing/presentation/widgets/app_slider_widget.dart';
 import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';

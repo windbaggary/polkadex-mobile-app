@@ -6,7 +6,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
+import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';

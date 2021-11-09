@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
+import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
 import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';

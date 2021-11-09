@@ -10,7 +10,7 @@ import 'package:polkadex/features/app_settings_info/screens/app_settings_securit
 import 'package:polkadex/features/app_settings_info/screens/my_account_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/terms_conditions_screen.dart';
-import 'package:polkadex/features/landing/providers/notification_drawer_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
