@@ -398,6 +398,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     double total,
     BuildContext context,
   ) {
+    FocusScope.of(context).unfocus();
     final thisProvider = context.read<TradeTabViewProvider>();
     if (price.isEmpty) {
       price = amount;
