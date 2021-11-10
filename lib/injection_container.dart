@@ -1,3 +1,7 @@
+import 'package:polkadex/features/landing/data/datasources/order_remote_datasource.dart';
+import 'package:polkadex/features/landing/data/repositories/order_repository.dart';
+import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
@@ -46,6 +50,22 @@ Future<void> init() async {
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => OrderRemoteDatasource(),
+  );
+
+  dependency.registerFactory<IOrderRepository>(
+    () => OrderRepository(
+      orderRemoteDatasource: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => PlaceOrderUseCase(
+      orderRepository: dependency(),
     ),
   );
 
