@@ -13,17 +13,24 @@ class LoadingDotsWidget extends StatefulWidget {
 
 class _LoadingDotsWidgetState extends State<LoadingDotsWidget> {
   int indexDotFade = 0;
+  late Timer animationTimer;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback(
-      (_) => Timer.periodic(
+      (_) => animationTimer = Timer.periodic(
         Duration(milliseconds: 500),
         (_) => setState(() => indexDotFade = (indexDotFade + 1) % 3),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    animationTimer.cancel();
+    super.dispose();
   }
 
   @override

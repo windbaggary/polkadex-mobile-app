@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -8,6 +9,8 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/widgets/loading_dots_widget.dart';
 
 /// The callback type for buy or sell
 typedef OnBuyOrSell = void Function(String price, String amount, double total);
@@ -235,9 +238,17 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                               ),
                               padding:
                                   const EdgeInsets.fromLTRB(56, 15, 63, 14),
-                              child: Text(
-                                '$btnText DOT',
-                                style: tsS16W600CFF,
+                              child: BlocBuilder<OrderCubit, OrderState>(
+                                builder: (context, state) {
+                                  if (state is OrderLoading) {
+                                    return LoadingDotsWidget(dotSize: 10);
+                                  }
+
+                                  return Text(
+                                    '$btnText DOT',
+                                    style: tsS16W600CFF,
+                                  );
+                                },
                               ),
                             ),
                           );

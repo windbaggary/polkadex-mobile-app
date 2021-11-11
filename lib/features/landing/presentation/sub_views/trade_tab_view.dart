@@ -7,6 +7,7 @@ import 'package:polkadex/features/landing/presentation/providers/home_scroll_not
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
+import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
 import 'package:polkadex/features/trade/order_book_item_model.dart';
 import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
@@ -231,6 +232,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             onSwapTab: () => _onSwapBuySellTab(context),
             onBuy: (price, amount, total) => _onBuyOrSell(
               EnumBuySell.buy,
+              _orderTypeSelNotifier.value,
               price,
               amount,
               total,
@@ -238,6 +240,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             ),
             onSell: (price, amount, total) => _onBuyOrSell(
               EnumBuySell.sell,
+              _orderTypeSelNotifier.value,
               price,
               amount,
               total,
@@ -393,12 +396,24 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
   /// The callback listener when the user buy or sell from the buyorsellwidget
   void _onBuyOrSell(
     EnumBuySell type,
+    EnumOrderTypes side,
     String price,
     String amount,
     double total,
     BuildContext context,
-  ) {
+  ) async {
     FocusScope.of(context).unfocus();
+
+    await context.read<OrderCubit>().placeOrder(
+          nonce: 0,
+          baseAsset: "BTC",
+          quoteAsset: "USD",
+          orderType: side,
+          orderSide: type,
+          quantity: 100.0,
+          price: 50.0,
+        );
+
     final thisProvider = context.read<TradeTabViewProvider>();
     if (price.isEmpty) {
       price = amount;
@@ -416,7 +431,11 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
       ),
     );
 
-    buildAppToast(msg: "Purchase added to open orders", context: context);
+    final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
+    final message = context.read<OrderCubit>().state is OrderAccepted
+        ? '$orderType added to open orders.'
+        : '$orderType not accepted. Please try again.';
+    buildAppToast(msg: message, context: context);
     _keyBuySellWidget.currentState?.reset();
   }
 
