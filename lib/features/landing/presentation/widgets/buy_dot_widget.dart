@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
@@ -11,38 +10,10 @@ import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/loading_dots_widget.dart';
+import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 
 /// The callback type for buy or sell
 typedef OnBuyOrSell = void Function(String price, String amount, double total);
-
-/// The common textField for the widget
-TextField _buildTextField(
-    {String? hintText,
-    TextEditingController? controller,
-    ValueChanged<String>? onChanged,
-    TextInputType keyboardType = TextInputType.text}) {
-  return TextField(
-    controller: controller,
-    style: tsS16W500CFF,
-    decoration: InputDecoration(
-      hintText: hintText,
-      hintStyle: tsS16W500CFF,
-      isDense: true,
-      contentPadding: EdgeInsets.zero,
-      border: InputBorder.none,
-      errorBorder: InputBorder.none,
-      enabledBorder: InputBorder.none,
-      focusedBorder: InputBorder.none,
-      disabledBorder: InputBorder.none,
-      focusedErrorBorder: InputBorder.none,
-    ),
-    keyboardType: keyboardType,
-    onChanged: onChanged,
-    inputFormatters: [
-      //  FilteringTextInputFormatter.
-    ],
-  );
-}
 
 /// The widget repesent the buy dot
 class BuyDotWidget extends StatefulWidget {
@@ -372,13 +343,9 @@ class _ThisAmountWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _buildTextField(
+            child: QuantityInputWidget(
               hintText: 'Amount',
               controller: _ThisInheritedWidget.of(context)?.amountController,
-              keyboardType: TextInputType.numberWithOptions(
-                decimal: true,
-                signed: false,
-              ),
             ),
           ),
           Container(
@@ -438,13 +405,9 @@ class _ThisPriceWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _buildTextField(
+            child: QuantityInputWidget(
               hintText: "Price",
               controller: _ThisInheritedWidget.of(context)?.priceController,
-              keyboardType: TextInputType.numberWithOptions(
-                decimal: true,
-                signed: false,
-              ),
             ),
           ),
           Container(
