@@ -233,20 +233,22 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             buySellNotifier: _buySellNotifier,
             onSwapTab: () => _onClickArrowsBuySell(
                 _ThisInheritedWidget.of(context)?.buySellTabController),
-            onBuy: (price, amount, total) => _onBuyOrSell(
+            onBuy: (price, amount, _) => _onBuyOrSell(
               EnumBuySell.buy,
               _orderTypeSelNotifier.value,
+              'BTC',
+              'DOT',
               price,
               amount,
-              total,
               context,
             ),
-            onSell: (price, amount, total) => _onBuyOrSell(
+            onSell: (price, amount, _) => _onBuyOrSell(
               EnumBuySell.sell,
               _orderTypeSelNotifier.value,
+              'BTC',
+              'DOT',
               price,
               amount,
-              total,
               context,
             ),
           ),
@@ -400,21 +402,22 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
   void _onBuyOrSell(
     EnumBuySell type,
     EnumOrderTypes side,
+    String leftAsset,
+    String rightAsset,
     String price,
     String amount,
-    double total,
     BuildContext context,
   ) async {
     FocusScope.of(context).unfocus();
 
     await context.read<OrderCubit>().placeOrder(
           nonce: 0,
-          baseAsset: "BTC",
-          quoteAsset: "USD",
+          baseAsset: leftAsset,
+          quoteAsset: rightAsset,
           orderType: side,
           orderSide: type,
-          quantity: 100.0,
-          price: 50.0,
+          quantity: double.parse(amount),
+          price: double.parse(price),
         );
 
     final thisProvider = context.read<TradeTabViewProvider>();
