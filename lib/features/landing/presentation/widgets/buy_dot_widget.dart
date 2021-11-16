@@ -17,6 +17,10 @@ typedef OnBuyOrSell = void Function(String price, String amount, double total);
 
 /// The widget repesent the buy dot
 class BuyDotWidget extends StatefulWidget {
+  final double leftBalance;
+  final double rightBalance;
+  final String leftAsset;
+  final String rightAsset;
   final OnBuyOrSell? onBuy;
   final OnBuyOrSell onSell;
   final ValueNotifier<EnumBuySell> buySellNotifier;
@@ -25,6 +29,10 @@ class BuyDotWidget extends StatefulWidget {
 
   const BuyDotWidget({
     required Key key,
+    required this.leftBalance,
+    required this.rightBalance,
+    required this.leftAsset,
+    required this.rightAsset,
     required this.buySellNotifier,
     required this.onSell,
     required this.onBuy,
@@ -45,7 +53,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
   late ValueNotifier<double> _progressNotifier;
   late ValueNotifier<EnumAmountType> _amountTypeNotifier;
 
-  final double _walletBalance = 12000.89;
+  double _walletBalance = 12000.89;
+  String _asset = 'BTC';
 
   @override
   void initState() {
@@ -71,167 +80,186 @@ class BuyDotWidgetState extends State<BuyDotWidget>
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
-      child: _ThisInheritedWidget(
-        amountController: _amountController,
-        priceController: _priceController,
-        buySellNotifier: widget.buySellNotifier,
-        progressNotifier: _progressNotifier,
-        orderTypeNotifier: widget.orderTypeNotifier,
-        amountTypeNotifier: _amountTypeNotifier,
-        walletBalance: _walletBalance,
-        child: Builder(
-          builder: (context) => Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: color2E303C,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.17),
-                  blurRadius: 99,
-                  offset: Offset(0.0, 100.0),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 33, 12.02 - 9.5),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 42,
-                        height: 42,
-                        margin: const EdgeInsets.only(right: 9),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: color8BA1BE.withOpacity(0.30),
-                        ),
-                        padding: const EdgeInsets.all(11),
-                        child: SvgPicture.asset('wallet'.asAssetSvg()),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              "My balance",
-                              style: tsS14W500CFF.copyWith(
-                                  color: colorFFFFFF.withOpacity(0.70)),
-                            ),
-                            Text(
-                              '${_walletBalance.toStringAsFixed(2)} BTC',
-                              style: tsS20W500CFF,
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: widget.onSwapTab,
-                        child: ValueListenableBuilder<EnumBuySell>(
-                          valueListenable: widget.buySellNotifier,
-                          builder: (context, buyOrSell, child) {
-                            String svg;
-                            switch (buyOrSell) {
-                              case EnumBuySell.buy:
-                                svg = 'tradeArrowsBuy'.asAssetSvg();
+      child: ValueListenableBuilder<EnumBuySell>(
+        valueListenable: widget.buySellNotifier,
+        builder: (context, buyOrSell, child) {
+          switch (buyOrSell) {
+            case EnumBuySell.buy:
+              _asset = 'BTC';
+              _walletBalance = 12000.89;
+              break;
+            case EnumBuySell.sell:
+              _asset = 'DOT';
+              _walletBalance = 200000.72;
+              break;
+          }
 
-                                break;
-                              case EnumBuySell.sell:
-                                svg = 'tradeArrows'.asAssetSvg();
-                                break;
-                            }
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SvgPicture.asset(
-                                svg,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+          return _ThisInheritedWidget(
+            amountController: _amountController,
+            priceController: _priceController,
+            buySellNotifier: widget.buySellNotifier,
+            progressNotifier: _progressNotifier,
+            orderTypeNotifier: widget.orderTypeNotifier,
+            amountTypeNotifier: _amountTypeNotifier,
+            walletBalance: _walletBalance,
+            asset: _asset,
+            child: Builder(
+              builder: (context) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: color2E303C,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.17),
+                      blurRadius: 99,
+                      offset: Offset(0.0, 100.0),
+                    ),
+                  ],
                 ),
-                ValueListenableBuilder<EnumOrderTypes>(
-                    valueListenable:
-                        _ThisInheritedWidget.of(context)?.orderTypeNotifier ??
-                            ValueNotifier(EnumOrderTypes.market),
-                    builder: (context, orderType, child) {
-                      Widget contentChild = child!;
-                      // if (orderType == EnumOrderTypes.Market) {
-                      //   contentChild = Container();
-                      // }
-                      return AnimatedSize(
-                        duration: AppConfigs.animDurationSmall,
-                        child: contentChild,
-                      );
-                    },
-                    child: _ThisAmountWidget()),
-                _ThisPriceWidget(),
-                _ThisTotalWidget(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 24),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Builder(
-                      builder: (context) => ValueListenableBuilder<EnumBuySell>(
-                        valueListenable: widget.buySellNotifier,
-                        builder: (context, enumBuySell, child) {
-                          String btnText = "Buy";
-                          Color color;
-                          switch (enumBuySell) {
-                            case EnumBuySell.buy:
-                              btnText = "Buy";
-                              color = color0CA564;
-                              break;
-                            case EnumBuySell.sell:
-                              btnText = "Sell";
-                              color = colorE6007A;
-                              break;
-                          }
-                          return InkWell(
-                            onTap: () {
-                              switch (enumBuySell) {
-                                case EnumBuySell.buy:
-                                  _onBuy(context);
-                                  break;
-                                case EnumBuySell.sell:
-                                  _onSell(context);
-                                  break;
-                              }
-                            },
-                            child: AnimatedContainer(
-                              duration: AppConfigs.animDurationSmall,
-                              decoration: BoxDecoration(
-                                color: color,
-                                borderRadius: BorderRadius.circular(13),
-                              ),
-                              padding:
-                                  const EdgeInsets.fromLTRB(56, 15, 63, 14),
-                              child: BlocBuilder<OrderCubit, OrderState>(
-                                builder: (context, state) {
-                                  if (state is OrderLoading) {
-                                    return LoadingDotsWidget(dotSize: 10);
-                                  }
-
-                                  return Text(
-                                    '$btnText DOT',
-                                    style: tsS16W600CFF,
-                                  );
-                                },
-                              ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.fromLTRB(24, 16, 33, 12.02 - 9.5),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 42,
+                            height: 42,
+                            margin: const EdgeInsets.only(right: 9),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: color8BA1BE.withOpacity(0.30),
                             ),
-                          );
-                        },
+                            padding: const EdgeInsets.all(11),
+                            child: SvgPicture.asset('wallet'.asAssetSvg()),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  "My balance",
+                                  style: tsS14W500CFF.copyWith(
+                                      color: colorFFFFFF.withOpacity(0.70)),
+                                ),
+                                Text(
+                                  '${_walletBalance.toStringAsFixed(2)} $_asset',
+                                  style: tsS20W500CFF,
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: widget.onSwapTab,
+                            child: ValueListenableBuilder<EnumBuySell>(
+                              valueListenable: widget.buySellNotifier,
+                              builder: (context, buyOrSell, child) {
+                                String svg;
+                                switch (buyOrSell) {
+                                  case EnumBuySell.buy:
+                                    svg = 'tradeArrowsBuy'.asAssetSvg();
+
+                                    break;
+                                  case EnumBuySell.sell:
+                                    svg = 'tradeArrows'.asAssetSvg();
+                                    break;
+                                }
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SvgPicture.asset(
+                                    svg,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
+                    ValueListenableBuilder<EnumOrderTypes>(
+                        valueListenable: _ThisInheritedWidget.of(context)
+                                ?.orderTypeNotifier ??
+                            ValueNotifier(EnumOrderTypes.market),
+                        builder: (context, orderType, child) {
+                          Widget contentChild = child!;
+                          // if (orderType == EnumOrderTypes.Market) {
+                          //   contentChild = Container();
+                          // }
+                          return AnimatedSize(
+                            duration: AppConfigs.animDurationSmall,
+                            child: contentChild,
+                          );
+                        },
+                        child: _ThisAmountWidget()),
+                    _ThisPriceWidget(),
+                    _ThisTotalWidget(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12, bottom: 24),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Builder(
+                          builder: (context) =>
+                              ValueListenableBuilder<EnumBuySell>(
+                            valueListenable: widget.buySellNotifier,
+                            builder: (context, enumBuySell, child) {
+                              String btnText = "Buy";
+                              Color color;
+                              switch (enumBuySell) {
+                                case EnumBuySell.buy:
+                                  btnText = "Buy";
+                                  color = color0CA564;
+                                  break;
+                                case EnumBuySell.sell:
+                                  btnText = "Sell";
+                                  color = colorE6007A;
+                                  break;
+                              }
+                              return InkWell(
+                                onTap: () {
+                                  switch (enumBuySell) {
+                                    case EnumBuySell.buy:
+                                      _onBuy(context);
+                                      break;
+                                    case EnumBuySell.sell:
+                                      _onSell(context);
+                                      break;
+                                  }
+                                },
+                                child: AnimatedContainer(
+                                  duration: AppConfigs.animDurationSmall,
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(13),
+                                  ),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(56, 15, 63, 14),
+                                  child: BlocBuilder<OrderCubit, OrderState>(
+                                    builder: (context, state) {
+                                      if (state is OrderLoading) {
+                                        return LoadingDotsWidget(dotSize: 10);
+                                      }
+
+                                      return Text(
+                                        '$btnText DOT',
+                                        style: tsS16W600CFF,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -346,6 +374,7 @@ class _ThisAmountWidget extends StatelessWidget {
             child: QuantityInputWidget(
               hintText: 'Amount',
               controller: _ThisInheritedWidget.of(context)?.amountController,
+              onChanged: (amount) => _onAmountChanged(amount, context),
             ),
           ),
           Container(
@@ -383,19 +412,23 @@ class _ThisAmountWidget extends StatelessWidget {
     );
   }
 
-  // void _onAmountChanged(String val, BuildContext context) {
-  //   try {
-  //     final double value = double.tryParse(val);
-  //     if (value == null) {
-  //       return;
-  //     }
-  //     _ThisInheritedWidget.of(context).progressNotifier.value =
-  //         (value / _ThisInheritedWidget.of(context).walletBalance)
-  //             .clamp(0.0, 1.0);
-  //   } catch (ex) {
-  //     print(ex);
-  //   }
-  // }
+  void _onAmountChanged(String val, BuildContext context) {
+    try {
+      final double? value = double.tryParse(val);
+      final double? price = double.tryParse(
+          _ThisInheritedWidget.of(context)!.priceController.text);
+
+      if (value == null || price == null) {
+        return;
+      }
+
+      _ThisInheritedWidget.of(context)?.progressNotifier.value =
+          ((value * price) / _ThisInheritedWidget.of(context)!.walletBalance)
+              .clamp(0.0, 1.0);
+    } catch (ex) {
+      print(ex);
+    }
+  }
 }
 
 class _ThisPriceWidget extends StatelessWidget {
@@ -408,6 +441,7 @@ class _ThisPriceWidget extends StatelessWidget {
             child: QuantityInputWidget(
               hintText: "Price",
               controller: _ThisInheritedWidget.of(context)?.priceController,
+              onChanged: (price) => _onPriceChanged(price, context),
             ),
           ),
           Container(
@@ -443,6 +477,24 @@ class _ThisPriceWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _onPriceChanged(String val, BuildContext context) {
+    try {
+      final double? amount = double.tryParse(
+          _ThisInheritedWidget.of(context)!.amountController.text);
+      final double? price = double.tryParse(val);
+
+      if (amount == null || price == null) {
+        return;
+      }
+
+      _ThisInheritedWidget.of(context)?.progressNotifier.value =
+          ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance)
+              .clamp(0.0, 1.0);
+    } catch (ex) {
+      print(ex);
+    }
   }
 }
 
@@ -493,64 +545,6 @@ class _ThisTotalWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: color8BA1BE.withOpacity(0.20),
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: ValueListenableBuilder<EnumAmountType>(
-                  valueListenable:
-                      _ThisInheritedWidget.of(context)?.amountTypeNotifier ??
-                          ValueNotifier(EnumAmountType.usd),
-                  builder: (context, amountType, child) {
-                    final selectedTextStyle = tsS13W600CFF;
-                    final unSelectedTextStyle =
-                        tsS13W600CFF.copyWith(color: colorABB2BC);
-                    TextStyle btcTextStyle = unSelectedTextStyle,
-                        usdTextStyle = unSelectedTextStyle;
-                    switch (amountType) {
-                      case EnumAmountType.btc:
-                        btcTextStyle = selectedTextStyle;
-                        break;
-                      case EnumAmountType.usd:
-                        usdTextStyle = selectedTextStyle;
-                        break;
-                    }
-                    return Row(
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            _ThisInheritedWidget.of(context)
-                                ?.amountTypeNotifier
-                                .value = EnumAmountType.btc;
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 12, 0, 12),
-                            child: Text(
-                              'BTC',
-                              style: btcTextStyle,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            _ThisInheritedWidget.of(context)
-                                ?.amountTypeNotifier
-                                .value = EnumAmountType.usd;
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 12, 10, 12),
-                            child: Text(
-                              '  / USD',
-                              style: usdTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
             ],
           ),
           Padding(
@@ -589,9 +583,15 @@ class _ThisTotalWidget extends StatelessWidget {
   }
 
   void _onProgressUpdate(double progress, BuildContext context) {
-    // _ThisInheritedWidget.of(context).amountController.text =
-    //     (_ThisInheritedWidget.of(context).walletBalance * progress)
-    //         .toStringAsFixed(2);
+    try {
+      final price =
+          double.parse(_ThisInheritedWidget.of(context)!.priceController.text);
+
+      _ThisInheritedWidget.of(context)?.amountController.text =
+          (_ThisInheritedWidget.of(context)!.walletBalance * progress / price)
+              .toStringAsFixed(2);
+    } catch (_) {}
+
     _ThisInheritedWidget.of(context)?.progressNotifier.value = progress;
   }
 }
@@ -626,6 +626,7 @@ class _ThisInheritedWidget extends InheritedWidget {
   final ValueNotifier<EnumOrderTypes> orderTypeNotifier;
   final ValueNotifier<EnumAmountType> amountTypeNotifier;
   final double walletBalance;
+  final String asset;
 
   _ThisInheritedWidget({
     required this.priceController,
@@ -634,6 +635,7 @@ class _ThisInheritedWidget extends InheritedWidget {
     required this.buySellNotifier,
     required this.orderTypeNotifier,
     required this.walletBalance,
+    required this.asset,
     required this.amountTypeNotifier,
     required Widget child,
   }) : super(child: child);
@@ -646,6 +648,7 @@ class _ThisInheritedWidget extends InheritedWidget {
         oldWidget.buySellNotifier != buySellNotifier ||
         oldWidget.orderTypeNotifier != orderTypeNotifier ||
         oldWidget.walletBalance != walletBalance ||
+        oldWidget.asset != asset ||
         oldWidget.amountTypeNotifier != amountTypeNotifier;
   }
 

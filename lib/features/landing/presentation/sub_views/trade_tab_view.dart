@@ -227,6 +227,10 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
           ),
           BuyDotWidget(
             key: _keyBuySellWidget,
+            leftBalance: 12000.89,
+            leftAsset: 'BTC',
+            rightBalance: 200000.72,
+            rightAsset: 'DOT',
             orderTypeNotifier: _orderTypeSelNotifier,
             buySellNotifier: _buySellNotifier,
             onSwapTab: () => _onSwapBuySellTab(context),
