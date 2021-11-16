@@ -84,7 +84,24 @@ class BuyDotWidgetState extends State<BuyDotWidget>
       child: ValueListenableBuilder<EnumBuySell>(
         valueListenable: widget.buySellNotifier,
         builder: (context, buyOrSell, child) {
-          _onOrderSideUpdate(buyOrSell, context);
+          switch (buyOrSell) {
+            case EnumBuySell.buy:
+              _asset = 'BTC';
+              _walletBalance = widget.leftBalance;
+              break;
+            case EnumBuySell.sell:
+              _asset = 'DOT';
+              _walletBalance = widget.rightBalance;
+              break;
+          }
+          _onProgressOrOrderSideUpdate(
+            buyOrSell,
+            _walletBalance,
+            _progressNotifier.value,
+            _amountController,
+            _priceController,
+            context,
+          );
 
           return _ThisInheritedWidget(
             amountController: _amountController,
@@ -254,30 +271,6 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         },
       ),
     );
-  }
-
-  void _onOrderSideUpdate(EnumBuySell buyOrSell, BuildContext context) {
-    switch (buyOrSell) {
-      case EnumBuySell.buy:
-        _asset = 'BTC';
-        _walletBalance = widget.leftBalance;
-        break;
-      case EnumBuySell.sell:
-        _asset = 'DOT';
-        _walletBalance = widget.rightBalance;
-        break;
-    }
-
-    try {
-      double newAmount = _walletBalance * _progressNotifier.value;
-
-      if (buyOrSell == EnumBuySell.buy) {
-        final price = double.parse(_priceController.text);
-        newAmount /= price;
-      }
-
-      _amountController.text = newAmount.toStringAsFixed(2);
-    } catch (_) {}
   }
 
   /// Update the price to [text]
@@ -586,8 +579,18 @@ class _ThisTotalWidget extends StatelessWidget {
                   builder: (context, progress, child) => AppHorizontalSlider(
                     initialProgress: progress,
                     activeColor: color,
-                    onProgressUpdate: (progress) =>
-                        _onProgressUpdate(progress, context),
+                    onProgressUpdate: (progress) {
+                      _ThisInheritedWidget.of(context)?.progressNotifier.value =
+                          progress;
+                      _onProgressOrOrderSideUpdate(
+                        buyOrSell,
+                        _ThisInheritedWidget.of(context)!.walletBalance,
+                        progress,
+                        _ThisInheritedWidget.of(context)!.amountController,
+                        _ThisInheritedWidget.of(context)!.priceController,
+                        context,
+                      );
+                    },
                   ),
                 );
               },
@@ -596,25 +599,6 @@ class _ThisTotalWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void _onProgressUpdate(double progress, BuildContext context) {
-    try {
-      double newAmount =
-          _ThisInheritedWidget.of(context)!.walletBalance * progress;
-
-      if (_ThisInheritedWidget.of(context)!.buySellNotifier.value ==
-          EnumBuySell.buy) {
-        final price = double.parse(
-            _ThisInheritedWidget.of(context)!.priceController.text);
-        newAmount /= price;
-      }
-
-      _ThisInheritedWidget.of(context)?.amountController.text =
-          newAmount.toStringAsFixed(2);
-    } catch (_) {}
-
-    _ThisInheritedWidget.of(context)?.progressNotifier.value = progress;
   }
 }
 
@@ -676,4 +660,27 @@ class _ThisInheritedWidget extends InheritedWidget {
 
   static _ThisInheritedWidget? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
+}
+
+void _onProgressOrOrderSideUpdate(
+  EnumBuySell buyOrSell,
+  double walletBalance,
+  double progressNotifier,
+  TextEditingController amountController,
+  TextEditingController priceController,
+  BuildContext context,
+) {
+  double newAmount = walletBalance * progressNotifier;
+
+  if (buyOrSell == EnumBuySell.buy) {
+    final price = double.tryParse(priceController.text);
+
+    if (price != null) {
+      newAmount /= price;
+    } else {
+      return;
+    }
+  }
+
+  amountController.text = newAmount.toStringAsFixed(2);
 }
