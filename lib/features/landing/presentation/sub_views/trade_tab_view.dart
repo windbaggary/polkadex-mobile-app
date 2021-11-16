@@ -130,9 +130,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     Future.microtask(() {
       final tabController =
           _ThisInheritedWidget.of(context)?.buySellTabController;
-      tabController?.addListener(() {
-        _buySellNotifier.value = EnumBuySell.values[tabController.index];
-      });
+      tabController?.addListener(() => _onSwapBuySellTab(context));
     });
   }
 
@@ -459,12 +457,8 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
   void _onSwapBuySellTab(BuildContext context) {
     final tabController =
         _ThisInheritedWidget.of(context)?.buySellTabController;
-    int newIndex = 0;
-    if (tabController?.index == 0) {
-      newIndex = 1;
-    }
 
-    tabController?.animateTo(newIndex);
+    _buySellNotifier.value = EnumBuySell.values[tabController!.index];
   }
 }
 

@@ -53,7 +53,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
   late ValueNotifier<double> _progressNotifier;
   late ValueNotifier<EnumAmountType> _amountTypeNotifier;
 
-  double _walletBalance = 12000.89;
+  late double _walletBalance;
   String _asset = 'BTC';
 
   @override
@@ -62,6 +62,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     _amountController = TextEditingController();
     _progressNotifier = ValueNotifier<double>(0.00);
     _amountTypeNotifier = ValueNotifier(EnumAmountType.usd);
+    _walletBalance = widget.leftBalance;
     super.initState();
   }
 
@@ -83,16 +84,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
       child: ValueListenableBuilder<EnumBuySell>(
         valueListenable: widget.buySellNotifier,
         builder: (context, buyOrSell, child) {
-          switch (buyOrSell) {
-            case EnumBuySell.buy:
-              _asset = 'BTC';
-              _walletBalance = 12000.89;
-              break;
-            case EnumBuySell.sell:
-              _asset = 'DOT';
-              _walletBalance = 200000.72;
-              break;
-          }
+          _onOrderSideUpdate(buyOrSell, context);
 
           return _ThisInheritedWidget(
             amountController: _amountController,
@@ -262,6 +254,30 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         },
       ),
     );
+  }
+
+  void _onOrderSideUpdate(EnumBuySell buyOrSell, BuildContext context) {
+    switch (buyOrSell) {
+      case EnumBuySell.buy:
+        _asset = 'BTC';
+        _walletBalance = widget.leftBalance;
+        break;
+      case EnumBuySell.sell:
+        _asset = 'DOT';
+        _walletBalance = widget.rightBalance;
+        break;
+    }
+
+    try {
+      double newAmount = _walletBalance * _progressNotifier.value;
+
+      if (buyOrSell == EnumBuySell.buy) {
+        final price = double.parse(_priceController.text);
+        newAmount /= price;
+      }
+
+      _amountController.text = newAmount.toStringAsFixed(2);
+    } catch (_) {}
   }
 
   /// Update the price to [text]
@@ -584,12 +600,18 @@ class _ThisTotalWidget extends StatelessWidget {
 
   void _onProgressUpdate(double progress, BuildContext context) {
     try {
-      final price =
-          double.parse(_ThisInheritedWidget.of(context)!.priceController.text);
+      double newAmount =
+          _ThisInheritedWidget.of(context)!.walletBalance * progress;
+
+      if (_ThisInheritedWidget.of(context)!.buySellNotifier.value ==
+          EnumBuySell.buy) {
+        final price = double.parse(
+            _ThisInheritedWidget.of(context)!.priceController.text);
+        newAmount /= price;
+      }
 
       _ThisInheritedWidget.of(context)?.amountController.text =
-          (_ThisInheritedWidget.of(context)!.walletBalance * progress / price)
-              .toStringAsFixed(2);
+          newAmount.toStringAsFixed(2);
     } catch (_) {}
 
     _ThisInheritedWidget.of(context)?.progressNotifier.value = progress;
