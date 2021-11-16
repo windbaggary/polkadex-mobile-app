@@ -231,7 +231,8 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             rightAsset: 'DOT',
             orderTypeNotifier: _orderTypeSelNotifier,
             buySellNotifier: _buySellNotifier,
-            onSwapTab: () => _onSwapBuySellTab(context),
+            onSwapTab: () => _onClickArrowsBuySell(
+                _ThisInheritedWidget.of(context)?.buySellTabController),
             onBuy: (price, amount, total) => _onBuyOrSell(
               EnumBuySell.buy,
               _orderTypeSelNotifier.value,
@@ -453,12 +454,20 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     }
   }
 
-  /// Listener to handle the Buy sell tab change
   void _onSwapBuySellTab(BuildContext context) {
     final tabController =
         _ThisInheritedWidget.of(context)?.buySellTabController;
 
     _buySellNotifier.value = EnumBuySell.values[tabController!.index];
+  }
+
+  void _onClickArrowsBuySell(TabController? buySellTabController) {
+    int newIndex = 0;
+    if (buySellTabController?.index == 0) {
+      newIndex = 1;
+    }
+
+    buySellTabController?.animateTo(newIndex);
   }
 }
 
