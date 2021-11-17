@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
-import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/suggestions_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/configs/app_config.dart';
@@ -265,7 +265,13 @@ class _RestoreExistingWalletScreenState
                   top: Radius.circular(30),
                 ),
               ),
-              builder: (_) => IncorrectMnemonicWidget(),
+              builder: (_) => WarningModalWidget(
+                title: 'Incorrect mnemonic phrase',
+                subtitle: 'Please enter again.',
+                imagePath: 'mnemonic_error.png',
+                details:
+                    'One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.',
+              ),
             );
     } else {
       _mnemonicPageController.nextPage(

@@ -10,11 +10,15 @@ class ImportedAccountModel extends ImportedAccountEntity {
     required EncodingEntity encoding,
     required String address,
     required MetaEntity meta,
+    required String name,
+    required bool biometricAccess,
   }) : super(
           encoded: encoded,
           encoding: encoding,
           address: address,
           meta: meta,
+          name: name,
+          biometricAccess: biometricAccess,
         );
 
   factory ImportedAccountModel.fromJson(Map<String, dynamic> map) {
@@ -23,6 +27,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
       encoding: EncodingModel.fromJson(map['encoding']),
       address: map['address'],
       meta: MetaModel.fromJson(map['meta']),
+      name: map['name'] ?? '',
+      biometricAccess: map['biometricAccess'] ?? false,
     );
   }
 
@@ -32,6 +38,26 @@ class ImportedAccountModel extends ImportedAccountEntity {
       'encoding': (encoding as EncodingModel).toJson(),
       'address': address,
       'meta': (meta as MetaModel).toJson(),
+      'name': name,
+      'biometricAccess': biometricAccess,
     };
+  }
+
+  ImportedAccountModel copyWith({
+    String? encoded,
+    EncodingEntity? encoding,
+    String? address,
+    MetaEntity? meta,
+    String? name,
+    bool? biometricAccess,
+  }) {
+    return ImportedAccountModel(
+      encoded: encoded ?? this.encoded,
+      encoding: encoding ?? this.encoding,
+      address: address ?? this.address,
+      meta: meta ?? this.meta,
+      name: name ?? this.name,
+      biometricAccess: biometricAccess ?? this.biometricAccess,
+    );
   }
 }

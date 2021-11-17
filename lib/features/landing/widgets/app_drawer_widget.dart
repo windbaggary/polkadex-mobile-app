@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_change_logs_screen.dart';
@@ -289,7 +290,8 @@ class _ThisProfileWidget extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {
+            onTap: () async {
+              await context.read<AccountCubit>().logout();
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => IntroScreen()),
                   (route) => false);
