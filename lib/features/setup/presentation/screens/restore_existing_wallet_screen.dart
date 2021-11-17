@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
-import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/suggestions_widget.dart';
 import 'package:provider/provider.dart';
@@ -44,8 +44,7 @@ class _RestoreExistingWalletScreenState
     _entryAnimation = _animationController;
     _mnemonicPageController = PageController(
         initialPage: 0,
-        viewportFraction:
-            (AppConfigs.size!.width - 40) / AppConfigs.size!.width);
+        viewportFraction: (AppConfigs.size.width - 40) / AppConfigs.size.width);
 
     super.initState();
     Future.microtask(() => _animationController.forward());
@@ -256,7 +255,7 @@ class _RestoreExistingWalletScreenState
       Navigator.of(context).pop();
 
       isMnemonicValid
-          ? _onNavigateToWalletSettings(context, provider)
+          ? Coordinator.goToWalletSettingsScreen(provider)
           : showModalBottomSheet(
               context: context,
               isScrollControlled: true,
@@ -279,22 +278,6 @@ class _RestoreExistingWalletScreenState
         curve: _pageTransition,
       );
     }
-  }
-
-  void _onNavigateToWalletSettings(
-      BuildContext context, MnemonicProvider provider) {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return ChangeNotifierProvider.value(
-          value: provider,
-          child: FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: WalletSettingsScreen(),
-          ),
-        );
-      },
-    ));
   }
 
   bool _isNextEnabled(BuildContext context, MnemonicProvider provider) {

@@ -5,14 +5,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/app_lifecycle_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
-import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
 import 'package:polkadex/generated/l10n.dart';
+
+import 'common/navigation/coordinator.dart';
+import 'common/navigation/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +47,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    AppConfigs.size = WidgetsBinding.instance!.window.physicalSize;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<BottomNavigationProvider>(
@@ -106,26 +105,9 @@ class _MyAppState extends State<MyApp> {
                   },
                 ),
               ),
-
-              // Set the initial route
-              home: Builder(
-                builder: (context) {
-                  AppConfigs.size = MediaQuery.of(context).size;
-                  return AuthLogoutScreen();
-                },
-              ),
-              onGenerateRoute: (settings) {
-                late Widget screen;
-                switch (settings.name) {
-                  case LandingScreen.routeName:
-                    screen = LandingScreen();
-                    break;
-                }
-
-                return MaterialPageRoute(
-                    builder: (context) => screen, settings: settings);
-              },
-
+              navigatorKey: Coordinator.navigationKey,
+              initialRoute: Routes.authLogoutScreen,
+              onGenerateRoute: Routes.onGenerateRoute,
               debugShowCheckedModeBanner: false,
             ),
           ),

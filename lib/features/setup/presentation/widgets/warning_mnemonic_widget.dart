@@ -76,7 +76,7 @@ class _WarningModalWidgetState extends State<WarningModalWidget>
           ),
         ),
         ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: AppConfigs.size!.height * 0.8),
+          constraints: BoxConstraints(maxHeight: AppConfigs.size.height * 0.8),
           child: ListView(
             physics: ClampingScrollPhysics(),
             shrinkWrap: true,

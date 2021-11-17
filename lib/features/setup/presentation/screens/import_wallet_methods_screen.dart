@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/features/setup/presentation/screens/restore_existing_wallet_screen.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -10,7 +10,6 @@ import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/setup/presentation/widgets/available_method_widget.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/injection_container.dart';
 
 class ImportWalletMethodsScreen extends StatefulWidget {
   @override
@@ -127,9 +126,8 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
                                       iconWidget: SvgPicture.asset(
                                         'mnemonicIcon'.asAssetSvg(),
                                       ),
-                                      onTap: (_) =>
-                                          _onNavigateToRestoreExistingWallet(
-                                              context),
+                                      onTap: (_) => Coordinator
+                                          .goToRestoreExistingWalletScreen(),
                                     ),
                                     SizedBox(
                                       height: 14,
@@ -169,25 +167,6 @@ class _ImportWalletMethodsScreenState extends State<ImportWalletMethodsScreen>
           ),
         );
       },
-    );
-  }
-
-  void _onNavigateToRestoreExistingWallet(BuildContext context) async {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: ChangeNotifierProvider(
-              create: (context) => dependency<MnemonicProvider>(),
-              builder: (context, _) {
-                return RestoreExistingWalletScreen();
-              },
-            ),
-          );
-        },
-      ),
     );
   }
 

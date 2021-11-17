@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:provider/provider.dart';
@@ -157,7 +157,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                           .confirmPassword(_passwordController.text);
 
                       isCorrect
-                          ? _onNavigateToLanding(context)
+                          ? Coordinator.goBackToLandingScreen()
                           : _onShowIncorrectPasswordModal(context);
                     },
                   ),
@@ -184,21 +184,6 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
         title: 'Incorrect password',
         subtitle: 'Please enter again.',
       ),
-    );
-  }
-
-  void _onNavigateToLanding(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: LandingScreen(),
-          );
-        },
-      ),
-      (route) => route.isFirst,
     );
   }
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/common/widgets/qr_code_screen.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 21
@@ -120,7 +120,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 'contacts'.asAssetSvg()),
                                           ),
                                           buildInkWell(
-                                            onTap: () => _onTapQR(context),
+                                            onTap: () => Coordinator
+                                                .goToQrCodeScanScreen(),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                             child: Container(
@@ -362,12 +363,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
           ],
         ),
       );
-
-  /// Navigate to QR code scanner screen and returns the data in navigator result
-  void _onTapQR(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => QRCodeScanScreen()));
-  }
 
   /// The method to toggle the keyboard
   void _onSwapTapped(BuildContext context) {
