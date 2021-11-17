@@ -23,7 +23,7 @@ class MnemonicPagesInputWidget extends StatelessWidget {
     final provider = context.read<MnemonicProvider>();
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 62.0 * itemsPerPage),
+      constraints: BoxConstraints(maxHeight: 64.0 * itemsPerPage),
       child: PageView.builder(
         onPageChanged: (nextPage) {
           currentPage.value = nextPage;

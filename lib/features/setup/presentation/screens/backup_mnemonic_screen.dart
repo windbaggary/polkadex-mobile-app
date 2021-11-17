@@ -6,7 +6,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/widgets/incorrect_mnemonic_widget.dart';
+import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -154,7 +154,13 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                                       top: Radius.circular(30),
                                     ),
                                   ),
-                                  builder: (_) => IncorrectMnemonicWidget(),
+                                  builder: (_) => WarningModalWidget(
+                                    title: 'Incorrect mnemonic phrase',
+                                    subtitle: 'Please enter again.',
+                                    imagePath: 'mnemonic_error.png',
+                                    details:
+                                        'One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.',
+                                  ),
                                 ),
                         ),
                       ),

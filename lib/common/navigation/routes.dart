@@ -18,7 +18,9 @@ import 'package:polkadex/features/landing/screens/market_token_selection_screen.
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/backup_mnemonic_screen.dart';
+import 'package:polkadex/features/setup/presentation/screens/confirm_password_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/import_wallet_methods_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
@@ -55,6 +57,8 @@ abstract class Routes {
   static const appSettingsChangeLogsScreen = '/AppSettingsChangeLogs';
   static const appSettingsSecurityScreen = '/appSettingsSecurity';
   static const landingScreen = '/landingScreen';
+  static const authLogoutScreen = '/authLogout';
+  static const confirmPasswordScreen = '/confirmPassword';
 
   static Route onGenerateRoute(RouteSettings settings) {
     WidgetBuilder builder;
@@ -234,6 +238,21 @@ abstract class Routes {
                   curve: Interval(0.500, 1.00),
                 ),
                 child: LandingScreen());
+          },
+        );
+      case authLogoutScreen:
+        builder = (_) {
+          return AuthLogoutScreen();
+        };
+        break;
+      case confirmPasswordScreen:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                  parent: animation, curve: Interval(0.500, 1.00)),
+              child: ConfirmPasswordScreen(),
+            );
           },
         );
       default:

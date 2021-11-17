@@ -51,6 +51,8 @@ class AppButton extends StatelessWidget {
     this.enabled = true,
     this.onTap,
     this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    this.backgroundColor = const Color(0xFFE6007A),
+    this.textColor = const Color(0xFFFFFFFF),
   });
 
   final _notifier = ValueNotifier<bool>(false);
@@ -59,6 +61,8 @@ class AppButton extends StatelessWidget {
   final bool enabled;
   final VoidCallback? onTap;
   final EdgeInsets padding;
+  final Color backgroundColor;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -91,14 +95,17 @@ class AppButton extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: enabled ? colorE6007A : color8BA1BE.withOpacity(0.20),
+                color:
+                    enabled ? backgroundColor : color8BA1BE.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
                 padding: padding,
                 child: Text(
                   label,
-                  style: tsS18W600CFF,
+                  textAlign: TextAlign.center,
+                  style: tsS18W600CFF.copyWith(
+                      color: enabled ? textColor : colorFFFFFF),
                 ),
               ),
             ),

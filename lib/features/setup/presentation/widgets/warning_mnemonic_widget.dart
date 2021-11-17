@@ -5,13 +5,24 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 
-class IncorrectMnemonicWidget extends StatefulWidget {
+class WarningModalWidget extends StatefulWidget {
+  WarningModalWidget({
+    required this.title,
+    this.subtitle,
+    this.imagePath,
+    this.details,
+  });
+
+  final String title;
+  final String? subtitle;
+  final String? imagePath;
+  final String? details;
+
   @override
-  _IncorrectMnemonicWidgetState createState() =>
-      _IncorrectMnemonicWidgetState();
+  _WarningModalWidgetState createState() => _WarningModalWidgetState();
 }
 
-class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
+class _WarningModalWidgetState extends State<WarningModalWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _expandController;
   late Animation<double> _animation;
@@ -91,32 +102,40 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Text(
-                        'Incorrect mnemonic phrase',
+                        widget.title,
                         style: tsS26W600CFF,
                       ),
                     ),
                     Text(
-                      'Please enter again.',
+                      widget.subtitle ?? '',
                       style: tsS18W400C93949A,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 28),
-                      child: GestureDetector(
-                        onTap: () => setState(() => _evalDetailsPressed()),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 6),
-                              child: Icon(
-                                Icons.arrow_downward,
-                                color: colorFFFFFF,
+                      padding: EdgeInsets.symmetric(
+                          vertical:
+                              widget.imagePath != null || widget.details != null
+                                  ? 28
+                                  : 14),
+                      child: Visibility(
+                        visible:
+                            widget.imagePath != null || widget.details != null,
+                        child: GestureDetector(
+                          onTap: () => setState(() => _evalDetailsPressed()),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 6),
+                                child: Icon(
+                                  Icons.arrow_downward,
+                                  color: colorFFFFFF,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'More details',
-                              style: tsS16W400CFF,
-                            ),
-                          ],
+                              Text(
+                                'More details',
+                                style: tsS16W400CFF,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -125,17 +144,19 @@ class _IncorrectMnemonicWidgetState extends State<IncorrectMnemonicWidget>
                       sizeFactor: _animation,
                       child: Column(
                         children: [
-                          Image.asset(
-                            'mnemonic_error.png'.asAssetImg(),
-                            fit: BoxFit.contain,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 26),
-                            child: Text(
-                              'One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.',
-                              style: tsS18W400CFF,
+                          if (widget.imagePath != null)
+                            Image.asset(
+                              widget.imagePath!,
+                              fit: BoxFit.contain,
                             ),
-                          ),
+                          if (widget.details != null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 26),
+                              child: Text(
+                                widget.details ?? '',
+                                style: tsS18W400CFF,
+                              ),
+                            )
                         ],
                       ),
                     )
