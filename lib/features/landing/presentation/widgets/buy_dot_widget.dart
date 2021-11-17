@@ -450,7 +450,11 @@ class _ThisPriceWidget extends StatelessWidget {
             child: QuantityInputWidget(
               hintText: "Price",
               controller: _ThisInheritedWidget.of(context)?.priceController,
-              onChanged: (price) => _onPriceChanged(price, context),
+              onChanged: (price) => _onPriceChanged(
+                _ThisInheritedWidget.of(context)?.buySellNotifier.value,
+                price,
+                context,
+              ),
             ),
           ),
           Container(
@@ -488,13 +492,14 @@ class _ThisPriceWidget extends StatelessWidget {
     );
   }
 
-  void _onPriceChanged(String val, BuildContext context) {
+  void _onPriceChanged(
+      EnumBuySell? buyOrSell, String val, BuildContext context) {
     try {
       final double? amount = double.tryParse(
           _ThisInheritedWidget.of(context)!.amountController.text);
       final double? price = double.tryParse(val);
 
-      if (amount == null || price == null) {
+      if (buyOrSell == EnumBuySell.sell || amount == null || price == null) {
         return;
       }
 
