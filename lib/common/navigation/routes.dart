@@ -32,7 +32,8 @@ import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 abstract class Routes {
-  static const introScreen = '/';
+  static const authLogoutScreen = '/';
+  static const introScreen = '/intro';
   static const backupMnemonicScreen = '/backupMnemonic';
   static const importWalletMethodsScreen = '/importWalletMethods';
   static const mnemonicGeneratedScreen = '/mnemonicGenerated';
@@ -57,7 +58,6 @@ abstract class Routes {
   static const appSettingsChangeLogsScreen = '/AppSettingsChangeLogs';
   static const appSettingsSecurityScreen = '/appSettingsSecurity';
   static const landingScreen = '/landingScreen';
-  static const authLogoutScreen = '/authLogout';
   static const confirmPasswordScreen = '/confirmPassword';
 
   static Route onGenerateRoute(RouteSettings settings) {
@@ -240,11 +240,16 @@ abstract class Routes {
                 child: LandingScreen());
           },
         );
-      case authLogoutScreen:
-        builder = (_) {
-          return AuthLogoutScreen();
-        };
-        break;
+      case introScreen:
+        return PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                  parent: animation, curve: Interval(0.500, 1.00)),
+              child: IntroScreen(),
+            );
+          },
+        );
       case confirmPasswordScreen:
         return PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
@@ -257,7 +262,7 @@ abstract class Routes {
         );
       default:
         builder = (_) {
-          return IntroScreen();
+          return AuthLogoutScreen();
         };
         break;
     }

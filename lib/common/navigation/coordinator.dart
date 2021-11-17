@@ -140,4 +140,8 @@ abstract class Coordinator {
       (route) => route.settings.name == Routes.landingScreen,
     );
   }
+
+  static void goToConfirmPasswordScreen() {
+    _navigationKey.currentState?.pushNamed(Routes.confirmPasswordScreen);
+  }
 }

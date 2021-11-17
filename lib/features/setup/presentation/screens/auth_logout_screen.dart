@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
-import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:provider/provider.dart';
-import 'confirm_password_screen.dart';
 
 class AuthLogoutScreen extends StatefulWidget {
   @override
@@ -78,7 +76,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                   textColor: Colors.black,
                                   onTap: () async {
                                     await context.read<AccountCubit>().logout();
-                                    _onNavigateToIntro(context);
+                                    Coordinator.goToIntroScreen();
                                   },
                                 ),
                               ),
@@ -99,10 +97,10 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                           .read<AccountCubit>()
                                           .authenticateBiometric();
                                       if (authenticated) {
-                                        _onNavigateToLanding(context);
+                                        Coordinator.goToLandingScreen();
                                       }
                                     } else {
-                                      _onNavigateToConfirmPassword(context);
+                                      Coordinator.goToConfirmPasswordScreen();
                                     }
                                   },
                                 ),
@@ -116,7 +114,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                 },
                 listener: (_, state) {
                   if (state is AccountNotLoaded) {
-                    _onNavigateToIntro(context);
+                    Coordinator.goToIntroScreen();
                   }
                 },
               ),
@@ -124,50 +122,6 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  void _onNavigateToLanding(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: LandingScreen(),
-          );
-        },
-      ),
-      (route) => route.isFirst,
-    );
-  }
-
-  void _onNavigateToConfirmPassword(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: ConfirmPasswordScreen(),
-          );
-        },
-      ),
-    );
-  }
-
-  void _onNavigateToIntro(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: IntroScreen(),
-          );
-        },
-      ),
-      (route) => route.isFirst,
     );
   }
 }
