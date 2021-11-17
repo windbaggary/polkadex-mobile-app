@@ -408,34 +408,39 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     String amount,
     BuildContext context,
   ) async {
+    final thisProvider = context.read<TradeTabViewProvider>();
+    final orderCubit = context.read<OrderCubit>();
+
     FocusScope.of(context).unfocus();
 
-    await context.read<OrderCubit>().placeOrder(
-          nonce: 0,
-          baseAsset: leftAsset,
-          quoteAsset: rightAsset,
-          orderType: side,
-          orderSide: type,
-          quantity: double.parse(amount),
-          price: double.parse(price),
-        );
+    await orderCubit.placeOrder(
+      nonce: 0,
+      baseAsset: leftAsset,
+      quoteAsset: rightAsset,
+      orderType: side,
+      orderSide: type,
+      quantity: double.parse(amount),
+      price: double.parse(price),
+    );
 
-    final thisProvider = context.read<TradeTabViewProvider>();
     if (price.isEmpty) {
       price = amount;
     }
-    thisProvider.addToListOrder(
-      TradeOpenOrderModel(
-        type: type,
-        amount: amount,
-        price: price,
-        dateTime: DateTime.now(),
-        amountCoin: "BTC",
-        priceCoin: "DOT",
-        tokenPairName: "DOT/BTC",
-        orderType: _orderTypeSelNotifier.value,
-      ),
-    );
+
+    if (orderCubit.state is OrderAccepted) {
+      thisProvider.addToListOrder(
+        TradeOpenOrderModel(
+          type: type,
+          amount: amount,
+          price: price,
+          dateTime: DateTime.now(),
+          amountCoin: "BTC",
+          priceCoin: "DOT",
+          tokenPairName: "DOT/BTC",
+          orderType: _orderTypeSelNotifier.value,
+        ),
+      );
+    }
 
     final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
     final message = context.read<OrderCubit>().state is OrderAccepted
