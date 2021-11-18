@@ -94,4 +94,15 @@ class AccountLocalDatasource {
 
     return result;
   }
+
+  Future<Map<String, dynamic>> registerUser(
+      Map<String, dynamic> account) async {
+    final String _callRegister =
+        'polkadexWorker.register(${account['address']}, ${account['address']}})';
+
+    final Map<String, dynamic> result =
+        await dependency<WebViewRunner>().evalJavascript(_callRegister);
+
+    return result;
+  }
 }
