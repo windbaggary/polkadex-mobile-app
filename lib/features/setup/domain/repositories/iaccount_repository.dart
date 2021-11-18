@@ -7,5 +7,5 @@ abstract class IAccountRepository {
   Future<bool> savePasswordStorage(String password);
   Future<String?> getPasswordStorage();
   Future<bool> confirmPassword(Map<String, dynamic> account, String password);
-  Future<bool> register(Map<String, dynamic> account);
+  Future<bool> register(ImportedAccountEntity account);
 }

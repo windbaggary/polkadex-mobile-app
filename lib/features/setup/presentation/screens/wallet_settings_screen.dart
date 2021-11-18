@@ -13,6 +13,7 @@ import 'package:polkadex/features/setup/presentation/providers/wallet_settings_p
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
@@ -311,7 +312,27 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       useBiometric,
     );
 
-    Coordinator.goToLandingScreen();
+    accountCubit.state is AccountLoaded
+        ? Coordinator.goToLandingScreen()
+        : _onShowRegisterErrorModal();
+  }
+
+  void _onShowRegisterErrorModal() {
+    Navigator.of(context).pop();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(30),
+        ),
+      ),
+      builder: (_) => WarningModalWidget(
+        title: 'Account register error',
+        subtitle:
+            'Something went on while registering the account. Please try again.',
+      ),
+    );
   }
 
   Future<bool> _onPop(BuildContext context) async {

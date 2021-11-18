@@ -126,6 +126,7 @@ Future<void> init() async {
       importAccountUseCase: dependency(),
       getPasswordUseCase: dependency(),
       confirmPasswordUseCase: dependency(),
+      registerUserUseCase: dependency(),
     ),
   );
 

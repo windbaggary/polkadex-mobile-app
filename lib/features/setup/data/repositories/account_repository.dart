@@ -49,9 +49,9 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<bool> register(Map<String, dynamic> account) async {
+  Future<bool> register(ImportedAccountEntity account) async {
     final result = await _accountLocalDatasource.registerUser(account);
 
-    return result['success'];
+    return result['success'] ?? false;
   }
 }
