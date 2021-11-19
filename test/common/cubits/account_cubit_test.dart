@@ -10,6 +10,7 @@ import 'package:polkadex/features/setup/domain/usecases/delete_account_and_passw
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:test/test.dart';
@@ -30,6 +31,8 @@ class _MockGetPasswordUseCase extends Mock implements GetPasswordUseCase {}
 class _MockConfirmPasswordUseCase extends Mock
     implements ConfirmPasswordUseCase {}
 
+class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
+
 void main() {
   late _MockGetAccountUseCase _mockGetAccountUseCase;
   late _MockDeleteAccountAndPasswordUsecase
@@ -39,6 +42,7 @@ void main() {
   late _MockSavePasswordUseCase _mockSavePasswordUseCase;
   late _MockGetPasswordUseCase _mockGetPasswordUseCase;
   late _MockConfirmPasswordUseCase _mockConfirmPasswordUseCase;
+  late _MockRegisterUserUseCase _mockRegisterUserUseCase;
 
   late AccountCubit cubit;
   late MetaModel tMeta;
@@ -55,6 +59,7 @@ void main() {
     _mockSavePasswordUseCase = _MockSavePasswordUseCase();
     _mockGetPasswordUseCase = _MockGetPasswordUseCase();
     _mockConfirmPasswordUseCase = _MockConfirmPasswordUseCase();
+    _mockRegisterUserUseCase = _MockRegisterUserUseCase();
 
     cubit = AccountCubit(
       getAccountStorageUseCase: _mockGetAccountUseCase,
@@ -64,6 +69,7 @@ void main() {
       savePasswordUseCase: _mockSavePasswordUseCase,
       getPasswordUseCase: _mockGetPasswordUseCase,
       confirmPasswordUseCase: _mockConfirmPasswordUseCase,
+      registerUserUseCase: _mockRegisterUserUseCase,
     );
 
     tMeta = MetaModel(name: 'userName');
@@ -81,6 +87,8 @@ void main() {
       name: 'test',
     );
     tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];
+
+    registerFallbackValue(tImportedAccount);
   });
 
   group(
@@ -261,6 +269,13 @@ void main() {
             ),
           ).thenAnswer(
             (_) async => Right(tImportedAccount),
+          );
+          when(
+            () => _mockRegisterUserUseCase(
+              account: any(named: 'account'),
+            ),
+          ).thenAnswer(
+            (_) async => true,
           );
           when(
             () => _mockSaveAccountUseCase(
