@@ -157,7 +157,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                           .confirmPassword(_passwordController.text);
 
                       isCorrect
-                          ? Coordinator.goBackToLandingScreen()
+                          ? Coordinator.goToLandingScreen()
                           : _onShowIncorrectPasswordModal(context);
                     },
                   ),
