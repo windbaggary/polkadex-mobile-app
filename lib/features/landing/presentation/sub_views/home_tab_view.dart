@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/rank_list_provider.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_slider_widget.dart';
-import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -543,10 +542,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
-      onTap: () async {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => BalanceCoinPreviewScreen()));
-      },
+      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
@@ -639,10 +635,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => CoinTradeScreen()));
-        },
+        onTap: () => Coordinator.goToCoinTradeScreen(),
         child: Container(
           decoration: BoxDecoration(
             color: color2E303C.withOpacity(0.30),

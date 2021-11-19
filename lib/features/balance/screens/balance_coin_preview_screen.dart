@@ -3,10 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
-import 'package:polkadex/features/balance/screens/balance_deposit_screen_1.dart';
-import 'package:polkadex/features/balance/screens/coin_withdraw_screen.dart';
-import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
-import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -134,10 +131,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           Expanded(
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BalanceDepositScreenOne())),
+                              onTap: () =>
+                                  Coordinator.goToBalanceDepositScreenOne(),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.deposit,
                               ),
@@ -149,11 +144,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           Expanded(
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        CoinWithdrawScreen()));
-                              },
+                              onTap: () => Coordinator.goToCoinWithdrawScreen(),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.withdraw,
                               ),
@@ -165,10 +156,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           Expanded(
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => CoinTradeScreen()));
-                              },
+                              onTap: () => Coordinator.goToCoinTradeScreen(),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.trade,
                               ),
@@ -463,12 +451,9 @@ class _ThisItemWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(14, 17, 14, 17),
             child: child,
           ),
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => NotifDepositScreen(
-                      screenType: EnumDepositScreenTypes.deposit,
-                    )));
-          }),
+          onTap: () => Coordinator.goToNotifDepositScreen(
+                enumDepositScreenTypes: EnumDepositScreenTypes.deposit,
+              )),
     );
 
     if (dateTitle?.isNotEmpty ?? false) {
@@ -813,10 +798,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(right: 16),
       child: buildInkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => CoinTradeScreen()));
-        },
+        onTap: () => Coordinator.goToCoinTradeScreen(),
         child: Container(
           decoration: BoxDecoration(
             color: color2E303C.withOpacity(0.30),

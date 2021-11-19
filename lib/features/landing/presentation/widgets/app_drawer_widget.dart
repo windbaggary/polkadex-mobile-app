@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
-import 'package:polkadex/features/app_settings_info/screens/app_settings_change_logs_screen.dart';
-import 'package:polkadex/features/app_settings_info/screens/app_settings_help_screen.dart';
-import 'package:polkadex/features/app_settings_info/screens/app_settings_lang_curr.dart';
-import 'package:polkadex/features/app_settings_info/screens/app_settings_notif_screen.dart';
-import 'package:polkadex/features/app_settings_info/screens/app_settings_security.dart';
-import 'package:polkadex/features/app_settings_info/screens/my_account_screen.dart';
-import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
-import 'package:polkadex/features/app_settings_info/screens/terms_conditions_screen.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
-import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
-import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
-import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-
 import 'package:provider/provider.dart';
 
 /// The left drawer width
@@ -32,7 +20,7 @@ double getAppDrawerNotifWidth() {
   // ratio = 0.750;
   // }
   // return math.min<double>(AppConfigs.size.width * ratio, 350.0);
-  return AppConfigs.size!.width - 40;
+  return AppConfigs.size.width - 40;
 }
 
 /// XD_PAGE: 35
@@ -125,29 +113,19 @@ class AppDrawerWidget extends StatelessWidget {
   void _onTapAppSettingsItem(EnumDrawerAppSettings e, BuildContext context) {
     switch (e) {
       case EnumDrawerAppSettings.notifications:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AppSettingsNotificationScreen(),
-        ));
+        Coordinator.goToAppSettingsNotificationScreen();
         break;
       case EnumDrawerAppSettings.appearance:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AppSettingsAppearance(),
-        ));
+        Coordinator.goToAppSettingsAppearanceScreen();
         break;
       case EnumDrawerAppSettings.languageCurrency:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AppSettingsLangCurrScreen(),
-        ));
+        Coordinator.goToAppSettingsLangCurrScreen();
         break;
       case EnumDrawerAppSettings.privacySecurtiy:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AppSettingsSecurity(),
-        ));
+        Coordinator.goToAppSettingsSecurityScreen();
         break;
       case EnumDrawerAppSettings.myAccount:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => MyAccountScreen(),
-        ));
+        Coordinator.goToMyAccountScreen();
         break;
     }
   }
@@ -234,20 +212,16 @@ class AppDrawerWidget extends StatelessWidget {
   void _onTapAppInfoItem(EnumDrawerAppInfo e, BuildContext context) {
     switch (e) {
       case EnumDrawerAppInfo.termsConditions:
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => TermsConditionsScreen()));
+        Coordinator.goToTermsConditionsScreen();
         break;
       case EnumDrawerAppInfo.privacyPolicy:
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => PrivacyPolicyScreen()));
+        Coordinator.goToPrivacyPolicyScreen();
         break;
       case EnumDrawerAppInfo.helpSupport:
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AppSettingsHelpScreen()));
+        Coordinator.goToAppSettingsHelpScreen();
         break;
       case EnumDrawerAppInfo.changeLog:
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => AppSettingsChangeLogsScreen()));
+        Coordinator.goToAppSettingsChangeLogsScreen();
         break;
     }
   }
@@ -289,11 +263,7 @@ class _ThisProfileWidget extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => IntroScreen()),
-                  (route) => false);
-            },
+            onTap: () => Coordinator.goToIntroScreen(),
             borderRadius: BorderRadius.circular(12),
             child: SvgPicture.asset(
               'drawer_logout'.asAssetSvg(),
@@ -427,19 +397,13 @@ class NotificationDrawerWidget extends StatelessWidget {
                                     title: model.title,
                                     description: model.description,
                                     opacity: model.isSeen ? 0.5 : 1.0),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => NotifDepositScreen(
-                                        screenType: model.enumType ==
-                                                EnumDrawerNotificationTypes
-                                                    .transactionWithdraw
-                                            ? EnumDepositScreenTypes.withdraw
-                                            : EnumDepositScreenTypes.deposit,
-                                      ),
-                                    ),
-                                  );
-                                },
+                                onTap: () => Coordinator.goToNotifDepositScreen(
+                                  enumDepositScreenTypes: model.enumType ==
+                                          EnumDrawerNotificationTypes
+                                              .transactionWithdraw
+                                      ? EnumDepositScreenTypes.withdraw
+                                      : EnumDepositScreenTypes.deposit,
+                                ),
                               ),
                             )
                             .toList(),
@@ -456,12 +420,8 @@ class NotificationDrawerWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: provider.oldList
                             .map((model) => InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                NotifDetailsScreen()));
-                                  },
+                                  onTap: () =>
+                                      Coordinator.goToNotifDetailsScreen(),
                                   child: _ThisNotifItemWidget(
                                     svgItem: model.svgAsset,
                                     title: model.title,

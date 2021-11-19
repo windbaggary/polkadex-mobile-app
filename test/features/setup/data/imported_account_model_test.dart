@@ -23,6 +23,8 @@ void main() {
       encoding: tEncoding,
       address: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
+      name: "test",
+      biometricAccess: false,
     );
   });
 

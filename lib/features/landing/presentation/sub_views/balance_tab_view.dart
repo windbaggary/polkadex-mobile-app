@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
-import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
-import 'package:polkadex/features/balance/screens/balance_summary_screen.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -264,8 +263,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   builder: (context, thisProvider, child) => ListView.builder(
                     padding: const EdgeInsets.only(bottom: 24),
                     itemBuilder: (context, index) => InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => BalanceCoinPreviewScreen())),
+                      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
                       child: _ThisItemWidget(
                         model: thisProvider.listCoins[index],
                       ),
@@ -478,11 +476,7 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => BalanceSummaryScreen(),
-                  ));
-                },
+                onTap: () => Coordinator.goToBalanceSummaryScreen(),
                 child: Container(
                   width: 40,
                   height: 40,

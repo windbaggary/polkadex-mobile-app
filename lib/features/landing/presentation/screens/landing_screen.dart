@@ -4,16 +4,16 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
-import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/balance_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/trade_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_bottom_navigation_bar.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_drawer_widget.dart';
-import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -24,7 +24,6 @@ import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34
 class LandingScreen extends StatefulWidget {
-  static const String routeName = '/landing_screen';
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
@@ -98,99 +97,105 @@ class _LandingScreenState extends State<LandingScreen>
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<NotificationDrawerProvider>(
-            create: (context) => NotificationDrawerProvider()),
-        ChangeNotifierProvider<HomeScrollNotifProvider>(
-            create: (_) => HomeScrollNotifProvider()),
-      ],
-      builder: (context, child) => _ThisInheritedWidget(
-        onOpenDrawer: _onOpenDrawer,
-        onOpenRightDrawer: _onOpenRightDrawer,
-        appbarTitleNotifier: _titleNotifier,
-        onNotificationTap: _onOpenRightDrawer,
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: color1C2023,
-          body: SafeArea(
-            child: GestureDetector(
-              onHorizontalDragCancel: _onHorizontalDragCancel,
-              onHorizontalDragEnd: _onHorizontalDragEnd,
-              onHorizontalDragStart: _onHorizontalDragStart,
-              onHorizontalDragUpdate: (details) =>
-                  _onHorizontalDragUpdate(details),
-              child: Stack(
-                alignment: Alignment.topLeft,
-                children: [
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: AnimatedBuilder(
-                      animation: _leftDrawerWidthAnimation,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(_leftDrawerWidthAnimation.value, 0.0),
-                          child: child,
-                        );
-                      },
-                      child: NotificationDrawerWidget(
-                        onClearTap: () {
-                          context.read<NotificationDrawerProvider>().seenAll();
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<NotificationDrawerProvider>(
+              create: (context) => NotificationDrawerProvider()),
+          ChangeNotifierProvider<HomeScrollNotifProvider>(
+              create: (_) => HomeScrollNotifProvider()),
+        ],
+        builder: (context, child) => _ThisInheritedWidget(
+          onOpenDrawer: _onOpenDrawer,
+          onOpenRightDrawer: _onOpenRightDrawer,
+          appbarTitleNotifier: _titleNotifier,
+          onNotificationTap: _onOpenRightDrawer,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: color1C2023,
+            body: SafeArea(
+              child: GestureDetector(
+                onHorizontalDragCancel: _onHorizontalDragCancel,
+                onHorizontalDragEnd: _onHorizontalDragEnd,
+                onHorizontalDragStart: _onHorizontalDragStart,
+                onHorizontalDragUpdate: (details) =>
+                    _onHorizontalDragUpdate(details),
+                child: Stack(
+                  alignment: Alignment.topLeft,
+                  children: [
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: AnimatedBuilder(
+                        animation: _leftDrawerWidthAnimation,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset:
+                                Offset(_leftDrawerWidthAnimation.value, 0.0),
+                            child: child,
+                          );
                         },
+                        child: NotificationDrawerWidget(
+                          onClearTap: () {
+                            context
+                                .read<NotificationDrawerProvider>()
+                                .seenAll();
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  AnimatedBuilder(
-                      animation: _rightDrawerWidthAnimation,
-                      builder: (context, child) => Transform.translate(
-                            offset:
-                                Offset(_rightDrawerWidthAnimation.value, 0.0),
-                            child: child,
-                          ),
-                      child: AppDrawerWidget()),
-                  AnimatedBuilder(
-                    animation: _rightDrawerWidthAnimation,
-                    builder: (context, child) => Transform.translate(
-                        offset: Offset(_rightDrawerWidthAnimation.value, 0.0),
-                        child: child),
-                    child: AnimatedBuilder(
-                      animation: _contentAnimController,
-                      builder: (context, child) {
-                        return Container(
-                          transform: Matrix4.translationValues(
-                              _leftDrawerWidthAnimation.value, 0.0, 0.0),
-                          decoration: BoxDecoration(
-                            color: color1C2023,
-                            borderRadius: _drawerContentRadiusAnimation.value,
-                          ),
-                          foregroundDecoration: BoxDecoration(
-                            color: _drawerContentColorAnimation.value,
-                            borderRadius: _drawerContentRadiusAnimation.value,
-                          ),
-                          width: MediaQuery.of(context).size.width,
-                          child: InkWell(
-                            onTap: (_isDrawerVisible || _isNotifDrawerVisible)
-                                ? () {
-                                    if (_isDrawerVisible) _onHideDrawer();
-                                    if (_isNotifDrawerVisible) {
-                                      _onHideRightDrawer();
-                                    }
-                                  }
-                                : null,
-                            child: IgnorePointer(
-                              ignoring:
-                                  _isDrawerVisible || _isNotifDrawerVisible,
+                    AnimatedBuilder(
+                        animation: _rightDrawerWidthAnimation,
+                        builder: (context, child) => Transform.translate(
+                              offset:
+                                  Offset(_rightDrawerWidthAnimation.value, 0.0),
                               child: child,
                             ),
-                          ),
-                        );
-                      },
-                      child: _ThisContentWidget(),
+                        child: AppDrawerWidget()),
+                    AnimatedBuilder(
+                      animation: _rightDrawerWidthAnimation,
+                      builder: (context, child) => Transform.translate(
+                          offset: Offset(_rightDrawerWidthAnimation.value, 0.0),
+                          child: child),
+                      child: AnimatedBuilder(
+                        animation: _contentAnimController,
+                        builder: (context, child) {
+                          return Container(
+                            transform: Matrix4.translationValues(
+                                _leftDrawerWidthAnimation.value, 0.0, 0.0),
+                            decoration: BoxDecoration(
+                              color: color1C2023,
+                              borderRadius: _drawerContentRadiusAnimation.value,
+                            ),
+                            foregroundDecoration: BoxDecoration(
+                              color: _drawerContentColorAnimation.value,
+                              borderRadius: _drawerContentRadiusAnimation.value,
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            child: InkWell(
+                              onTap: (_isDrawerVisible || _isNotifDrawerVisible)
+                                  ? () {
+                                      if (_isDrawerVisible) _onHideDrawer();
+                                      if (_isNotifDrawerVisible) {
+                                        _onHideRightDrawer();
+                                      }
+                                    }
+                                  : null,
+                              child: IgnorePointer(
+                                ignoring:
+                                    _isDrawerVisible || _isNotifDrawerVisible,
+                                child: child,
+                              ),
+                            ),
+                          );
+                        },
+                        child: _ThisContentWidget(),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -692,11 +697,7 @@ class _ThisAppBar extends StatelessWidget {
               title: title,
               actions: [
                 InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MarketTokenSelectionScreen(),
-                    ));
-                  },
+                  onTap: () => Coordinator.goToMarketTokenSelectionScreen(),
                   child: SizedBox(
                     width: 25,
                     height: 25,

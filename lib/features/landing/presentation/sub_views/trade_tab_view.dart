@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/data/models/trade_models.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -9,7 +10,6 @@ import 'package:polkadex/features/landing/presentation/screens/market_token_sele
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
 import 'package:polkadex/features/trade/order_book_item_model.dart';
-import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -725,10 +725,7 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
           ),
           buildInkWell(
             borderRadius: BorderRadius.circular(8),
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => CoinTradeScreen()));
-            },
+            onTap: () => Coordinator.goToCoinTradeScreen(),
             child: Container(
               width: 33,
               height: 33,
@@ -746,10 +743,7 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
   }
 
   void _onMarketSelection(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(
-            builder: (context) => MarketTokenSelectionScreen()))
-        .then((model) {
+    Coordinator.goToMarketTokenSelectionScreen().then((model) {
       if (model != null && model is MarketSelectionResultModel) {
         final provider = context.read<TradeTabCoinProvider>();
         provider.tokenCoin = model.tokenModel;

@@ -40,14 +40,14 @@ class WebViewRunner {
         onWebViewCreated: (controller) {
           print('HeadlessInAppWebView created!');
         },
-        onConsoleMessage: (controller, message) {
+        onConsoleMessage: (controller, message) async {
           print("CONSOLE MESSAGE: " + message.message);
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
 
           String? path;
-          String? data;
+          dynamic data;
 
-          compute(jsonDecode, message.message).then((msg) {
+          await compute(jsonDecode, message.message).then((msg) {
             path = msg['path'];
             data = msg['data'];
           }, onError: (_) {
