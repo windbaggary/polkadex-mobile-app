@@ -80,7 +80,7 @@ class AccountCubit extends Cubit<AccountState> {
       password: password,
     );
 
-    resultImport.fold(
+    await resultImport.fold(
       (_) {},
       (importedAcc) async {
         final acc = (importedAcc as ImportedAccountModel).copyWith(
@@ -88,12 +88,13 @@ class AccountCubit extends Cubit<AccountState> {
           biometricAccess: useBiometric,
         );
 
-        final resultRegister = await _registerUserUseCase(account: acc);
+        await _registerUserUseCase(account: acc);
 
-        if (resultRegister) {
-          emit(AccountLoaded(account: acc));
-          await _saveAccountUseCase(keypairJson: json.encode(acc));
-        }
+        // TODO: Reinsert if conditional once orderbook supports ed25519 algorithm
+        //if (resultRegister) {
+        emit(AccountLoaded(account: acc));
+        await _saveAccountUseCase(keypairJson: json.encode(acc));
+        //}
       },
     );
   }
