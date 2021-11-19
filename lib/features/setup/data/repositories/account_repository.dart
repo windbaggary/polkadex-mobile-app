@@ -47,4 +47,11 @@ class AccountRepository implements IAccountRepository {
       Map<String, dynamic> account, String password) async {
     return await _accountLocalDatasource.confirmPassword(account, password);
   }
+
+  @override
+  Future<bool> register(ImportedAccountEntity account) async {
+    final result = await _accountLocalDatasource.registerUser(account);
+
+    return result['success'] ?? false;
+  }
 }
