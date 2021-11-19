@@ -1,4 +1,5 @@
 import 'package:biometric_storage/biometric_storage.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/landing/data/datasources/order_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/repositories/order_repository.dart';
 import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
@@ -111,6 +112,18 @@ Future<void> init() async {
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => AccountCubit(
+      savePasswordUseCase: dependency(),
+      deleteAccountAndPasswordUseCase: dependency(),
+      saveAccountUseCase: dependency(),
+      importAccountUseCase: dependency(),
+      getPasswordUseCase: dependency(),
+      getAccountStorageUseCase: dependency(),
+      confirmPasswordUseCase: dependency(),
     ),
   );
 

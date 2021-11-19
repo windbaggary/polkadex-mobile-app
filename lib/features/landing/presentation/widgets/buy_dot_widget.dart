@@ -47,13 +47,12 @@ class BuyDotWidget extends StatefulWidget {
 class BuyDotWidgetState extends State<BuyDotWidget>
     with TickerProviderStateMixin {
   late TextEditingController _priceController;
-
   late TextEditingController _amountController;
-
   late ValueNotifier<double> _progressNotifier;
+  late ValueNotifier<double?> _totalNotifier;
   late ValueNotifier<EnumAmountType> _amountTypeNotifier;
-
   late double _walletBalance;
+
   String _asset = 'BTC';
 
   @override
@@ -61,6 +60,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     _priceController = TextEditingController();
     _amountController = TextEditingController();
     _progressNotifier = ValueNotifier<double>(0.00);
+    _totalNotifier = ValueNotifier<double?>(null);
     _amountTypeNotifier = ValueNotifier(EnumAmountType.usd);
     _walletBalance = widget.leftBalance;
     super.initState();
@@ -107,6 +107,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
             amountController: _amountController,
             priceController: _priceController,
             buySellNotifier: widget.buySellNotifier,
+            totalNotifier: _totalNotifier,
             progressNotifier: _progressNotifier,
             orderTypeNotifier: widget.orderTypeNotifier,
             amountTypeNotifier: _amountTypeNotifier,
@@ -499,7 +500,7 @@ class _ThisPriceWidget extends StatelessWidget {
           _ThisInheritedWidget.of(context)!.amountController.text);
       final double? price = double.tryParse(val);
 
-      if (buyOrSell == EnumBuySell.sell || amount == null || price == null) {
+      if (amount == null || price == null) {
         return;
       }
 
@@ -633,6 +634,7 @@ class _ThisInheritedWidget extends InheritedWidget {
   final TextEditingController priceController;
   final TextEditingController amountController;
   final ValueNotifier<double> progressNotifier;
+  final ValueNotifier<double?> totalNotifier;
   final ValueNotifier<EnumBuySell> buySellNotifier;
   final ValueNotifier<EnumOrderTypes> orderTypeNotifier;
   final ValueNotifier<EnumAmountType> amountTypeNotifier;
@@ -643,6 +645,7 @@ class _ThisInheritedWidget extends InheritedWidget {
     required this.priceController,
     required this.amountController,
     required this.progressNotifier,
+    required this.totalNotifier,
     required this.buySellNotifier,
     required this.orderTypeNotifier,
     required this.walletBalance,
@@ -656,6 +659,7 @@ class _ThisInheritedWidget extends InheritedWidget {
     return oldWidget.amountController != amountController ||
         oldWidget.priceController != priceController ||
         oldWidget.progressNotifier != progressNotifier ||
+        oldWidget.totalNotifier != totalNotifier ||
         oldWidget.buySellNotifier != buySellNotifier ||
         oldWidget.orderTypeNotifier != orderTypeNotifier ||
         oldWidget.walletBalance != walletBalance ||
@@ -677,14 +681,12 @@ void _onProgressOrOrderSideUpdate(
 ) {
   double newAmount = walletBalance * progressNotifier;
 
-  if (buyOrSell == EnumBuySell.buy) {
-    final price = double.tryParse(priceController.text);
+  final price = double.tryParse(priceController.text);
 
-    if (price != null) {
-      newAmount /= price;
-    } else {
-      return;
-    }
+  if (price != null) {
+    newAmount /= price;
+  } else {
+    return;
   }
 
   amountController.text = newAmount.toStringAsFixed(2);
