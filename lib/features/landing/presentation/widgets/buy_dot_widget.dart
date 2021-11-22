@@ -535,17 +535,18 @@ class _ThisTotalWidget extends StatelessWidget {
                     builder: (context, progress, child) {
                       String? totalAmount;
                       try {
-                        double amt =
-                            (_ThisInheritedWidget.of(context)!.walletBalance *
-                                progress);
-                        switch (amountType) {
-                          case EnumAmountType.btc:
-                            amt /= 0.030;
-                            break;
-                          case EnumAmountType.usd:
-                            break;
-                        }
-                        totalAmount = amt.toStringAsFixed(2);
+                        final double? amount = double.tryParse(
+                            _ThisInheritedWidget.of(context)!
+                                .amountController
+                                .text);
+                        final double? price = double.tryParse(
+                            _ThisInheritedWidget.of(context)!
+                                .priceController
+                                .text);
+
+                        totalAmount = amount != null && price != null
+                            ? (amount * price).toString()
+                            : null;
                       } on Exception catch (ex) {
                         print(ex);
                       }
@@ -679,14 +680,17 @@ void _onProgressOrOrderSideUpdate(
   TextEditingController priceController,
   BuildContext context,
 ) {
-  double newAmount = walletBalance * progressNotifier;
+  double progressFloor = (progressNotifier * 100.0).floorToDouble() / 100.0;
+  double newAmount = walletBalance * progressFloor;
 
   final price = double.tryParse(priceController.text);
 
-  if (price != null) {
-    newAmount /= price;
-  } else {
+  if (price == null) {
     return;
+  }
+
+  if (buyOrSell == EnumBuySell.buy) {
+    newAmount /= price;
   }
 
   amountController.text = newAmount.toStringAsFixed(2);
