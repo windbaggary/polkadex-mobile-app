@@ -1,3 +1,4 @@
+import "dart:math";
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -683,7 +684,7 @@ void _onProgressOrOrderSideUpdate(
   TextEditingController priceController,
   BuildContext context,
 ) {
-  double progressFloor = (progressNotifier * 100.0).floorToDouble() / 100.0;
+  double progressFloor = _floorDecimalPrecision(progressNotifier, 2);
   double newAmount = walletBalance * progressFloor;
 
   final price = double.tryParse(priceController.text);
@@ -696,5 +697,10 @@ void _onProgressOrOrderSideUpdate(
     newAmount /= price;
   }
 
-  amountController.text = newAmount.toStringAsFixed(2);
+  amountController.text = _floorDecimalPrecision(newAmount, 4).toString();
+}
+
+double _floorDecimalPrecision(double value, int precision) {
+  num mod = pow(10, precision);
+  return (value * mod).floorToDouble() / mod;
 }

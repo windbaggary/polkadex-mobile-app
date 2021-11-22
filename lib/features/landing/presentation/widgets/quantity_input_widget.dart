@@ -36,7 +36,7 @@ class QuantityInputWidget extends StatelessWidget {
       ),
       onChanged: onChanged,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))
+        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,4}'))
       ],
     );
   }
