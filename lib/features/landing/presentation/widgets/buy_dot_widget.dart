@@ -94,6 +94,11 @@ class BuyDotWidgetState extends State<BuyDotWidget>
               _walletBalance = widget.rightBalance;
               break;
           }
+
+          if (_progressNotifier.value > 1.0) {
+            _progressNotifier.value = 1.0;
+          }
+
           _onProgressOrOrderSideUpdate(
             buyOrSell,
             _walletBalance,
@@ -504,8 +509,7 @@ class _ThisPriceWidget extends StatelessWidget {
       }
 
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
-          ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance)
-              .clamp(0.0, 1.0);
+          ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance);
     } catch (ex) {
       print(ex);
     }
