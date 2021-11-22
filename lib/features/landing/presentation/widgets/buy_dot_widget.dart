@@ -95,7 +95,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
               break;
           }
           _onProgressOrOrderSideUpdate(
-            buyOrSell,
+            true,
             _walletBalance,
             _progressNotifier.value,
             _amountController,
@@ -424,16 +424,17 @@ class _ThisAmountWidget extends StatelessWidget {
 
   void _onAmountChanged(String val, BuildContext context) {
     try {
-      final double? value = double.tryParse(val);
+      final double? amount = double.tryParse(val);
       final double? price = double.tryParse(
           _ThisInheritedWidget.of(context)!.priceController.text);
 
-      if (value == null || price == null) {
+      if (amount == null || price == null) {
         return;
       }
 
+      _ThisInheritedWidget.of(context)?.totalNotifier.value = amount * price;
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
-          ((value * price) / _ThisInheritedWidget.of(context)!.walletBalance)
+          ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance)
               .clamp(0.0, 1.0);
     } catch (ex) {
       print(ex);
@@ -504,6 +505,7 @@ class _ThisPriceWidget extends StatelessWidget {
         return;
       }
 
+      _ThisInheritedWidget.of(context)?.totalNotifier.value = amount * price;
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
           ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance)
               .clamp(0.0, 1.0);
@@ -528,35 +530,42 @@ class _ThisTotalWidget extends StatelessWidget {
                       _ThisInheritedWidget.of(context)?.amountTypeNotifier ??
                           ValueNotifier(EnumAmountType.usd),
                   builder: (context, amountType, child) =>
-                      ValueListenableBuilder<double>(
+                      ValueListenableBuilder<double?>(
                     valueListenable:
-                        _ThisInheritedWidget.of(context)?.progressNotifier ??
-                            ValueNotifier<double>(0.00),
-                    builder: (context, progress, child) {
-                      String? totalAmount;
-                      try {
-                        double amt =
-                            (_ThisInheritedWidget.of(context)!.walletBalance *
-                                progress);
-                        switch (amountType) {
-                          case EnumAmountType.btc:
-                            amt /= 0.030;
-                            break;
-                          case EnumAmountType.usd:
-                            break;
+                        _ThisInheritedWidget.of(context)?.totalNotifier ??
+                            ValueNotifier<double?>(null),
+                    builder: (context, total, child) =>
+                        ValueListenableBuilder<double>(
+                      valueListenable:
+                          _ThisInheritedWidget.of(context)?.progressNotifier ??
+                              ValueNotifier<double>(0.00),
+                      builder: (context, progress, child) {
+                        String? totalAmount;
+                        try {
+                          double amt = total ??
+                              (_ThisInheritedWidget.of(context)!.walletBalance *
+                                  progress);
+                          switch (amountType) {
+                            case EnumAmountType.btc:
+                              amt /= 0.030;
+                              break;
+                            case EnumAmountType.usd:
+                              break;
+                          }
+                          totalAmount = amt.toStringAsFixed(2);
+                        } on Exception catch (ex) {
+                          print(ex);
                         }
-                        totalAmount = amt.toStringAsFixed(2);
-                      } on Exception catch (ex) {
-                        print(ex);
-                      }
-                      if ((totalAmount?.isEmpty ?? true) || (progress == 0.0)) {
-                        totalAmount = "Total";
-                      }
-                      return Text(
-                        totalAmount ?? "Total",
-                        style: tsS16W500CFF,
-                      );
-                    },
+                        if ((totalAmount?.isEmpty ?? true) ||
+                            (progress == 0.0)) {
+                          totalAmount = "Total";
+                        }
+                        return Text(
+                          totalAmount ?? "Total",
+                          style: tsS16W500CFF,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -589,7 +598,7 @@ class _ThisTotalWidget extends StatelessWidget {
                       _ThisInheritedWidget.of(context)?.progressNotifier.value =
                           progress;
                       _onProgressOrOrderSideUpdate(
-                        buyOrSell,
+                        false,
                         _ThisInheritedWidget.of(context)!.walletBalance,
                         progress,
                         _ThisInheritedWidget.of(context)!.amountController,
@@ -672,7 +681,7 @@ class _ThisInheritedWidget extends InheritedWidget {
 }
 
 void _onProgressOrOrderSideUpdate(
-  EnumBuySell buyOrSell,
+  bool orderSideChanged,
   double walletBalance,
   double progressNotifier,
   TextEditingController amountController,
@@ -682,6 +691,10 @@ void _onProgressOrOrderSideUpdate(
   double newAmount = walletBalance * progressNotifier;
 
   final price = double.tryParse(priceController.text);
+
+  if (!orderSideChanged) {
+    _ThisInheritedWidget.of(context)!.totalNotifier.value = null;
+  }
 
   if (price != null) {
     newAmount /= price;
