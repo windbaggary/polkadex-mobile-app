@@ -433,8 +433,7 @@ class _ThisAmountWidget extends StatelessWidget {
       }
 
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
-          ((value * price) / _ThisInheritedWidget.of(context)!.walletBalance)
-              .clamp(0.0, 1.0);
+          (value * price) / _ThisInheritedWidget.of(context)!.walletBalance;
     } catch (ex) {
       print(ex);
     }
@@ -584,7 +583,7 @@ class _ThisTotalWidget extends StatelessWidget {
                       _ThisInheritedWidget.of(context)?.progressNotifier ??
                           ValueNotifier<double>(0.00),
                   builder: (context, progress, child) => AppHorizontalSlider(
-                    initialProgress: progress,
+                    initialProgress: progress.clamp(0.0, 1.0),
                     activeColor: color,
                     onProgressUpdate: (progress) {
                       _ThisInheritedWidget.of(context)?.progressNotifier.value =
