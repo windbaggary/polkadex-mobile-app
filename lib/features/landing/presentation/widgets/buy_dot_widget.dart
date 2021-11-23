@@ -312,7 +312,10 @@ class BuyDotWidgetState extends State<BuyDotWidget>
 
     try {
       final priceInDouble = double.tryParse(price!);
-      if (priceInDouble == null) throw Exception();
+      final amountInDouble = double.tryParse(amount!);
+
+      if (priceInDouble == null || amountInDouble == null) throw Exception();
+
       if (priceInDouble <= 0) {
         buildAppToast(
             msg: "Price should be greater than 0.00", context: context);
@@ -325,8 +328,15 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         return;
       }
 
+      if (priceInDouble * amountInDouble > _walletBalance) {
+        buildAppToast(
+            msg: "Total should be equal or less than wallet balance",
+            context: context);
+        return;
+      }
+
       if (widget.onBuy != null) {
-        widget.onBuy!(price, amount!, total!);
+        widget.onBuy!(price, amount, total!);
       }
     } catch (ex) {
       buildAppToast(msg: "Please enter a valid price", context: context);
@@ -356,22 +366,32 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     }
 
     try {
-      final princeInDouble = double.tryParse(price!);
-      if (princeInDouble == null) throw Exception();
-      if (princeInDouble <= 0) {
+      final priceInDouble = double.tryParse(price!);
+      final amountInDouble = double.tryParse(amount!);
+
+      if (priceInDouble == null || amountInDouble == null) throw Exception();
+
+      if (priceInDouble <= 0) {
         buildAppToast(
             msg: "Price should be greater than 0.00", context: context);
         return;
       }
 
-      if (princeInDouble >= _walletBalance) {
+      if (priceInDouble >= _walletBalance) {
         buildAppToast(
             msg: "Price should be less than wallet balance", context: context);
         return;
       }
 
+      if (amountInDouble > _walletBalance) {
+        buildAppToast(
+            msg: "Amount should be equal or less than wallet balance",
+            context: context);
+        return;
+      }
+
       if (widget.onBuy != null) {
-        widget.onSell(price, amount!, total!);
+        widget.onSell(price, amount, total!);
       }
     } catch (ex) {
       buildAppToast(msg: "Please enter a valid price", context: context);
