@@ -13,6 +13,31 @@ class OrderCubit extends Cubit<OrderState> {
 
   final PlaceOrderUseCase _placeOrderUseCase;
 
+  void updateOrderParams({
+    required EnumBuySell orderside,
+    double? balance,
+    double? amount,
+    double? price,
+  }) {
+    final currentState = state;
+    final isOrderValid = amount != null &&
+        price != null &&
+        (orderside == EnumBuySell.buy ? price * amount : amount) <=
+            (balance ?? state.balance);
+
+    isOrderValid
+        ? OrderValid(
+            balance: balance ?? currentState.balance,
+            amount: amount ?? currentState.amount,
+            price: price ?? currentState.price,
+          )
+        : OrderNotValid(
+            balance: balance ?? currentState.balance,
+            amount: amount ?? currentState.amount,
+            price: price ?? currentState.price,
+          );
+  }
+
   Future<void> placeOrder({
     required int nonce,
     required String baseAsset,
