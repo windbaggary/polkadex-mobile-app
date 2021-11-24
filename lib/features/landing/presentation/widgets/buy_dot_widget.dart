@@ -228,7 +228,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
 
                             if (state is OrderLoading) {
                               return Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 28),
                                 child: LoadingDotsWidget(
                                   dotSize: 10,
                                 ),
