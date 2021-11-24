@@ -392,8 +392,8 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
       builder: (context, selectedMenu, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider<OrderCubit>(
-              create: (_) => dependency<OrderCubit>(),
+            BlocProvider<PlaceOrderCubit>(
+              create: (_) => dependency<PlaceOrderCubit>(),
             ),
           ],
           child: Column(

@@ -409,7 +409,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     BuildContext context,
   ) async {
     final thisProvider = context.read<TradeTabViewProvider>();
-    final orderCubit = context.read<OrderCubit>();
+    final orderCubit = context.read<PlaceOrderCubit>();
 
     FocusManager.instance.primaryFocus?.unfocus();
 
@@ -427,7 +427,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
       price = amount;
     }
 
-    if (orderCubit.state is OrderAccepted) {
+    if (orderCubit.state is PlaceOrderAccepted) {
       thisProvider.addToListOrder(
         TradeOpenOrderModel(
           type: type,
@@ -443,7 +443,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     }
 
     final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
-    final message = context.read<OrderCubit>().state is OrderAccepted
+    final message = context.read<PlaceOrderCubit>().state is PlaceOrderAccepted
         ? '$orderType added to open orders.'
         : '$orderType not accepted. Please try again.';
     buildAppToast(msg: message, context: context);

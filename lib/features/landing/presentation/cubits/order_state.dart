@@ -1,7 +1,7 @@
 part of 'order_cubit.dart';
 
-abstract class OrderState extends Equatable {
-  const OrderState({
+abstract class PlaceOrderState extends Equatable {
+  const PlaceOrderState({
     this.balance = 0.0,
     this.amount = 0.0,
     this.price = 0.0,
@@ -22,10 +22,10 @@ abstract class OrderState extends Equatable {
       ];
 }
 
-class OrderInitial extends OrderState {}
+class PlaceOrderInitial extends PlaceOrderState {}
 
-class OrderValid extends OrderState {
-  const OrderValid({
+class PlaceOrderValid extends PlaceOrderState {
+  const PlaceOrderValid({
     required double balance,
     required double amount,
     required double price,
@@ -38,8 +38,8 @@ class OrderValid extends OrderState {
         );
 }
 
-class OrderNotValid extends OrderState {
-  const OrderNotValid({
+class PlaceOrderNotValid extends PlaceOrderState {
+  const PlaceOrderNotValid({
     required double balance,
     required double amount,
     required double price,
@@ -52,10 +52,10 @@ class OrderNotValid extends OrderState {
         );
 }
 
-class OrderLoading extends OrderState {}
+class PlaceOrderLoading extends PlaceOrderState {}
 
-class OrderAccepted extends OrderNotValid {
-  const OrderAccepted({
+class PlaceOrderAccepted extends PlaceOrderNotValid {
+  const PlaceOrderAccepted({
     required double balance,
     required double amount,
     required double price,
@@ -68,8 +68,8 @@ class OrderAccepted extends OrderNotValid {
         );
 }
 
-class OrderNotAccepted extends OrderNotValid {
-  const OrderNotAccepted({
+class PlaceOrderNotAccepted extends PlaceOrderNotValid {
+  const PlaceOrderNotAccepted({
     required double balance,
     required double amount,
     required double price,

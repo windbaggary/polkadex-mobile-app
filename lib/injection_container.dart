@@ -144,7 +144,7 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => OrderCubit(
+    () => PlaceOrderCubit(
       placeOrderUseCase: dependency(),
     ),
   );

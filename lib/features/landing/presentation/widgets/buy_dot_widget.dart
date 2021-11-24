@@ -64,7 +64,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     _totalNotifier = ValueNotifier<double?>(null);
     _amountTypeNotifier = ValueNotifier(EnumAmountType.usd);
     _walletBalance = widget.leftBalance;
-    context.read<OrderCubit>().updateOrderParams(
+    context.read<PlaceOrderCubit>().updateOrderParams(
           balance: widget.leftBalance,
           orderside: EnumBuySell.buy,
         );
@@ -219,14 +219,14 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Align(
                         alignment: Alignment.center,
-                        child: BlocBuilder<OrderCubit, OrderState>(
+                        child: BlocBuilder<PlaceOrderCubit, PlaceOrderState>(
                           builder: (context, state) {
                             final tapFunction =
                                 state.orderSide == EnumBuySell.buy
                                     ? widget.onBuy
                                     : widget.onSell;
 
-                            if (state is OrderLoading) {
+                            if (state is PlaceOrderLoading) {
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 28),
@@ -241,8 +241,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                   vertical: 14, horizontal: 64),
                               label:
                                   '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${widget.rightAsset}',
-                              enabled: state is! OrderNotValid,
-                              onTap: () => state is OrderValid
+                              enabled: state is! PlaceOrderNotValid,
+                              onTap: () => state is PlaceOrderValid
                                   ? tapFunction(
                                       state.price.toString(),
                                       state.amount.toString(),
@@ -342,7 +342,7 @@ class _ThisAmountWidget extends StatelessWidget {
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
           (amount * price) / _ThisInheritedWidget.of(context)!.walletBalance;
 
-      context.read<OrderCubit>().updateOrderParams(
+      context.read<PlaceOrderCubit>().updateOrderParams(
             orderside: _ThisInheritedWidget.of(context)!.buySellNotifier.value,
             amount: amount,
             price: price,
@@ -420,7 +420,7 @@ class _ThisPriceWidget extends StatelessWidget {
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
           ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance);
 
-      context.read<OrderCubit>().updateOrderParams(
+      context.read<PlaceOrderCubit>().updateOrderParams(
             orderside: _ThisInheritedWidget.of(context)!.buySellNotifier.value,
             amount: amount,
             price: price,
@@ -614,7 +614,7 @@ void _onProgressOrOrderSideUpdate(
   newAmount = _floorDecimalPrecision(newAmount, 4);
   amountController.text = newAmount.toString();
 
-  context.read<OrderCubit>().updateOrderParams(
+  context.read<PlaceOrderCubit>().updateOrderParams(
         orderside: buyOrSell,
         balance: walletBalance,
         amount: newAmount,

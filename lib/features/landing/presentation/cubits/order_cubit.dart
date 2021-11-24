@@ -5,11 +5,11 @@ import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.da
 
 part 'order_state.dart';
 
-class OrderCubit extends Cubit<OrderState> {
-  OrderCubit({
+class PlaceOrderCubit extends Cubit<PlaceOrderState> {
+  PlaceOrderCubit({
     required PlaceOrderUseCase placeOrderUseCase,
   })  : _placeOrderUseCase = placeOrderUseCase,
-        super(OrderInitial());
+        super(PlaceOrderInitial());
 
   final PlaceOrderUseCase _placeOrderUseCase;
 
@@ -31,13 +31,13 @@ class OrderCubit extends Cubit<OrderState> {
             newBalance;
 
     isOrderValid
-        ? emit(OrderValid(
+        ? emit(PlaceOrderValid(
             balance: newBalance,
             amount: newAmount,
             price: newPrice,
             orderSide: newOrderside,
           ))
-        : emit(OrderNotValid(
+        : emit(PlaceOrderNotValid(
             balance: newBalance,
             amount: newAmount,
             price: newPrice,
@@ -56,7 +56,7 @@ class OrderCubit extends Cubit<OrderState> {
   }) async {
     final previousState = state;
 
-    emit(OrderLoading());
+    emit(PlaceOrderLoading());
 
     final result = await _placeOrderUseCase(
       nonce: nonce,
@@ -69,13 +69,13 @@ class OrderCubit extends Cubit<OrderState> {
     );
 
     result.fold(
-      (l) => emit(OrderNotAccepted(
+      (l) => emit(PlaceOrderNotAccepted(
         balance: previousState.balance,
         amount: 0.0,
         price: 0.0,
         orderSide: orderSide,
       )),
-      (r) => emit(OrderAccepted(
+      (r) => emit(PlaceOrderAccepted(
         balance: previousState.balance,
         amount: 0.0,
         price: 0.0,

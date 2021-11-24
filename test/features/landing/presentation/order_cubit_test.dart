@@ -11,7 +11,7 @@ class _MockPlaceOrderUsecase extends Mock implements PlaceOrderUseCase {}
 
 void main() {
   late _MockPlaceOrderUsecase _mockPlaceOrderUsecase;
-  late OrderCubit cubit;
+  late PlaceOrderCubit cubit;
   late int nonce;
   late String baseAsset;
   late String quoteAsset;
@@ -23,7 +23,7 @@ void main() {
   setUp(() {
     _mockPlaceOrderUsecase = _MockPlaceOrderUsecase();
 
-    cubit = OrderCubit(
+    cubit = PlaceOrderCubit(
       placeOrderUseCase: _mockPlaceOrderUsecase,
     );
 
@@ -42,13 +42,13 @@ void main() {
   });
 
   group(
-    'OrderCubit tests',
+    'PlaceOrderCubit tests',
     () {
       test('Verifies initial state', () {
-        expect(cubit.state, OrderInitial());
+        expect(cubit.state, PlaceOrderInitial());
       });
 
-      blocTest<OrderCubit, OrderState>(
+      blocTest<PlaceOrderCubit, PlaceOrderState>(
         'Order placed successfully',
         build: () {
           when(
@@ -78,12 +78,12 @@ void main() {
           );
         },
         expect: () => [
-          isA<OrderLoading>(),
-          isA<OrderAccepted>(),
+          isA<PlaceOrderLoading>(),
+          isA<PlaceOrderAccepted>(),
         ],
       );
 
-      blocTest<OrderCubit, OrderState>(
+      blocTest<PlaceOrderCubit, PlaceOrderState>(
         'Order placement failed',
         build: () {
           when(
@@ -113,8 +113,8 @@ void main() {
           );
         },
         expect: () => [
-          isA<OrderLoading>(),
-          isA<OrderNotAccepted>(),
+          isA<PlaceOrderLoading>(),
+          isA<PlaceOrderNotAccepted>(),
         ],
       );
     },
