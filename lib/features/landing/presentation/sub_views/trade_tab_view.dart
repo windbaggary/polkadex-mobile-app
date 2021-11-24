@@ -55,7 +55,6 @@ class _TradeTabViewState extends State<TradeTabView>
 
   @override
   Widget build(BuildContext context) {
-    print('lkjfsdhlkjsdhfgjkfshd');
     return _ThisInheritedWidget(
       buySellTabController: _buySellDotController,
       child: MultiProvider(
