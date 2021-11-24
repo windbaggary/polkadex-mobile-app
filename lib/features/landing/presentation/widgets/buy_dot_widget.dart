@@ -335,6 +335,7 @@ class _ThisAmountWidget extends StatelessWidget {
           _ThisInheritedWidget.of(context)!.priceController.text);
 
       if (amount == null || price == null) {
+        _ThisInheritedWidget.of(context)?.progressNotifier.value = 0.0;
         return;
       }
 
@@ -412,6 +413,7 @@ class _ThisPriceWidget extends StatelessWidget {
       final double? price = double.tryParse(val);
 
       if (amount == null || price == null) {
+        _ThisInheritedWidget.of(context)?.progressNotifier.value = 0.0;
         return;
       }
 
