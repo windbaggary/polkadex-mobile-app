@@ -10,6 +10,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/widgets/loading_dots_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 
 /// The callback type for buy or sell
@@ -83,7 +84,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusManager.instance.primaryFocus?.unfocus();
       },
       child: ValueListenableBuilder<EnumBuySell>(
         valueListenable: widget.buySellNotifier,
@@ -224,6 +225,15 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                 state.orderSide == EnumBuySell.buy
                                     ? widget.onBuy
                                     : widget.onSell;
+
+                            if (state is OrderLoading) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: LoadingDotsWidget(
+                                  dotSize: 10,
+                                ),
+                              );
+                            }
 
                             return AppButton(
                               padding: EdgeInsets.symmetric(

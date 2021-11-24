@@ -55,6 +55,7 @@ class _TradeTabViewState extends State<TradeTabView>
 
   @override
   Widget build(BuildContext context) {
+    print('lkjfsdhlkjsdhfgjkfshd');
     return _ThisInheritedWidget(
       buySellTabController: _buySellDotController,
       child: MultiProvider(
@@ -411,7 +412,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     final thisProvider = context.read<TradeTabViewProvider>();
     final orderCubit = context.read<OrderCubit>();
 
-    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
 
     await orderCubit.placeOrder(
       nonce: 0,
