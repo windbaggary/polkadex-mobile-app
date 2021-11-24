@@ -233,7 +233,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
             buySellNotifier: _buySellNotifier,
             onSwapTab: () => _onClickArrowsBuySell(
                 _ThisInheritedWidget.of(context)?.buySellTabController),
-            onBuy: (price, amount, _) => _onBuyOrSell(
+            onBuy: (price, amount) => _onBuyOrSell(
               EnumBuySell.buy,
               _orderTypeSelNotifier.value,
               'BTC',
@@ -242,7 +242,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
               amount,
               context,
             ),
-            onSell: (price, amount, _) => _onBuyOrSell(
+            onSell: (price, amount) => _onBuyOrSell(
               EnumBuySell.sell,
               _orderTypeSelNotifier.value,
               'BTC',

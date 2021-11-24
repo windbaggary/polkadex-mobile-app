@@ -7,14 +7,13 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
-import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
-import 'package:polkadex/features/landing/presentation/widgets/loading_dots_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 
 /// The callback type for buy or sell
-typedef OnBuyOrSell = void Function(String price, String amount, double total);
+typedef OnBuyOrSell = void Function(String price, String amount);
 
 /// The widget repesent the buy dot
 class BuyDotWidget extends StatefulWidget {
@@ -22,7 +21,7 @@ class BuyDotWidget extends StatefulWidget {
   final double rightBalance;
   final String leftAsset;
   final String rightAsset;
-  final OnBuyOrSell? onBuy;
+  final OnBuyOrSell onBuy;
   final OnBuyOrSell onSell;
   final ValueNotifier<EnumBuySell> buySellNotifier;
   final ValueNotifier<EnumOrderTypes> orderTypeNotifier;
@@ -64,6 +63,10 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     _totalNotifier = ValueNotifier<double?>(null);
     _amountTypeNotifier = ValueNotifier(EnumAmountType.usd);
     _walletBalance = widget.leftBalance;
+    context.read<OrderCubit>().updateOrderParams(
+          balance: widget.leftBalance,
+          orderside: EnumBuySell.buy,
+        );
     super.initState();
   }
 
@@ -212,61 +215,34 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                     _ThisPriceWidget(),
                     _ThisTotalWidget(),
                     Padding(
-                      padding: const EdgeInsets.only(top: 12, bottom: 24),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Align(
                         alignment: Alignment.center,
-                        child: Builder(
-                          builder: (context) =>
-                              ValueListenableBuilder<EnumBuySell>(
-                            valueListenable: widget.buySellNotifier,
-                            builder: (context, enumBuySell, child) {
-                              String btnText = "Buy";
-                              Color color;
-                              switch (enumBuySell) {
-                                case EnumBuySell.buy:
-                                  btnText = "Buy";
-                                  color = color0CA564;
-                                  break;
-                                case EnumBuySell.sell:
-                                  btnText = "Sell";
-                                  color = colorE6007A;
-                                  break;
-                              }
-                              return InkWell(
-                                onTap: () {
-                                  switch (enumBuySell) {
-                                    case EnumBuySell.buy:
-                                      _onBuy(context);
-                                      break;
-                                    case EnumBuySell.sell:
-                                      _onSell(context);
-                                      break;
-                                  }
-                                },
-                                child: AnimatedContainer(
-                                  duration: AppConfigs.animDurationSmall,
-                                  decoration: BoxDecoration(
-                                    color: color,
-                                    borderRadius: BorderRadius.circular(13),
-                                  ),
-                                  padding:
-                                      const EdgeInsets.fromLTRB(56, 15, 63, 14),
-                                  child: BlocBuilder<OrderCubit, OrderState>(
-                                    builder: (context, state) {
-                                      if (state is OrderLoading) {
-                                        return LoadingDotsWidget(dotSize: 10);
-                                      }
+                        child: BlocBuilder<OrderCubit, OrderState>(
+                          builder: (context, state) {
+                            final tapFunction =
+                                state.orderSide == EnumBuySell.buy
+                                    ? widget.onBuy
+                                    : widget.onSell;
 
-                                      return Text(
-                                        '$btnText DOT',
-                                        style: tsS16W600CFF,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                            return AppButton(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 14, horizontal: 64),
+                              label:
+                                  '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${widget.rightAsset}',
+                              enabled: state is! OrderNotValid,
+                              onTap: () => state is OrderValid
+                                  ? tapFunction(
+                                      state.price.toString(),
+                                      state.amount.toString(),
+                                    )
+                                  : {},
+                              backgroundColor:
+                                  state.orderSide == EnumBuySell.buy
+                                      ? color0CA564
+                                      : colorE6007A,
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -290,113 +266,6 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     _amountController.text = "";
     _priceController.text = "";
     _progressNotifier.value = 0.00;
-  }
-
-  /// A callback to handle when the user tap on buy button
-  void _onBuy(BuildContext context) {
-    final price = _ThisInheritedWidget.of(context)?.priceController.text;
-    final amount = _ThisInheritedWidget.of(context)?.amountController.text;
-    final total = _ThisInheritedWidget.of(context)?.progressNotifier.value;
-    // if (price?.isEmpty ?? true) {
-    //   buildAppToast(
-    //     msg: "Please enter the price",
-    //     context: context,
-    //   );
-    //   return;
-    // }
-
-    if (price?.isEmpty ?? true) {
-      buildAppToast(msg: "Please enter the price", context: context);
-      return;
-    }
-
-    try {
-      final priceInDouble = double.tryParse(price!);
-      final amountInDouble = double.tryParse(amount!);
-
-      if (priceInDouble == null || amountInDouble == null) throw Exception();
-
-      if (priceInDouble <= 0) {
-        buildAppToast(
-            msg: "Price should be greater than 0.00", context: context);
-        return;
-      }
-
-      if (priceInDouble >= _walletBalance) {
-        buildAppToast(
-            msg: "Price should be less than wallet balance", context: context);
-        return;
-      }
-
-      if (priceInDouble * amountInDouble > _walletBalance) {
-        buildAppToast(
-            msg: "Total should be equal or less than wallet balance",
-            context: context);
-        return;
-      }
-
-      if (widget.onBuy != null) {
-        widget.onBuy!(price, amount, total!);
-      }
-    } catch (ex) {
-      buildAppToast(msg: "Please enter a valid price", context: context);
-      print(ex);
-    }
-  }
-
-  /// A callback to handle when the user tap on sell button
-  void _onSell(BuildContext context) {
-    final price = _ThisInheritedWidget.of(context)?.priceController.text;
-    final amount = _ThisInheritedWidget.of(context)?.amountController.text;
-    final total = _ThisInheritedWidget.of(context)?.progressNotifier.value;
-    // if (price?.isEmpty ?? true) {
-    //   buildAppToast(
-    //     msg: "Please enter the price",
-    //     context: context,
-    //   );
-    //   return;
-    // }
-
-    if (price?.isEmpty ?? true) {
-      buildAppToast(
-        msg: "Please enter the price",
-        context: context,
-      );
-      return;
-    }
-
-    try {
-      final priceInDouble = double.tryParse(price!);
-      final amountInDouble = double.tryParse(amount!);
-
-      if (priceInDouble == null || amountInDouble == null) throw Exception();
-
-      if (priceInDouble <= 0) {
-        buildAppToast(
-            msg: "Price should be greater than 0.00", context: context);
-        return;
-      }
-
-      if (priceInDouble >= _walletBalance) {
-        buildAppToast(
-            msg: "Price should be less than wallet balance", context: context);
-        return;
-      }
-
-      if (amountInDouble > _walletBalance) {
-        buildAppToast(
-            msg: "Amount should be equal or less than wallet balance",
-            context: context);
-        return;
-      }
-
-      if (widget.onBuy != null) {
-        widget.onSell(price, amount, total!);
-      }
-    } catch (ex) {
-      buildAppToast(msg: "Please enter a valid price", context: context);
-      print(ex);
-    }
   }
 }
 
@@ -450,16 +319,22 @@ class _ThisAmountWidget extends StatelessWidget {
 
   void _onAmountChanged(String val, BuildContext context) {
     try {
-      final double? value = double.tryParse(val);
+      final double? amount = double.tryParse(val);
       final double? price = double.tryParse(
           _ThisInheritedWidget.of(context)!.priceController.text);
 
-      if (value == null || price == null) {
+      if (amount == null || price == null) {
         return;
       }
 
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
-          (value * price) / _ThisInheritedWidget.of(context)!.walletBalance;
+          (amount * price) / _ThisInheritedWidget.of(context)!.walletBalance;
+
+      context.read<OrderCubit>().updateOrderParams(
+            orderside: _ThisInheritedWidget.of(context)!.buySellNotifier.value,
+            amount: amount,
+            price: price,
+          );
     } catch (ex) {
       print(ex);
     }
@@ -531,6 +406,12 @@ class _ThisPriceWidget extends StatelessWidget {
 
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
           ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance);
+
+      context.read<OrderCubit>().updateOrderParams(
+            orderside: _ThisInheritedWidget.of(context)!.buySellNotifier.value,
+            amount: amount,
+            price: price,
+          );
     } catch (ex) {
       print(ex);
     }
@@ -717,7 +598,15 @@ void _onProgressOrOrderSideUpdate(
     newAmount /= price;
   }
 
-  amountController.text = _floorDecimalPrecision(newAmount, 4).toString();
+  newAmount = _floorDecimalPrecision(newAmount, 4);
+  amountController.text = newAmount.toString();
+
+  context.read<OrderCubit>().updateOrderParams(
+        orderside: buyOrSell,
+        balance: walletBalance,
+        amount: newAmount,
+        price: price,
+      );
 }
 
 double _floorDecimalPrecision(double value, int precision) {

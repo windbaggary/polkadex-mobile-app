@@ -5,17 +5,20 @@ abstract class OrderState extends Equatable {
     this.balance = 0.0,
     this.amount = 0.0,
     this.price = 0.0,
+    this.orderSide = EnumBuySell.buy,
   });
 
   final double balance;
   final double amount;
   final double price;
+  final EnumBuySell orderSide;
 
   @override
   List<Object> get props => [
         balance,
         amount,
         price,
+        orderSide,
       ];
 }
 
@@ -26,10 +29,12 @@ class OrderValid extends OrderState {
     required double balance,
     required double amount,
     required double price,
+    required EnumBuySell orderSide,
   }) : super(
           balance: balance,
           amount: amount,
           price: price,
+          orderSide: orderSide,
         );
 }
 
@@ -38,15 +43,41 @@ class OrderNotValid extends OrderState {
     required double balance,
     required double amount,
     required double price,
+    required EnumBuySell orderSide,
   }) : super(
           balance: balance,
           amount: amount,
           price: price,
+          orderSide: orderSide,
         );
 }
 
 class OrderLoading extends OrderState {}
 
-class OrderAccepted extends OrderState {}
+class OrderAccepted extends OrderNotValid {
+  const OrderAccepted({
+    required double balance,
+    required double amount,
+    required double price,
+    required EnumBuySell orderSide,
+  }) : super(
+          balance: balance,
+          amount: amount,
+          price: price,
+          orderSide: orderSide,
+        );
+}
 
-class OrderNotAccepted extends OrderState {}
+class OrderNotAccepted extends OrderNotValid {
+  const OrderNotAccepted({
+    required double balance,
+    required double amount,
+    required double price,
+    required EnumBuySell orderSide,
+  }) : super(
+          balance: balance,
+          amount: amount,
+          price: price,
+          orderSide: orderSide,
+        );
+}

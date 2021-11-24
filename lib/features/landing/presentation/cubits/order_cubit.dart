@@ -14,28 +14,35 @@ class OrderCubit extends Cubit<OrderState> {
   final PlaceOrderUseCase _placeOrderUseCase;
 
   void updateOrderParams({
-    required EnumBuySell orderside,
+    EnumBuySell? orderside,
     double? balance,
     double? amount,
     double? price,
   }) {
-    final currentState = state;
-    final isOrderValid = amount != null &&
-        price != null &&
-        (orderside == EnumBuySell.buy ? price * amount : amount) <=
-            (balance ?? state.balance);
+    final previousState = state;
+    final newBalance = balance ?? previousState.balance;
+    final newAmount = amount ?? previousState.amount;
+    final newPrice = price ?? previousState.price;
+    final newOrderside = orderside ?? previousState.orderSide;
+
+    final isOrderValid = newAmount > 0.0 &&
+        newPrice > 0.0 &&
+        (newOrderside == EnumBuySell.buy ? newPrice * newAmount : newAmount) <=
+            newBalance;
 
     isOrderValid
-        ? OrderValid(
-            balance: balance ?? currentState.balance,
-            amount: amount ?? currentState.amount,
-            price: price ?? currentState.price,
-          )
-        : OrderNotValid(
-            balance: balance ?? currentState.balance,
-            amount: amount ?? currentState.amount,
-            price: price ?? currentState.price,
-          );
+        ? emit(OrderValid(
+            balance: newBalance,
+            amount: newAmount,
+            price: newPrice,
+            orderSide: newOrderside,
+          ))
+        : emit(OrderNotValid(
+            balance: newBalance,
+            amount: newAmount,
+            price: newPrice,
+            orderSide: newOrderside,
+          ));
   }
 
   Future<void> placeOrder({
@@ -47,6 +54,8 @@ class OrderCubit extends Cubit<OrderState> {
     required double price,
     required double quantity,
   }) async {
+    final previousState = state;
+
     emit(OrderLoading());
 
     final result = await _placeOrderUseCase(
@@ -60,8 +69,18 @@ class OrderCubit extends Cubit<OrderState> {
     );
 
     result.fold(
-      (l) => emit(OrderNotAccepted()),
-      (r) => emit(OrderAccepted()),
+      (l) => emit(OrderNotAccepted(
+        balance: previousState.balance,
+        amount: 0.0,
+        price: 0.0,
+        orderSide: orderSide,
+      )),
+      (r) => emit(OrderAccepted(
+        balance: previousState.balance,
+        amount: 0.0,
+        price: 0.0,
+        orderSide: orderSide,
+      )),
     );
   }
 }
