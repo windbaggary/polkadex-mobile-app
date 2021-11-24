@@ -78,8 +78,8 @@ void main() {
           );
         },
         expect: () => [
-          OrderLoading(),
-          OrderAccepted(),
+          isA<OrderLoading>(),
+          isA<OrderAccepted>(),
         ],
       );
 
@@ -113,8 +113,8 @@ void main() {
           );
         },
         expect: () => [
-          OrderLoading(),
-          OrderNotAccepted(),
+          isA<OrderLoading>(),
+          isA<OrderNotAccepted>(),
         ],
       );
     },
