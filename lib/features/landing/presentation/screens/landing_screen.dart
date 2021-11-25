@@ -1,22 +1,25 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/features/landing/providers/notification_drawer_provider.dart';
-import 'package:polkadex/features/landing/sub_views/balance_tab_view.dart';
-import 'package:polkadex/features/landing/sub_views/exchange_tab_view.dart';
-import 'package:polkadex/features/landing/sub_views/home_tab_view.dart';
-import 'package:polkadex/features/landing/sub_views/trade_tab_view.dart';
-import 'package:polkadex/features/landing/widgets/app_bottom_navigation_bar.dart';
-import 'package:polkadex/features/landing/widgets/app_drawer_widget.dart';
+import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
+import 'package:polkadex/features/landing/presentation/sub_views/balance_tab_view.dart';
+import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_view.dart';
+import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.dart';
+import 'package:polkadex/features/landing/presentation/sub_views/trade_tab_view.dart';
+import 'package:polkadex/features/landing/presentation/widgets/app_bottom_navigation_bar.dart';
+import 'package:polkadex/features/landing/presentation/widgets/app_drawer_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34
@@ -387,53 +390,60 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
     return ValueListenableBuilder<EnumBottonBarItem>(
       valueListenable: _bottomNavbarNotifier,
       builder: (context, selectedMenu, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _ThisAppBar(),
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: TabBarView(
-                      controller: _tabController,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: EnumBottonBarItem.values
-                          .map((e) => _buildBottomBarTab(e))
-                          .toList(),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Consumer2<BottomNavigationProvider,
-                        HomeScrollNotifProvider>(
-                      builder: (context, bottomNavigationProvider,
-                          homeScrollProvider, child) {
-                        return Container(
-                          height: homeScrollProvider.bottombarSize -
-                              homeScrollProvider.bottombarValue,
-                          child: SingleChildScrollView(
-                            physics: NeverScrollableScrollPhysics(),
-                            child: Container(
-                              transform: Matrix4.identity(),
-                              height: homeScrollProvider.bottombarSize,
-                              child: AppBottomNavigationBar(
-                                onSelected: _onBottomNavigationSelected,
-                                initialItem: EnumBottonBarItem
-                                    .values[_tabController.index],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider<PlaceOrderCubit>(
+              create: (_) => dependency<PlaceOrderCubit>(),
             ),
           ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _ThisAppBar(),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: TabBarView(
+                        controller: _tabController,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: EnumBottonBarItem.values
+                            .map((e) => _buildBottomBarTab(e))
+                            .toList(),
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Consumer2<BottomNavigationProvider,
+                          HomeScrollNotifProvider>(
+                        builder: (context, bottomNavigationProvider,
+                            homeScrollProvider, child) {
+                          return Container(
+                            height: homeScrollProvider.bottombarSize -
+                                homeScrollProvider.bottombarValue,
+                            child: SingleChildScrollView(
+                              physics: NeverScrollableScrollPhysics(),
+                              child: Container(
+                                transform: Matrix4.identity(),
+                                height: homeScrollProvider.bottombarSize,
+                                child: AppBottomNavigationBar(
+                                  onSelected: _onBottomNavigationSelected,
+                                  initialItem: EnumBottonBarItem
+                                      .values[_tabController.index],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

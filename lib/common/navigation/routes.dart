@@ -13,8 +13,8 @@ import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.da
 import 'package:polkadex/features/balance/screens/balance_deposit_screen_1.dart';
 import 'package:polkadex/features/balance/screens/balance_summary_screen.dart';
 import 'package:polkadex/features/balance/screens/coin_withdraw_screen.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
-import 'package:polkadex/features/landing/screens/market_token_selection_screen.dart';
+import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
+import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';

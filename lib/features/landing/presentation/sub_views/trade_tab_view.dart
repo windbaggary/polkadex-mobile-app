@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/features/landing/dialogs/trade_view_dialogs.dart';
-import 'package:polkadex/features/landing/models/trade_models.dart';
-import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/features/landing/providers/trade_tab_provider.dart';
-import 'package:polkadex/features/landing/screens/market_token_selection_screen.dart';
-import 'package:polkadex/features/landing/widgets/buy_dot_widget.dart';
+import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
+import 'package:polkadex/features/landing/data/models/trade_models.dart';
+import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
+import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
+import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
+import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
 import 'package:polkadex/features/trade/order_book_item_model.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -129,9 +130,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     Future.microtask(() {
       final tabController =
           _ThisInheritedWidget.of(context)?.buySellTabController;
-      tabController?.addListener(() {
-        _buySellNotifier.value = EnumBuySell.values[tabController.index];
-      });
+      tabController?.addListener(() => _onSwapBuySellTab(context));
     });
   }
 
@@ -226,21 +225,30 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
           ),
           BuyDotWidget(
             key: _keyBuySellWidget,
+            leftBalance: 12000.89,
+            leftAsset: 'BTC',
+            rightBalance: 200000.72,
+            rightAsset: 'DOT',
             orderTypeNotifier: _orderTypeSelNotifier,
             buySellNotifier: _buySellNotifier,
-            onSwapTab: () => _onSwapBuySellTab(context),
-            onBuy: (price, amount, total) => _onBuyOrSell(
+            onSwapTab: () => _onClickArrowsBuySell(
+                _ThisInheritedWidget.of(context)?.buySellTabController),
+            onBuy: (price, amount) => _onBuyOrSell(
               EnumBuySell.buy,
+              _orderTypeSelNotifier.value,
+              'BTC',
+              'DOT',
               price,
               amount,
-              total,
               context,
             ),
-            onSell: (price, amount, total) => _onBuyOrSell(
+            onSell: (price, amount) => _onBuyOrSell(
               EnumBuySell.sell,
+              _orderTypeSelNotifier.value,
+              'BTC',
+              'DOT',
               price,
               amount,
-              total,
               context,
             ),
           ),
@@ -393,29 +401,52 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
   /// The callback listener when the user buy or sell from the buyorsellwidget
   void _onBuyOrSell(
     EnumBuySell type,
+    EnumOrderTypes side,
+    String leftAsset,
+    String rightAsset,
     String price,
     String amount,
-    double total,
     BuildContext context,
-  ) {
+  ) async {
     final thisProvider = context.read<TradeTabViewProvider>();
+    final orderCubit = context.read<PlaceOrderCubit>();
+
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    await orderCubit.placeOrder(
+      nonce: 0,
+      baseAsset: leftAsset,
+      quoteAsset: rightAsset,
+      orderType: side,
+      orderSide: type,
+      quantity: double.parse(amount),
+      price: double.parse(price),
+    );
+
     if (price.isEmpty) {
       price = amount;
     }
-    thisProvider.addToListOrder(
-      TradeOpenOrderModel(
-        type: type,
-        amount: amount,
-        price: price,
-        dateTime: DateTime.now(),
-        amountCoin: "BTC",
-        priceCoin: "DOT",
-        tokenPairName: "DOT/BTC",
-        orderType: _orderTypeSelNotifier.value,
-      ),
-    );
 
-    buildAppToast(msg: "Purchase added to open orders", context: context);
+    if (orderCubit.state is PlaceOrderAccepted) {
+      thisProvider.addToListOrder(
+        TradeOpenOrderModel(
+          type: type,
+          amount: amount,
+          price: price,
+          dateTime: DateTime.now(),
+          amountCoin: "BTC",
+          priceCoin: "DOT",
+          tokenPairName: "DOT/BTC",
+          orderType: _orderTypeSelNotifier.value,
+        ),
+      );
+    }
+
+    final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
+    final message = context.read<PlaceOrderCubit>().state is PlaceOrderAccepted
+        ? '$orderType added to open orders.'
+        : '$orderType not accepted. Please try again.';
+    buildAppToast(msg: message, context: context);
     _keyBuySellWidget.currentState?.reset();
   }
 
@@ -431,16 +462,20 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     }
   }
 
-  /// Listener to handle the Buy sell tab change
   void _onSwapBuySellTab(BuildContext context) {
     final tabController =
         _ThisInheritedWidget.of(context)?.buySellTabController;
+
+    _buySellNotifier.value = EnumBuySell.values[tabController!.index];
+  }
+
+  void _onClickArrowsBuySell(TabController? buySellTabController) {
     int newIndex = 0;
-    if (tabController?.index == 0) {
+    if (buySellTabController?.index == 0) {
       newIndex = 1;
     }
 
-    tabController?.animateTo(newIndex);
+    buySellTabController?.animateTo(newIndex);
   }
 }
 

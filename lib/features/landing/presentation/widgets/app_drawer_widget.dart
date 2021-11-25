@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/features/landing/providers/notification_drawer_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';

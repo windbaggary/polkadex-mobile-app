@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:polkadex/features/landing/models/drawer_notification_model.dart';
+import 'package:polkadex/features/landing/data/models/drawer_notification_model.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 

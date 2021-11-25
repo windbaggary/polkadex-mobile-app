@@ -4,7 +4,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
-import 'package:polkadex/features/landing/providers/home_scroll_notif_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';

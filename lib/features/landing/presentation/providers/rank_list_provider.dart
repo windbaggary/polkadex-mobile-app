@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
-import 'package:polkadex/features/landing/models/home_models.dart';
+import 'package:polkadex/features/landing/data/models/home_models.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
 /// The provider to show the rank list based on the type selected

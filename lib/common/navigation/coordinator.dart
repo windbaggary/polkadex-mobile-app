@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/navigation/routes.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/screens/market_token_selection_screen.dart';
+import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
 
 abstract class Coordinator {
