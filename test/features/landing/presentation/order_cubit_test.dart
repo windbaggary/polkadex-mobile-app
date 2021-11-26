@@ -3,8 +3,10 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/landing/data/models/order_model.dart';
+import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
-import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:test/test.dart';
 
 class _MockPlaceOrderUsecase extends Mock implements PlaceOrderUseCase {}
@@ -19,6 +21,7 @@ void main() {
   late EnumBuySell orderSide;
   late double quantity;
   late double price;
+  late OrderEntity order;
 
   setUp(() {
     _mockPlaceOrderUsecase = _MockPlaceOrderUsecase();
@@ -34,6 +37,17 @@ void main() {
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
     price = 50.0;
+    order = OrderModel(
+      uuid: 'abcd',
+      type: orderSide,
+      amount: quantity.toString(),
+      price: price.toString(),
+      dateTime: DateTime.now(),
+      amountCoin: baseAsset,
+      priceCoin: quoteAsset,
+      orderType: orderType,
+      tokenPairName: '$baseAsset/$quoteAsset',
+    );
   });
 
   setUpAll(() {
@@ -62,7 +76,7 @@ void main() {
               baseAsset: any(named: 'baseAsset'),
             ),
           ).thenAnswer(
-            (_) async => Right('test'),
+            (_) async => Right(order),
           );
           return cubit;
         },

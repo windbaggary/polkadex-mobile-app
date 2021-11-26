@@ -1,4 +1,4 @@
-part of 'order_cubit.dart';
+part of 'place_order_cubit.dart';
 
 abstract class PlaceOrderState extends Equatable {
   const PlaceOrderState({

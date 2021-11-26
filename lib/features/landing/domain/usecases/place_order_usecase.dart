@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
 
 class PlaceOrderUseCase {
@@ -10,7 +11,7 @@ class PlaceOrderUseCase {
 
   final IOrderRepository _orderRepository;
 
-  Future<Either<ApiError, String>> call({
+  Future<Either<ApiError, OrderEntity>> call({
     required int nonce,
     required String baseAsset,
     required String quoteAsset,

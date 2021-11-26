@@ -1,28 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
-abstract class ITradeOpenOrderModel {
-  String get iType;
-  EnumBuySell get iEnumType;
-  EnumOrderTypes get iEnumOrderType;
-  String get iAmount;
-  String get iPrice;
-  String get iFormattedDate;
-  String get iOrderTypeName;
-  String get iTokenPairName;
-}
-
-class TradeOpenOrderModel implements ITradeOpenOrderModel {
-  final EnumBuySell type;
-  final String? amount;
-  final String price;
-  final DateTime dateTime;
-  final String? amountCoin;
-  final String priceCoin;
-  final EnumOrderTypes orderType;
-  final String tokenPairName;
-
-  TradeOpenOrderModel({
+abstract class OrderEntity extends Equatable {
+  const OrderEntity({
+    required this.uuid,
     required this.type,
     required this.amount,
     required this.price,
@@ -33,18 +15,24 @@ class TradeOpenOrderModel implements ITradeOpenOrderModel {
     required this.tokenPairName,
   });
 
-  @override
-  String get iAmount => "${amount ?? ""} ${amountCoin ?? ""}";
+  final String uuid;
+  final EnumBuySell type;
+  final String amount;
+  final String price;
+  final DateTime dateTime;
+  final String amountCoin;
+  final String priceCoin;
+  final EnumOrderTypes orderType;
+  final String tokenPairName;
 
-  @override
+  String get iAmount => "$amount $amountCoin";
+
   String get iFormattedDate {
     return DateFormat("MMM dd, yyyy HH:mm:ss").format(dateTime);
   }
 
-  @override
   String get iPrice => "$price $priceCoin";
 
-  @override
   String get iType {
     switch (type) {
       case EnumBuySell.buy:
@@ -54,10 +42,8 @@ class TradeOpenOrderModel implements ITradeOpenOrderModel {
     }
   }
 
-  @override
   EnumBuySell get iEnumType => type;
 
-  @override
   String get iOrderTypeName {
     switch (orderType) {
       case EnumOrderTypes.market:
@@ -69,9 +55,20 @@ class TradeOpenOrderModel implements ITradeOpenOrderModel {
     }
   }
 
-  @override
   String get iTokenPairName => tokenPairName;
 
-  @override
   EnumOrderTypes get iEnumOrderType => orderType;
+
+  @override
+  List<Object> get props => [
+        uuid,
+        type,
+        amount,
+        price,
+        dateTime,
+        amountCoin,
+        priceCoin,
+        orderType,
+        tokenPairName,
+      ];
 }

@@ -3,6 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/landing/data/models/order_model.dart';
+import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
 
@@ -18,6 +20,7 @@ void main() {
   late EnumBuySell orderSide;
   late double quantity;
   late double price;
+  late OrderEntity order;
 
   setUp(() {
     _repository = _OrderRepositoryMock();
@@ -29,6 +32,17 @@ void main() {
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
     price = 50.0;
+    order = OrderModel(
+      uuid: 'abcd',
+      type: orderSide,
+      amount: quantity.toString(),
+      price: price.toString(),
+      dateTime: DateTime.now(),
+      amountCoin: baseAsset,
+      priceCoin: quoteAsset,
+      orderType: orderType,
+      tokenPairName: '$baseAsset/$quoteAsset',
+    );
   });
 
   setUpAll(() {
@@ -43,8 +57,9 @@ void main() {
         // arrange
         when(() => _repository.placeOrder(
             any(), any(), any(), any(), any(), any(), any())).thenAnswer(
-          (_) async => Right('test'),
+          (_) async => Right(order),
         );
+        OrderEntity? orderResult;
         // act
         final result = await _usecase(
           nonce: nonce,
@@ -57,7 +72,12 @@ void main() {
         );
         // assert
 
-        expect(result.isRight(), true);
+        result.fold(
+          (_) => null,
+          (order) => orderResult = order,
+        );
+
+        expect(orderResult, order);
         verify(() => _repository.placeOrder(
             any(), any(), any(), any(), any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);

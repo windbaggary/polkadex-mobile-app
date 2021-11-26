@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
-import 'package:polkadex/features/landing/data/models/trade_models.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
-import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
+import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/trade/order_book_item_model.dart';
 import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -259,6 +261,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
               right: 41,
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 InkWell(
@@ -278,20 +281,22 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                       }
                     }
                   },
-                  child: Consumer<TradeTabViewProvider>(
-                    builder: (context, thisProvider, child) => Stack(
+                  child: BlocBuilder<ListOrdersCubit, ListOrdersState>(
+                      builder: (context, state) {
+                    return Stack(
                       alignment: Alignment.topRight,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 8, right: 12),
                           child: Text(
                             "Open Orders",
-                            style: thisProvider.listOpenOrders.isNotEmpty
-                                ? tsS15W600CFF
-                                : tsS15W600CABB2BC,
+                            style: state is ListOrdersLoaded &&
+                                    state.openOrders.isEmpty
+                                ? tsS15W600CABB2BC
+                                : tsS15W600CFF,
                           ),
                         ),
-                        if (thisProvider.listOpenOrders.isNotEmpty)
+                        if (state is ListOrdersLoaded)
                           Container(
                             decoration: BoxDecoration(
                               color: colorE6007A,
@@ -299,67 +304,13 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                             ),
                             padding: const EdgeInsets.all(4),
                             margin: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                                thisProvider.listOpenOrders.length.toString(),
+                            child: Text('${state.openOrders.length}',
                                 style: tsS10W500CFF),
                           ),
                       ],
-                    ),
-                  ),
+                    );
+                  }),
                 ),
-                Spacer(),
-                InkWell(
-                  onTap: () {
-                    if (_orderDisplayTypeNotifier.value ==
-                        EnumTradeOrdersDisplayType.history) {
-                      if (_isOrdersExpanded.value) {
-                        _isOrdersExpanded.value = false;
-                      } else {
-                        _isOrdersExpanded.value = true;
-                      }
-                    } else {
-                      _orderDisplayTypeNotifier.value =
-                          EnumTradeOrdersDisplayType.history;
-                      if (!_isOrdersExpanded.value) {
-                        _isOrdersExpanded.value = true;
-                      }
-                    }
-                  },
-                  child: Consumer<TradeTabViewProvider>(
-                    builder: (context, thisProvider, child) => Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, right: 12),
-                          child: Text(
-                            "Orders History",
-                            style: thisProvider.listOrdersHistory.isNotEmpty
-                                ? tsS15W600CFF
-                                : tsS15W600CABB2BC,
-                          ),
-                        ),
-                        if (thisProvider.listOrdersHistory.isNotEmpty)
-                          Container(
-                            decoration: BoxDecoration(
-                              color: colorE6007A,
-                              shape: BoxShape.circle,
-                            ),
-                            padding: const EdgeInsets.all(4),
-                            margin: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                                thisProvider.listOrdersHistory.length
-                                    .toString(),
-                                style: tsS10W500CFF),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Text(
-                //   "Orders History",
-                //   style: tsS15W600CABB2BC,
-                //   textAlign: TextAlign.end,
-                // ),
               ],
             ),
           ),
@@ -408,12 +359,12 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     String amount,
     BuildContext context,
   ) async {
-    final thisProvider = context.read<TradeTabViewProvider>();
-    final orderCubit = context.read<PlaceOrderCubit>();
+    final placeOrderCubit = context.read<PlaceOrderCubit>();
+    final listOrdersCubit = context.read<ListOrdersCubit>();
 
     FocusManager.instance.primaryFocus?.unfocus();
 
-    await orderCubit.placeOrder(
+    final resultPlaceOrder = await placeOrderCubit.placeOrder(
       nonce: 0,
       baseAsset: leftAsset,
       quoteAsset: rightAsset,
@@ -427,19 +378,8 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
       price = amount;
     }
 
-    if (orderCubit.state is PlaceOrderAccepted) {
-      thisProvider.addToListOrder(
-        TradeOpenOrderModel(
-          type: type,
-          amount: amount,
-          price: price,
-          dateTime: DateTime.now(),
-          amountCoin: "BTC",
-          priceCoin: "DOT",
-          tokenPairName: "DOT/BTC",
-          orderType: _orderTypeSelNotifier.value,
-        ),
-      );
+    if (resultPlaceOrder != null) {
+      listOrdersCubit.addToOpenOrders(resultPlaceOrder);
     }
 
     final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
@@ -488,20 +428,14 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Alignment barAlignment = Alignment.centerLeft;
-    double barWidth = 104;
-    if (type == EnumTradeOrdersDisplayType.history) {
-      barAlignment = Alignment.centerRight;
-      barWidth = 127;
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 8),
         Align(
-          alignment: barAlignment,
+          alignment: Alignment.center,
           child: Container(
-            width: barWidth,
+            width: 104,
             height: 4,
             margin: const EdgeInsets.only(bottom: 2.5, left: 40, right: 40),
             decoration: BoxDecoration(
@@ -511,186 +445,35 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8),
-        Consumer<TradeTabViewProvider>(
-          builder: (context, thisProvider, child) {
-            List<ITradeOpenOrderModel>? list;
-            switch (type) {
-              case EnumTradeOrdersDisplayType.open:
-                list = thisProvider.listOpenOrders;
-                break;
-              case EnumTradeOrdersDisplayType.history:
-                list = thisProvider.listOrdersHistory;
-                break;
-              default:
-                list = [];
-            }
-            return Column(
-              children: list
-                  .map<Widget>((m) => _ThisOpenOrderItemWidget(
-                        iModel: m,
-                        onTapClose: () {
-                          context.read<TradeTabViewProvider>().removeItem(m);
+        BlocBuilder<ListOrdersCubit, ListOrdersState>(
+          builder: (context, state) {
+            if (state is ListOrdersLoaded) {
+              return Column(
+                children: state.openOrders
+                    .map<Widget>(
+                      (order) => OrderItemWidget(
+                        order: order,
+                        isProcessing:
+                            state.orderUuidsLoading.contains(order.uuid),
+                        onTapClose: () async {
+                          final cancelSuccess = await context
+                              .read<ListOrdersCubit>()
+                              .cancelOrder(order);
+
+                          buildAppToast(
+                              msg: cancelSuccess
+                                  ? 'Order cancelled successfully'
+                                  : 'Order cancel failed. Please try again',
+                              context: context);
                         },
-                      ))
-                  .toList(),
-            );
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class _ThisOpenOrderItemWidget extends StatelessWidget {
-  final ITradeOpenOrderModel iModel;
-  final VoidCallback? onTapClose;
-  const _ThisOpenOrderItemWidget({
-    required this.iModel,
-    this.onTapClose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Color colorBuySell = color0CA564;
-    if (iModel.iEnumType == EnumBuySell.sell) {
-      colorBuySell = colorE6007A;
-    }
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: colorFFFFFF.withOpacity(0.05),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black.withOpacity(0.17),
-                blurRadius: 99,
-                offset: Offset(0.0, 100.0),
-              ),
-            ],
-          ),
-          margin: const EdgeInsets.symmetric(horizontal: 24),
-          padding: const EdgeInsets.fromLTRB(27, 13, 19, 7),
-          child: Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: color8BA1BE.withOpacity(0.20),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                margin: const EdgeInsets.only(right: 9),
-                child: Text(
-                  'Limit',
-                  style: tsS16W500CFF,
-                ),
-              ),
-              Text(
-                'DOT/BTC',
-                style: tsS15W600CFF,
-              ),
-              Spacer(),
-              InkWell(
-                onTap: onTapClose,
-                child: SvgPicture.asset(
-                  'close'.asAssetSvg(),
-                  width: 10,
-                  height: 10,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: color2E303C,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black.withOpacity(0.17),
-                blurRadius: 99,
-                offset: Offset(0.0, 100.0),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.fromLTRB(15, 15, 13, 19),
-          margin: const EdgeInsets.only(left: 13, right: 13, bottom: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  SizedBox(
-                    width: 75,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Type',
-                          style: tsS14W400CFF.copyWith(color: colorABB2BC),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: colorBuySell.withOpacity(0.20),
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          margin: const EdgeInsets.only(top: 4),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 2),
-                          child: Text(
-                            iModel.iType,
-                            style: tsS16W500CFF.copyWith(
-                              color: colorBuySell,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Amount',
-                          style: tsS14W400CFF.copyWith(color: colorABB2BC),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          iModel.iAmount,
-                          style: tsS16W500CFF,
-                        )
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Price',
-                        style: tsS14W400CFF.copyWith(color: colorABB2BC),
                       ),
-                      Text(
-                        iModel.iPrice,
-                        style: tsS16W500CFF,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  iModel.iFormattedDate,
-                  style: tsS14W400CFF.copyWith(color: colorABB2BC),
-                ),
-              ),
-            ],
-          ),
+                    )
+                    .toList(),
+              );
+            }
+
+            return Container();
+          },
         ),
       ],
     );

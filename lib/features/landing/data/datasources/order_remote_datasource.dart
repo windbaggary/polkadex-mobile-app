@@ -22,4 +22,21 @@ class OrderRemoteDatasource {
 
     return result;
   }
+
+  Future<Map<String, dynamic>> cancelOrder(
+    int nonce,
+    String baseAsset,
+    String quoteAsset,
+    String orderUuid,
+  ) async {
+    final String _callCancelOrder =
+        'polkadexWorkerMock.cancelOrder(keyring.addFromUri(\'//Bob\'), keyring.addFromUri(\'//Alice\').address, "$nonce", "$baseAsset", "$quoteAsset", "$orderUuid")';
+
+    final Map<String, dynamic> result =
+        await dependency<WebViewRunner>().evalJavascript(
+      _callCancelOrder,
+    );
+
+    return result;
+  }
 }

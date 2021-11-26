@@ -1,10 +1,13 @@
-import 'package:biometric_storage/biometric_storage.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/landing/data/datasources/order_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/repositories/order_repository.dart';
 import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/features/landing/domain/usecases/cancel_order_usecase.dart';
+import 'package:biometric_storage/biometric_storage.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
-import 'package:polkadex/features/landing/presentation/cubits/order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
+import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/repositories/account_repository.dart';
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
@@ -19,6 +22,7 @@ import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.da
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
+import 'common/cubits/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
 import 'features/setup/domain/usecases/get_password_usecase.dart';
 import 'features/setup/domain/usecases/import_account_usecase.dart';
@@ -152,8 +156,20 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => CancelOrderUseCase(
+      orderRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => PlaceOrderCubit(
       placeOrderUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => ListOrdersCubit(
+      cancelOrderUseCase: dependency(),
     ),
   );
 

@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
 
-part 'order_state.dart';
+part 'place_order_state.dart';
 
 class PlaceOrderCubit extends Cubit<PlaceOrderState> {
   PlaceOrderCubit({
@@ -45,7 +46,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
           ));
   }
 
-  Future<void> placeOrder({
+  Future<OrderEntity?> placeOrder({
     required int nonce,
     required String baseAsset,
     required String quoteAsset,
@@ -55,6 +56,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     required double quantity,
   }) async {
     final previousState = state;
+    OrderEntity? newOrder;
 
     emit(PlaceOrderLoading());
 
@@ -69,18 +71,23 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     );
 
     result.fold(
-      (l) => emit(PlaceOrderNotAccepted(
+      (_) => emit(PlaceOrderNotAccepted(
         balance: previousState.balance,
         amount: 0.0,
         price: 0.0,
         orderSide: orderSide,
       )),
-      (r) => emit(PlaceOrderAccepted(
-        balance: previousState.balance,
-        amount: 0.0,
-        price: 0.0,
-        orderSide: orderSide,
-      )),
+      (order) {
+        emit(PlaceOrderAccepted(
+          balance: previousState.balance,
+          amount: 0.0,
+          price: 0.0,
+          orderSide: orderSide,
+        ));
+        newOrder = order;
+      },
     );
+
+    return newOrder;
   }
 }
