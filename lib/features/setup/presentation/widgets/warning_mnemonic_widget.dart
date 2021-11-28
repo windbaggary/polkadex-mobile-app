@@ -146,7 +146,7 @@ class _WarningModalWidgetState extends State<WarningModalWidget>
                         children: [
                           if (widget.imagePath != null)
                             Image.asset(
-                              widget.imagePath!,
+                              widget.imagePath!.asAssetImg(),
                               fit: BoxFit.contain,
                             ),
                           if (widget.details != null)
