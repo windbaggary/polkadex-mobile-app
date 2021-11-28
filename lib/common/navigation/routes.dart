@@ -4,6 +4,7 @@ import 'package:polkadex/common/widgets/qr_code_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_change_logs_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_help_screen.dart';
+import 'package:polkadex/features/app_settings_info/screens/app_settings_lang_curr.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_notif_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_security.dart';
 import 'package:polkadex/features/app_settings_info/screens/my_account_screen.dart';
@@ -179,10 +180,12 @@ abstract class Routes {
         };
         break;
       case marketTokenSelectionScreen:
-        builder = (_) {
-          return MarketTokenSelectionScreen();
-        };
-        break;
+        return MaterialPageRoute<MarketSelectionResultModel>(
+          builder: (_) {
+            return MarketTokenSelectionScreen();
+          },
+          settings: settings,
+        );
       case appSettingsHelpScreen:
         builder = (_) {
           return AppSettingsHelpScreen();
@@ -216,6 +219,11 @@ abstract class Routes {
       case appSettingsAppearanceScreen:
         builder = (_) {
           return AppSettingsAppearance();
+        };
+        break;
+      case appSettingsLangCurrScreen:
+        builder = (_) {
+          return AppSettingsLangCurrScreen();
         };
         break;
       case appSettingsSecurityScreen:
