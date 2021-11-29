@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/graph/data/models/line_chart_model.dart';
+import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/widgets/chart/app_charts.dart';
 
 /// The provider create a dummy data for line chart
 class BalanceChartDummyProvider extends ChangeNotifier {
-  final List<LineChartModel> _list = List<LineChartModel>.empty(growable: true);
+  final List<LineChartEntity> _list = List<LineChartEntity>.empty(growable: true);
 
   BalanceChartDummyProvider() : super() {
     _list.addAll(_createHourDummyList());
@@ -24,7 +25,7 @@ class BalanceChartDummyProvider extends ChangeNotifier {
 
   EnumBalanceChartDataTypes get balanceChartDataType => _balanceChartDataTypes;
 
-  List<LineChartModel> get list => _list;
+  List<LineChartEntity> get list => _list;
 
   set balanceChartDataType(EnumBalanceChartDataTypes val) {
     stopTimer();
@@ -120,42 +121,42 @@ class BalanceChartDummyProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  List<LineChartModel> _createHourDummyList() {
-    return List<LineChartModel>.generate(
+  List<LineChartEntity> _createHourDummyList() {
+    return List<LineChartEntity>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(hours: -index)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(hours: -index)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }
 
-  List<LineChartModel> _createWeekDummyList() {
-    return List<LineChartModel>.generate(
+  List<LineChartEntity> _createWeekDummyList() {
+    return List<LineChartEntity>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(days: -index - 6 * index)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(days: -index - 6 * index)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }
 
-  List<LineChartModel> _createDayDummyList() {
-    return List<LineChartModel>.generate(
+  List<LineChartEntity> _createDayDummyList() {
+    return List<LineChartEntity>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(days: -index)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(days: -index)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }
 
-  List<LineChartModel> _createMonthDummyList() {
-    return List<LineChartModel>.generate(
+  List<LineChartEntity> _createMonthDummyList() {
+    return List<LineChartEntity>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(days: -index * 30)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(days: -index * 30)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }

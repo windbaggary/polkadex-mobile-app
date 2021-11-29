@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import '_chart_options.dart';
-import 'chart_models.dart';
 
 import 'dart:math' as math;
 import '_app_chart_custom_widget.dart';
@@ -12,14 +12,14 @@ export '_chart_options.dart';
 ///
 /// The widget accept data of type [List<LineChartModel>]
 /// Use [AppLineChartOptions] to customise the chart colors and all
-class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
+class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartEntity> {
   final AppLineChartOptions options;
 
   AppLineChartWidget(
-      {required List<LineChartModel> data, required this.options})
+      {required List<LineChartEntity> data, required this.options})
       : super(parentData: data);
 
-  List<LineChartModel> get data => super.parentData;
+  List<LineChartEntity> get data => super.parentData;
 
   @override
   void iPaintChart(
@@ -69,7 +69,7 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartModel> {
     // Set the limit to the data needed on UI
     final int xLimit = listDataOffset.length;
     int xOffset = (data.length - xLimit).clamp(0, data.length);
-    final List<LineChartModel> currentData =
+    final List<LineChartEntity> currentData =
         data.skip(xOffset).take(xLimit).toList();
 
     // Calculate the maximum value of y
