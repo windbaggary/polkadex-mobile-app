@@ -11,7 +11,6 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'dart:math' as math;
@@ -483,10 +482,8 @@ class _ThisGraphOptionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double containerWidth = 38;
-    double calendarPaddingRight = 16;
     if (MediaQuery.of(context).size.width <= 385) {
       containerWidth = 30;
-      calendarPaddingRight = 12;
     }
     return Center(
       child: SizedBox(
@@ -541,14 +538,6 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         ))
                     .toList(),
                 SizedBox(width: 8),
-                InkWell(
-                  onTap: () => _onDateTapped(context),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('calendar'.asAssetSvg())),
-                ),
-                SizedBox(width: calendarPaddingRight),
                 // Spacer(),
                 Container(
                   height: 36,
@@ -595,53 +584,12 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: 8),
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
-                  ),
-                  padding: const EdgeInsets.all(9),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('setting'.asAssetSvg())),
-                ),
-                SizedBox(width: 8),
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
-                  ),
-                  padding: const EdgeInsets.all(11),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('expand-screen'.asAssetSvg())),
-                ),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void _onDateTapped(BuildContext context) async {
-    final provider = context.read<AppChartDummyProvider>();
-    await CustomDateRangePicker.call(
-            filterStartDate: provider.filterStartDate,
-            filterEndDate: provider.filterEndDate,
-            context: context)
-        .then((dates) {
-      if (dates != null) {
-        provider.setFilterDates(dates.start, dates.end);
-      }
-    });
   }
 }
 
