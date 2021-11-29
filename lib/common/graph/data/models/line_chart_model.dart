@@ -7,5 +7,12 @@ class LineChartModel extends LineChartEntity {
   }) : super(
           date: date,
           pointY: pointY,
-  );
+        );
+
+  factory LineChartModel.fromJson(Map<String, dynamic> map) {
+    return LineChartModel(
+      date: DateTime.parse(map['_time']),
+      pointY: map['open'],
+    );
+  }
 }

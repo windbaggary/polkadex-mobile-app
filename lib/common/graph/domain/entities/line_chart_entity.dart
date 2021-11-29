@@ -8,6 +8,7 @@ abstract class LineChartEntity extends BaseChartEntity {
 
   /// The date on the X axis
   final DateTime date;
+
   /// The point on the Y axis
   final double pointY;
 
@@ -18,7 +19,7 @@ abstract class LineChartEntity extends BaseChartEntity {
 
   @override
   List<Object> get props => [
-    date,
-    pointY,
-  ];
+        date,
+        pointY,
+      ];
 }

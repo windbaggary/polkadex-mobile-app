@@ -8,7 +8,8 @@ import 'package:polkadex/common/utils/enums.dart';
 
 /// The provider create a dummy data for line chart
 class AppChartDummyProvider extends ChangeNotifier {
-  final List<LineChartEntity> _list = List<LineChartEntity>.empty(growable: true);
+  final List<LineChartEntity> _list =
+      List<LineChartEntity>.empty(growable: true);
 
   AppChartDummyProvider() : super() {
     _list.addAll(_createHourDummyList());
