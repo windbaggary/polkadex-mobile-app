@@ -27,8 +27,8 @@ import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/restore_existing_wallet_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
-import 'package:polkadex/features/trade/screens/coin_trade_screen.dart';
-import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
+import 'package:polkadex/features/trade/presentation/screens/coin_trade_screen.dart';
+import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 

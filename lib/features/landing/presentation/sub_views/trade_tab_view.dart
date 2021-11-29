@@ -11,8 +11,8 @@ import 'package:polkadex/features/landing/presentation/screens/market_token_sele
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
-import 'package:polkadex/features/trade/order_book_item_model.dart';
-import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
+import 'package:polkadex/features/trade/presentation/order_book_item_model.dart';
+import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
