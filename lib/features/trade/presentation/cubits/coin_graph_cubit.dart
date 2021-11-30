@@ -1,29 +1,30 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'graph_state.dart';
+import 'coin_graph_state.dart';
 
-class GraphCubit extends Cubit<GraphState> {
-  GraphCubit({
-    required GetGraphDataUseCase getGraphDataUseCase,
+class CoinGraphCubit extends Cubit<CoinGraphState> {
+  CoinGraphCubit({
+    required GetCoinGraphDataUseCase getGraphDataUseCase,
   })  : _getGraphDataUseCase = getGraphDataUseCase,
-        super(GraphInitial(typeSelected: EnumAppChartDataTypes.day));
+        super(CoinGraphInitial(typeSelected: EnumAppChartDataTypes.day));
 
-  final GetGraphDataUseCase _getGraphDataUseCase;
+  final GetCoinGraphDataUseCase _getGraphDataUseCase;
 
   Future<void> loadGraph({EnumAppChartDataTypes? typeSelected}) async {
     final newTypeChart = typeSelected ?? state.typeSelected;
-    emit(GraphLoading(typeSelected: newTypeChart));
+    emit(CoinGraphLoading(typeSelected: newTypeChart));
 
     final result = await _getGraphDataUseCase();
 
     result.fold(
-      (error) => emit(GraphError(
+      (error) => emit(CoinGraphError(
         typeSelected: newTypeChart,
         errorMessage: error.message ??
             'Unexpected error on getting graph data. Please try again',
       )),
-      (data) => emit(GraphLoaded(typeSelected: newTypeChart, dataList: data)),
+      (data) =>
+          emit(CoinGraphLoaded(typeSelected: newTypeChart, dataList: data)),
     );
   }
 }

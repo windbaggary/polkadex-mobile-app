@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class GraphRemoteDatasource {
-  Future<Response> getGraphData() async {
+  Future<Response> getCoinGraphData() async {
     return await post(
       Uri.parse('http://ec2-3-101-117-26.us-west-1.polkadex.trade/fetchohlcv'),
       headers: <String, String>{

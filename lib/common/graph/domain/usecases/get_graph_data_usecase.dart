@@ -3,8 +3,8 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 
-class GetGraphDataUseCase {
-  GetGraphDataUseCase({
+class GetCoinGraphDataUseCase {
+  GetCoinGraphDataUseCase({
     required IGraphRepository graphRepository,
   }) : _graphRepository = graphRepository;
 

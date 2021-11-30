@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/features/trade/presentation/cubits/graph_cubit.dart';
-import 'package:polkadex/features/trade/presentation/cubits/graph_state.dart';
+import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
+import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
 import 'package:polkadex/features/trade/presentation/widgets/coin_graph_shimmer_widget.dart';
 import 'package:polkadex/features/trade/presentation/widgets/graph_heading_widget.dart';
@@ -71,8 +71,8 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
           create: (context) => AppChartDummyProvider(),
         ),
       ],
-      builder: (context, _) => BlocProvider<GraphCubit>(
-        create: (_) => dependency<GraphCubit>()..loadGraph(),
+      builder: (context, _) => BlocProvider<CoinGraphCubit>(
+        create: (_) => dependency<CoinGraphCubit>()..loadGraph(),
         child: Scaffold(
           backgroundColor: color1C2023,
           body: SafeArea(
@@ -392,8 +392,9 @@ class _ThisGrpahCard extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 25, right: 22),
                   child: _TopCoinWidget(),
                 ),
-                BlocBuilder<GraphCubit, GraphState>(builder: (context, state) {
-                  if (state is GraphLoaded) {
+                BlocBuilder<CoinGraphCubit, CoinGraphState>(
+                    builder: (context, state) {
+                  if (state is CoinGraphLoaded) {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
                       child: GraphHeadingWidget(
@@ -415,9 +416,9 @@ class _ThisGrpahCard extends StatelessWidget {
                   child: SizedBox(
                     height: math.min(
                         250, MediaQuery.of(context).size.width * 0.450),
-                    child: BlocBuilder<GraphCubit, GraphState>(
+                    child: BlocBuilder<CoinGraphCubit, CoinGraphState>(
                       builder: (context, state) {
-                        if (state is GraphLoaded) {
+                        if (state is CoinGraphLoaded) {
                           return app_charts.AppLineChartWidget(
                             data: state.dataList,
                             options:
@@ -435,7 +436,7 @@ class _ThisGrpahCard extends StatelessWidget {
                           );
                         }
 
-                        if (state is GraphError) {
+                        if (state is CoinGraphError) {
                           return Center(
                             child: Text(
                               state.errorMessage,

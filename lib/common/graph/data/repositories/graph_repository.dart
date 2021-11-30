@@ -14,7 +14,7 @@ class GraphRepository implements IGraphRepository {
 
   @override
   Future<Either<ApiError, List<LineChartEntity>>> getGraphData() async {
-    final result = await _graphLocalDatasource.getGraphData();
+    final result = await _graphLocalDatasource.getCoinGraphData();
     final Map<String, dynamic> body = jsonDecode(result.body);
 
     if (result.statusCode == 200 && body.containsKey('Fine')) {

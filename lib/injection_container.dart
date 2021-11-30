@@ -24,7 +24,7 @@ import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dar
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
-import 'package:polkadex/features/trade/presentation/cubits/graph_cubit.dart';
+import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'common/graph/data/datasources/graph_remote_datasource.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
 import 'common/cubits/account_cubit.dart';
@@ -191,13 +191,13 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => GetGraphDataUseCase(
+    () => GetCoinGraphDataUseCase(
       graphRepository: dependency(),
     ),
   );
 
   dependency.registerFactory(
-    () => GraphCubit(
+    () => CoinGraphCubit(
       getGraphDataUseCase: dependency(),
     ),
   );

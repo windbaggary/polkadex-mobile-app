@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
-abstract class GraphState extends Equatable {
-  const GraphState({required this.typeSelected});
+abstract class CoinGraphState extends Equatable {
+  const CoinGraphState({required this.typeSelected});
 
   final EnumAppChartDataTypes typeSelected;
 
@@ -11,18 +11,18 @@ abstract class GraphState extends Equatable {
   List<Object> get props => [typeSelected];
 }
 
-class GraphInitial extends GraphState {
-  GraphInitial({required EnumAppChartDataTypes typeSelected})
+class CoinGraphInitial extends CoinGraphState {
+  CoinGraphInitial({required EnumAppChartDataTypes typeSelected})
       : super(typeSelected: typeSelected);
 }
 
-class GraphLoading extends GraphState {
-  GraphLoading({required EnumAppChartDataTypes typeSelected})
+class CoinGraphLoading extends CoinGraphState {
+  CoinGraphLoading({required EnumAppChartDataTypes typeSelected})
       : super(typeSelected: typeSelected);
 }
 
-class GraphError extends GraphState {
-  GraphError({
+class CoinGraphError extends CoinGraphState {
+  CoinGraphError({
     required EnumAppChartDataTypes typeSelected,
     required this.errorMessage,
   }) : super(typeSelected: typeSelected);
@@ -30,8 +30,8 @@ class GraphError extends GraphState {
   final String errorMessage;
 }
 
-class GraphLoaded extends GraphState {
-  GraphLoaded({
+class CoinGraphLoaded extends CoinGraphState {
+  CoinGraphLoaded({
     required EnumAppChartDataTypes typeSelected,
     required this.dataList,
   }) : super(typeSelected: typeSelected);
