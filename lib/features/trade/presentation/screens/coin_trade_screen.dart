@@ -520,7 +520,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                 shaderCallback: (Rect bounds) {
                   return LinearGradient(
                     colors: [Colors.white, Colors.white.withOpacity(0.05)],
-                    stops: [0.8, 1],
+                    stops: [0.9, 1],
                     tileMode: TileMode.mirror,
                   ).createShader(bounds);
                 },
