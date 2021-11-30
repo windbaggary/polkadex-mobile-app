@@ -26,7 +26,8 @@ class AppChartDummyProvider extends ChangeNotifier {
   DateTime? _filterStartDate;
   DateTime? _filterEndDate;
 
-  EnumAppChartTimestampTypes _chartDataType = EnumAppChartTimestampTypes.hour;
+  EnumAppChartTimestampTypes _chartDataType =
+      EnumAppChartTimestampTypes.oneHour;
   EnumBalanceChartDataTypes _balanceChartDataTypes =
       EnumBalanceChartDataTypes.hour;
 
@@ -76,22 +77,24 @@ class AppChartDummyProvider extends ChangeNotifier {
     stopTimer();
     _list.clear();
     switch (val) {
-      case EnumAppChartTimestampTypes.hour:
+      case EnumAppChartTimestampTypes.oneMinute:
+      case EnumAppChartTimestampTypes.fiveMinutes:
+      case EnumAppChartTimestampTypes.thirtyMinutes:
+      case EnumAppChartTimestampTypes.oneHour:
+      case EnumAppChartTimestampTypes.fourHours:
+      case EnumAppChartTimestampTypes.twelveHours:
         _list.addAll(_createHourDummyList());
         _scale = 0.004;
         break;
-
-      case EnumAppChartTimestampTypes.week:
-        _list.addAll(_createWeekDummyList());
-        _scale = 0.000025;
-        break;
-
-      case EnumAppChartTimestampTypes.day:
+      case EnumAppChartTimestampTypes.oneDay:
         _list.addAll(_createDayDummyList());
         _scale = 0.00017;
         break;
-
-      case EnumAppChartTimestampTypes.month:
+      case EnumAppChartTimestampTypes.oneWeek:
+        _list.addAll(_createWeekDummyList());
+        _scale = 0.000025;
+        break;
+      case EnumAppChartTimestampTypes.oneMonth:
         _list.addAll(_createMonthDummyList());
         _scale = 0.000007;
         break;

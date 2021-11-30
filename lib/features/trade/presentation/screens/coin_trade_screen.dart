@@ -513,102 +513,139 @@ class _ThisGraphOptionWidget extends StatelessWidget {
     return Center(
       child: SizedBox(
         height: 36 + 10 + 14.0,
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 10, 16, 14),
-            child: Row(
-              children: [
-                ...EnumAppChartTimestampTypes.values
-                    .map<Widget>((item) => Consumer<AppChartDummyProvider>(
-                          builder: (context, appChartProvider, child) {
-                            String text;
-                            switch (item) {
-                              case EnumAppChartTimestampTypes.hour:
-                                text = "1h";
-                                break;
-                              case EnumAppChartTimestampTypes.week:
-                                text = "7d";
-                                break;
-                              case EnumAppChartTimestampTypes.day:
-                                text = "1d";
-                                break;
-                              case EnumAppChartTimestampTypes.month:
-                                text = "1m";
-                                break;
-                            }
-                            return InkWell(
-                              onTap: () {
-                                appChartProvider.chartDataType = item;
-                              },
-                              child: AnimatedContainer(
-                                duration: AppConfigs.animDurationSmall,
-                                width: containerWidth,
-                                height: containerWidth,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: item == appChartProvider.chartDataType
-                                      ? colorE6007A
-                                      : null,
-                                ),
-                                child: Text(
-                                  text,
-                                  style: tsS13W600CFF,
+        child: Row(
+          children: [
+            Flexible(
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    colors: [Colors.white, Colors.white.withOpacity(0.05)],
+                    stops: [0.8, 1],
+                    tileMode: TileMode.mirror,
+                  ).createShader(bounds);
+                },
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 10, 16, 14),
+                    child: Row(
+                      children: [
+                        ...EnumAppChartTimestampTypes.values
+                            .map<Widget>((item) =>
+                                Consumer<AppChartDummyProvider>(
+                                  builder: (context, appChartProvider, child) {
+                                    String text;
+                                    switch (item) {
+                                      case EnumAppChartTimestampTypes.oneMinute:
+                                        text = "1m";
+                                        break;
+                                      case EnumAppChartTimestampTypes
+                                          .fiveMinutes:
+                                        text = "5m";
+                                        break;
+                                      case EnumAppChartTimestampTypes
+                                          .thirtyMinutes:
+                                        text = "30m";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneHour:
+                                        text = "1h";
+                                        break;
+                                      case EnumAppChartTimestampTypes.fourHours:
+                                        text = "4h";
+                                        break;
+                                      case EnumAppChartTimestampTypes
+                                          .twelveHours:
+                                        text = "12h";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneDay:
+                                        text = "1D";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneWeek:
+                                        text = "1w";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneMonth:
+                                        text = "1M";
+                                        break;
+                                    }
+                                    return InkWell(
+                                      onTap: () {
+                                        appChartProvider.chartDataType = item;
+                                      },
+                                      child: AnimatedContainer(
+                                        duration: AppConfigs.animDurationSmall,
+                                        width: containerWidth,
+                                        height: containerWidth,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: item ==
+                                                  appChartProvider.chartDataType
+                                              ? colorE6007A
+                                              : null,
+                                        ),
+                                        child: Text(
+                                          text,
+                                          style: tsS13W600CFF,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ))
+                            .toList(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Container(
+                height: 36,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: color8BA1BE.withOpacity(0.2),
+                ),
+                padding: const EdgeInsets.only(left: 8),
+                child: Row(
+                  children: [
+                    SvgPicture.asset('trade-candle'.asAssetSvg()),
+                    SizedBox(width: 5),
+                    Container(
+                      width: 65,
+                      child: ButtonTheme(
+                        alignedDropdown: false,
+                        child: ValueListenableBuilder<EnumAppChartDataTypes>(
+                          valueListenable: dataTypeNotifier,
+                          builder: (context, dataType, _) {
+                            return DropdownButton<EnumAppChartDataTypes>(
+                              items: _dropdownItems,
+                              value: dataType,
+                              style: tsS13W400CFF,
+                              underline: Container(),
+                              onChanged: (val) => dataTypeNotifier.value =
+                                  val ?? EnumAppChartDataTypes.average,
+                              iconEnabledColor: Colors.white,
+                              icon: Padding(
+                                padding: const EdgeInsets.only(left: 2.0),
+                                child: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: colorFFFFFF,
+                                  size: 16,
                                 ),
                               ),
                             );
                           },
-                        ))
-                    .toList(),
-                SizedBox(width: 8),
-                // Spacer(),
-                Container(
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
-                  ),
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('trade-candle'.asAssetSvg()),
-                      SizedBox(width: 5),
-                      Container(
-                        width: 65,
-                        child: ButtonTheme(
-                          alignedDropdown: false,
-                          child: ValueListenableBuilder<EnumAppChartDataTypes>(
-                            valueListenable: dataTypeNotifier,
-                            builder: (context, dataType, _) {
-                              return DropdownButton<EnumAppChartDataTypes>(
-                                items: _dropdownItems,
-                                value: dataType,
-                                style: tsS13W400CFF,
-                                underline: Container(),
-                                onChanged: (val) => dataTypeNotifier.value =
-                                    val ?? EnumAppChartDataTypes.average,
-                                iconEnabledColor: Colors.white,
-                                icon: Padding(
-                                  padding: const EdgeInsets.only(left: 2.0),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: colorFFFFFF,
-                                    size: 16,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

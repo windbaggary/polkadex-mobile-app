@@ -73,10 +73,15 @@ enum EnumOrderTypes {
 }
 
 enum EnumAppChartTimestampTypes {
-  hour,
-  week,
-  day,
-  month,
+  oneMinute,
+  fiveMinutes,
+  thirtyMinutes,
+  oneHour,
+  fourHours,
+  twelveHours,
+  oneDay,
+  oneWeek,
+  oneMonth,
 }
 
 enum EnumAppChartDataTypes {
