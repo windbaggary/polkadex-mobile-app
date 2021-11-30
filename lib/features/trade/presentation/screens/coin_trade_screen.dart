@@ -435,6 +435,16 @@ class _ThisGrpahCard extends StatelessWidget {
                           );
                         }
 
+                        if (state is GraphError) {
+                          return Center(
+                            child: Text(
+                              state.errorMessage,
+                              textAlign: TextAlign.center,
+                              style: tsS16W500CFF,
+                            ),
+                          );
+                        }
+
                         return CoinGraphShimmerWidget();
                       },
                     ),
@@ -550,7 +560,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         child: ButtonTheme(
                           alignedDropdown: false,
                           child: DropdownButton<String>(
-                            items: ['Trading', 'Trade 1', 'Trade 3']
+                            items: ['Average', 'High', 'Low']
                                 .map((e) => DropdownMenuItem<String>(
                                       child: Text(
                                         e,
@@ -560,7 +570,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                       value: e,
                                     ))
                                 .toList(),
-                            value: 'Trading',
+                            value: 'Average',
                             style: tsS13W400CFF,
                             underline: Container(),
                             onChanged: (val) {},
