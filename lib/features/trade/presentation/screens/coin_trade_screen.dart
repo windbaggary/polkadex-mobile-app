@@ -366,6 +366,9 @@ class _ThisDetailCard extends StatelessWidget {
 
 /// The card shows the graph on top section
 class _ThisGrpahCard extends StatelessWidget {
+  final ValueNotifier<EnumAppChartDataTypes> _dataTypeNotifier =
+      ValueNotifier<EnumAppChartDataTypes>(EnumAppChartDataTypes.average);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -419,21 +422,28 @@ class _ThisGrpahCard extends StatelessWidget {
                     child: BlocBuilder<CoinGraphCubit, CoinGraphState>(
                       builder: (context, state) {
                         if (state is CoinGraphLoaded) {
-                          return app_charts.AppLineChartWidget(
-                            data: state.dataList,
-                            options:
-                                app_charts.AppLineChartOptions.withDefaults(
-                              chartScale: 0.12,
-                              areaGradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: <Color>[
-                                  color8BA1BE.withOpacity(0.50),
-                                  color8BA1BE.withOpacity(0.0710),
-                                ],
-                              ),
-                            ),
-                          );
+                          return ValueListenableBuilder<EnumAppChartDataTypes>(
+                              valueListenable: _dataTypeNotifier,
+                              builder: (context, dataType, _) {
+                                return app_charts.AppLineChartWidget(
+                                  data: state.dataList[
+                                          _fromEnumChartDataTypeToString(
+                                              _dataTypeNotifier.value)] ??
+                                      [],
+                                  options: app_charts.AppLineChartOptions
+                                      .withDefaults(
+                                    chartScale: 0.12,
+                                    areaGradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        color8BA1BE.withOpacity(0.50),
+                                        color8BA1BE.withOpacity(0.0710),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
                         }
 
                         if (state is CoinGraphError) {
@@ -451,7 +461,9 @@ class _ThisGrpahCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                _ThisGraphOptionWidget(),
+                _ThisGraphOptionWidget(
+                  dataTypeNotifier: _dataTypeNotifier,
+                ),
               ],
             ),
           ),
@@ -485,12 +497,19 @@ class _ThisGrpahCard extends StatelessWidget {
 }
 
 class _ThisGraphOptionWidget extends StatelessWidget {
+  _ThisGraphOptionWidget({required this.dataTypeNotifier});
+
+  final ValueNotifier<EnumAppChartDataTypes> dataTypeNotifier;
+
   @override
   Widget build(BuildContext context) {
     double containerWidth = 38;
     if (MediaQuery.of(context).size.width <= 385) {
       containerWidth = 30;
     }
+    List<DropdownMenuItem<EnumAppChartDataTypes>>? _dropdownItems =
+        EnumAppChartDataTypes.values.map((e) => _dropdownItem(e)).toList();
+
     return Center(
       child: SizedBox(
         height: 36 + 10 + 14.0,
@@ -560,30 +579,27 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         width: 65,
                         child: ButtonTheme(
                           alignedDropdown: false,
-                          child: DropdownButton<String>(
-                            items: ['Average', 'High', 'Low']
-                                .map((e) => DropdownMenuItem<String>(
-                                      child: Text(
-                                        e,
-                                        style: tsS13W400CFF,
-                                        textAlign: TextAlign.start,
-                                      ),
-                                      value: e,
-                                    ))
-                                .toList(),
-                            value: 'Average',
-                            style: tsS13W400CFF,
-                            underline: Container(),
-                            onChanged: (val) {},
-                            iconEnabledColor: Colors.white,
-                            icon: Padding(
-                              padding: const EdgeInsets.only(left: 2.0),
-                              child: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: colorFFFFFF,
-                                size: 16,
-                              ),
-                            ),
+                          child: ValueListenableBuilder<EnumAppChartDataTypes>(
+                            valueListenable: dataTypeNotifier,
+                            builder: (context, dataType, _) {
+                              return DropdownButton<EnumAppChartDataTypes>(
+                                items: _dropdownItems,
+                                value: dataType,
+                                style: tsS13W400CFF,
+                                underline: Container(),
+                                onChanged: (val) => dataTypeNotifier.value =
+                                    val ?? EnumAppChartDataTypes.average,
+                                iconEnabledColor: Colors.white,
+                                icon: Padding(
+                                  padding: const EdgeInsets.only(left: 2.0),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: colorFFFFFF,
+                                    size: 16,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -595,6 +611,18 @@ class _ThisGraphOptionWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  DropdownMenuItem<EnumAppChartDataTypes> _dropdownItem(
+      EnumAppChartDataTypes dataType) {
+    return DropdownMenuItem<EnumAppChartDataTypes>(
+      child: Text(
+        _fromEnumChartDataTypeToString(dataType).capitalize(),
+        style: tsS13W400CFF,
+        textAlign: TextAlign.start,
+      ),
+      value: dataType,
     );
   }
 }
@@ -1005,6 +1033,10 @@ class _ThisOrderDisplayProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+}
+
+String _fromEnumChartDataTypeToString(EnumAppChartDataTypes dataType) {
+  return dataType.toString().split('.')[1];
 }
 
 typedef OnEnumCoinDisplayListener = void Function(EnumCardFlipState state);

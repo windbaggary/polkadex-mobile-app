@@ -7,24 +7,25 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
   CoinGraphCubit({
     required GetCoinGraphDataUseCase getGraphDataUseCase,
   })  : _getGraphDataUseCase = getGraphDataUseCase,
-        super(CoinGraphInitial(typeSelected: EnumAppChartTimestampTypes.day));
+        super(CoinGraphInitial(
+            timestampSelected: EnumAppChartTimestampTypes.day));
 
   final GetCoinGraphDataUseCase _getGraphDataUseCase;
 
   Future<void> loadGraph({EnumAppChartTimestampTypes? typeSelected}) async {
-    final newTypeChart = typeSelected ?? state.typeSelected;
-    emit(CoinGraphLoading(typeSelected: newTypeChart));
+    final newTypeChart = typeSelected ?? state.timestampSelected;
+    emit(CoinGraphLoading(timestampSelected: newTypeChart));
 
     final result = await _getGraphDataUseCase();
 
     result.fold(
       (error) => emit(CoinGraphError(
-        typeSelected: newTypeChart,
+        timestampSelected: newTypeChart,
         errorMessage: error.message ??
             'Unexpected error on getting graph data. Please try again',
       )),
-      (data) =>
-          emit(CoinGraphLoaded(typeSelected: newTypeChart, dataList: data)),
+      (data) => emit(
+          CoinGraphLoaded(timestampSelected: newTypeChart, dataList: data)),
     );
   }
 }

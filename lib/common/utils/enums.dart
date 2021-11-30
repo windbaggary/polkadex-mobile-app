@@ -79,6 +79,12 @@ enum EnumAppChartTimestampTypes {
   month,
 }
 
+enum EnumAppChartDataTypes {
+  average,
+  high,
+  low,
+}
+
 enum EnumBalanceChartDataTypes {
   hour,
   week,

@@ -3,44 +3,56 @@ import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
 abstract class CoinGraphState extends Equatable {
-  const CoinGraphState({required this.typeSelected});
+  const CoinGraphState({
+    required this.timestampSelected,
+  });
 
-  final EnumAppChartTimestampTypes typeSelected;
+  final EnumAppChartTimestampTypes timestampSelected;
 
   @override
-  List<Object> get props => [typeSelected];
+  List<Object> get props => [timestampSelected];
 }
 
 class CoinGraphInitial extends CoinGraphState {
-  CoinGraphInitial({required EnumAppChartTimestampTypes typeSelected})
-      : super(typeSelected: typeSelected);
+  CoinGraphInitial({
+    required EnumAppChartTimestampTypes timestampSelected,
+  }) : super(
+          timestampSelected: timestampSelected,
+        );
 }
 
 class CoinGraphLoading extends CoinGraphState {
-  CoinGraphLoading({required EnumAppChartTimestampTypes typeSelected})
-      : super(typeSelected: typeSelected);
+  CoinGraphLoading({
+    required EnumAppChartTimestampTypes timestampSelected,
+  }) : super(
+          timestampSelected: timestampSelected,
+        );
 }
 
 class CoinGraphError extends CoinGraphState {
   CoinGraphError({
-    required EnumAppChartTimestampTypes typeSelected,
+    required EnumAppChartTimestampTypes timestampSelected,
     required this.errorMessage,
-  }) : super(typeSelected: typeSelected);
+  }) : super(
+          timestampSelected: timestampSelected,
+        );
 
   final String errorMessage;
 }
 
 class CoinGraphLoaded extends CoinGraphState {
   CoinGraphLoaded({
-    required EnumAppChartTimestampTypes typeSelected,
+    required EnumAppChartTimestampTypes timestampSelected,
     required this.dataList,
-  }) : super(typeSelected: typeSelected);
+  }) : super(
+          timestampSelected: timestampSelected,
+        );
 
-  final List<LineChartEntity> dataList;
+  final Map<String, List<LineChartEntity>> dataList;
 
   @override
   List<Object> get props => [
-        typeSelected,
+        timestampSelected,
         dataList,
       ];
 }

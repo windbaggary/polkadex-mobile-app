@@ -10,7 +10,7 @@ class GetCoinGraphDataUseCase {
 
   final IGraphRepository _graphRepository;
 
-  Future<Either<ApiError, List<LineChartEntity>>> call() async {
+  Future<Either<ApiError, Map<String, List<LineChartEntity>>>> call() async {
     return await _graphRepository.getGraphData();
   }
 }

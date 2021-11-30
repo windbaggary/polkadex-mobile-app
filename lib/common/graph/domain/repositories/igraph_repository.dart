@@ -3,5 +3,5 @@ import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/network/error.dart';
 
 abstract class IGraphRepository {
-  Future<Either<ApiError, List<LineChartEntity>>> getGraphData();
+  Future<Either<ApiError, Map<String, List<LineChartEntity>>>> getGraphData();
 }
