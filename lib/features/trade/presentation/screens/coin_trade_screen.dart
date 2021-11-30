@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/trade/presentation/cubits/graph_cubit.dart';
+import 'package:polkadex/features/trade/presentation/cubits/graph_state.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
+import 'package:polkadex/features/trade/presentation/widgets/coin_graph_shimmer_widget.dart';
+import 'package:polkadex/features/trade/presentation/widgets/graph_heading_widget.dart';
 import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -16,6 +21,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:polkadex/common/widgets/chart/app_charts.dart' as app_charts;
+import 'package:polkadex/injection_container.dart';
 
 /// XD_PAGE: 24
 /// XD_PAGE: 25
@@ -65,92 +71,95 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
           create: (context) => AppChartDummyProvider(),
         ),
       ],
-      builder: (context, _) => Scaffold(
-        backgroundColor: color1C2023,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: color2E303C,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(40),
+      builder: (context, _) => BlocProvider<GraphCubit>(
+        create: (_) => dependency<GraphCubit>()..loadGraph(),
+        child: Scaffold(
+          backgroundColor: color1C2023,
+          body: SafeArea(
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: color2E303C,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(40),
+                          ),
                         ),
+                        child: _ThisAppBar(),
                       ),
-                      child: _ThisAppBar(),
-                    ),
-                    ListView(
-                      padding: const EdgeInsets.only(bottom: 88),
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: color2E303C,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(25),
-                              bottomRight: Radius.circular(25),
+                      ListView(
+                        padding: const EdgeInsets.only(bottom: 88),
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: color2E303C,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(25),
+                                bottomRight: Radius.circular(25),
+                              ),
+                            ),
+                            child: Consumer<_ThisOrderDisplayProvider>(
+                              builder: (context, orderDisplayProvider, _) =>
+                                  CardFlipAnimation(
+                                duration: AppConfigs.animDuration,
+                                firstChild:
+                                    // false
+                                    //     ? InkWell(
+                                    //         onTap: () {
+                                    //           orderDisplayProvider.enumCoinDisplay =
+                                    //               EnumCardFlipState.showSecond;
+                                    //         },
+                                    //         child: Container(
+                                    //           margin: const EdgeInsets.all(32),
+                                    //           key: ValueKey("one"),
+                                    //           height: 250,
+                                    //           color: colorE6007A,
+                                    //         ),
+                                    //       )
+                                    //     :
+                                    _ThisGrpahCard(),
+                                secondChild:
+                                    // false
+                                    // ? InkWell(
+                                    //     onTap: () {
+                                    //       orderDisplayProvider.enumCoinDisplay =
+                                    //           EnumCardFlipState.showFirst;
+                                    //     },
+                                    //     child: Container(
+                                    //       margin: const EdgeInsets.all(32),
+                                    //       key: ValueKey("two"),
+                                    //       height: 250,
+                                    //       color: color0CA564,
+                                    //     ),
+                                    //   )
+                                    // :
+                                    _ThisDetailCard(),
+                                cardState: orderDisplayProvider.enumCoinDisplay,
+                              ),
                             ),
                           ),
-                          child: Consumer<_ThisOrderDisplayProvider>(
-                            builder: (context, orderDisplayProvider, _) =>
-                                CardFlipAnimation(
-                              duration: AppConfigs.animDuration,
-                              firstChild:
-                                  // false
-                                  //     ? InkWell(
-                                  //         onTap: () {
-                                  //           orderDisplayProvider.enumCoinDisplay =
-                                  //               EnumCardFlipState.showSecond;
-                                  //         },
-                                  //         child: Container(
-                                  //           margin: const EdgeInsets.all(32),
-                                  //           key: ValueKey("one"),
-                                  //           height: 250,
-                                  //           color: colorE6007A,
-                                  //         ),
-                                  //       )
-                                  //     :
-                                  _ThisGrpahCard(),
-                              secondChild:
-                                  // false
-                                  // ? InkWell(
-                                  //     onTap: () {
-                                  //       orderDisplayProvider.enumCoinDisplay =
-                                  //           EnumCardFlipState.showFirst;
-                                  //     },
-                                  //     child: Container(
-                                  //       margin: const EdgeInsets.all(32),
-                                  //       key: ValueKey("two"),
-                                  //       height: 250,
-                                  //       color: color0CA564,
-                                  //     ),
-                                  //   )
-                                  // :
-                                  _ThisDetailCard(),
-                              cardState: orderDisplayProvider.enumCoinDisplay,
-                            ),
-                          ),
-                        ),
-                        OrderBookHeadingWidget(),
-                        OrderBookWidget(),
-                      ],
-                    ),
-                  ],
+                          OrderBookHeadingWidget(),
+                          OrderBookWidget(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: _ThisBottomNavigationBar(),
-              ),
-            ],
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: _ThisBottomNavigationBar(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -383,9 +392,21 @@ class _ThisGrpahCard extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 25, right: 22),
                   child: _TopCoinWidget(),
                 ),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
-                    child: _GraphHeadingWidget()),
+                BlocBuilder<GraphCubit, GraphState>(builder: (context, state) {
+                  if (state is GraphLoaded) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
+                      child: GraphHeadingWidget(
+                        open: 1243.0,
+                        high: 1500.0,
+                        low: 1600.0,
+                        close: 1700.0,
+                      ),
+                    );
+                  }
+
+                  return Container();
+                }),
                 Padding(
                   padding: const EdgeInsets.only(
                     top: 12.0,
@@ -394,22 +415,28 @@ class _ThisGrpahCard extends StatelessWidget {
                   child: SizedBox(
                     height: math.min(
                         250, MediaQuery.of(context).size.width * 0.450),
-                    child: Consumer<AppChartDummyProvider>(
-                      builder: (context, provider, _) =>
-                          app_charts.AppLineChartWidget(
-                        data: provider.list,
-                        options: app_charts.AppLineChartOptions.withDefaults(
-                          chartScale: provider.chartScale,
-                          areaGradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: <Color>[
-                              color8BA1BE.withOpacity(0.50),
-                              color8BA1BE.withOpacity(0.0710),
-                            ],
-                          ),
-                        ),
-                      ),
+                    child: BlocBuilder<GraphCubit, GraphState>(
+                      builder: (context, state) {
+                        if (state is GraphLoaded) {
+                          return app_charts.AppLineChartWidget(
+                            data: state.dataList,
+                            options:
+                                app_charts.AppLineChartOptions.withDefaults(
+                              chartScale: 0.12,
+                              areaGradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: <Color>[
+                                  color8BA1BE.withOpacity(0.50),
+                                  color8BA1BE.withOpacity(0.0710),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        return CoinGraphShimmerWidget();
+                      },
                     ),
                   ),
                 ),
@@ -444,38 +471,6 @@ class _ThisGrpahCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class _GraphHeadingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _buildItemWidget(title: "O:", value: "1243.0"),
-        Spacer(),
-        _buildItemWidget(title: "H:", value: "1500.0"),
-        Spacer(),
-        _buildItemWidget(title: "L:", value: "1600.0"),
-        Spacer(),
-        _buildItemWidget(title: "C:", value: "1700.0"),
-      ],
-    );
-  }
-
-  Widget _buildItemWidget({String? title, String? value}) => Row(
-        children: [
-          Text(
-            "${title ?? ""} ",
-            style: tsS12W500CFF,
-          ),
-          Text(
-            value ?? "",
-            style: tsS12W500CFF.copyWith(
-              color: color0CA564,
-            ),
-          ),
-        ],
-      );
 }
 
 class _ThisGraphOptionWidget extends StatelessWidget {

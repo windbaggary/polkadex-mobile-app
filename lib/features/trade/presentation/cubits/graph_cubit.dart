@@ -18,12 +18,12 @@ class GraphCubit extends Cubit<GraphState> {
     final result = await _getGraphDataUseCase();
 
     result.fold(
-      (error) => GraphError(
+      (error) => emit(GraphError(
         typeSelected: newTypeChart,
         errorMessage: error.message ??
             'Unexpected error on getting graph data. Please try again',
-      ),
-      (data) => GraphLoaded(typeSelected: newTypeChart, dataList: data),
+      )),
+      (data) => emit(GraphLoaded(typeSelected: newTypeChart, dataList: data)),
     );
   }
 }

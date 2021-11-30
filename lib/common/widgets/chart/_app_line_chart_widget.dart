@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:polkadex/common/graph/data/models/line_chart_model.dart';
 import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import '_chart_options.dart';
 
@@ -69,8 +70,8 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartEntity> {
     // Set the limit to the data needed on UI
     final int xLimit = listDataOffset.length;
     int xOffset = (data.length - xLimit).clamp(0, data.length);
-    final List<LineChartEntity> currentData =
-        data.skip(xOffset).take(xLimit).toList();
+    final List<LineChartModel> currentData =
+        data.skip(xOffset).take(xLimit).toList() as List<LineChartModel>;
 
     // Calculate the maximum value of y
     final double yMax = _getMaxRoundValue(currentData.reduce((value, element) {
