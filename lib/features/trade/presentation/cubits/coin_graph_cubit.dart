@@ -7,11 +7,11 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
   CoinGraphCubit({
     required GetCoinGraphDataUseCase getGraphDataUseCase,
   })  : _getGraphDataUseCase = getGraphDataUseCase,
-        super(CoinGraphInitial(typeSelected: EnumAppChartDataTypes.day));
+        super(CoinGraphInitial(typeSelected: EnumAppChartTimestampTypes.day));
 
   final GetCoinGraphDataUseCase _getGraphDataUseCase;
 
-  Future<void> loadGraph({EnumAppChartDataTypes? typeSelected}) async {
+  Future<void> loadGraph({EnumAppChartTimestampTypes? typeSelected}) async {
     final newTypeChart = typeSelected ?? state.typeSelected;
     emit(CoinGraphLoading(typeSelected: newTypeChart));
 

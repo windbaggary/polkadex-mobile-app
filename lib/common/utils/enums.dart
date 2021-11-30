@@ -72,7 +72,7 @@ enum EnumOrderTypes {
   stop,
 }
 
-enum EnumAppChartDataTypes {
+enum EnumAppChartTimestampTypes {
   hour,
   week,
   day,

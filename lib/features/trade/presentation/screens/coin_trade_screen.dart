@@ -501,21 +501,21 @@ class _ThisGraphOptionWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(8, 10, 16, 14),
             child: Row(
               children: [
-                ...EnumAppChartDataTypes.values
+                ...EnumAppChartTimestampTypes.values
                     .map<Widget>((item) => Consumer<AppChartDummyProvider>(
                           builder: (context, appChartProvider, child) {
                             String text;
                             switch (item) {
-                              case EnumAppChartDataTypes.hour:
+                              case EnumAppChartTimestampTypes.hour:
                                 text = "1h";
                                 break;
-                              case EnumAppChartDataTypes.week:
+                              case EnumAppChartTimestampTypes.week:
                                 text = "7d";
                                 break;
-                              case EnumAppChartDataTypes.day:
+                              case EnumAppChartTimestampTypes.day:
                                 text = "1d";
                                 break;
-                              case EnumAppChartDataTypes.month:
+                              case EnumAppChartTimestampTypes.month:
                                 text = "1m";
                                 break;
                             }

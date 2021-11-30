@@ -5,25 +5,25 @@ import 'package:polkadex/common/utils/enums.dart';
 abstract class CoinGraphState extends Equatable {
   const CoinGraphState({required this.typeSelected});
 
-  final EnumAppChartDataTypes typeSelected;
+  final EnumAppChartTimestampTypes typeSelected;
 
   @override
   List<Object> get props => [typeSelected];
 }
 
 class CoinGraphInitial extends CoinGraphState {
-  CoinGraphInitial({required EnumAppChartDataTypes typeSelected})
+  CoinGraphInitial({required EnumAppChartTimestampTypes typeSelected})
       : super(typeSelected: typeSelected);
 }
 
 class CoinGraphLoading extends CoinGraphState {
-  CoinGraphLoading({required EnumAppChartDataTypes typeSelected})
+  CoinGraphLoading({required EnumAppChartTimestampTypes typeSelected})
       : super(typeSelected: typeSelected);
 }
 
 class CoinGraphError extends CoinGraphState {
   CoinGraphError({
-    required EnumAppChartDataTypes typeSelected,
+    required EnumAppChartTimestampTypes typeSelected,
     required this.errorMessage,
   }) : super(typeSelected: typeSelected);
 
@@ -32,7 +32,7 @@ class CoinGraphError extends CoinGraphState {
 
 class CoinGraphLoaded extends CoinGraphState {
   CoinGraphLoaded({
-    required EnumAppChartDataTypes typeSelected,
+    required EnumAppChartTimestampTypes typeSelected,
     required this.dataList,
   }) : super(typeSelected: typeSelected);
 
