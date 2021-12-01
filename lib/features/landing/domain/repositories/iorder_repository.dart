@@ -18,5 +18,6 @@ abstract class IOrderRepository {
     String baseAsset,
     String quoteAsset,
     String orderUuid,
+    String signature,
   );
 }

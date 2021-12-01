@@ -43,6 +43,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
       'meta': (meta as MetaModel).toJson(),
       'name': name,
       'biometricAccess': biometricAccess,
+      'signature': signature
     };
   }
 

@@ -16,26 +16,31 @@ class GraphRepository implements IGraphRepository {
   Future<Either<ApiError, Map<String, List<LineChartEntity>>>>
       getGraphData() async {
     final result = await _graphLocalDatasource.getCoinGraphData();
-    final Map<String, dynamic> body = jsonDecode(result.body);
 
-    if (result.statusCode == 200 && body.containsKey('Fine')) {
-      final dataLow = (body['Fine'] as List)
-          .map((dynamic json) => LineChartModel.fromJsonLow(json))
-          .toList();
-      final dataHigh = (body['Fine'] as List)
-          .map((dynamic json) => LineChartModel.fromJsonHigh(json))
-          .toList();
-      final dataAverage = (body['Fine'] as List)
-          .map((dynamic json) => LineChartModel.fromJsonAverage(json))
-          .toList();
+    try {
+      final Map<String, dynamic> body = jsonDecode(result.body);
 
-      return Right({
-        'low': dataLow,
-        'high': dataHigh,
-        'average': dataAverage,
-      });
-    } else {
-      return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      if (result.statusCode == 200 && body.containsKey('Fine')) {
+        final dataLow = (body['Fine'] as List)
+            .map((dynamic json) => LineChartModel.fromJsonLow(json))
+            .toList();
+        final dataHigh = (body['Fine'] as List)
+            .map((dynamic json) => LineChartModel.fromJsonHigh(json))
+            .toList();
+        final dataAverage = (body['Fine'] as List)
+            .map((dynamic json) => LineChartModel.fromJsonAverage(json))
+            .toList();
+
+        return Right({
+          'low': dataLow,
+          'high': dataHigh,
+          'average': dataAverage,
+        });
+      } else {
+        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      }
+    } catch (_) {
+      return Left(ApiError(message: result.reasonPhrase));
     }
   }
 }

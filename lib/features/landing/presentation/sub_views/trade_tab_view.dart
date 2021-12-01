@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
@@ -447,6 +448,9 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
         SizedBox(height: 8),
         BlocBuilder<ListOrdersCubit, ListOrdersState>(
           builder: (context, state) {
+            final accountState =
+                context.read<AccountCubit>().state as AccountLoaded;
+
             if (state is ListOrdersLoaded) {
               return Column(
                 children: state.openOrders
@@ -458,7 +462,8 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
                         onTapClose: () async {
                           final cancelSuccess = await context
                               .read<ListOrdersCubit>()
-                              .cancelOrder(order);
+                              .cancelOrder(
+                                  order, accountState.account.signature);
 
                           buildAppToast(
                               msg: cancelSuccess

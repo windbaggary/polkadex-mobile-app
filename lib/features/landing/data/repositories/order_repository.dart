@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:polkadex/common/network/error.dart';
@@ -57,18 +59,26 @@ class OrderRepository implements IOrderRepository {
     String baseAsset,
     String quoteAsset,
     String orderUuid,
+    String signature,
   ) async {
     final result = await _orderRemoteDatasource.cancelOrder(
       nonce,
       baseAsset,
       quoteAsset,
       orderUuid,
+      signature,
     );
 
-    if (result['success']) {
-      return Right(result['message']);
-    } else {
-      return Left(ApiError(message: result['message']));
+    try {
+      final Map<String, dynamic> body = jsonDecode(result.body);
+
+      if (result.statusCode == 200 && body.containsKey('Fine')) {
+        return Right(body['Fine']);
+      } else {
+        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      }
+    } catch (_) {
+      return Left(ApiError(message: result.reasonPhrase));
     }
   }
 }

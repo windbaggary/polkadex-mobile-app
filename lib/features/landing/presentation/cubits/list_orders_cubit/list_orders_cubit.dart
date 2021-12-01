@@ -50,7 +50,7 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
     }
   }
 
-  Future<bool> cancelOrder(OrderEntity order) async {
+  Future<bool> cancelOrder(OrderEntity order, String signature) async {
     final firstPreviousState = state;
 
     if (firstPreviousState is ListOrdersLoaded &&
@@ -68,6 +68,7 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
         baseAsset: order.amountCoin,
         quoteAsset: order.priceCoin,
         orderUuid: order.uuid,
+        signature: signature,
       );
 
       final secondPreviousState = state;
