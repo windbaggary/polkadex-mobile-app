@@ -10,6 +10,7 @@ class ImportedAccountEntity extends Equatable {
     required this.meta,
     required this.name,
     required this.biometricAccess,
+    required this.signature,
   });
 
   final String encoded;
@@ -18,6 +19,7 @@ class ImportedAccountEntity extends Equatable {
   final MetaEntity meta;
   final String name;
   final bool biometricAccess;
+  final String signature;
 
   @override
   List<Object?> get props => [
@@ -27,5 +29,6 @@ class ImportedAccountEntity extends Equatable {
         meta,
         name,
         biometricAccess,
+        signature,
       ];
 }
