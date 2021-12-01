@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
+import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
@@ -432,7 +433,12 @@ class _ThisGrpahCard extends StatelessWidget {
                                       [],
                                   options: app_charts.AppLineChartOptions
                                       .withDefaults(
-                                    chartScale: 0.12,
+                                    chartScale: _calculateGraphScale(
+                                        context,
+                                        state.dataList[
+                                                _fromEnumChartDataTypeToString(
+                                                    _dataTypeNotifier.value)] ??
+                                            []),
                                     areaGradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
@@ -493,6 +499,16 @@ class _ThisGrpahCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  double _calculateGraphScale(
+      BuildContext context, List<LineChartEntity> list) {
+    if (list.isEmpty) {
+      return 0.0;
+    }
+
+    return -MediaQuery.of(context).size.width /
+        (list.first.date.difference(list.last.date).inSeconds);
   }
 }
 
