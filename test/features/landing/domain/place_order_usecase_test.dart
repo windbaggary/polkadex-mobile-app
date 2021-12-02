@@ -21,6 +21,7 @@ void main() {
   late double quantity;
   late double price;
   late OrderEntity order;
+  late String signature;
 
   setUp(() {
     _repository = _OrderRepositoryMock();
@@ -32,6 +33,7 @@ void main() {
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
     price = 50.0;
+    signature = 'test';
     order = OrderModel(
       uuid: 'abcd',
       type: orderSide,
@@ -56,20 +58,20 @@ void main() {
       () async {
         // arrange
         when(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any())).thenAnswer(
+            any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
           (_) async => Right(order),
         );
         OrderEntity? orderResult;
         // act
         final result = await _usecase(
-          nonce: nonce,
-          baseAsset: baseAsset,
-          quoteAsset: quoteAsset,
-          orderType: orderType,
-          orderSide: orderSide,
-          price: price,
-          quantity: quantity,
-        );
+            nonce: nonce,
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset,
+            orderType: orderType,
+            orderSide: orderSide,
+            price: price,
+            quantity: quantity,
+            signature: signature);
         // assert
 
         result.fold(
@@ -79,7 +81,7 @@ void main() {
 
         expect(orderResult, order);
         verify(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any())).called(1);
+            any(), any(), any(), any(), any(), any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -89,7 +91,7 @@ void main() {
       () async {
         // arrange
         when(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any())).thenAnswer(
+            any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
           (_) async => Left(ApiError()),
         );
         // act
@@ -101,12 +103,13 @@ void main() {
           orderSide: orderSide,
           price: price,
           quantity: quantity,
+          signature: signature,
         );
         // assert
 
         expect(result.isLeft(), true);
         verify(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any())).called(1);
+            any(), any(), any(), any(), any(), any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

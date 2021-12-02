@@ -85,7 +85,7 @@ void main() {
         meta: tMeta,
         biometricAccess: false,
         name: 'test',
-        signature: '');
+        signature: 'test');
     tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];
 
     registerFallbackValue(tImportedAccount);

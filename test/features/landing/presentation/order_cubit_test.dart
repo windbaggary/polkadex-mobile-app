@@ -22,6 +22,7 @@ void main() {
   late double quantity;
   late double price;
   late OrderEntity order;
+  late String signature;
 
   setUp(() {
     _mockPlaceOrderUsecase = _MockPlaceOrderUsecase();
@@ -37,6 +38,7 @@ void main() {
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
     price = 50.0;
+    signature = 'test';
     order = OrderModel(
       uuid: 'abcd',
       type: orderSide,
@@ -74,6 +76,7 @@ void main() {
               orderSide: any(named: 'orderSide'),
               quantity: any(named: 'quantity'),
               baseAsset: any(named: 'baseAsset'),
+              signature: any(named: 'signature'),
             ),
           ).thenAnswer(
             (_) async => Right(order),
@@ -89,6 +92,7 @@ void main() {
             orderSide: orderSide,
             price: price,
             quantity: quantity,
+            signature: signature,
           );
         },
         expect: () => [
@@ -109,6 +113,7 @@ void main() {
               orderSide: any(named: 'orderSide'),
               quantity: any(named: 'quantity'),
               baseAsset: any(named: 'baseAsset'),
+              signature: any(named: 'signature'),
             ),
           ).thenAnswer(
             (_) async => Left(ApiError()),
@@ -117,14 +122,14 @@ void main() {
         },
         act: (cubit) async {
           await cubit.placeOrder(
-            nonce: nonce,
-            baseAsset: baseAsset,
-            quoteAsset: quoteAsset,
-            orderType: orderType,
-            orderSide: orderSide,
-            price: price,
-            quantity: quantity,
-          );
+              nonce: nonce,
+              baseAsset: baseAsset,
+              quoteAsset: quoteAsset,
+              orderType: orderType,
+              orderSide: orderSide,
+              price: price,
+              quantity: quantity,
+              signature: signature);
         },
         expect: () => [
           isA<PlaceOrderLoading>(),
