@@ -50,7 +50,6 @@ class OrderRepository implements IOrderRepository {
     );
 
     try {
-      print(result.statusCode);
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('FineWithMessage')) {
