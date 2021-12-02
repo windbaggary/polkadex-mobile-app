@@ -375,14 +375,14 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     FocusManager.instance.primaryFocus?.unfocus();
 
     final resultPlaceOrder = await placeOrderCubit.placeOrder(
-      nonce: 0,
-      baseAsset: leftAsset,
-      quoteAsset: rightAsset,
-      orderType: side,
-      orderSide: type,
-      quantity: double.parse(amount),
-      price: double.parse(price),
-    );
+        nonce: 0,
+        baseAsset: leftAsset,
+        quoteAsset: 'USD',
+        orderType: side,
+        orderSide: type,
+        quantity: double.parse(amount),
+        price: double.parse(price),
+        signature: context.read<ImportedAccountEntity>().signature);
 
     if (price.isEmpty) {
       price = amount;

@@ -12,6 +12,7 @@ abstract class IOrderRepository {
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String signature,
   );
   Future<Either<ApiError, String>> cancelOrder(
     int nonce,

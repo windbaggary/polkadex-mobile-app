@@ -37,4 +37,18 @@ class OrderModel extends OrderEntity {
       tokenPairName: map['tokenPairName'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'uuid': uuid,
+      'type': type,
+      'amount': amount,
+      'price': price,
+      'dateTime': dateTime,
+      'amountCoin': amountCoin,
+      'priceCoin': priceCoin,
+      'orderType': orderType,
+      'tokenPairName': tokenPairName,
+    };
+  }
 }

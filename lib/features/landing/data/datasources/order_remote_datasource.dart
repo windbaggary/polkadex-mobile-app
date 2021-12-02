@@ -1,14 +1,12 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
-import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 class OrderRemoteDatasource {
   final _baseUrl = 'http://148.251.1.248:7777';
 
-  Future<Map<String, dynamic>> placeOrder(
+  Future<Response> placeOrder(
     int nonce,
     String baseAsset,
     String quoteAsset,
@@ -16,16 +14,24 @@ class OrderRemoteDatasource {
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String signature,
   ) async {
-    final String _callPlaceOrder =
-        'polkadexWorkerMock.placeOrder(keyring.addFromUri(\'//Bob\'), keyring.addFromUri(\'//Alice\').address, "$nonce", "$baseAsset", "$quoteAsset", "${orderType.toString().toUpperCase().split('.')[1]}", "${orderSide.toString().toUpperCase().split('.')[1]}", "$price", "$quantity")';
-
-    final Map<String, dynamic> result =
-        await dependency<WebViewRunner>().evalJavascript(
-      _callPlaceOrder,
+    return await post(
+      Uri.parse('$_baseUrl/place_order'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'signature': {'Sr25519': signature},
+        'payload': {
+          'symbol': [baseAsset, quoteAsset],
+          'order_type': orderType.toString().split('.')[1].capitalize(),
+          'order_side': orderSide.toString().split('.')[1].capitalize(),
+          'price': price,
+          'amount': quantity,
+        },
+      }),
     );
-
-    return result;
   }
 
   Future<Response> cancelOrder(

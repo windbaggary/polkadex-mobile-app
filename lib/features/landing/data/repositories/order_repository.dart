@@ -24,6 +24,7 @@ class OrderRepository implements IOrderRepository {
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String signature,
   ) async {
     final result = await _orderRemoteDatasource.placeOrder(
       nonce,
@@ -33,23 +34,32 @@ class OrderRepository implements IOrderRepository {
       orderSide,
       price,
       quantity,
+      signature,
+    );
+    final newOrder = OrderModel(
+      //uuid will be a random string since we are working with mocks for now
+      uuid: UniqueKey().toString(),
+      type: orderSide,
+      amount: quantity.toString(),
+      price: price.toString(),
+      dateTime: DateTime.now(),
+      amountCoin: baseAsset,
+      priceCoin: quoteAsset,
+      orderType: orderType,
+      tokenPairName: '$baseAsset/$quoteAsset',
     );
 
-    if (result['success']) {
-      return Right(OrderModel(
-        //uuid will be a random string since we are working with mocks for now
-        uuid: UniqueKey().toString(),
-        type: orderSide,
-        amount: quantity.toString(),
-        price: price.toString(),
-        dateTime: DateTime.now(),
-        amountCoin: baseAsset,
-        priceCoin: quoteAsset,
-        orderType: orderType,
-        tokenPairName: '$baseAsset/$quoteAsset',
-      ));
-    } else {
-      return Left(ApiError(message: result['message']));
+    try {
+      print(result.statusCode);
+      final Map<String, dynamic> body = jsonDecode(result.body);
+
+      if (result.statusCode == 200 && body.containsKey('FineWithMessage')) {
+        return Right(newOrder);
+      } else {
+        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      }
+    } catch (_) {
+      return Left(ApiError(message: result.reasonPhrase));
     }
   }
 
