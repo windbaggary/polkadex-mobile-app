@@ -7,6 +7,7 @@ import 'package:polkadex/features/landing/domain/repositories/iorder_repository.
 import 'package:polkadex/features/landing/domain/usecases/cancel_order_usecase.dart';
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_open_orders.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
@@ -175,6 +176,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => ListOrdersCubit(
       cancelOrderUseCase: dependency(),
+      getOpenOrdersUseCase: dependency(),
     ),
   );
 
@@ -199,6 +201,12 @@ Future<void> init() async {
   dependency.registerFactory(
     () => CoinGraphCubit(
       getGraphDataUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => GetOpenOrdersUseCase(
+      orderRepository: dependency(),
     ),
   );
 }

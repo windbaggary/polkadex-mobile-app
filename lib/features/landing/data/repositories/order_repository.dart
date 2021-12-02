@@ -81,4 +81,31 @@ class OrderRepository implements IOrderRepository {
       return Left(ApiError(message: result.reasonPhrase));
     }
   }
+
+  @override
+  Future<Either<ApiError, List<OrderEntity>>> fetchOpenOrders(
+    String address,
+    String signature,
+  ) async {
+    final result = await _orderRemoteDatasource.fetchOpenOrders(
+      address,
+      signature,
+    );
+
+    try {
+      final Map<String, dynamic> body = jsonDecode(result.body);
+
+      if (result.statusCode == 200 && body.containsKey('Fine')) {
+        final orderList = (body['Fine'] as List)
+            .map((dynamic json) => OrderModel.fromJson(json))
+            .toList();
+
+        return Right(orderList);
+      } else {
+        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      }
+    } catch (_) {
+      return Left(ApiError(message: result.reasonPhrase));
+    }
+  }
 }

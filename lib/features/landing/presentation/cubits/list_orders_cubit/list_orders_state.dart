@@ -11,6 +11,8 @@ class ListOrdersInitial extends ListOrdersState {}
 
 class ListOrdersLoading extends ListOrdersState {}
 
+class ListOrdersError extends ListOrdersState {}
+
 class ListOrdersLoaded extends ListOrdersState {
   const ListOrdersLoaded({
     required this.openOrders,

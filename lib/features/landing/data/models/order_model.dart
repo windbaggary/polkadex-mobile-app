@@ -23,4 +23,18 @@ class OrderModel extends OrderEntity {
           orderType: orderType,
           tokenPairName: tokenPairName,
         );
+
+  factory OrderModel.fromJson(Map<String, dynamic> map) {
+    return OrderModel(
+      uuid: map['uuid'],
+      type: map['type'],
+      amount: map['amount'],
+      price: map['price'],
+      dateTime: map['dateTime'],
+      amountCoin: map['amountCoin'],
+      priceCoin: map['priceCoin'],
+      orderType: map['orderType'],
+      tokenPairName: map['tokenPairName'],
+    );
+  }
 }

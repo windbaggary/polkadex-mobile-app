@@ -4,19 +4,41 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/data/models/order_model.dart';
 import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/cancel_order_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_open_orders.dart';
 
 part 'list_orders_state.dart';
 
 class ListOrdersCubit extends Cubit<ListOrdersState> {
   ListOrdersCubit({
     required CancelOrderUseCase cancelOrderUseCase,
+    required GetOpenOrdersUseCase getOpenOrdersUseCase,
   })  : _cancelOrderUseCase = cancelOrderUseCase,
+        _getOpenOrdersUseCase = getOpenOrdersUseCase,
         super(ListOrdersInitial());
 
   final CancelOrderUseCase _cancelOrderUseCase;
+  final GetOpenOrdersUseCase _getOpenOrdersUseCase;
 
-  Future<void> getOpenOrders() async {
-    final List<OrderEntity> _openOrders = <OrderEntity>[
+  Future<void> getOpenOrders(String address, String signature) async {
+    final List<OrderEntity> _openOrders = [];
+    final List<String> _orderUuidsLoading = [];
+
+    emit(ListOrdersLoading());
+
+    final result = await _getOpenOrdersUseCase(
+      address: address,
+      signature: signature,
+    );
+
+    result.fold(
+      (_) {
+        emit(ListOrdersError());
+        return;
+      },
+      (orders) => _openOrders.addAll(orders),
+    );
+
+    _openOrders.add(
       OrderModel(
         uuid: 'b47d2527-5a0c-11ea-822c-1831bf9834b0',
         type: EnumBuySell.buy,
@@ -27,9 +49,8 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
         priceCoin: "BTC",
         orderType: EnumOrderTypes.limit,
         tokenPairName: "DOT/BTC",
-      )
-    ];
-    final List<String> _orderUuidsLoading = [];
+      ),
+    );
 
     emit(ListOrdersLoaded(
       openOrders: _openOrders,

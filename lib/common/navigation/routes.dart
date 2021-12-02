@@ -18,6 +18,7 @@ import 'package:polkadex/features/landing/presentation/screens/landing_screen.da
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/backup_mnemonic_screen.dart';
@@ -241,11 +242,14 @@ abstract class Routes {
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
-                opacity: CurvedAnimation(
-                  parent: animation,
-                  curve: Interval(0.500, 1.00),
-                ),
-                child: LandingScreen());
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Interval(0.500, 1.00),
+              ),
+              child: LandingScreen(
+                account: settings.arguments as ImportedAccountEntity,
+              ),
+            );
           },
         );
       case introScreen:

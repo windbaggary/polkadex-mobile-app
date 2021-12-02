@@ -46,4 +46,20 @@ class OrderRemoteDatasource {
       }),
     );
   }
+
+  Future<Response> fetchOpenOrders(
+    String address,
+    String signature,
+  ) async {
+    return await post(
+      Uri.parse('$_baseUrl/fetch_open_orders'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'signature': {'Sr25519': signature},
+        'payload': {'account': address},
+      }),
+    );
+  }
 }

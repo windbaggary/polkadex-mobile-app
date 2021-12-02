@@ -20,4 +20,8 @@ abstract class IOrderRepository {
     String orderUuid,
     String signature,
   );
+  Future<Either<ApiError, List<OrderEntity>>> fetchOpenOrders(
+    String address,
+    String signature,
+  );
 }

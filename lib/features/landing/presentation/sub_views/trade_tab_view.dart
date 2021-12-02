@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
@@ -12,6 +11,7 @@ import 'package:polkadex/features/landing/presentation/screens/market_token_sele
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/trade/presentation/order_book_item_model.dart';
 import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -297,16 +297,25 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                                 : tsS15W600CFF,
                           ),
                         ),
-                        if (state is ListOrdersLoaded)
+                        if (state is! ListOrdersError)
                           Container(
                             decoration: BoxDecoration(
                               color: colorE6007A,
                               shape: BoxShape.circle,
                             ),
-                            padding: const EdgeInsets.all(4),
+                            padding: EdgeInsets.all(
+                                state is ListOrdersLoading ? 2.5 : 4),
                             margin: const EdgeInsets.only(bottom: 4),
-                            child: Text('${state.openOrders.length}',
-                                style: tsS10W500CFF),
+                            child: state is ListOrdersLoaded
+                                ? Text('${state.openOrders.length}',
+                                    style: tsS10W500CFF)
+                                : SizedBox(
+                                    width: 6.0,
+                                    height: 6.0,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 1.5,
+                                    ),
+                                  ),
                           ),
                       ],
                     );
@@ -448,9 +457,6 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
         SizedBox(height: 8),
         BlocBuilder<ListOrdersCubit, ListOrdersState>(
           builder: (context, state) {
-            final accountState =
-                context.read<AccountCubit>().state as AccountLoaded;
-
             if (state is ListOrdersLoaded) {
               return Column(
                 children: state.openOrders
@@ -463,7 +469,9 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
                           final cancelSuccess = await context
                               .read<ListOrdersCubit>()
                               .cancelOrder(
-                                  order, accountState.account.signature);
+                                order,
+                                context.read<ImportedAccountEntity>().signature,
+                              );
 
                           buildAppToast(
                               msg: cancelSuccess
