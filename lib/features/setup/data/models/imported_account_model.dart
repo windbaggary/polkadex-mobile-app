@@ -12,6 +12,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
     required MetaEntity meta,
     required String name,
     required bool biometricAccess,
+    required String signature,
   }) : super(
           encoded: encoded,
           encoding: encoding,
@@ -19,6 +20,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
           meta: meta,
           name: name,
           biometricAccess: biometricAccess,
+          signature: signature,
         );
 
   factory ImportedAccountModel.fromJson(Map<String, dynamic> map) {
@@ -29,6 +31,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
       meta: MetaModel.fromJson(map['meta']),
       name: map['name'] ?? '',
       biometricAccess: map['biometricAccess'] ?? false,
+      signature: map['signature'] ?? '',
     );
   }
 
@@ -40,6 +43,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
       'meta': (meta as MetaModel).toJson(),
       'name': name,
       'biometricAccess': biometricAccess,
+      'signature': signature
     };
   }
 
@@ -50,14 +54,15 @@ class ImportedAccountModel extends ImportedAccountEntity {
     MetaEntity? meta,
     String? name,
     bool? biometricAccess,
+    String? signature,
   }) {
     return ImportedAccountModel(
-      encoded: encoded ?? this.encoded,
-      encoding: encoding ?? this.encoding,
-      address: address ?? this.address,
-      meta: meta ?? this.meta,
-      name: name ?? this.name,
-      biometricAccess: biometricAccess ?? this.biometricAccess,
-    );
+        encoded: encoded ?? this.encoded,
+        encoding: encoding ?? this.encoding,
+        address: address ?? this.address,
+        meta: meta ?? this.meta,
+        name: name ?? this.name,
+        biometricAccess: biometricAccess ?? this.biometricAccess,
+        signature: signature ?? this.signature);
   }
 }

@@ -97,7 +97,8 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                           .read<AccountCubit>()
                                           .authenticateBiometric();
                                       if (authenticated) {
-                                        Coordinator.goToLandingScreen();
+                                        Coordinator.goToLandingScreen(
+                                            state.account);
                                       }
                                     } else {
                                       Coordinator.goToConfirmPasswordScreen();

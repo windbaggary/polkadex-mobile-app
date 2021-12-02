@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:polkadex/common/navigation/routes.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
-import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
 
 abstract class Coordinator {
   static final _navigationKey = GlobalKey<NavigatorState>();
@@ -128,10 +129,11 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.appSettingsSecurityScreen);
   }
 
-  static void goToLandingScreen() {
+  static void goToLandingScreen(ImportedAccountEntity account) {
     _navigationKey.currentState?.pushNamedAndRemoveUntil(
       Routes.landingScreen,
       (route) => route.isFirst,
+      arguments: account,
     );
   }
 

@@ -155,9 +155,10 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                       final isCorrect = await context
                           .read<AccountCubit>()
                           .confirmPassword(_passwordController.text);
+                      final accountState = context.read<AccountCubit>().state;
 
-                      isCorrect
-                          ? Coordinator.goToLandingScreen()
+                      isCorrect && accountState is AccountLoaded
+                          ? Coordinator.goToLandingScreen(accountState.account)
                           : _onShowIncorrectPasswordModal(context);
                     },
                   ),

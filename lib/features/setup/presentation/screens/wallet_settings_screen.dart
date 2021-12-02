@@ -311,9 +311,10 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       name,
       useBiometric,
     );
+    final accountState = accountCubit.state;
 
-    accountCubit.state is AccountLoaded
-        ? Coordinator.goToLandingScreen()
+    accountState is AccountLoaded
+        ? Coordinator.goToLandingScreen(accountState.account)
         : _onShowRegisterErrorModal();
   }
 

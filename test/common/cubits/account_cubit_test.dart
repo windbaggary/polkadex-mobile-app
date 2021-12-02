@@ -79,13 +79,13 @@ void main() {
       type: ["none"],
     );
     tImportedAccount = ImportedAccountModel(
-      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-      encoding: tEncoding,
-      address: "k9o1dxJxQE8Zwm5Fy",
-      meta: tMeta,
-      biometricAccess: false,
-      name: 'test',
-    );
+        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+        encoding: tEncoding,
+        address: "k9o1dxJxQE8Zwm5Fy",
+        meta: tMeta,
+        biometricAccess: false,
+        name: 'test',
+        signature: 'test');
     tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];
 
     registerFallbackValue(tImportedAccount);
@@ -275,7 +275,7 @@ void main() {
               account: any(named: 'account'),
             ),
           ).thenAnswer(
-            (_) async => true,
+            (_) async => 'test',
           );
           when(
             () => _mockSaveAccountUseCase(

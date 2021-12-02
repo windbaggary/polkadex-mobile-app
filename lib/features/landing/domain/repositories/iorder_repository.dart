@@ -12,11 +12,17 @@ abstract class IOrderRepository {
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String signature,
   );
   Future<Either<ApiError, String>> cancelOrder(
     int nonce,
     String baseAsset,
     String quoteAsset,
     String orderUuid,
+    String signature,
+  );
+  Future<Either<ApiError, List<OrderEntity>>> fetchOpenOrders(
+    String address,
+    String signature,
   );
 }

@@ -17,7 +17,7 @@ class MnemonicRemoteDatasource {
   Future<Map<String, dynamic>> importAccount(
       String mnemonic, String password) async {
     final String _callImportAccount =
-        'polkadexWorker.importAccountFromMnemonic("$mnemonic", "ed25519", "$password")';
+        'polkadexWorker.importAccountFromMnemonic("$mnemonic", "sr25519", "$password")';
 
     final Map<String, dynamic> result =
         await dependency<WebViewRunner>().evalJavascript(_callImportAccount);

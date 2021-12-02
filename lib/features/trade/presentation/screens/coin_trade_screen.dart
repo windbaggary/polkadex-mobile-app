@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
+import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/features/trade/widgets/card_flip_widgett.dart';
-import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
+import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
+import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
+import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
+import 'package:polkadex/features/trade/presentation/widgets/coin_graph_shimmer_widget.dart';
+import 'package:polkadex/features/trade/presentation/widgets/graph_heading_widget.dart';
+import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:polkadex/common/widgets/chart/app_charts.dart' as app_charts;
+import 'package:polkadex/injection_container.dart';
 
 /// XD_PAGE: 24
 /// XD_PAGE: 25
@@ -66,92 +72,95 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
           create: (context) => AppChartDummyProvider(),
         ),
       ],
-      builder: (context, _) => Scaffold(
-        backgroundColor: color1C2023,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: color2E303C,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(40),
+      builder: (context, _) => BlocProvider<CoinGraphCubit>(
+        create: (_) => dependency<CoinGraphCubit>()..loadGraph(),
+        child: Scaffold(
+          backgroundColor: color1C2023,
+          body: SafeArea(
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: color2E303C,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(40),
+                          ),
                         ),
+                        child: _ThisAppBar(),
                       ),
-                      child: _ThisAppBar(),
-                    ),
-                    ListView(
-                      padding: const EdgeInsets.only(bottom: 88),
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: color2E303C,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(25),
-                              bottomRight: Radius.circular(25),
+                      ListView(
+                        padding: const EdgeInsets.only(bottom: 88),
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: color2E303C,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(25),
+                                bottomRight: Radius.circular(25),
+                              ),
+                            ),
+                            child: Consumer<_ThisOrderDisplayProvider>(
+                              builder: (context, orderDisplayProvider, _) =>
+                                  CardFlipAnimation(
+                                duration: AppConfigs.animDuration,
+                                firstChild:
+                                    // false
+                                    //     ? InkWell(
+                                    //         onTap: () {
+                                    //           orderDisplayProvider.enumCoinDisplay =
+                                    //               EnumCardFlipState.showSecond;
+                                    //         },
+                                    //         child: Container(
+                                    //           margin: const EdgeInsets.all(32),
+                                    //           key: ValueKey("one"),
+                                    //           height: 250,
+                                    //           color: colorE6007A,
+                                    //         ),
+                                    //       )
+                                    //     :
+                                    _ThisGrpahCard(),
+                                secondChild:
+                                    // false
+                                    // ? InkWell(
+                                    //     onTap: () {
+                                    //       orderDisplayProvider.enumCoinDisplay =
+                                    //           EnumCardFlipState.showFirst;
+                                    //     },
+                                    //     child: Container(
+                                    //       margin: const EdgeInsets.all(32),
+                                    //       key: ValueKey("two"),
+                                    //       height: 250,
+                                    //       color: color0CA564,
+                                    //     ),
+                                    //   )
+                                    // :
+                                    _ThisDetailCard(),
+                                cardState: orderDisplayProvider.enumCoinDisplay,
+                              ),
                             ),
                           ),
-                          child: Consumer<_ThisOrderDisplayProvider>(
-                            builder: (context, orderDisplayProvider, _) =>
-                                CardFlipAnimation(
-                              duration: AppConfigs.animDuration,
-                              firstChild:
-                                  // false
-                                  //     ? InkWell(
-                                  //         onTap: () {
-                                  //           orderDisplayProvider.enumCoinDisplay =
-                                  //               EnumCardFlipState.showSecond;
-                                  //         },
-                                  //         child: Container(
-                                  //           margin: const EdgeInsets.all(32),
-                                  //           key: ValueKey("one"),
-                                  //           height: 250,
-                                  //           color: colorE6007A,
-                                  //         ),
-                                  //       )
-                                  //     :
-                                  _ThisGrpahCard(),
-                              secondChild:
-                                  // false
-                                  // ? InkWell(
-                                  //     onTap: () {
-                                  //       orderDisplayProvider.enumCoinDisplay =
-                                  //           EnumCardFlipState.showFirst;
-                                  //     },
-                                  //     child: Container(
-                                  //       margin: const EdgeInsets.all(32),
-                                  //       key: ValueKey("two"),
-                                  //       height: 250,
-                                  //       color: color0CA564,
-                                  //     ),
-                                  //   )
-                                  // :
-                                  _ThisDetailCard(),
-                              cardState: orderDisplayProvider.enumCoinDisplay,
-                            ),
-                          ),
-                        ),
-                        OrderBookHeadingWidget(),
-                        OrderBookWidget(),
-                      ],
-                    ),
-                  ],
+                          OrderBookHeadingWidget(),
+                          OrderBookWidget(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: _ThisBottomNavigationBar(),
-              ),
-            ],
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: _ThisBottomNavigationBar(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -358,6 +367,9 @@ class _ThisDetailCard extends StatelessWidget {
 
 /// The card shows the graph on top section
 class _ThisGrpahCard extends StatelessWidget {
+  final ValueNotifier<EnumAppChartDataTypes> _dataTypeNotifier =
+      ValueNotifier<EnumAppChartDataTypes>(EnumAppChartDataTypes.average);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -384,9 +396,22 @@ class _ThisGrpahCard extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 25, right: 22),
                   child: _TopCoinWidget(),
                 ),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
-                    child: _GraphHeadingWidget()),
+                BlocBuilder<CoinGraphCubit, CoinGraphState>(
+                    builder: (context, state) {
+                  if (state is CoinGraphLoaded) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
+                      child: GraphHeadingWidget(
+                        open: 1243.0,
+                        high: 1500.0,
+                        low: 1600.0,
+                        close: 1700.0,
+                      ),
+                    );
+                  }
+
+                  return Container();
+                }),
                 Padding(
                   padding: const EdgeInsets.only(
                     top: 12.0,
@@ -395,26 +420,56 @@ class _ThisGrpahCard extends StatelessWidget {
                   child: SizedBox(
                     height: math.min(
                         250, MediaQuery.of(context).size.width * 0.450),
-                    child: Consumer<AppChartDummyProvider>(
-                      builder: (context, provider, _) =>
-                          app_charts.AppLineChartWidget(
-                        data: provider.list,
-                        options: app_charts.AppLineChartOptions.withDefaults(
-                          chartScale: provider.chartScale,
-                          areaGradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: <Color>[
-                              color8BA1BE.withOpacity(0.50),
-                              color8BA1BE.withOpacity(0.0710),
-                            ],
-                          ),
-                        ),
-                      ),
+                    child: BlocBuilder<CoinGraphCubit, CoinGraphState>(
+                      builder: (context, state) {
+                        if (state is CoinGraphLoaded) {
+                          return ValueListenableBuilder<EnumAppChartDataTypes>(
+                              valueListenable: _dataTypeNotifier,
+                              builder: (context, dataType, _) {
+                                return app_charts.AppLineChartWidget(
+                                  data: state.dataList[
+                                          _fromEnumChartDataTypeToString(
+                                              _dataTypeNotifier.value)] ??
+                                      [],
+                                  options: app_charts.AppLineChartOptions
+                                      .withDefaults(
+                                    chartScale: _calculateGraphScale(
+                                        context,
+                                        state.dataList[
+                                                _fromEnumChartDataTypeToString(
+                                                    _dataTypeNotifier.value)] ??
+                                            []),
+                                    areaGradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: <Color>[
+                                        color8BA1BE.withOpacity(0.50),
+                                        color8BA1BE.withOpacity(0.0710),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
+                        }
+
+                        if (state is CoinGraphError) {
+                          return Center(
+                            child: Text(
+                              state.errorMessage,
+                              textAlign: TextAlign.center,
+                              style: tsS16W500CFF,
+                            ),
+                          );
+                        }
+
+                        return CoinGraphShimmerWidget();
+                      },
                     ),
                   ),
                 ),
-                _ThisGraphOptionWidget(),
+                _ThisGraphOptionWidget(
+                  dataTypeNotifier: _dataTypeNotifier,
+                ),
               ],
             ),
           ),
@@ -445,203 +500,183 @@ class _ThisGrpahCard extends StatelessWidget {
       ),
     );
   }
-}
 
-class _GraphHeadingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _buildItemWidget(title: "O:", value: "1243.0"),
-        Spacer(),
-        _buildItemWidget(title: "H:", value: "1500.0"),
-        Spacer(),
-        _buildItemWidget(title: "L:", value: "1600.0"),
-        Spacer(),
-        _buildItemWidget(title: "C:", value: "1700.0"),
-      ],
-    );
+  double _calculateGraphScale(
+      BuildContext context, List<LineChartEntity> list) {
+    if (list.isEmpty) {
+      return 0.0;
+    }
+
+    return -MediaQuery.of(context).size.width /
+        (list.first.date.difference(list.last.date).inSeconds);
   }
-
-  Widget _buildItemWidget({String? title, String? value}) => Row(
-        children: [
-          Text(
-            "${title ?? ""} ",
-            style: tsS12W500CFF,
-          ),
-          Text(
-            value ?? "",
-            style: tsS12W500CFF.copyWith(
-              color: color0CA564,
-            ),
-          ),
-        ],
-      );
 }
 
 class _ThisGraphOptionWidget extends StatelessWidget {
+  _ThisGraphOptionWidget({required this.dataTypeNotifier});
+
+  final ValueNotifier<EnumAppChartDataTypes> dataTypeNotifier;
+
   @override
   Widget build(BuildContext context) {
     double containerWidth = 38;
-    double calendarPaddingRight = 16;
     if (MediaQuery.of(context).size.width <= 385) {
       containerWidth = 30;
-      calendarPaddingRight = 12;
     }
+    List<DropdownMenuItem<EnumAppChartDataTypes>>? _dropdownItems =
+        EnumAppChartDataTypes.values.map((e) => _dropdownItem(e)).toList();
+
     return Center(
       child: SizedBox(
         height: 36 + 10 + 14.0,
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 10, 16, 14),
-            child: Row(
-              children: [
-                ...EnumAppChartDataTypes.values
-                    .map<Widget>((item) => Consumer<AppChartDummyProvider>(
-                          builder: (context, appChartProvider, child) {
-                            String text;
-                            switch (item) {
-                              case EnumAppChartDataTypes.hour:
-                                text = "1h";
-                                break;
-                              case EnumAppChartDataTypes.week:
-                                text = "7d";
-                                break;
-                              case EnumAppChartDataTypes.day:
-                                text = "1d";
-                                break;
-                              case EnumAppChartDataTypes.month:
-                                text = "1m";
-                                break;
-                            }
-                            return InkWell(
-                              onTap: () {
-                                appChartProvider.chartDataType = item;
-                              },
-                              child: AnimatedContainer(
-                                duration: AppConfigs.animDurationSmall,
-                                width: containerWidth,
-                                height: containerWidth,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: item == appChartProvider.chartDataType
-                                      ? colorE6007A
-                                      : null,
-                                ),
-                                child: Text(
-                                  text,
-                                  style: tsS13W600CFF,
+        child: Row(
+          children: [
+            Flexible(
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    colors: [Colors.white, Colors.white.withOpacity(0.05)],
+                    stops: [0.9, 1],
+                    tileMode: TileMode.mirror,
+                  ).createShader(bounds);
+                },
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 10, 16, 14),
+                    child: Row(
+                      children: [
+                        ...EnumAppChartTimestampTypes.values
+                            .map<Widget>((item) =>
+                                Consumer<AppChartDummyProvider>(
+                                  builder: (context, appChartProvider, child) {
+                                    String text;
+                                    switch (item) {
+                                      case EnumAppChartTimestampTypes.oneMinute:
+                                        text = "1m";
+                                        break;
+                                      case EnumAppChartTimestampTypes
+                                          .fiveMinutes:
+                                        text = "5m";
+                                        break;
+                                      case EnumAppChartTimestampTypes
+                                          .thirtyMinutes:
+                                        text = "30m";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneHour:
+                                        text = "1h";
+                                        break;
+                                      case EnumAppChartTimestampTypes.fourHours:
+                                        text = "4h";
+                                        break;
+                                      case EnumAppChartTimestampTypes
+                                          .twelveHours:
+                                        text = "12h";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneDay:
+                                        text = "1D";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneWeek:
+                                        text = "1w";
+                                        break;
+                                      case EnumAppChartTimestampTypes.oneMonth:
+                                        text = "1M";
+                                        break;
+                                    }
+                                    return InkWell(
+                                      onTap: () {
+                                        appChartProvider.chartDataType = item;
+                                      },
+                                      child: AnimatedContainer(
+                                        duration: AppConfigs.animDurationSmall,
+                                        width: containerWidth,
+                                        height: containerWidth,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: item ==
+                                                  appChartProvider.chartDataType
+                                              ? colorE6007A
+                                              : null,
+                                        ),
+                                        child: Text(
+                                          text,
+                                          style: tsS13W600CFF,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ))
+                            .toList(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Container(
+                height: 36,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: color8BA1BE.withOpacity(0.2),
+                ),
+                padding: const EdgeInsets.only(left: 8),
+                child: Row(
+                  children: [
+                    SvgPicture.asset('trade-candle'.asAssetSvg()),
+                    SizedBox(width: 5),
+                    Container(
+                      width: 65,
+                      child: ButtonTheme(
+                        alignedDropdown: false,
+                        child: ValueListenableBuilder<EnumAppChartDataTypes>(
+                          valueListenable: dataTypeNotifier,
+                          builder: (context, dataType, _) {
+                            return DropdownButton<EnumAppChartDataTypes>(
+                              items: _dropdownItems,
+                              value: dataType,
+                              style: tsS13W400CFF,
+                              underline: Container(),
+                              onChanged: (val) => dataTypeNotifier.value =
+                                  val ?? EnumAppChartDataTypes.average,
+                              iconEnabledColor: Colors.white,
+                              icon: Padding(
+                                padding: const EdgeInsets.only(left: 2.0),
+                                child: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: colorFFFFFF,
+                                  size: 16,
                                 ),
                               ),
                             );
                           },
-                        ))
-                    .toList(),
-                SizedBox(width: 8),
-                InkWell(
-                  onTap: () => _onDateTapped(context),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('calendar'.asAssetSvg())),
-                ),
-                SizedBox(width: calendarPaddingRight),
-                // Spacer(),
-                Container(
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
-                  ),
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset('trade-candle'.asAssetSvg()),
-                      SizedBox(width: 5),
-                      Container(
-                        width: 65,
-                        child: ButtonTheme(
-                          alignedDropdown: false,
-                          child: DropdownButton<String>(
-                            items: ['Trading', 'Trade 1', 'Trade 3']
-                                .map((e) => DropdownMenuItem<String>(
-                                      child: Text(
-                                        e,
-                                        style: tsS13W400CFF,
-                                        textAlign: TextAlign.start,
-                                      ),
-                                      value: e,
-                                    ))
-                                .toList(),
-                            value: 'Trading',
-                            style: tsS13W400CFF,
-                            underline: Container(),
-                            onChanged: (val) {},
-                            iconEnabledColor: Colors.white,
-                            icon: Padding(
-                              padding: const EdgeInsets.only(left: 2.0),
-                              child: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: colorFFFFFF,
-                                size: 16,
-                              ),
-                            ),
-                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8),
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
-                  ),
-                  padding: const EdgeInsets.all(9),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('setting'.asAssetSvg())),
-                ),
-                SizedBox(width: 8),
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: color8BA1BE.withOpacity(0.2),
-                  ),
-                  padding: const EdgeInsets.all(11),
-                  child: SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: SvgPicture.asset('expand-screen'.asAssetSvg())),
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  void _onDateTapped(BuildContext context) async {
-    final provider = context.read<AppChartDummyProvider>();
-    await CustomDateRangePicker.call(
-            filterStartDate: provider.filterStartDate,
-            filterEndDate: provider.filterEndDate,
-            context: context)
-        .then((dates) {
-      if (dates != null) {
-        provider.setFilterDates(dates.start, dates.end);
-      }
-    });
+  DropdownMenuItem<EnumAppChartDataTypes> _dropdownItem(
+      EnumAppChartDataTypes dataType) {
+    return DropdownMenuItem<EnumAppChartDataTypes>(
+      child: Text(
+        _fromEnumChartDataTypeToString(dataType).capitalize(),
+        style: tsS13W400CFF,
+        textAlign: TextAlign.start,
+      ),
+      value: dataType,
+    );
   }
 }
 
@@ -1051,6 +1086,10 @@ class _ThisOrderDisplayProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+}
+
+String _fromEnumChartDataTypeToString(EnumAppChartDataTypes dataType) {
+  return dataType.toString().split('.')[1];
 }
 
 typedef OnEnumCoinDisplayListener = void Function(EnumCardFlipState state);

@@ -8,7 +8,7 @@ class RegisterUserUseCase {
 
   final IAccountRepository _accountRepository;
 
-  Future<bool> call({required ImportedAccountEntity account}) async {
+  Future<String?> call({required ImportedAccountEntity account}) async {
     return await _accountRepository.register(account);
   }
 }

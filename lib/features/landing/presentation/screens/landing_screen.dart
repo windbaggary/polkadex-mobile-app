@@ -20,11 +20,16 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34
 class LandingScreen extends StatefulWidget {
+  const LandingScreen({required this.account});
+
+  final ImportedAccountEntity account;
+
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
@@ -106,6 +111,9 @@ class _LandingScreenState extends State<LandingScreen>
               create: (context) => NotificationDrawerProvider()),
           ChangeNotifierProvider<HomeScrollNotifProvider>(
               create: (_) => HomeScrollNotifProvider()),
+          Provider(
+            create: (_) => widget.account,
+          ),
         ],
         builder: (context, child) => _ThisInheritedWidget(
           onOpenDrawer: _onOpenDrawer,
@@ -397,7 +405,11 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
               create: (_) => dependency<PlaceOrderCubit>(),
             ),
             BlocProvider<ListOrdersCubit>(
-              create: (_) => dependency<ListOrdersCubit>()..getOpenOrders(),
+              create: (_) => dependency<ListOrdersCubit>()
+                ..getOpenOrders(
+                  context.read<ImportedAccountEntity>().address,
+                  context.read<ImportedAccountEntity>().signature,
+                ),
             ),
           ],
           child: Column(

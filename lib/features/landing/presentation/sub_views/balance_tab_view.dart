@@ -60,13 +60,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   SizedBox(height: 24),
                   _ThisTopBalanceWidget(),
                   SizedBox(height: 36),
-                  InkWell(
-                      onTap: () {
-                        context
-                            .read<_ThisIsChartVisibleProvider>()
-                            .toggleVisible();
-                      },
-                      child: _ThisHoldingWidget()),
+                  _ThisHoldingWidget(),
                   Consumer<_ThisIsChartVisibleProvider>(
                     builder: (context, isChartVisbileProvider, _) =>
                         AnimatedSize(

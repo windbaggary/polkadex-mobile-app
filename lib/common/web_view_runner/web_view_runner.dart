@@ -41,7 +41,11 @@ class WebViewRunner {
           print('HeadlessInAppWebView created!');
         },
         onConsoleMessage: (controller, message) async {
-          print("CONSOLE MESSAGE: " + message.message);
+          // prints hidden browser messages only if the app is in debug mode
+          if (!kReleaseMode) {
+            print("CONSOLE MESSAGE: " + message.message);
+          }
+
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
 
           String? path;

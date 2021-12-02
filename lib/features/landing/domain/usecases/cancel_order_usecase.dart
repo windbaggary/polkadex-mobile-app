@@ -13,8 +13,9 @@ class CancelOrderUseCase {
       {required int nonce,
       required String baseAsset,
       required String quoteAsset,
-      required String orderUuid}) async {
+      required String orderUuid,
+      required String signature}) async {
     return await _orderRepository.cancelOrder(
-        nonce, baseAsset, quoteAsset, orderUuid);
+        nonce, baseAsset, quoteAsset, orderUuid, signature);
   }
 }

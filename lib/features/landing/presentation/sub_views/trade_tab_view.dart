@@ -11,8 +11,9 @@ import 'package:polkadex/features/landing/presentation/screens/market_token_sele
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
-import 'package:polkadex/features/trade/order_book_item_model.dart';
-import 'package:polkadex/features/trade/widgets/order_book_widget.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/trade/presentation/order_book_item_model.dart';
+import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -296,16 +297,25 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                                 : tsS15W600CFF,
                           ),
                         ),
-                        if (state is ListOrdersLoaded)
+                        if (state is! ListOrdersError)
                           Container(
                             decoration: BoxDecoration(
                               color: colorE6007A,
                               shape: BoxShape.circle,
                             ),
-                            padding: const EdgeInsets.all(4),
+                            padding: EdgeInsets.all(
+                                state is ListOrdersLoading ? 2.5 : 4),
                             margin: const EdgeInsets.only(bottom: 4),
-                            child: Text('${state.openOrders.length}',
-                                style: tsS10W500CFF),
+                            child: state is ListOrdersLoaded
+                                ? Text('${state.openOrders.length}',
+                                    style: tsS10W500CFF)
+                                : SizedBox(
+                                    width: 6.0,
+                                    height: 6.0,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 1.5,
+                                    ),
+                                  ),
                           ),
                       ],
                     );
@@ -365,14 +375,14 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     FocusManager.instance.primaryFocus?.unfocus();
 
     final resultPlaceOrder = await placeOrderCubit.placeOrder(
-      nonce: 0,
-      baseAsset: leftAsset,
-      quoteAsset: rightAsset,
-      orderType: side,
-      orderSide: type,
-      quantity: double.parse(amount),
-      price: double.parse(price),
-    );
+        nonce: 0,
+        baseAsset: leftAsset,
+        quoteAsset: 'USD',
+        orderType: side,
+        orderSide: type,
+        quantity: double.parse(amount),
+        price: double.parse(price),
+        signature: context.read<ImportedAccountEntity>().signature);
 
     if (price.isEmpty) {
       price = amount;
@@ -458,7 +468,10 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
                         onTapClose: () async {
                           final cancelSuccess = await context
                               .read<ListOrdersCubit>()
-                              .cancelOrder(order);
+                              .cancelOrder(
+                                order,
+                                context.read<ImportedAccountEntity>().signature,
+                              );
 
                           buildAppToast(
                               msg: cancelSuccess
