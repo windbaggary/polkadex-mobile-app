@@ -314,6 +314,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                                     height: 6.0,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 1.5,
+                                      color: Colors.white,
                                     ),
                                   ),
                           ),
