@@ -64,6 +64,23 @@ class CoinGraphLoaded extends CoinGraphState {
     );
   }
 
+  double? get selectedOpen =>
+      indexPointSelected != null && dataList['open'] != null
+          ? dataList['open']![indexPointSelected!].pointY
+          : null;
+  double? get selectedLow =>
+      indexPointSelected != null && dataList['low'] != null
+          ? dataList['low']![indexPointSelected!].pointY
+          : null;
+  double? get selectedHigh =>
+      indexPointSelected != null && dataList['high'] != null
+          ? dataList['high']![indexPointSelected!].pointY
+          : null;
+  double? get selectedClose =>
+      indexPointSelected != null && dataList['close'] != null
+          ? dataList['close']![indexPointSelected!].pointY
+          : null;
+
   @override
   List<Object?> get props => [
         timestampSelected,

@@ -403,10 +403,10 @@ class _ThisGrpahCard extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
                       child: GraphHeadingWidget(
-                        open: 1243.0,
-                        high: 1500.0,
-                        low: 1600.0,
-                        close: 1700.0,
+                        open: state.selectedOpen,
+                        high: state.selectedHigh,
+                        low: state.selectedLow,
+                        close: state.selectedClose,
                       ),
                     );
                   }
