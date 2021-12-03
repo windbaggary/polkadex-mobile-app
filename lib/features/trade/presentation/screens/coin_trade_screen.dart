@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
+import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
@@ -567,7 +568,8 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                               : null,
                                         ),
                                         child: Text(
-                                          _timestampTypeToString(item),
+                                          TimestampUtils.timestampTypeToString(
+                                              item),
                                           style: tsS13W600CFF,
                                         ),
                                       ),
@@ -642,29 +644,6 @@ class _ThisGraphOptionWidget extends StatelessWidget {
       ),
       value: dataType,
     );
-  }
-
-  String _timestampTypeToString(EnumAppChartTimestampTypes timestampType) {
-    switch (timestampType) {
-      case EnumAppChartTimestampTypes.oneMinute:
-        return "1m";
-      case EnumAppChartTimestampTypes.fiveMinutes:
-        return "5m";
-      case EnumAppChartTimestampTypes.thirtyMinutes:
-        return "30m";
-      case EnumAppChartTimestampTypes.oneHour:
-        return "1h";
-      case EnumAppChartTimestampTypes.fourHours:
-        return "4h";
-      case EnumAppChartTimestampTypes.twelveHours:
-        return "12h";
-      case EnumAppChartTimestampTypes.oneDay:
-        return "1D";
-      case EnumAppChartTimestampTypes.oneWeek:
-        return "1w";
-      case EnumAppChartTimestampTypes.oneMonth:
-        return "1M";
-    }
   }
 }
 

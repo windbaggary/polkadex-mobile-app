@@ -17,7 +17,7 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
     final newTimestampChart = timestampSelected ?? state.timestampSelected;
     emit(CoinGraphLoading(timestampSelected: newTimestampChart));
 
-    final result = await _getGraphDataUseCase();
+    final result = await _getGraphDataUseCase(newTimestampChart);
 
     result.fold(
       (error) => emit(CoinGraphError(
