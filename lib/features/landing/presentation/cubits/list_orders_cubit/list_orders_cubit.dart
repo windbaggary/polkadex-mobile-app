@@ -31,31 +31,28 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
     );
 
     result.fold(
-      (_) {
-        emit(ListOrdersError());
-        return;
+      (_) => emit(ListOrdersError()),
+      (orders) {
+        _openOrders.addAll(orders);
+        _openOrders.add(
+          OrderModel(
+            uuid: 'b47d2527-5a0c-11ea-822c-1831bf9834b0',
+            type: EnumBuySell.buy,
+            amount: '0.2900',
+            price: '0.4423',
+            dateTime: DateTime.now(),
+            amountCoin: "DOT",
+            priceCoin: "BTC",
+            orderType: EnumOrderTypes.limit,
+            tokenPairName: "DOT/BTC",
+          ),
+        );
+        emit(ListOrdersLoaded(
+          openOrders: _openOrders,
+          orderUuidsLoading: _orderUuidsLoading,
+        ));
       },
-      (orders) => _openOrders.addAll(orders),
     );
-
-    _openOrders.add(
-      OrderModel(
-        uuid: 'b47d2527-5a0c-11ea-822c-1831bf9834b0',
-        type: EnumBuySell.buy,
-        amount: '0.2900',
-        price: '0.4423',
-        dateTime: DateTime.now(),
-        amountCoin: "DOT",
-        priceCoin: "BTC",
-        orderType: EnumOrderTypes.limit,
-        tokenPairName: "DOT/BTC",
-      ),
-    );
-
-    emit(ListOrdersLoaded(
-      openOrders: _openOrders,
-      orderUuidsLoading: _orderUuidsLoading,
-    ));
   }
 
   Future<void> addToOpenOrders(OrderEntity newOrder) async {
