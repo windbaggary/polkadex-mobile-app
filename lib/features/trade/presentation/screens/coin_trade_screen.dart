@@ -545,49 +545,15 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8, 10, 16, 14),
-                    child: Row(
-                      children: [
-                        ...EnumAppChartTimestampTypes.values
-                            .map<Widget>((item) =>
-                                Consumer<AppChartDummyProvider>(
-                                  builder: (context, appChartProvider, child) {
-                                    String text;
-                                    switch (item) {
-                                      case EnumAppChartTimestampTypes.oneMinute:
-                                        text = "1m";
-                                        break;
-                                      case EnumAppChartTimestampTypes
-                                          .fiveMinutes:
-                                        text = "5m";
-                                        break;
-                                      case EnumAppChartTimestampTypes
-                                          .thirtyMinutes:
-                                        text = "30m";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneHour:
-                                        text = "1h";
-                                        break;
-                                      case EnumAppChartTimestampTypes.fourHours:
-                                        text = "4h";
-                                        break;
-                                      case EnumAppChartTimestampTypes
-                                          .twelveHours:
-                                        text = "12h";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneDay:
-                                        text = "1D";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneWeek:
-                                        text = "1w";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneMonth:
-                                        text = "1M";
-                                        break;
-                                    }
-                                    return InkWell(
-                                      onTap: () {
-                                        appChartProvider.chartDataType = item;
-                                      },
+                    child: BlocBuilder<CoinGraphCubit, CoinGraphState>(
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            ...EnumAppChartTimestampTypes.values
+                                .map<Widget>((item) => InkWell(
+                                      onTap: () => context
+                                          .read<CoinGraphCubit>()
+                                          .loadGraph(timestampSelected: item),
                                       child: AnimatedContainer(
                                         duration: AppConfigs.animDurationSmall,
                                         width: containerWidth,
@@ -596,21 +562,20 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: item ==
-                                                  appChartProvider.chartDataType
+                                          color: state.timestampSelected == item
                                               ? colorE6007A
                                               : null,
                                         ),
                                         child: Text(
-                                          text,
+                                          _timestampTypeToString(item),
                                           style: tsS13W600CFF,
                                         ),
                                       ),
-                                    );
-                                  },
-                                ))
-                            .toList(),
-                      ],
+                                    ))
+                                .toList(),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -677,6 +642,29 @@ class _ThisGraphOptionWidget extends StatelessWidget {
       ),
       value: dataType,
     );
+  }
+
+  String _timestampTypeToString(EnumAppChartTimestampTypes timestampType) {
+    switch (timestampType) {
+      case EnumAppChartTimestampTypes.oneMinute:
+        return "1m";
+      case EnumAppChartTimestampTypes.fiveMinutes:
+        return "5m";
+      case EnumAppChartTimestampTypes.thirtyMinutes:
+        return "30m";
+      case EnumAppChartTimestampTypes.oneHour:
+        return "1h";
+      case EnumAppChartTimestampTypes.fourHours:
+        return "4h";
+      case EnumAppChartTimestampTypes.twelveHours:
+        return "12h";
+      case EnumAppChartTimestampTypes.oneDay:
+        return "1D";
+      case EnumAppChartTimestampTypes.oneWeek:
+        return "1w";
+      case EnumAppChartTimestampTypes.oneMonth:
+        return "1M";
+    }
   }
 }
 
