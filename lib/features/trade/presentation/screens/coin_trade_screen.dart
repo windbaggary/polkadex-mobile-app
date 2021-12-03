@@ -427,6 +427,9 @@ class _ThisGrpahCard extends StatelessWidget {
                           return ValueListenableBuilder<EnumAppChartDataTypes>(
                               valueListenable: _dataTypeNotifier,
                               builder: (context, dataType, _) {
+                                final graphColor =
+                                    _getGraphColorTheme(dataType);
+
                                 return app_charts.AppLineChartWidget(
                                   data: state.dataList[
                                           _fromEnumChartDataTypeToString(
@@ -440,12 +443,13 @@ class _ThisGrpahCard extends StatelessWidget {
                                                 _fromEnumChartDataTypeToString(
                                                     _dataTypeNotifier.value)] ??
                                             []),
+                                    lineColor: graphColor,
                                     areaGradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: <Color>[
-                                        color8BA1BE.withOpacity(0.50),
-                                        color8BA1BE.withOpacity(0.0710),
+                                        graphColor.withOpacity(0.50),
+                                        graphColor.withOpacity(0.0710),
                                       ],
                                     ),
                                   ),
@@ -500,6 +504,17 @@ class _ThisGrpahCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color _getGraphColorTheme(EnumAppChartDataTypes dataType) {
+    switch (dataType) {
+      case EnumAppChartDataTypes.low:
+        return colorE6007A;
+      case EnumAppChartDataTypes.high:
+        return color0CA564;
+      default:
+        return color8BA1BE;
+    }
   }
 
   double _calculateGraphScale(
