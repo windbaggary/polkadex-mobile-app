@@ -10,7 +10,7 @@ abstract class CoinGraphState extends Equatable {
   final EnumAppChartTimestampTypes timestampSelected;
 
   @override
-  List<Object> get props => [timestampSelected];
+  List<Object?> get props => [timestampSelected];
 }
 
 class CoinGraphInitial extends CoinGraphState {
@@ -44,15 +44,47 @@ class CoinGraphLoaded extends CoinGraphState {
   CoinGraphLoaded({
     required EnumAppChartTimestampTypes timestampSelected,
     required this.dataList,
+    required this.indexPointSelected,
   }) : super(
           timestampSelected: timestampSelected,
         );
 
   final Map<String, List<LineChartEntity>> dataList;
+  final int? indexPointSelected;
+
+  CoinGraphLoaded copyWith({
+    EnumAppChartTimestampTypes? timestampSelected,
+    Map<String, List<LineChartEntity>>? dataList,
+    int? indexPointSelected,
+  }) {
+    return CoinGraphLoaded(
+      timestampSelected: timestampSelected ?? this.timestampSelected,
+      dataList: dataList ?? this.dataList,
+      indexPointSelected: indexPointSelected ?? this.indexPointSelected,
+    );
+  }
+
+  double? get selectedOpen =>
+      indexPointSelected != null && dataList['open'] != null
+          ? dataList['open']![indexPointSelected!].pointY
+          : null;
+  double? get selectedLow =>
+      indexPointSelected != null && dataList['low'] != null
+          ? dataList['low']![indexPointSelected!].pointY
+          : null;
+  double? get selectedHigh =>
+      indexPointSelected != null && dataList['high'] != null
+          ? dataList['high']![indexPointSelected!].pointY
+          : null;
+  double? get selectedClose =>
+      indexPointSelected != null && dataList['close'] != null
+          ? dataList['close']![indexPointSelected!].pointY
+          : null;
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         timestampSelected,
         dataList,
+        indexPointSelected,
       ];
 }

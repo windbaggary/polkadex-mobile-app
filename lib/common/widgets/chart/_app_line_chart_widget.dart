@@ -14,11 +14,14 @@ export '_chart_options.dart';
 /// The widget accept data of type [List<LineChartModel>]
 /// Use [AppLineChartOptions] to customise the chart colors and all
 class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartEntity> {
-  final AppLineChartOptions options;
+  AppLineChartWidget({
+    required List<LineChartEntity> data,
+    required this.options,
+    this.onPointSelected,
+  }) : super(parentData: data);
 
-  AppLineChartWidget(
-      {required List<LineChartEntity> data, required this.options})
-      : super(parentData: data);
+  final AppLineChartOptions options;
+  final Function(int?)? onPointSelected;
 
   List<LineChartEntity> get data => super.parentData;
 
@@ -52,6 +55,10 @@ class AppLineChartWidget extends BaseAppChartCustomWidget<LineChartEntity> {
       if (touchPoint != null) {
         if ((pathX - touchPoint.dx).abs() < 10.0) {
           selectedModelIndex = i;
+
+          if (onPointSelected != null) {
+            onPointSelected!(selectedModelIndex);
+          }
         }
       }
 

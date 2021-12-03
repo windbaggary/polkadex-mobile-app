@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
+import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
@@ -402,10 +403,10 @@ class _ThisGrpahCard extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
                       child: GraphHeadingWidget(
-                        open: 1243.0,
-                        high: 1500.0,
-                        low: 1600.0,
-                        close: 1700.0,
+                        open: state.selectedOpen,
+                        high: state.selectedHigh,
+                        low: state.selectedLow,
+                        close: state.selectedClose,
                       ),
                     );
                   }
@@ -426,6 +427,9 @@ class _ThisGrpahCard extends StatelessWidget {
                           return ValueListenableBuilder<EnumAppChartDataTypes>(
                               valueListenable: _dataTypeNotifier,
                               builder: (context, dataType, _) {
+                                final graphColor =
+                                    _getGraphColorTheme(dataType);
+
                                 return app_charts.AppLineChartWidget(
                                   data: state.dataList[
                                           _fromEnumChartDataTypeToString(
@@ -439,15 +443,20 @@ class _ThisGrpahCard extends StatelessWidget {
                                                 _fromEnumChartDataTypeToString(
                                                     _dataTypeNotifier.value)] ??
                                             []),
+                                    lineColor: graphColor,
                                     areaGradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: <Color>[
-                                        color8BA1BE.withOpacity(0.50),
-                                        color8BA1BE.withOpacity(0.0710),
+                                        graphColor.withOpacity(0.50),
+                                        graphColor.withOpacity(0.0710),
                                       ],
                                     ),
                                   ),
+                                  onPointSelected: (indexPoint) => context
+                                      .read<CoinGraphCubit>()
+                                      .updatePointValues(
+                                          indexPointSelected: indexPoint),
                                 );
                               });
                         }
@@ -501,6 +510,17 @@ class _ThisGrpahCard extends StatelessWidget {
     );
   }
 
+  Color _getGraphColorTheme(EnumAppChartDataTypes dataType) {
+    switch (dataType) {
+      case EnumAppChartDataTypes.low:
+        return colorE6007A;
+      case EnumAppChartDataTypes.high:
+        return color0CA564;
+      default:
+        return color8BA1BE;
+    }
+  }
+
   double _calculateGraphScale(
       BuildContext context, List<LineChartEntity> list) {
     if (list.isEmpty) {
@@ -545,49 +565,15 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8, 10, 16, 14),
-                    child: Row(
-                      children: [
-                        ...EnumAppChartTimestampTypes.values
-                            .map<Widget>((item) =>
-                                Consumer<AppChartDummyProvider>(
-                                  builder: (context, appChartProvider, child) {
-                                    String text;
-                                    switch (item) {
-                                      case EnumAppChartTimestampTypes.oneMinute:
-                                        text = "1m";
-                                        break;
-                                      case EnumAppChartTimestampTypes
-                                          .fiveMinutes:
-                                        text = "5m";
-                                        break;
-                                      case EnumAppChartTimestampTypes
-                                          .thirtyMinutes:
-                                        text = "30m";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneHour:
-                                        text = "1h";
-                                        break;
-                                      case EnumAppChartTimestampTypes.fourHours:
-                                        text = "4h";
-                                        break;
-                                      case EnumAppChartTimestampTypes
-                                          .twelveHours:
-                                        text = "12h";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneDay:
-                                        text = "1D";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneWeek:
-                                        text = "1w";
-                                        break;
-                                      case EnumAppChartTimestampTypes.oneMonth:
-                                        text = "1M";
-                                        break;
-                                    }
-                                    return InkWell(
-                                      onTap: () {
-                                        appChartProvider.chartDataType = item;
-                                      },
+                    child: BlocBuilder<CoinGraphCubit, CoinGraphState>(
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            ...EnumAppChartTimestampTypes.values
+                                .map<Widget>((item) => InkWell(
+                                      onTap: () => context
+                                          .read<CoinGraphCubit>()
+                                          .loadGraph(timestampSelected: item),
                                       child: AnimatedContainer(
                                         duration: AppConfigs.animDurationSmall,
                                         width: containerWidth,
@@ -596,21 +582,21 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: item ==
-                                                  appChartProvider.chartDataType
+                                          color: state.timestampSelected == item
                                               ? colorE6007A
                                               : null,
                                         ),
                                         child: Text(
-                                          text,
+                                          TimestampUtils.timestampTypeToString(
+                                              item),
                                           style: tsS13W600CFF,
                                         ),
                                       ),
-                                    );
-                                  },
-                                ))
-                            .toList(),
-                      ],
+                                    ))
+                                .toList(),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),

@@ -9,6 +9,13 @@ class LineChartModel extends LineChartEntity {
           pointY: pointY,
         );
 
+  factory LineChartModel.fromJsonOpen(Map<String, dynamic> map) {
+    return LineChartModel(
+      date: DateTime.parse(map['_time']),
+      pointY: map['open'],
+    );
+  }
+
   factory LineChartModel.fromJsonLow(Map<String, dynamic> map) {
     return LineChartModel(
       date: DateTime.parse(map['_time']),
@@ -20,6 +27,13 @@ class LineChartModel extends LineChartEntity {
     return LineChartModel(
       date: DateTime.parse(map['_time']),
       pointY: map['high'],
+    );
+  }
+
+  factory LineChartModel.fromJsonClose(Map<String, dynamic> map) {
+    return LineChartModel(
+      date: DateTime.parse(map['_time']),
+      pointY: map['close'],
     );
   }
 
