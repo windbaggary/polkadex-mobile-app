@@ -15,9 +15,8 @@ class GraphRepository implements IGraphRepository {
   @override
   Future<Either<ApiError, Map<String, List<LineChartEntity>>>>
       getGraphData() async {
-    final result = await _graphLocalDatasource.getCoinGraphData();
-
     try {
+      final result = await _graphLocalDatasource.getCoinGraphData();
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('Fine')) {
@@ -40,7 +39,7 @@ class GraphRepository implements IGraphRepository {
         return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
       }
     } catch (_) {
-      return Left(ApiError(message: result.reasonPhrase));
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
 }

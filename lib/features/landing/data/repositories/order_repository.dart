@@ -26,30 +26,29 @@ class OrderRepository implements IOrderRepository {
     double quantity,
     String signature,
   ) async {
-    final result = await _orderRemoteDatasource.placeOrder(
-      nonce,
-      baseAsset,
-      quoteAsset,
-      orderType,
-      orderSide,
-      price,
-      quantity,
-      signature,
-    );
-    final newOrder = OrderModel(
-      //uuid will be a random string since we are working with mocks for now
-      uuid: UniqueKey().toString(),
-      type: orderSide,
-      amount: quantity.toString(),
-      price: price.toString(),
-      dateTime: DateTime.now(),
-      amountCoin: baseAsset,
-      priceCoin: quoteAsset,
-      orderType: orderType,
-      tokenPairName: '$baseAsset/$quoteAsset',
-    );
-
     try {
+      final result = await _orderRemoteDatasource.placeOrder(
+        nonce,
+        baseAsset,
+        quoteAsset,
+        orderType,
+        orderSide,
+        price,
+        quantity,
+        signature,
+      );
+      final newOrder = OrderModel(
+        //uuid will be a random string since we are working with mocks for now
+        uuid: UniqueKey().toString(),
+        type: orderSide,
+        amount: quantity.toString(),
+        price: price.toString(),
+        dateTime: DateTime.now(),
+        amountCoin: baseAsset,
+        priceCoin: quoteAsset,
+        orderType: orderType,
+        tokenPairName: '$baseAsset/$quoteAsset',
+      );
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('FineWithMessage')) {
@@ -58,7 +57,7 @@ class OrderRepository implements IOrderRepository {
         return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
       }
     } catch (_) {
-      return Left(ApiError(message: result.reasonPhrase));
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
 
@@ -70,15 +69,14 @@ class OrderRepository implements IOrderRepository {
     String orderUuid,
     String signature,
   ) async {
-    final result = await _orderRemoteDatasource.cancelOrder(
-      nonce,
-      baseAsset,
-      quoteAsset,
-      orderUuid,
-      signature,
-    );
-
     try {
+      final result = await _orderRemoteDatasource.cancelOrder(
+        nonce,
+        baseAsset,
+        quoteAsset,
+        orderUuid,
+        signature,
+      );
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('Fine')) {
@@ -87,7 +85,7 @@ class OrderRepository implements IOrderRepository {
         return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
       }
     } catch (_) {
-      return Left(ApiError(message: result.reasonPhrase));
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
 
@@ -96,12 +94,11 @@ class OrderRepository implements IOrderRepository {
     String address,
     String signature,
   ) async {
-    final result = await _orderRemoteDatasource.fetchOpenOrders(
-      address,
-      signature,
-    );
-
     try {
+      final result = await _orderRemoteDatasource.fetchOpenOrders(
+        address,
+        signature,
+      );
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('Fine')) {
@@ -114,7 +111,7 @@ class OrderRepository implements IOrderRepository {
         return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
       }
     } catch (_) {
-      return Left(ApiError(message: result.reasonPhrase));
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
 }

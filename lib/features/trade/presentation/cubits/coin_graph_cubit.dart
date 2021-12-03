@@ -22,8 +22,7 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
     result.fold(
       (error) => emit(CoinGraphError(
         timestampSelected: newTimestampChart,
-        errorMessage: error.message ??
-            'Unexpected error on getting graph data. Please try again',
+        errorMessage: error.message!,
       )),
       (data) => emit(CoinGraphLoaded(
           timestampSelected: newTimestampChart, dataList: data)),
