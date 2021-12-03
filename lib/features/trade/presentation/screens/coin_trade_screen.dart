@@ -453,6 +453,10 @@ class _ThisGrpahCard extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  onPointSelected: (indexPoint) => context
+                                      .read<CoinGraphCubit>()
+                                      .updatePointValues(
+                                          indexPointSelected: indexPoint),
                                 );
                               });
                         }

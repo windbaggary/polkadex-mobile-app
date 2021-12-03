@@ -25,7 +25,19 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
         errorMessage: error.message!,
       )),
       (data) => emit(CoinGraphLoaded(
-          timestampSelected: newTimestampChart, dataList: data)),
+        timestampSelected: newTimestampChart,
+        dataList: data,
+        indexPointSelected: null,
+      )),
     );
+  }
+
+  Future<void> updatePointValues({required int? indexPointSelected}) async {
+    final previousState = state;
+
+    if (previousState is CoinGraphLoaded &&
+        previousState.indexPointSelected != indexPointSelected) {
+      emit(previousState.copyWith(indexPointSelected: indexPointSelected));
+    }
   }
 }
