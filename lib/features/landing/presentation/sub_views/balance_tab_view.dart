@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
@@ -9,7 +10,14 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/features/landing/presentation/widgets/balance_item_shimmer_widget.dart';
+import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
+import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 18
@@ -48,6 +56,13 @@ class _BalanceTabViewState extends State<BalanceTabView>
         ChangeNotifierProvider<BalanceChartDummyProvider>(
           create: (_) => BalanceChartDummyProvider(),
         ),
+        BlocProvider(
+          create: (_) => dependency<BalanceCubit>()
+            ..getBalance(
+              context.read<ImportedAccountEntity>().address,
+              context.read<ImportedAccountEntity>().signature,
+            ),
+        ),
       ],
       builder: (context, _) => NestedScrollView(
         controller: _scrollController,
@@ -58,7 +73,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 24),
-                  _ThisTopBalanceWidget(),
+                  TopBalanceWidget(),
                   SizedBox(height: 36),
                   _ThisHoldingWidget(),
                   Consumer<_ThisIsChartVisibleProvider>(
@@ -253,19 +268,33 @@ class _BalanceTabViewState extends State<BalanceTabView>
                 ),
               ),
               SliverToBoxAdapter(
-                child: Consumer<_ThisProvider>(
-                  builder: (context, thisProvider, child) => ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 24),
-                    itemBuilder: (context, index) => InkWell(
-                      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
-                      child: _ThisItemWidget(
-                        model: thisProvider.listCoins[index],
-                      ),
-                    ),
-                    itemCount: thisProvider.listCoins.length,
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                  ),
+                child: BlocBuilder<BalanceCubit, BalanceState>(
+                  builder: (context, state) {
+                    if (state is BalanceLoaded) {
+                      return ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        itemBuilder: (context, index) {
+                          String key = state.free.keys.elementAt(index);
+                          return InkWell(
+                            onTap: () =>
+                                Coordinator.goToBalanceCoinPreviewScreen(),
+                            child: BalanceItemWidget(
+                              tokenAcronym: key,
+                              tokenFullName:
+                                  TokenUtils.tokenAcronymToFullName(key),
+                              assetImg: TokenUtils.tokenAcronymToAssetImg(key),
+                              amount: state.free[key],
+                            ),
+                          );
+                        },
+                        itemCount: state.free.keys.length,
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                      );
+                    }
+
+                    return BalanceItemShimmerWidget();
+                  },
                 ),
               ),
             ],
@@ -486,131 +515,6 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// The list item for the main wallet
-class _ThisItemWidget extends StatelessWidget {
-  final _ThisModel model;
-  const _ThisItemWidget({
-    required this.model,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.fromLTRB(15, 14, 10, 14),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: colorFFFFFF,
-            ),
-            width: 42,
-            height: 42,
-            padding: const EdgeInsets.all(3),
-            child: Image.asset(
-              model.imgAsset.asAssetImg(),
-              fit: BoxFit.contain,
-            ),
-          ),
-          SizedBox(width: 9),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                model.name,
-                style: tsS16W500CFF,
-              ),
-              Text(
-                model.code,
-                style: tsS13W500CFF.copyWith(color: colorABB2BC),
-              ),
-            ],
-          ),
-          Spacer(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                model.unit,
-                style: tsS16W500CFF,
-              ),
-              Text(
-                model.iPrice,
-                style: tsS13W500CFF.copyWith(color: colorABB2BC),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// The top balance widget showing the balance amount and wallet icon
-class _ThisTopBalanceWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Center(
-          child: Container(
-            width: 42,
-            height: 42,
-            margin: const EdgeInsets.only(bottom: 9),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: color8BA1BE.withOpacity(0.30),
-            ),
-            padding: const EdgeInsets.all(11),
-            child: SvgPicture.asset('wallet_selected'.asAssetSvg()),
-          ),
-        ),
-        Text(
-          'Total Balance',
-          style: tsS15W400CFF.copyWith(color: colorABB2BC),
-          textAlign: TextAlign.center,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '0.8713 ',
-                  style: tsS32W600CFF,
-                ),
-                TextSpan(
-                  text: 'BTC ',
-                  style: tsS15W600CFF,
-                ),
-              ],
-            ),
-          ),
-        ),
-        RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                text: '~437.50 ',
-                style: tsS19W400CFF,
-              ),
-              TextSpan(
-                text: 'USD',
-                style: tsS12W400CFF,
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

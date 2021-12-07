@@ -15,7 +15,9 @@ class BalanceRemoteDatasource {
       },
       body: jsonEncode(<String, dynamic>{
         'signature': {'Sr25519': signature},
-        'payload': {'account': address},
+        'payload': {
+          'account': '5HGabetgTWWsoRJxdZP11ns2yi1oVaenXEBprfKHp7tpw7NH'
+        },
       }),
     );
   }

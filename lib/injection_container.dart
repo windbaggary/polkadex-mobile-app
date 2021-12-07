@@ -1,12 +1,16 @@
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
+import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/datasources/order_remote_datasource.dart';
+import 'package:polkadex/features/landing/data/repositories/balance_repository.dart';
 import 'package:polkadex/features/landing/data/repositories/order_repository.dart';
+import 'package:polkadex/features/landing/domain/repositories/ibalance_repository.dart';
 import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
 import 'package:polkadex/features/landing/domain/usecases/cancel_order_usecase.dart';
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_open_orders.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
@@ -32,6 +36,7 @@ import 'common/cubits/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
 import 'features/setup/domain/usecases/get_password_usecase.dart';
 import 'features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'common/web_view_runner/web_view_runner.dart';
 import 'package:get_it/get_it.dart';
 
@@ -207,6 +212,28 @@ Future<void> init() async {
   dependency.registerFactory(
     () => GetOpenOrdersUseCase(
       orderRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => BalanceRemoteDatasource(),
+  );
+
+  dependency.registerFactory<IBalanceRepository>(
+    () => BalanceRepository(
+      balanceRemoteDatasource: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => GetBalanceUseCase(
+      balanceRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => BalanceCubit(
+      getBalanceUseCase: dependency(),
     ),
   );
 }
