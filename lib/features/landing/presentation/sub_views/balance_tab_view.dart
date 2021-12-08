@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -64,242 +66,259 @@ class _BalanceTabViewState extends State<BalanceTabView>
             ),
         ),
       ],
-      builder: (context, _) => NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: 24),
-                  TopBalanceWidget(),
-                  SizedBox(height: 36),
-                  _ThisHoldingWidget(),
-                  Consumer<_ThisIsChartVisibleProvider>(
-                    builder: (context, isChartVisbileProvider, _) =>
-                        AnimatedSize(
-                      duration: AppConfigs.animDurationSmall,
-                      alignment: Alignment.topCenter,
-                      child: isChartVisbileProvider.isChartVisible
-                          ? Column(
-                              children: [
-                                _ThisGraphHeadingWidget(),
-                                SizedBox(height: 8),
-                                SizedBox(
-                                  height: 250,
-                                  child: Consumer<BalanceChartDummyProvider>(
-                                    builder: (context, provider, child) =>
-                                        AppLineChartWidget(
-                                      data: provider.list,
-                                      options: AppLineChartOptions(
-                                        yLabelCount: 3,
-                                        yAxisTopPaddingRatio: 0.05,
-                                        yAxisBottomPaddingRatio: 0.15,
-                                        chartScale: provider.chartScale,
-                                        lineColor: colorE6007A,
-                                        yAxisLabelPrefix: "\$ ",
-                                        areaGradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: <Color>[
-                                            colorE6007A.withOpacity(0.50),
-                                            color8BA1BE.withOpacity(0.0),
-                                          ],
-                                          // stops: [0.0, 0.40],
-                                        ),
-                                        gridColor:
-                                            color8BA1BE.withOpacity(0.15),
-                                        gridStroke: 1,
-                                        yLabelTextStyle: TextStyle(
-                                          fontSize: 08,
-                                          fontFamily: "WorkSans",
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                _ThisGraphOptionWidget(),
-                                SizedBox(height: 30),
-                              ],
-                            )
-                          : Container(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ];
-        },
-        body: Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(40),
-            color: color2E303C,
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 30,
-                offset: Offset(0.0, 20.0),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
-          child: CustomScrollView(
-            slivers: [
-              SliverPersistentHeader(
-                floating: false,
-                pinned: true,
-                delegate: _SliverPersistentHeaderDelegate(
-                  height: 115,
-                  child: Container(
-                    color: color2E303C,
+      builder: (context, _) => BlocBuilder<BalanceCubit, BalanceState>(
+        builder: (context, state) {
+          return PolkadexProgressErrorWidget(
+            onRefresh: () => context.read<BalanceCubit>().getBalance(
+                  context.read<ImportedAccountEntity>().address,
+                  context.read<ImportedAccountEntity>().signature,
+                ),
+            isError: state is BalanceError,
+            notificationPredicate: 1,
+            child: NestedScrollView(
+              controller: _scrollController,
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverToBoxAdapter(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Center(
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 13),
-                            decoration: BoxDecoration(
-                              color: color1C2023,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            height: 3,
-                            width: 51,
-                          ),
-                        ),
-                        Center(
-                          child: SizedBox(
-                            height: 35,
-                            child: DropdownButton<String>(
-                              items: ['Main Wallet', 'Spot', 'Margin']
-                                  .map((e) => DropdownMenuItem<String>(
-                                        child: Text(
-                                          e,
-                                          style: tsS20W600CFF,
+                        SizedBox(height: 24),
+                        TopBalanceWidget(),
+                        SizedBox(height: 36),
+                        _ThisHoldingWidget(),
+                        Consumer<_ThisIsChartVisibleProvider>(
+                          builder: (context, isChartVisbileProvider, _) =>
+                              AnimatedSize(
+                            duration: AppConfigs.animDurationSmall,
+                            alignment: Alignment.topCenter,
+                            child: isChartVisbileProvider.isChartVisible
+                                ? Column(
+                                    children: [
+                                      _ThisGraphHeadingWidget(),
+                                      SizedBox(height: 8),
+                                      SizedBox(
+                                        height: 250,
+                                        child:
+                                            Consumer<BalanceChartDummyProvider>(
+                                          builder: (context, provider, child) =>
+                                              AppLineChartWidget(
+                                            data: provider.list,
+                                            options: AppLineChartOptions(
+                                              yLabelCount: 3,
+                                              yAxisTopPaddingRatio: 0.05,
+                                              yAxisBottomPaddingRatio: 0.15,
+                                              chartScale: provider.chartScale,
+                                              lineColor: colorE6007A,
+                                              yAxisLabelPrefix: "\$ ",
+                                              areaGradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: <Color>[
+                                                  colorE6007A.withOpacity(0.50),
+                                                  color8BA1BE.withOpacity(0.0),
+                                                ],
+                                                // stops: [0.0, 0.40],
+                                              ),
+                                              gridColor:
+                                                  color8BA1BE.withOpacity(0.15),
+                                              gridStroke: 1,
+                                              yLabelTextStyle: TextStyle(
+                                                fontSize: 08,
+                                                fontFamily: "WorkSans",
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.grey.shade400,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        value: e,
-                                      ))
-                                  .toList(),
-                              value: 'Main Wallet',
-                              style: tsS20W600CFF,
-                              underline: Container(),
-                              onChanged: (value) {},
-                              isExpanded: false,
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: colorFFFFFF,
-                                size: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                            bottom: 12,
-                            left: 10,
-                            right: 10,
-                          ),
-                          child: Row(
-                            children: [
-                              Consumer<_ThisProvider>(
-                                builder: (context, thisProvider, child) =>
-                                    CheckBoxWidget(
-                                  checkColor: colorFFFFFF,
-                                  backgroundColor: colorE6007A,
-                                  isChecked: thisProvider.isHideSmallBalance,
-                                  isBackTransparentOnUnchecked: true,
-                                  onTap: (val) =>
-                                      thisProvider.isHideSmallBalance = val,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Hide small balances',
-                                style: tsS14W400CFF,
-                              ),
-                              Spacer(),
-                              InkWell(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(12, 12, 6, 12),
-                                  child: Opacity(
-                                    opacity: 1.0,
-                                    child: Text(
-                                      'Tokens',
-                                      style: tsS15W600CFF,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  final thisProvider =
-                                      context.read<_ThisProvider>();
-                                  thisProvider.isHideFiat =
-                                      !thisProvider.isHideFiat;
-                                },
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(6, 12, 12, 12),
-                                  child: Consumer<_ThisProvider>(
-                                    builder: (context, thisProvider, child) =>
-                                        Opacity(
-                                      opacity:
-                                          thisProvider.isHideFiat ? 1.0 : 0.3,
-                                      child: child,
-                                    ),
-                                    child: Text(
-                                      'Fiat',
-                                      style: tsS15W600CFF,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                                      ),
+                                      _ThisGraphOptionWidget(),
+                                      SizedBox(height: 30),
+                                    ],
+                                  )
+                                : Container(),
                           ),
                         ),
                       ],
                     ),
                   ),
+                ];
+              },
+              body: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: color2E303C,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 30,
+                      offset: Offset(0.0, 20.0),
+                    ),
+                  ],
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: BlocBuilder<BalanceCubit, BalanceState>(
-                  builder: (context, state) {
-                    if (state is BalanceLoaded) {
-                      return ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 24),
-                        itemBuilder: (context, index) {
-                          String key = state.free.keys.elementAt(index);
-                          return InkWell(
-                            onTap: () =>
-                                Coordinator.goToBalanceCoinPreviewScreen(),
-                            child: BalanceItemWidget(
-                              tokenAcronym: key,
-                              tokenFullName:
-                                  TokenUtils.tokenAcronymToFullName(key),
-                              assetImg: TokenUtils.tokenAcronymToAssetImg(key),
-                              amount: state.free[key],
-                            ),
-                          );
-                        },
-                        itemCount: state.free.keys.length,
-                        shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
-                      );
-                    }
+                padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverPersistentHeader(
+                      floating: false,
+                      pinned: true,
+                      delegate: _SliverPersistentHeaderDelegate(
+                        height: 115,
+                        child: Container(
+                          color: color2E303C,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Center(
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 13),
+                                  decoration: BoxDecoration(
+                                    color: color1C2023,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  height: 3,
+                                  width: 51,
+                                ),
+                              ),
+                              Center(
+                                child: SizedBox(
+                                  height: 35,
+                                  child: DropdownButton<String>(
+                                    items: ['Main Wallet', 'Spot', 'Margin']
+                                        .map((e) => DropdownMenuItem<String>(
+                                              child: Text(
+                                                e,
+                                                style: tsS20W600CFF,
+                                              ),
+                                              value: e,
+                                            ))
+                                        .toList(),
+                                    value: 'Main Wallet',
+                                    style: tsS20W600CFF,
+                                    underline: Container(),
+                                    onChanged: (value) {},
+                                    isExpanded: false,
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      color: colorFFFFFF,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 12,
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Consumer<_ThisProvider>(
+                                      builder: (context, thisProvider, child) =>
+                                          CheckBoxWidget(
+                                        checkColor: colorFFFFFF,
+                                        backgroundColor: colorE6007A,
+                                        isChecked:
+                                            thisProvider.isHideSmallBalance,
+                                        isBackTransparentOnUnchecked: true,
+                                        onTap: (val) => thisProvider
+                                            .isHideSmallBalance = val,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Hide small balances',
+                                      style: tsS14W400CFF,
+                                    ),
+                                    Spacer(),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            12, 12, 6, 12),
+                                        child: Opacity(
+                                          opacity: 1.0,
+                                          child: Text(
+                                            'Tokens',
+                                            style: tsS15W600CFF,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        final thisProvider =
+                                            context.read<_ThisProvider>();
+                                        thisProvider.isHideFiat =
+                                            !thisProvider.isHideFiat;
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            6, 12, 12, 12),
+                                        child: Consumer<_ThisProvider>(
+                                          builder:
+                                              (context, thisProvider, child) =>
+                                                  Opacity(
+                                            opacity: thisProvider.isHideFiat
+                                                ? 1.0
+                                                : 0.3,
+                                            child: child,
+                                          ),
+                                          child: Text(
+                                            'Fiat',
+                                            style: tsS15W600CFF,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: BlocBuilder<BalanceCubit, BalanceState>(
+                        builder: (context, state) {
+                          if (state is BalanceLoaded) {
+                            return ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 24),
+                              itemBuilder: (context, index) {
+                                String key = state.free.keys.elementAt(index);
+                                return InkWell(
+                                  onTap: () => Coordinator
+                                      .goToBalanceCoinPreviewScreen(),
+                                  child: BalanceItemWidget(
+                                    tokenAcronym: key,
+                                    tokenFullName:
+                                        TokenUtils.tokenAcronymToFullName(key),
+                                    assetImg:
+                                        TokenUtils.tokenAcronymToAssetImg(key),
+                                    amount: state.free[key],
+                                  ),
+                                );
+                              },
+                              itemCount: state.free.keys.length,
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                            );
+                          }
 
-                    return BalanceItemShimmerWidget();
-                  },
+                          return BalanceItemShimmerWidget();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
