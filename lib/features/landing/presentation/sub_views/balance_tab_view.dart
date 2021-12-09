@@ -73,7 +73,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   context.read<ImportedAccountEntity>().address,
                   context.read<ImportedAccountEntity>().signature,
                 ),
-            isError: state is BalanceError,
+            errorMessage: state is BalanceError ? state.message : null,
             notificationPredicate: 1,
             child: NestedScrollView(
               controller: _scrollController,

@@ -8,13 +8,13 @@ import 'package:polkadex/common/utils/styles.dart';
 
 class PolkadexProgressErrorWidget extends StatefulWidget {
   const PolkadexProgressErrorWidget({
-    this.isError = false,
+    this.errorMessage,
     this.notificationPredicate = 0,
     this.onRefresh,
     required this.child,
   });
 
-  final bool isError;
+  final String? errorMessage;
   final int notificationPredicate;
   final Widget child;
   final Future<void> Function()? onRefresh;
@@ -41,8 +41,8 @@ class _PolkadexProgressErrorWidgetState
           builder: (context, child) {
             Widget widgetToShow;
 
-            if (widget.isError) {
-              widgetToShow = _errorWidget();
+            if (widget.errorMessage != null) {
+              widgetToShow = _errorWidget(widget.errorMessage!);
             } else if (controller.state == IndicatorState.loading) {
               widgetToShow = _loadingWidget();
             } else {
@@ -53,8 +53,10 @@ class _PolkadexProgressErrorWidgetState
               alignment: Alignment.topCenter,
               children: <Widget>[
                 Positioned(
-                  top: (widget.isError ? 10.0 : 10.0 * controller.value),
-                  child: widget.isError
+                  top: (widget.errorMessage != null
+                      ? 10.0
+                      : 10.0 * controller.value),
+                  child: widget.errorMessage != null
                       ? Column(
                           children: [
                             widgetToShow,
@@ -76,7 +78,7 @@ class _PolkadexProgressErrorWidgetState
                 Transform.translate(
                   offset: Offset(
                       0,
-                      (widget.isError
+                      (widget.errorMessage != null
                           ? 80.0 + (controller.value * 20.0)
                           : controller.value * 20.0)),
                   child: child,
@@ -90,7 +92,7 @@ class _PolkadexProgressErrorWidgetState
     );
   }
 
-  Widget _errorWidget() {
+  Widget _errorWidget(String errorMessage) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -108,7 +110,7 @@ class _PolkadexProgressErrorWidgetState
         ),
         SizedBox(height: 8),
         Text(
-          'Connection Error',
+          errorMessage,
           style: tsS20W600CFF,
         ),
       ],
