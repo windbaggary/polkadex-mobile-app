@@ -6,7 +6,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
-class PolkadexProgressErrorWidget extends StatefulWidget {
+class PolkadexProgressErrorWidget extends StatelessWidget {
   const PolkadexProgressErrorWidget({
     this.errorMessage,
     this.notificationPredicate = 0,
@@ -20,18 +20,11 @@ class PolkadexProgressErrorWidget extends StatefulWidget {
   final Future<void> Function()? onRefresh;
 
   @override
-  State<PolkadexProgressErrorWidget> createState() =>
-      _PolkadexProgressErrorWidgetState();
-}
-
-class _PolkadexProgressErrorWidgetState
-    extends State<PolkadexProgressErrorWidget> with TickerProviderStateMixin {
-  @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
-      onRefresh: widget.onRefresh != null ? widget.onRefresh! : () async {},
+      onRefresh: onRefresh != null ? onRefresh! : () async {},
       notificationPredicate: (notification) =>
-          notification.depth == widget.notificationPredicate,
+          notification.depth == notificationPredicate,
       offsetToArmed: 200,
       builder:
           (BuildContext context, Widget child, IndicatorController controller) {
@@ -41,8 +34,8 @@ class _PolkadexProgressErrorWidgetState
           builder: (context, child) {
             Widget widgetToShow;
 
-            if (widget.errorMessage != null) {
-              widgetToShow = _errorWidget(widget.errorMessage!);
+            if (errorMessage != null) {
+              widgetToShow = _errorWidget(errorMessage!);
             } else if (controller.state == IndicatorState.loading) {
               widgetToShow = _loadingWidget();
             } else {
@@ -53,10 +46,8 @@ class _PolkadexProgressErrorWidgetState
               alignment: Alignment.topCenter,
               children: <Widget>[
                 Positioned(
-                  top: (widget.errorMessage != null
-                      ? 10.0
-                      : 10.0 * controller.value),
-                  child: widget.errorMessage != null
+                  top: (errorMessage != null ? 10.0 : 10.0 * controller.value),
+                  child: errorMessage != null
                       ? Column(
                           children: [
                             widgetToShow,
@@ -78,7 +69,7 @@ class _PolkadexProgressErrorWidgetState
                 Transform.translate(
                   offset: Offset(
                       0,
-                      (widget.errorMessage != null
+                      (errorMessage != null
                           ? 80.0 + (controller.value * 20.0)
                           : controller.value * 20.0)),
                   child: child,
@@ -88,7 +79,7 @@ class _PolkadexProgressErrorWidgetState
           },
         );
       },
-      child: widget.child,
+      child: child,
     );
   }
 
