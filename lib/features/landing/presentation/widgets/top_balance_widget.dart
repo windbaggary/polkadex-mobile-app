@@ -13,6 +13,78 @@ class TopBalanceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BalanceCubit, BalanceState>(
       builder: (context, state) {
+        final Widget mainBalanceValueWidget;
+        final Widget secondaryBalanceValueWidget;
+
+        if (state is BalanceLoaded) {
+          mainBalanceValueWidget = Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '0.8713 ',
+                    style: tsS32W600CFF,
+                  ),
+                  TextSpan(
+                    text: 'BTC ',
+                    style: tsS15W600CFF,
+                  ),
+                ],
+              ),
+            ),
+          );
+          secondaryBalanceValueWidget = RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: '~437.50 ',
+                  style: tsS19W400CFF,
+                ),
+                TextSpan(
+                  text: 'USD',
+                  style: tsS12W400CFF,
+                ),
+              ],
+            ),
+          );
+        } else if (state is BalanceError) {
+          mainBalanceValueWidget = Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '- ',
+                    style: tsS32W600CFF,
+                  ),
+                  TextSpan(
+                    text: 'BTC ',
+                    style: tsS15W600CFF,
+                  ),
+                ],
+              ),
+            ),
+          );
+          secondaryBalanceValueWidget = RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: '- ',
+                  style: tsS19W400CFF,
+                ),
+                TextSpan(
+                  text: 'USD',
+                  style: tsS12W400CFF,
+                ),
+              ],
+            ),
+          );
+        } else {
+          mainBalanceValueWidget = _mainBTCBalanceShimmerWidget();
+          secondaryBalanceValueWidget = _secondaryUSDBalanceShimmerWidget();
+        }
+
         return Column(
           children: [
             Center(
@@ -33,42 +105,9 @@ class TopBalanceWidget extends StatelessWidget {
               style: tsS15W400CFF.copyWith(color: colorABB2BC),
               textAlign: TextAlign.center,
             ),
-            state is BalanceLoaded
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: '0.8713 ',
-                            style: tsS32W600CFF,
-                          ),
-                          TextSpan(
-                            text: 'BTC ',
-                            style: tsS15W600CFF,
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : _mainBTCBalanceShimmerWidget(),
+            mainBalanceValueWidget,
             SizedBox(height: 4),
-            state is BalanceLoaded
-                ? RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: '~437.50 ',
-                          style: tsS19W400CFF,
-                        ),
-                        TextSpan(
-                          text: 'USD',
-                          style: tsS12W400CFF,
-                        ),
-                      ],
-                    ),
-                  )
-                : _secondaryUSDBalanceShimmerWidget(),
+            secondaryBalanceValueWidget,
           ],
         );
       },

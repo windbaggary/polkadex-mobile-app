@@ -315,7 +315,11 @@ class _BalanceTabViewState extends State<BalanceTabView>
                             );
                           }
 
-                          return BalanceItemShimmerWidget();
+                          if (state is BalanceLoading) {
+                            return BalanceItemShimmerWidget();
+                          }
+
+                          return Container();
                         },
                       ),
                     ),
