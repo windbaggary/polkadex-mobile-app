@@ -53,8 +53,6 @@
 <string>This app needs photos to update profile picture</string>
 <key>NSCameraUsageDescription</key>
 <string>This app needs camera to update profile picture</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>This app needs microphone to record profile picture</string>
 <key>LSApplicationQueriesSchemes</key>
 <array>
   <string>https</string>
