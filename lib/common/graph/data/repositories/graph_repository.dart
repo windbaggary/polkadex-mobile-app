@@ -23,21 +23,29 @@ class GraphRepository implements IGraphRepository {
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('Fine')) {
-        final dataOpen = (body['Fine'] as List)
-            .map((dynamic json) => LineChartModel.fromJsonOpen(json))
-            .toList();
-        final dataLow = (body['Fine'] as List)
-            .map((dynamic json) => LineChartModel.fromJsonLow(json))
-            .toList();
-        final dataHigh = (body['Fine'] as List)
-            .map((dynamic json) => LineChartModel.fromJsonHigh(json))
-            .toList();
-        final dataClose = (body['Fine'] as List)
-            .map((dynamic json) => LineChartModel.fromJsonClose(json))
-            .toList();
-        final dataAverage = (body['Fine'] as List)
-            .map((dynamic json) => LineChartModel.fromJsonAverage(json))
-            .toList();
+        final listRawData = (body['Fine'] as List);
+
+        final List<LineChartEntity> dataOpen = List<LineChartEntity>.generate(
+          listRawData.length,
+          (index) => LineChartModel.fromJsonOpen(listRawData[index]),
+        ).toList();
+        final List<LineChartEntity> dataLow = List<LineChartEntity>.generate(
+          listRawData.length,
+          (index) => LineChartModel.fromJsonLow(listRawData[index]),
+        ).toList();
+        final List<LineChartEntity> dataHigh = List<LineChartEntity>.generate(
+          listRawData.length,
+          (index) => LineChartModel.fromJsonHigh(listRawData[index]),
+        ).toList();
+        final List<LineChartEntity> dataClose = List<LineChartEntity>.generate(
+          listRawData.length,
+          (index) => LineChartModel.fromJsonClose(listRawData[index]),
+        ).toList();
+        final List<LineChartEntity> dataAverage =
+            List<LineChartEntity>.generate(
+          listRawData.length,
+          (index) => LineChartModel.fromJsonAverage(listRawData[index]),
+        ).toList();
 
         return Right({
           'open': dataOpen,

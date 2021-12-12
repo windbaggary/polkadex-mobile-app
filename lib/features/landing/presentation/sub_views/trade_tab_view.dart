@@ -7,7 +7,6 @@ import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
-import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
@@ -541,7 +540,7 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
 
   void _onMarketSelection(BuildContext context) {
     Coordinator.goToMarketTokenSelectionScreen().then((model) {
-      if (model != null && model is MarketSelectionResultModel) {
+      if (model != null) {
         final provider = context.read<TradeTabCoinProvider>();
         provider.tokenCoin = model.tokenModel;
         provider.pairCoin = model.pairModel;

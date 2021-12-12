@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'dart:math' as math;
 

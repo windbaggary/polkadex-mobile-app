@@ -55,6 +55,7 @@ dependencies:
   flutter_localized_locales: ^2.0.3
   biometric_storage: ^3.0.1
   bloc_test: ^8.3.0
+  custom_refresh_indicator: ^1.0.0
 
 dev_dependencies:
   flutter_test:
