@@ -13,6 +13,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_list_animated_widget.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/utils/maps.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -621,7 +622,8 @@ class _ThisLoadingItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
-        onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
+        onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+            context.read<ImportedAccountEntity>()),
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(

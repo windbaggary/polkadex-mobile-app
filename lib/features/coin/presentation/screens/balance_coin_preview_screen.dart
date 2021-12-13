@@ -12,6 +12,7 @@ import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
@@ -27,6 +28,10 @@ enum _EnumMenus {
 /// XD_PAGE: 20
 /// XD_PAGE: 31
 class BalanceCoinPreviewScreen extends StatefulWidget {
+  const BalanceCoinPreviewScreen({required this.account});
+
+  final ImportedAccountEntity account;
+
   @override
   _BalanceCoinPreviewScreenState createState() =>
       _BalanceCoinPreviewScreenState();
@@ -144,7 +149,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           Expanded(
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
-                              onTap: () => Coordinator.goToCoinWithdrawScreen(),
+                              onTap: () => Coordinator.goToCoinWithdrawScreen(
+                                asset: 'PDEX',
+                                account: widget.account,
+                              ),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.withdraw,
                               ),

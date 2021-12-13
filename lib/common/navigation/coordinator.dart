@@ -51,8 +51,17 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.privacyPolicyScreen);
   }
 
-  static void goToCoinWithdrawScreen() {
-    _navigationKey.currentState?.pushNamed(Routes.coinWithdrawScreen);
+  static void goToCoinWithdrawScreen({
+    required String asset,
+    required ImportedAccountEntity account,
+  }) {
+    _navigationKey.currentState?.pushNamed(
+      Routes.coinWithdrawScreen,
+      arguments: {
+        'asset': asset,
+        'account': account,
+      },
+    );
   }
 
   static void goToCoinTradeScreen({EnumCardFlipState? enumCardFlipState}) {
@@ -78,8 +87,9 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.notifDetailsScreen);
   }
 
-  static void goToBalanceCoinPreviewScreen() {
-    _navigationKey.currentState?.pushNamed(Routes.balanceCoinPreviewScreen);
+  static void goToBalanceCoinPreviewScreen(ImportedAccountEntity account) {
+    _navigationKey.currentState
+        ?.pushNamed(Routes.balanceCoinPreviewScreen, arguments: account);
   }
 
   static Future<MarketSelectionResultModel?>

@@ -149,7 +149,12 @@ abstract class Routes {
         break;
       case coinWithdrawScreen:
         builder = (_) {
-          return CoinWithdrawScreen();
+          final withdrawArguments = settings.arguments as Map;
+
+          return CoinWithdrawScreen(
+            asset: withdrawArguments['asset'],
+            account: withdrawArguments['account'],
+          );
         };
         break;
       case coinTradeScreen:
@@ -177,7 +182,9 @@ abstract class Routes {
         break;
       case balanceCoinPreviewScreen:
         builder = (_) {
-          return BalanceCoinPreviewScreen();
+          return BalanceCoinPreviewScreen(
+            account: settings.arguments as ImportedAccountEntity,
+          );
         };
         break;
       case marketTokenSelectionScreen:

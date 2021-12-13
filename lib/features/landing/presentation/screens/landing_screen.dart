@@ -110,7 +110,7 @@ class _LandingScreenState extends State<LandingScreen>
               create: (context) => NotificationDrawerProvider()),
           ChangeNotifierProvider<HomeScrollNotifProvider>(
               create: (_) => HomeScrollNotifProvider()),
-          Provider(
+          Provider<ImportedAccountEntity>(
             create: (_) => widget.account,
           ),
         ],

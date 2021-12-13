@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
@@ -8,11 +9,22 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/features/coin/presentation/cubits/withdraw_cubit.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 21
 /// XD_PAGE: 28
 class CoinWithdrawScreen extends StatefulWidget {
+  const CoinWithdrawScreen({
+    required this.asset,
+    required this.account,
+  });
+
+  final String asset;
+  final ImportedAccountEntity account;
+
   @override
   _CoinWithdrawScreenState createState() => _CoinWithdrawScreenState();
 }
@@ -21,318 +33,351 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => _ThisProvider(),
-      builder: (context, _) => Scaffold(
+    return BlocProvider(
+      create: (_) => dependency<WithdrawCubit>()
+        ..getBalance(
+            widget.asset, widget.account.address, widget.account.signature),
+      child: ChangeNotifierProvider(
+        create: (_) => _ThisProvider(),
+        builder: (context, _) => Scaffold(
           backgroundColor: color1C2023,
-          body: SafeArea(
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: color2E303C,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(40),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _buildAppbar(context),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: color1C2023,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(35),
-                                topLeft: Radius.circular(35),
-                              ),
-                            ),
-                            child: SingleChildScrollView(
+          body: BlocBuilder<WithdrawCubit, WithdrawState>(
+            builder: (context, state) {
+              return SafeArea(
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: color2E303C,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(40),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildAppbar(context),
+                            Expanded(
                               child: Container(
-                                // height:
-                                //     MediaQuery.of(context).size.height - 120,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    _ThisCoinTitleWidget(),
-                                    _ThisAmountWidget(),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          22, 40, 24, 0),
-                                      child: Consumer<_ThisProvider>(
-                                        builder: (context, thisProvider, _) {
-                                          return AppHorizontalSlider(
-                                            bgColor: const Color(0xFF313236),
-                                            activeColor: colorE6007A,
-                                            initialProgress:
-                                                thisProvider.progress,
-                                            onProgressUpdate: (progress) {
-                                              thisProvider.progress = progress;
+                                decoration: BoxDecoration(
+                                  color: color1C2023,
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(35),
+                                    topLeft: Radius.circular(35),
+                                  ),
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Container(
+                                    // height:
+                                    //     MediaQuery.of(context).size.height - 120,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        _ThisCoinTitleWidget(),
+                                        _ThisAmountWidget(),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              22, 40, 24, 0),
+                                          child: Consumer<_ThisProvider>(
+                                            builder:
+                                                (context, thisProvider, _) {
+                                              return AppHorizontalSlider(
+                                                bgColor:
+                                                    const Color(0xFF313236),
+                                                activeColor: colorE6007A,
+                                                initialProgress:
+                                                    thisProvider.progress,
+                                                onProgressUpdate: (progress) {
+                                                  thisProvider.progress =
+                                                      progress;
+                                                },
+                                              );
                                             },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.fromLTRB(
-                                          22, 26, 22, 0.0),
-                                      padding: const EdgeInsets.fromLTRB(
-                                          27, 14, 13, 13),
-                                      decoration: BoxDecoration(
-                                        color: colorFFFFFF.withOpacity(0.05),
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: <BoxShadow>[bsDefault],
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: TextField(
-                                              style: tsS16W500CFF,
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                contentPadding: EdgeInsets.zero,
-                                                hintText: 'Enter Dex address',
-                                                hintStyle:
-                                                    tsS16W500CFF.copyWith(
-                                                  color: colorFFFFFF
-                                                      .withOpacity(0.5),
-                                                ),
-                                                border: InputBorder.none,
-                                                errorBorder: InputBorder.none,
-                                                enabledBorder: InputBorder.none,
-                                                focusedBorder: InputBorder.none,
-                                                disabledBorder:
-                                                    InputBorder.none,
-                                                focusedErrorBorder:
-                                                    InputBorder.none,
-                                              ),
-                                            ),
                                           ),
-                                          Container(
-                                            width: 43,
-                                            height: 43,
-                                            padding: const EdgeInsets.all(12),
-                                            child: SvgPicture.asset(
-                                                'contacts'.asAssetSvg()),
-                                          ),
-                                          buildInkWell(
-                                            onTap: () => Coordinator
-                                                .goToQrCodeScanScreen(),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            child: Container(
-                                              width: 43,
-                                              height: 43,
-                                              decoration: BoxDecoration(
-                                                color: color8BA1BE
-                                                    .withOpacity(0.2),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              padding: const EdgeInsets.all(12),
-                                              child: SvgPicture.asset(
-                                                  'scan'.asAssetSvg()),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          22, 18, 22, 20.0),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 18),
-                                            padding: const EdgeInsets.fromLTRB(
-                                              27,
-                                              9,
-                                              22,
-                                              9,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  colorFFFFFF.withOpacity(0.05),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              boxShadow: <BoxShadow>[bsDefault],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 100,
-                                                  child: DropdownButton<String>(
-                                                    items: [
-                                                      'DOT Chain',
-                                                      'DOT 1',
-                                                      'DOT 2'
-                                                    ]
-                                                        .map((e) =>
-                                                            DropdownMenuItem<
-                                                                String>(
-                                                              child: Text(
-                                                                e,
-                                                                style:
-                                                                    tsS16W600CFF,
-                                                              ),
-                                                              value: e,
-                                                            ))
-                                                        .toList(),
-                                                    value: 'DOT Chain',
-                                                    style: tsS16W600CFF,
-                                                    underline: Container(),
-                                                    onChanged: (val) {},
-                                                    isExpanded: true,
-                                                    icon: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 0.0),
-                                                      child: Icon(
-                                                        Icons
-                                                            .keyboard_arrow_down_rounded,
-                                                        color: colorFFFFFF,
-                                                        size: 16,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Withdraw Fee',
-                                                    style: tsS13W400CFFOP60
-                                                        .copyWith(
-                                                            color: colorFFFFFF
-                                                                .withOpacity(
-                                                                    0.5)),
-                                                  ),
-                                                  SizedBox(height: 4),
-                                                  Text(
-                                                    '0.012 DEX / \$0.02',
-                                                    style: tsS15W600CFF,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Consumer<_ThisProvider>(
-                                      builder: (context, provider, _) {
-                                        double height = 0;
-                                        if (!provider.isKeyboardVisible) {
-                                          height = (10 *
-                                                  (MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                      759.27272727))
-                                              .clamp(0.0, double.infinity);
-                                        }
-                                        return AnimatedSize(
-                                          duration:
-                                              AppConfigs.animDurationSmall,
-                                          child: SizedBox(
-                                            height: height,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    Consumer<_ThisProvider>(
-                                      builder: (context, provider, _) =>
-                                          AnimatedPadding(
-                                        duration: AppConfigs.animDurationSmall,
-                                        padding: EdgeInsets.fromLTRB(
-                                          21,
-                                          0.0,
-                                          21.0,
-                                          provider.isKeyboardVisible
-                                              ? 400.0
-                                              : 0.0,
                                         ),
-                                        child: AppSlideButton(
-                                          height: 60,
-                                          onComplete: () {},
-                                          label: 'Slide to withdraw',
-                                          icon: Container(
-                                            decoration: BoxDecoration(
-                                              color: color1C2023,
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            padding: const EdgeInsets.all(14),
-                                            width: 45,
-                                            height: 45,
-                                            child: SvgPicture.asset(
-                                              'arrow'.asAssetSvg(),
-                                              fit: BoxFit.contain,
-                                              color: colorFFFFFF,
-                                            ),
-                                          ),
+                                        Container(
+                                          margin: const EdgeInsets.fromLTRB(
+                                              22, 26, 22, 0.0),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              27, 14, 13, 13),
                                           decoration: BoxDecoration(
-                                            color: colorE6007A,
+                                            color:
+                                                colorFFFFFF.withOpacity(0.05),
                                             borderRadius:
                                                 BorderRadius.circular(20),
+                                            boxShadow: <BoxShadow>[bsDefault],
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: TextField(
+                                                  style: tsS16W500CFF,
+                                                  decoration: InputDecoration(
+                                                    isDense: true,
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    hintText:
+                                                        'Enter Dex address',
+                                                    hintStyle:
+                                                        tsS16W500CFF.copyWith(
+                                                      color: colorFFFFFF
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                    border: InputBorder.none,
+                                                    errorBorder:
+                                                        InputBorder.none,
+                                                    enabledBorder:
+                                                        InputBorder.none,
+                                                    focusedBorder:
+                                                        InputBorder.none,
+                                                    disabledBorder:
+                                                        InputBorder.none,
+                                                    focusedErrorBorder:
+                                                        InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 43,
+                                                height: 43,
+                                                padding:
+                                                    const EdgeInsets.all(12),
+                                                child: SvgPicture.asset(
+                                                    'contacts'.asAssetSvg()),
+                                              ),
+                                              buildInkWell(
+                                                onTap: () => Coordinator
+                                                    .goToQrCodeScanScreen(),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child: Container(
+                                                  width: 43,
+                                                  height: 43,
+                                                  decoration: BoxDecoration(
+                                                    color: color8BA1BE
+                                                        .withOpacity(0.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.all(12),
+                                                  child: SvgPicture.asset(
+                                                      'scan'.asAssetSvg()),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              22, 18, 22, 20.0),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 18),
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  27,
+                                                  9,
+                                                  22,
+                                                  9,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: colorFFFFFF
+                                                      .withOpacity(0.05),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  boxShadow: <BoxShadow>[
+                                                    bsDefault
+                                                  ],
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 100,
+                                                      child: DropdownButton<
+                                                          String>(
+                                                        items: [
+                                                          'DOT Chain',
+                                                          'DOT 1',
+                                                          'DOT 2'
+                                                        ]
+                                                            .map((e) =>
+                                                                DropdownMenuItem<
+                                                                    String>(
+                                                                  child: Text(
+                                                                    e,
+                                                                    style:
+                                                                        tsS16W600CFF,
+                                                                  ),
+                                                                  value: e,
+                                                                ))
+                                                            .toList(),
+                                                        value: 'DOT Chain',
+                                                        style: tsS16W600CFF,
+                                                        underline: Container(),
+                                                        onChanged: (val) {},
+                                                        isExpanded: true,
+                                                        icon: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 0.0),
+                                                          child: Icon(
+                                                            Icons
+                                                                .keyboard_arrow_down_rounded,
+                                                            color: colorFFFFFF,
+                                                            size: 16,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Withdraw Fee',
+                                                        style: tsS13W400CFFOP60
+                                                            .copyWith(
+                                                                color: colorFFFFFF
+                                                                    .withOpacity(
+                                                                        0.5)),
+                                                      ),
+                                                      SizedBox(height: 4),
+                                                      Text(
+                                                        '0.012 DEX / \$0.02',
+                                                        style: tsS15W600CFF,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Consumer<_ThisProvider>(
+                                          builder: (context, provider, _) {
+                                            double height = 0;
+                                            if (!provider.isKeyboardVisible) {
+                                              height = (10 *
+                                                      (MediaQuery.of(context)
+                                                              .size
+                                                              .height /
+                                                          759.27272727))
+                                                  .clamp(0.0, double.infinity);
+                                            }
+                                            return AnimatedSize(
+                                              duration:
+                                                  AppConfigs.animDurationSmall,
+                                              child: SizedBox(
+                                                height: height,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        Consumer<_ThisProvider>(
+                                          builder: (context, provider, _) =>
+                                              AnimatedPadding(
+                                            duration:
+                                                AppConfigs.animDurationSmall,
+                                            padding: EdgeInsets.fromLTRB(
+                                              21,
+                                              0.0,
+                                              21.0,
+                                              provider.isKeyboardVisible
+                                                  ? 400.0
+                                                  : 0.0,
+                                            ),
+                                            child: AppSlideButton(
+                                              height: 60,
+                                              onComplete: () {},
+                                              label: 'Slide to withdraw',
+                                              icon: Container(
+                                                decoration: BoxDecoration(
+                                                  color: color1C2023,
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(14),
+                                                width: 45,
+                                                height: 45,
+                                                child: SvgPicture.asset(
+                                                  'arrow'.asAssetSvg(),
+                                                  fit: BoxFit.contain,
+                                                  color: colorFFFFFF,
+                                                ),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: colorE6007A,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                Consumer<_ThisProvider>(
-                  builder: (context, provider, child) => Positioned.fill(
-                    child: IgnorePointer(
-                      ignoring: !provider.isKeyboardVisible,
-                      child: GestureDetector(
-                          onTap: () {
-                            provider.isKeyboardVisible = false;
-                          },
-                          child: Container(
-                            color: Colors.transparent,
-                          )),
+                    Consumer<_ThisProvider>(
+                      builder: (context, provider, child) => Positioned.fill(
+                        child: IgnorePointer(
+                          ignoring: !provider.isKeyboardVisible,
+                          child: GestureDetector(
+                              onTap: () {
+                                provider.isKeyboardVisible = false;
+                              },
+                              child: Container(
+                                color: Colors.transparent,
+                              )),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Consumer<_ThisProvider>(
-                  builder: (context, provider, _) => AnimatedPositioned(
-                    duration: AppConfigs.animDurationSmall,
-                    left: 0.0,
-                    right: 0.0,
-                    bottom: provider.isKeyboardVisible ? 0.0 : -400.0,
-                    child: AppCustomKeyboard(
-                      onSwapTapped: () => _onSwapTapped(context),
-                      onKeypadNumberTapped: (number) =>
-                          context.read<_ThisProvider>().setUnitEntered(number),
-                      onEnterTapped: () => context
-                          .read<_ThisProvider>()
-                          .isKeyboardVisible = false,
+                    Consumer<_ThisProvider>(
+                      builder: (context, provider, _) => AnimatedPositioned(
+                        duration: AppConfigs.animDurationSmall,
+                        left: 0.0,
+                        right: 0.0,
+                        bottom: provider.isKeyboardVisible ? 0.0 : -400.0,
+                        child: AppCustomKeyboard(
+                          onSwapTapped: () => _onSwapTapped(context),
+                          onKeypadNumberTapped: (number) => context
+                              .read<_ThisProvider>()
+                              .setUnitEntered(number),
+                          onEnterTapped: () => context
+                              .read<_ThisProvider>()
+                              .isKeyboardVisible = false,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          )),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 
