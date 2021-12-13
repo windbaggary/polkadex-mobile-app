@@ -1,6 +1,9 @@
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
+import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
+import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
+import 'package:polkadex/features/coin/domain/repositories/icoin_repository.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/datasources/order_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/repositories/balance_repository.dart';
@@ -31,6 +34,7 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'common/graph/data/datasources/graph_remote_datasource.dart';
+import 'features/coin/domain/usecases/withdraw_usecase.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
 import 'common/cubits/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
@@ -234,6 +238,22 @@ Future<void> init() async {
   dependency.registerFactory(
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => CoinRemoteDatasource(),
+  );
+
+  dependency.registerFactory<ICoinRepository>(
+    () => CoinRepository(
+      coinRemoteDatasource: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => WithdrawUseCase(
+      coinRepository: dependency(),
     ),
   );
 }
