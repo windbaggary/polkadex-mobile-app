@@ -10,10 +10,10 @@ import 'package:polkadex/features/app_settings_info/screens/app_settings_securit
 import 'package:polkadex/features/app_settings_info/screens/my_account_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/terms_conditions_screen.dart';
-import 'package:polkadex/features/balance/presentation/screens/balance_coin_preview_screen.dart';
-import 'package:polkadex/features/balance/presentation/screens/balance_deposit_screen_1.dart';
-import 'package:polkadex/features/balance/presentation/screens/balance_summary_screen.dart';
-import 'package:polkadex/features/balance/presentation/screens/coin_withdraw_screen.dart';
+import 'package:polkadex/features/coin/presentation/screens/balance_coin_preview_screen.dart';
+import 'package:polkadex/features/coin/presentation/screens/balance_deposit_screen_1.dart';
+import 'package:polkadex/features/coin/presentation/screens/balance_summary_screen.dart';
+import 'package:polkadex/features/coin/presentation/screens/coin_withdraw_screen.dart';
 import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
