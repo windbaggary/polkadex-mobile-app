@@ -35,6 +35,7 @@ import 'package:polkadex/features/setup/presentation/providers/wallet_settings_p
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'common/graph/data/datasources/graph_remote_datasource.dart';
 import 'features/coin/domain/usecases/withdraw_usecase.dart';
+import 'features/coin/presentation/cubits/withdraw_cubit.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
 import 'common/cubits/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
@@ -254,6 +255,13 @@ Future<void> init() async {
   dependency.registerFactory(
     () => WithdrawUseCase(
       coinRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => WithdrawCubit(
+      getBalanceUseCase: dependency(),
+      withdrawUseCase: dependency(),
     ),
   );
 }
