@@ -92,7 +92,7 @@ void main() {
         // arrange
         when(() => _repository.placeOrder(
             any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
-          (_) async => Left(ApiError()),
+          (_) async => Left(ApiError(message: '')),
         );
         // act
         final result = await _usecase(

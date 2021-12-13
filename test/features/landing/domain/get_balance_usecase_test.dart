@@ -63,7 +63,7 @@ void main() {
       () async {
         // arrange
         when(() => _repository.fetchBalance(any(), any())).thenAnswer(
-          (_) async => Left(ApiError()),
+          (_) async => Left(ApiError(message: '')),
         );
         // act
         final result = await _usecase(

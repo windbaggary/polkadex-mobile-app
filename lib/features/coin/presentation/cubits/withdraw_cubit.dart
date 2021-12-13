@@ -29,7 +29,7 @@ class WithdrawCubit extends Cubit<WithdrawState> {
     );
 
     result.fold(
-      (error) => WithdrawBalanceError(message: error.message!),
+      (error) => WithdrawBalanceError(message: error.message),
       (balance) => WithdrawLoaded(balance: balance.free[asset]),
     );
   }

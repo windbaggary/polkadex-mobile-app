@@ -22,7 +22,7 @@ class BalanceCubit extends Cubit<BalanceState> {
 
     result.fold(
       (error) => emit(
-        BalanceError(message: error.message!),
+        BalanceError(message: error.message),
       ),
       (balance) => emit(
         BalanceLoaded(
