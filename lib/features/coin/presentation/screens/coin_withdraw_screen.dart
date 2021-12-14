@@ -344,24 +344,12 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                       enabled:
                                                           _isWithdrawSlideEnabled,
                                                       height: 60,
-                                                      onComplete: () => context
-                                                          .read<WithdrawCubit>()
-                                                          .withdraw(
-                                                            asset: widget.asset,
-                                                            amountFree: state
-                                                                    is WithdrawAmountUpdated
-                                                                ? state.amount
-                                                                : widget.amount,
-                                                            amountToBeWithdrawn:
-                                                                _amountToBeWithdrawn,
-                                                            address:
-                                                                _addressController
-                                                                    .text,
-                                                            signature: context
-                                                                .read<
-                                                                    AccountCubit>()
-                                                                .accountSignature,
-                                                          ),
+                                                      onComplete: () =>
+                                                          _onSlideToWithdrawComplete(
+                                                        context.read<
+                                                            WithdrawCubit>(),
+                                                        provider,
+                                                      ),
                                                       label:
                                                           'Slide to withdraw',
                                                       icon: Container(
@@ -442,6 +430,23 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         ),
       ),
     );
+  }
+
+  void _onSlideToWithdrawComplete(
+      WithdrawCubit cubit, _ThisProvider provider) async {
+    final currentState = cubit.state;
+
+    await cubit.withdraw(
+      asset: widget.asset,
+      amountFree: currentState is WithdrawAmountUpdated
+          ? currentState.amount
+          : widget.amount,
+      amountToBeWithdrawn: _amountToBeWithdrawn,
+      address: _addressController.text,
+      signature: context.read<AccountCubit>().accountSignature,
+    );
+
+    _onAmountSlideUpdate(0.0, cubit.state, provider);
   }
 
   void _onAmountSlideUpdate(
