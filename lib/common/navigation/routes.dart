@@ -205,10 +205,12 @@ abstract class Routes {
         };
         break;
       case qrCodeScanScreen:
-        builder = (_) {
-          return QRCodeScanScreen();
-        };
-        break;
+        return MaterialPageRoute<String>(
+          builder: (_) {
+            return QRCodeScanScreen();
+          },
+          settings: settings,
+        );
       case termsConditionsScreen:
         builder = (_) {
           return TermsConditionsScreen();

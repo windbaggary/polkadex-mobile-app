@@ -106,8 +106,9 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.balanceSummaryScreen);
   }
 
-  static void goToQrCodeScanScreen() {
-    _navigationKey.currentState?.pushNamed(Routes.qrCodeScanScreen);
+  static Future<String?> goToQrCodeScanScreen() async {
+    return await _navigationKey.currentState
+        ?.pushNamed(Routes.qrCodeScanScreen);
   }
 
   static void goToTermsConditionsScreen() {

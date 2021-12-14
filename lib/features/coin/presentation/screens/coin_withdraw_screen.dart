@@ -158,15 +158,23 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                         InputBorder.none,
                                                   ),
                                                   onChanged: (address) =>
-                                                      setState(() =>
-                                                          _isWithdrawSlideEnabled =
-                                                              address.length >=
-                                                                  48),
+                                                      _evalWithdrawSlideEnabled(
+                                                          address),
                                                 ),
                                               ),
                                               buildInkWell(
-                                                onTap: () => Coordinator
-                                                    .goToQrCodeScanScreen(),
+                                                onTap: () async {
+                                                  final address =
+                                                      await Coordinator
+                                                          .goToQrCodeScanScreen();
+
+                                                  if (address != null) {
+                                                    _addressController.text =
+                                                        address;
+                                                    _evalWithdrawSlideEnabled(
+                                                        address);
+                                                  }
+                                                },
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                                 child: Container(
@@ -421,6 +429,14 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         ),
       ),
     );
+  }
+
+  void _evalWithdrawSlideEnabled(String newAddress) {
+    final bool isAddressValid = newAddress.length >= 48;
+
+    if (isAddressValid != _isWithdrawSlideEnabled) {
+      setState(() => _isWithdrawSlideEnabled = isAddressValid);
+    }
   }
 
   /// The app bar for the screen
