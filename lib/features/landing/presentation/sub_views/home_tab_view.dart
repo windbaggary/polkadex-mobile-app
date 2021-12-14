@@ -10,7 +10,6 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -543,8 +542,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
-      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
-          context.read<ImportedAccountEntity>()),
+      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(

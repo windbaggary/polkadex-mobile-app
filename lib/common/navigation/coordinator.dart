@@ -87,9 +87,8 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.notifDetailsScreen);
   }
 
-  static void goToBalanceCoinPreviewScreen(ImportedAccountEntity account) {
-    _navigationKey.currentState
-        ?.pushNamed(Routes.balanceCoinPreviewScreen, arguments: account);
+  static void goToBalanceCoinPreviewScreen() {
+    _navigationKey.currentState?.pushNamed(Routes.balanceCoinPreviewScreen);
   }
 
   static Future<MarketSelectionResultModel?>
