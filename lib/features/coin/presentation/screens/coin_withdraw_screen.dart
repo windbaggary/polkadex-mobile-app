@@ -99,18 +99,11 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 activeColor: colorE6007A,
                                                 initialProgress:
                                                     thisProvider.progress,
-                                                onProgressUpdate: (progress) {
-                                                  thisProvider.progress =
-                                                      progress;
-                                                  final amountFree = state
-                                                          is WithdrawAmountUpdated
-                                                      ? state.amount
-                                                      : widget.amount;
-                                                  setState(() =>
-                                                      _amountToBeWithdrawn =
-                                                          amountFree *
-                                                              progress);
-                                                },
+                                                onProgressUpdate: (progress) =>
+                                                    _onAmountSlideUpdate(
+                                                        progress,
+                                                        state,
+                                                        thisProvider),
                                               );
                                             },
                                           ),
@@ -158,8 +151,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                         InputBorder.none,
                                                   ),
                                                   onChanged: (address) =>
-                                                      _evalWithdrawSlideEnabled(
-                                                          address),
+                                                      _evalWithdrawSlideEnabled(),
                                                 ),
                                               ),
                                               buildInkWell(
@@ -171,8 +163,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   if (address != null) {
                                                     _addressController.text =
                                                         address;
-                                                    _evalWithdrawSlideEnabled(
-                                                        address);
+                                                    _evalWithdrawSlideEnabled();
                                                   }
                                                 },
                                                 borderRadius:
@@ -431,11 +422,25 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     );
   }
 
-  void _evalWithdrawSlideEnabled(String newAddress) {
-    final bool isAddressValid = newAddress.length >= 48;
+  void _onAmountSlideUpdate(
+    double progress,
+    WithdrawState state,
+    _ThisProvider provider,
+  ) {
+    provider.progress = progress;
+    final amountFree =
+        state is WithdrawAmountUpdated ? state.amount : widget.amount;
 
-    if (isAddressValid != _isWithdrawSlideEnabled) {
-      setState(() => _isWithdrawSlideEnabled = isAddressValid);
+    setState(() => _amountToBeWithdrawn = amountFree * progress);
+    _evalWithdrawSlideEnabled();
+  }
+
+  void _evalWithdrawSlideEnabled() {
+    final bool _isSlideEnabled =
+        _addressController.text.length >= 48 && _amountToBeWithdrawn > 0.0;
+
+    if (_isSlideEnabled != _isWithdrawSlideEnabled) {
+      setState(() => _isWithdrawSlideEnabled = _isSlideEnabled);
     }
   }
 
