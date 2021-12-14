@@ -164,14 +164,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                                   48),
                                                 ),
                                               ),
-                                              Container(
-                                                width: 43,
-                                                height: 43,
-                                                padding:
-                                                    const EdgeInsets.all(12),
-                                                child: SvgPicture.asset(
-                                                    'contacts'.asAssetSvg()),
-                                              ),
                                               buildInkWell(
                                                 onTap: () => Coordinator
                                                     .goToQrCodeScanScreen(),
