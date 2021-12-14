@@ -31,6 +31,8 @@ class CoinWithdrawScreen extends StatefulWidget {
 
 class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
+  final _addressController = TextEditingController();
+  bool _isWithdrawSlideEnabled = false;
   double _amountToBeWithdrawn = 0.0;
 
   @override
@@ -129,6 +131,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                             children: [
                                               Expanded(
                                                 child: TextField(
+                                                  controller:
+                                                      _addressController,
                                                   style: tsS16W500CFF,
                                                   decoration: InputDecoration(
                                                     isDense: true,
@@ -153,6 +157,11 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                     focusedErrorBorder:
                                                         InputBorder.none,
                                                   ),
+                                                  onChanged: (address) =>
+                                                      setState(() =>
+                                                          _isWithdrawSlideEnabled =
+                                                              address.length >=
+                                                                  48),
                                                 ),
                                               ),
                                               Container(
@@ -327,6 +336,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                           dotSize: 10),
                                                     )
                                                   : AppSlideButton(
+                                                      enabled:
+                                                          _isWithdrawSlideEnabled,
                                                       height: 60,
                                                       onComplete: () => context
                                                           .read<WithdrawCubit>()
