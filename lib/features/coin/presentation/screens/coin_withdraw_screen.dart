@@ -32,7 +32,10 @@ class CoinWithdrawScreen extends StatefulWidget {
 
 class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
-  final _addressController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final double _conversionRate = 20.0;
+  bool _areAmountUnitsSwapped = false;
+  String _editableAmountString = '';
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +99,15 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                         _ThisCoinTitleWidget(
                                           asset: widget.asset,
                                           amount: state.amountFree,
+                                          areUnitsSwapped:
+                                              _areAmountUnitsSwapped,
+                                          conversionRate: _conversionRate,
                                         ),
                                         _ThisAmountWidget(
                                           amount: state.amountToBeWithdrawn,
+                                          conversionRate: _conversionRate,
+                                          areUnitsSwapped:
+                                              _areAmountUnitsSwapped,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
@@ -418,10 +427,14 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                         right: 0.0,
                         bottom: provider.isKeyboardVisible ? 0.0 : -400.0,
                         child: AppCustomKeyboard(
-                          onSwapTapped: () => _onSwapTapped(context),
-                          onKeypadNumberTapped: (number) => context
-                              .read<_ThisProvider>()
-                              .setUnitEntered(number),
+                          onSwapTapped: () => setState(() =>
+                              _areAmountUnitsSwapped = !_areAmountUnitsSwapped),
+                          onKeypadNumberTapped: (number) =>
+                              _onKeyboardNumberTapped(
+                            number,
+                            context.read<WithdrawCubit>(),
+                            provider,
+                          ),
                           onEnterTapped: () => context
                               .read<_ThisProvider>()
                               .isKeyboardVisible = false,
@@ -436,6 +449,75 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         ),
       ),
     );
+  }
+
+  void _onKeyboardNumberTapped(
+    _EnumKeypadNumbers numberTapped,
+    WithdrawCubit cubit,
+    _ThisProvider provider,
+  ) {
+    final previousState = cubit.state;
+    String _newEditableValue = _areAmountUnitsSwapped
+        ? (double.tryParse(_editableAmountString)! * _conversionRate).toString()
+        : _editableAmountString;
+
+    switch (numberTapped) {
+      case _EnumKeypadNumbers.one:
+        _newEditableValue += "1";
+        break;
+      case _EnumKeypadNumbers.two:
+        _newEditableValue += "2";
+        break;
+      case _EnumKeypadNumbers.three:
+        _newEditableValue += "3";
+        break;
+      case _EnumKeypadNumbers.four:
+        _newEditableValue += "4";
+        break;
+      case _EnumKeypadNumbers.five:
+        _newEditableValue += "5";
+        break;
+      case _EnumKeypadNumbers.six:
+        _newEditableValue += "6";
+        break;
+      case _EnumKeypadNumbers.seven:
+        _newEditableValue += "7";
+        break;
+      case _EnumKeypadNumbers.eight:
+        _newEditableValue += "8";
+        break;
+      case _EnumKeypadNumbers.nine:
+        _newEditableValue += "9";
+        break;
+      case _EnumKeypadNumbers.zero:
+        _newEditableValue += "0";
+        break;
+      case _EnumKeypadNumbers.dot:
+        _newEditableValue += ".";
+        if (_newEditableValue.length == 1) {
+          _newEditableValue = "0.";
+        }
+        break;
+      case _EnumKeypadNumbers.back:
+        if (_newEditableValue.isEmpty) break;
+        if (_newEditableValue.isNotEmpty) {
+          _newEditableValue =
+              _newEditableValue.substring(0, _newEditableValue.length - 1);
+        }
+        break;
+    }
+    _newEditableValue = (_newEditableValue.isEmpty) ? "0" : _newEditableValue;
+    final double? valInDouble = double.tryParse(_newEditableValue);
+
+    if (valInDouble != null) {
+      _editableAmountString = _newEditableValue;
+      provider.progress =
+          (valInDouble / previousState.amountFree).clamp(0.0, 1.0);
+      cubit.updateWithdrawParams(
+          amountToBeWithdrawn: _areAmountUnitsSwapped
+              ? valInDouble * (1 / _conversionRate)
+              : valInDouble);
+    }
   }
 
   void _onSlideToWithdrawComplete(
@@ -492,20 +574,30 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
           ],
         ),
       );
-
-  /// The method to toggle the keyboard
-  void _onSwapTapped(BuildContext context) {
-    context.read<_ThisProvider>().onSwap();
-  }
 }
 
 class _ThisAmountWidget extends StatelessWidget {
-  const _ThisAmountWidget({required this.amount});
+  const _ThisAmountWidget({
+    required this.amount,
+    required this.conversionRate,
+    required this.areUnitsSwapped,
+  });
 
   final double amount;
+  final double conversionRate;
+  final bool areUnitsSwapped;
 
   @override
   Widget build(BuildContext context) {
+    String primaryAmount = amount.toString();
+    String secondaryAmount = (amount * conversionRate).toString();
+
+    if (areUnitsSwapped) {
+      final temp = secondaryAmount;
+      secondaryAmount = primaryAmount;
+      primaryAmount = temp;
+    }
+
     return InkWell(
       onTap: () {
         context.read<_ThisProvider>().isKeyboardVisible = true;
@@ -521,7 +613,7 @@ class _ThisAmountWidget extends StatelessWidget {
           children: [
             Consumer<_ThisProvider>(
               builder: (context, provider, child) => Text(
-                amount.toStringAsFixed(4),
+                primaryAmount,
                 style: tsS31W500CFF,
                 textAlign: TextAlign.center,
               ),
@@ -529,7 +621,7 @@ class _ThisAmountWidget extends StatelessWidget {
             SizedBox(height: 4),
             Consumer<_ThisProvider>(
               builder: (context, provider, child) => Text(
-                '~${provider.bottomValue}',
+                '~$secondaryAmount',
                 style: tsS15W400CFFOP50,
                 textAlign: TextAlign.center,
               ),
@@ -553,13 +645,26 @@ class _ThisCoinTitleWidget extends StatelessWidget {
   const _ThisCoinTitleWidget({
     required this.asset,
     required this.amount,
+    required this.areUnitsSwapped,
+    required this.conversionRate,
   });
 
   final String asset;
   final double amount;
+  final bool areUnitsSwapped;
+  final double conversionRate;
 
   @override
   Widget build(BuildContext context) {
+    String primaryAmount = '$amount $asset ';
+    String secondaryAmount = '\$${amount * conversionRate}';
+
+    if (areUnitsSwapped) {
+      final temp = secondaryAmount;
+      secondaryAmount = primaryAmount;
+      primaryAmount = temp;
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(21, 40, 21, 0.0),
       child: Row(
@@ -592,11 +697,11 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: '$amount $asset ',
+                        text: primaryAmount,
                         style: tsS17W600C0CA564.copyWith(color: colorFFFFFF),
                       ),
                       TextSpan(
-                        text: '\$31.25',
+                        text: secondaryAmount,
                         style: tsS17W600C0CA564.copyWith(
                           color: colorFFFFFF.withOpacity(0.5),
                         ),
@@ -617,7 +722,6 @@ class _ThisCoinTitleWidget extends StatelessWidget {
 class _ThisProvider extends ChangeNotifier {
   final double _availableAmount = 31.25;
   final double _availableUnit = 1.5;
-  bool _isSwap = false;
 
   double _progress = 0.0;
   String _unit = "0", _amount = "0";
@@ -641,110 +745,6 @@ class _ThisProvider extends ChangeNotifier {
   String get unit => _unit;
 
   String get amount => "\$$_amount";
-
-  String get topValue {
-    if (_isSwap) {
-      return amount;
-    } else {
-      return unit;
-    }
-  }
-
-  String get bottomValue {
-    if (_isSwap) {
-      return unit;
-    } else {
-      return amount;
-    }
-  }
-
-  void onSwap() {
-    _isSwap = !_isSwap;
-    notifyListeners();
-  }
-
-  void setUnitEntered(_EnumKeypadNumbers val) {
-    String enteredString = _unit;
-    if (_isSwap) {
-      enteredString = _amount;
-    }
-    if (enteredString == "0") {
-      enteredString = "";
-    }
-    switch (val) {
-      case _EnumKeypadNumbers.one:
-        enteredString += "1";
-        break;
-      case _EnumKeypadNumbers.two:
-        enteredString += "2";
-
-        break;
-      case _EnumKeypadNumbers.three:
-        enteredString += "3";
-
-        break;
-      case _EnumKeypadNumbers.four:
-        enteredString += "4";
-
-        break;
-      case _EnumKeypadNumbers.five:
-        enteredString += "5";
-
-        break;
-      case _EnumKeypadNumbers.six:
-        enteredString += "6";
-
-        break;
-      case _EnumKeypadNumbers.seven:
-        enteredString += "7";
-
-        break;
-      case _EnumKeypadNumbers.eight:
-        enteredString += "8";
-
-        break;
-      case _EnumKeypadNumbers.nine:
-        enteredString += "9";
-
-        break;
-      case _EnumKeypadNumbers.zero:
-        enteredString += "0";
-
-        break;
-      case _EnumKeypadNumbers.dot:
-        enteredString += ".";
-        if (enteredString.length == 1) {
-          enteredString = "0.";
-        }
-
-        break;
-      case _EnumKeypadNumbers.back:
-        if (enteredString.isEmpty) break;
-        if (enteredString.isNotEmpty) {
-          enteredString = enteredString.substring(0, enteredString.length - 1);
-        }
-        break;
-    }
-    try {
-      enteredString = (enteredString.isEmpty) ? "0" : enteredString;
-      final double? valInDouble = double.tryParse(enteredString);
-
-      if (_isSwap) {
-        _progress = (valInDouble! / _availableAmount).clamp(0.0, 1.0);
-
-        _amount = enteredString;
-        _unit = (_availableUnit * _progress).toStringAsFixed(2);
-      } else {
-        _progress = (valInDouble! / _availableUnit).clamp(0.0, 1.0);
-
-        _unit = enteredString;
-        _amount = (_availableAmount * _progress).toStringAsFixed(2);
-      }
-    } catch (ex) {
-      print(ex);
-    }
-    notifyListeners();
-  }
 }
 
 enum _EnumKeypadNumbers {
