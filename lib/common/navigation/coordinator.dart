@@ -53,13 +53,13 @@ abstract class Coordinator {
 
   static void goToCoinWithdrawScreen({
     required String asset,
-    required ImportedAccountEntity account,
+    required double amount,
   }) {
     _navigationKey.currentState?.pushNamed(
       Routes.coinWithdrawScreen,
       arguments: {
         'asset': asset,
-        'account': account,
+        'amount': amount,
       },
     );
   }

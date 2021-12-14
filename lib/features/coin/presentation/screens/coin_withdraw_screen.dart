@@ -10,20 +10,19 @@ import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/coin/presentation/cubits/withdraw_cubit.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
-import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
+import 'package:polkadex/injection_container.dart';
 
 /// XD_PAGE: 21
 /// XD_PAGE: 28
 class CoinWithdrawScreen extends StatefulWidget {
   const CoinWithdrawScreen({
     required this.asset,
-    required this.account,
+    required this.amount,
   });
 
   final String asset;
-  final ImportedAccountEntity account;
+  final double amount;
 
   @override
   _CoinWithdrawScreenState createState() => _CoinWithdrawScreenState();
@@ -34,9 +33,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => dependency<WithdrawCubit>()
-        ..getBalance(
-            widget.asset, widget.account.address, widget.account.signature),
+      create: (_) => dependency<WithdrawCubit>(),
       child: ChangeNotifierProvider(
         create: (_) => _ThisProvider(),
         builder: (context, _) => Scaffold(

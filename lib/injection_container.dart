@@ -260,7 +260,6 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => WithdrawCubit(
-      getBalanceUseCase: dependency(),
       withdrawUseCase: dependency(),
     ),
   );

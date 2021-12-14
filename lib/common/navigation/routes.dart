@@ -153,7 +153,7 @@ abstract class Routes {
 
           return CoinWithdrawScreen(
             asset: withdrawArguments['asset'],
-            account: withdrawArguments['account'],
+            amount: withdrawArguments['amount'],
           );
         };
         break;
