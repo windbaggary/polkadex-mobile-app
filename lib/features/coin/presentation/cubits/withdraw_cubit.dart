@@ -11,13 +11,13 @@ class WithdrawCubit extends Cubit<WithdrawState> {
 
   final WithdrawUseCase _withdrawUseCase;
 
-  Future<void> withdraw(
-    String asset,
-    double amountFree,
-    double amountToBeWithdrawn,
-    String address,
-    String signature,
-  ) async {
+  Future<void> withdraw({
+    required String asset,
+    required double amountFree,
+    required double amountToBeWithdrawn,
+    required String address,
+    required String signature,
+  }) async {
     emit(WithdrawLoading(amount: amountFree));
 
     final result = await _withdrawUseCase(

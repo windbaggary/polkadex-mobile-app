@@ -10,6 +10,7 @@ import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/coin/presentation/cubits/withdraw_cubit.dart';
+import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart';
 
@@ -316,31 +317,55 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   ? 400.0
                                                   : 0.0,
                                             ),
-                                            child: AppSlideButton(
-                                              height: 60,
-                                              onComplete: () {},
-                                              label: 'Slide to withdraw',
-                                              icon: Container(
-                                                decoration: BoxDecoration(
-                                                  color: color1C2023,
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.all(14),
-                                                width: 45,
-                                                height: 45,
-                                                child: SvgPicture.asset(
-                                                  'arrow'.asAssetSvg(),
-                                                  fit: BoxFit.contain,
-                                                  color: colorFFFFFF,
-                                                ),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: colorE6007A,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
+                                            child: Center(
+                                              child: state is WithdrawLoading
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 25.0),
+                                                      child: LoadingDotsWidget(
+                                                          dotSize: 10),
+                                                    )
+                                                  : AppSlideButton(
+                                                      height: 60,
+                                                      onComplete: () => context
+                                                          .read<WithdrawCubit>()
+                                                          .withdraw(
+                                                            asset: widget.asset,
+                                                            amountFree: 15.50,
+                                                            amountToBeWithdrawn:
+                                                                1.0,
+                                                            address: 'test',
+                                                            signature: 'test',
+                                                          ),
+                                                      label:
+                                                          'Slide to withdraw',
+                                                      icon: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: color1C2023,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                        ),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(14),
+                                                        width: 45,
+                                                        height: 45,
+                                                        child: SvgPicture.asset(
+                                                          'arrow'.asAssetSvg(),
+                                                          fit: BoxFit.contain,
+                                                          color: colorFFFFFF,
+                                                        ),
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: colorE6007A,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                      ),
+                                                    ),
                                             ),
                                           ),
                                         ),

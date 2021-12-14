@@ -10,7 +10,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
-import 'package:polkadex/features/landing/presentation/widgets/loading_dots_widget.dart';
+import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 
 /// The callback type for buy or sell
