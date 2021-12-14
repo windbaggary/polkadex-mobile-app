@@ -43,7 +43,20 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         create: (_) => _ThisProvider(),
         builder: (context, _) => Scaffold(
           backgroundColor: color1C2023,
-          body: BlocBuilder<WithdrawCubit, WithdrawState>(
+          body: BlocConsumer<WithdrawCubit, WithdrawState>(
+            listener: (context, state) {
+              if (state is WithdrawSuccess) {
+                buildAppToast(
+                    msg: '${widget.asset} withdrawn successfully',
+                    context: context);
+              }
+
+              if (state is WithdrawError) {
+                buildAppToast(
+                    msg: '${widget.asset} withdraw failed. Please try again',
+                    context: context);
+              }
+            },
             builder: (context, state) {
               return SafeArea(
                 child: Stack(
