@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/features/coin/domain/usecases/withdraw_usecase.dart';
-
 part 'withdraw_state.dart';
 
 class WithdrawCubit extends Cubit<WithdrawState> {
@@ -14,22 +13,29 @@ class WithdrawCubit extends Cubit<WithdrawState> {
 
   Future<void> withdraw(
     String asset,
-    double amount,
+    double amountFree,
+    double amountToBeWithdrawn,
     String address,
     String signature,
   ) async {
-    emit(WithdrawLoading());
+    emit(WithdrawLoading(amount: amountFree));
 
     final result = await _withdrawUseCase(
       asset: asset,
-      amount: amount,
+      amount: amountToBeWithdrawn,
       address: address,
       signature: signature,
     );
 
     result.fold(
-      (error) {},
-      (success) {},
+      (error) => emit(
+        WithdrawError(message: error.message, amount: amountFree),
+      ),
+      (success) => emit(
+        WithdrawSuccess(
+            message: '$asset successfully withdrawn.',
+            amount: amountFree - amountToBeWithdrawn),
+      ),
     );
   }
 }

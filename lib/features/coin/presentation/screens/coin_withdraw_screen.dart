@@ -30,6 +30,8 @@ class CoinWithdrawScreen extends StatefulWidget {
 
 class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
+  double _amountToBeWithdrawn = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -73,8 +75,15 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
                                       children: [
-                                        _ThisCoinTitleWidget(),
-                                        _ThisAmountWidget(),
+                                        _ThisCoinTitleWidget(
+                                          asset: widget.asset,
+                                          amount: state is WithdrawAmountUpdated
+                                              ? state.amount
+                                              : widget.amount,
+                                        ),
+                                        _ThisAmountWidget(
+                                          amount: _amountToBeWithdrawn,
+                                        ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               22, 40, 24, 0),
@@ -90,6 +99,14 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 onProgressUpdate: (progress) {
                                                   thisProvider.progress =
                                                       progress;
+                                                  final amountFree = state
+                                                          is WithdrawAmountUpdated
+                                                      ? state.amount
+                                                      : widget.amount;
+                                                  setState(() =>
+                                                      _amountToBeWithdrawn =
+                                                          amountFree *
+                                                              progress);
                                                 },
                                               );
                                             },
@@ -413,6 +430,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
 }
 
 class _ThisAmountWidget extends StatelessWidget {
+  const _ThisAmountWidget({required this.amount});
+
+  final double amount;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -430,7 +451,7 @@ class _ThisAmountWidget extends StatelessWidget {
           children: [
             Consumer<_ThisProvider>(
               builder: (context, provider, child) => Text(
-                provider.topValue,
+                amount.toStringAsFixed(4),
                 style: tsS31W500CFF,
                 textAlign: TextAlign.center,
               ),
@@ -459,6 +480,14 @@ class _ThisAmountWidget extends StatelessWidget {
 }
 
 class _ThisCoinTitleWidget extends StatelessWidget {
+  const _ThisCoinTitleWidget({
+    required this.asset,
+    required this.amount,
+  });
+
+  final String asset;
+  final double amount;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -493,7 +522,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: '1.5000 DEX ',
+                        text: '$amount $asset ',
                         style: tsS17W600C0CA564.copyWith(color: colorFFFFFF),
                       ),
                       TextSpan(
