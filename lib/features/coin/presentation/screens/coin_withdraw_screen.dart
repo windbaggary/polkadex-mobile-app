@@ -33,13 +33,16 @@ class CoinWithdrawScreen extends StatefulWidget {
 class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
   final _addressController = TextEditingController();
-  bool _isWithdrawSlideEnabled = false;
-  double _amountToBeWithdrawn = 0.0;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => dependency<WithdrawCubit>(),
+      create: (_) => dependency<WithdrawCubit>()
+        ..init(
+          amountFree: widget.amount,
+          amountToBeWithdrawn: 0.0,
+          address: '',
+        ),
       child: ChangeNotifierProvider(
         create: (_) => _ThisProvider(),
         builder: (context, _) => Scaffold(
@@ -47,9 +50,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
           body: BlocConsumer<WithdrawCubit, WithdrawState>(
             listener: (context, state) {
               if (state is WithdrawSuccess) {
-                buildAppToast(
-                    msg: '${widget.asset} withdrawn successfully',
-                    context: context);
+                buildAppToast(msg: state.message, context: context);
               }
 
               if (state is WithdrawError) {
@@ -94,12 +95,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                       children: [
                                         _ThisCoinTitleWidget(
                                           asset: widget.asset,
-                                          amount: state is WithdrawAmountUpdated
-                                              ? state.amount
-                                              : widget.amount,
+                                          amount: state.amountFree,
                                         ),
                                         _ThisAmountWidget(
-                                          amount: _amountToBeWithdrawn,
+                                          amount: state.amountToBeWithdrawn,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
@@ -116,7 +115,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 onProgressUpdate: (progress) =>
                                                     _onAmountSlideUpdate(
                                                         progress,
-                                                        state,
+                                                        context.read<
+                                                            WithdrawCubit>(),
                                                         thisProvider),
                                               );
                                             },
@@ -165,7 +165,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                         InputBorder.none,
                                                   ),
                                                   onChanged: (address) =>
-                                                      _evalWithdrawSlideEnabled(),
+                                                      context
+                                                          .read<WithdrawCubit>()
+                                                          .updateWithdrawParams(
+                                                              address: address),
                                                 ),
                                               ),
                                               buildInkWell(
@@ -177,7 +180,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   if (address != null) {
                                                     _addressController.text =
                                                         address;
-                                                    _evalWithdrawSlideEnabled();
+                                                    context
+                                                        .read<WithdrawCubit>()
+                                                        .updateWithdrawParams(
+                                                            address: address);
                                                   }
                                                 },
                                                 borderRadius:
@@ -341,8 +347,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                           dotSize: 10),
                                                     )
                                                   : AppSlideButton(
-                                                      enabled:
-                                                          _isWithdrawSlideEnabled,
+                                                      enabled: state
+                                                          is WithdrawValid,
                                                       height: 60,
                                                       onComplete: () =>
                                                           _onSlideToWithdrawComplete(
@@ -438,37 +444,25 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
 
     await cubit.withdraw(
       asset: widget.asset,
-      amountFree: currentState is WithdrawAmountUpdated
-          ? currentState.amount
-          : widget.amount,
-      amountToBeWithdrawn: _amountToBeWithdrawn,
-      address: _addressController.text,
+      amountFree: currentState.amountFree,
+      amountToBeWithdrawn: currentState.amountToBeWithdrawn,
+      address: currentState.address,
       signature: context.read<AccountCubit>().accountSignature,
     );
 
-    _onAmountSlideUpdate(0.0, cubit.state, provider);
+    _onAmountSlideUpdate(0.0, cubit, provider);
   }
 
   void _onAmountSlideUpdate(
     double progress,
-    WithdrawState state,
+    WithdrawCubit cubit,
     _ThisProvider provider,
   ) {
+    final previousState = cubit.state;
+
+    cubit.updateWithdrawParams(
+        amountToBeWithdrawn: previousState.amountFree * progress);
     provider.progress = progress;
-    final amountFree =
-        state is WithdrawAmountUpdated ? state.amount : widget.amount;
-
-    setState(() => _amountToBeWithdrawn = amountFree * progress);
-    _evalWithdrawSlideEnabled();
-  }
-
-  void _evalWithdrawSlideEnabled() {
-    final bool _isSlideEnabled =
-        _addressController.text.length >= 48 && _amountToBeWithdrawn > 0.0;
-
-    if (_isSlideEnabled != _isWithdrawSlideEnabled) {
-      setState(() => _isWithdrawSlideEnabled = _isSlideEnabled);
-    }
   }
 
   /// The app bar for the screen

@@ -1,55 +1,103 @@
 part of 'withdraw_cubit.dart';
 
 abstract class WithdrawState extends Equatable {
-  const WithdrawState();
+  const WithdrawState(
+      {required this.amountFree,
+      required this.amountToBeWithdrawn,
+      required this.address});
+
+  final double amountFree;
+  final double amountToBeWithdrawn;
+  final String address;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [
+        amountFree,
+        amountToBeWithdrawn,
+        address,
+      ];
 }
 
-class WithdrawInitial extends WithdrawState {}
-
-abstract class WithdrawAmountUpdated extends WithdrawState {
-  const WithdrawAmountUpdated({required this.amount});
-
-  final double amount;
-
-  @override
-  List<Object> get props => [amount];
+class WithdrawInitial extends WithdrawState {
+  const WithdrawInitial({
+    required double amountFree,
+    required double amountToBeWithdrawn,
+    required String address,
+  }) : super(
+          amountFree: amountFree,
+          amountToBeWithdrawn: amountToBeWithdrawn,
+          address: address,
+        );
 }
 
-class WithdrawLoading extends WithdrawAmountUpdated {
+class WithdrawLoading extends WithdrawState {
   const WithdrawLoading({
-    required double amount,
-  }) : super(amount: amount);
+    required double amountFree,
+    required double amountToBeWithdrawn,
+    required String address,
+  }) : super(
+          amountFree: amountFree,
+          amountToBeWithdrawn: amountToBeWithdrawn,
+          address: address,
+        );
 }
 
-class WithdrawError extends WithdrawAmountUpdated {
+class WithdrawValid extends WithdrawState {
+  const WithdrawValid({
+    required double amountFree,
+    required double amountToBeWithdrawn,
+    required String address,
+  }) : super(
+          amountFree: amountFree,
+          amountToBeWithdrawn: amountToBeWithdrawn,
+          address: address,
+        );
+}
+
+class WithdrawNotValid extends WithdrawState {
+  const WithdrawNotValid({
+    required double amountFree,
+    required double amountToBeWithdrawn,
+    required String address,
+  }) : super(
+          amountFree: amountFree,
+          amountToBeWithdrawn: amountToBeWithdrawn,
+          address: address,
+        );
+}
+
+class WithdrawError extends WithdrawState {
   const WithdrawError({
-    required double amount,
+    required double amountFree,
+    required double amountToBeWithdrawn,
+    required String address,
     required this.message,
-  }) : super(amount: amount);
+  }) : super(
+          amountFree: amountFree,
+          amountToBeWithdrawn: amountToBeWithdrawn,
+          address: address,
+        );
 
   final String message;
 
   @override
-  List<Object> get props => [
-        amount,
-        message,
-      ];
+  List<Object> get props => [amountFree, amountToBeWithdrawn, address, message];
 }
 
-class WithdrawSuccess extends WithdrawAmountUpdated {
+class WithdrawSuccess extends WithdrawState {
   const WithdrawSuccess({
-    required double amount,
+    required double amountFree,
+    required double amountToBeWithdrawn,
+    required String address,
     required this.message,
-  }) : super(amount: amount);
+  }) : super(
+          amountFree: amountFree,
+          amountToBeWithdrawn: amountToBeWithdrawn,
+          address: address,
+        );
 
   final String message;
 
   @override
-  List<Object> get props => [
-        amount,
-        message,
-      ];
+  List<Object> get props => [amountFree, amountToBeWithdrawn, address, message];
 }
