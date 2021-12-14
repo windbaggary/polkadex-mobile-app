@@ -348,13 +348,15 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                           .read<WithdrawCubit>()
                                                           .withdraw(
                                                             asset: widget.asset,
-                                                            amountFree: 15.50,
+                                                            amountFree: state
+                                                                    is WithdrawAmountUpdated
+                                                                ? state.amount
+                                                                : widget.amount,
                                                             amountToBeWithdrawn:
-                                                                1.0,
-                                                            address: context
-                                                                .read<
-                                                                    AccountCubit>()
-                                                                .accountAddress,
+                                                                _amountToBeWithdrawn,
+                                                            address:
+                                                                _addressController
+                                                                    .text,
                                                             signature: context
                                                                 .read<
                                                                     AccountCubit>()
