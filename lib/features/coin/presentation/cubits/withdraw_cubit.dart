@@ -43,7 +43,9 @@ class WithdrawCubit extends Cubit<WithdrawState> {
     final newAmountDisplayed = amountDisplayed ?? previousState.amountDisplayed;
     final newAddress = address ?? previousState.address;
 
-    newAddress.length >= 48 && newAmountToBeWithdrawn > 0.0
+    newAddress.length >= 48 &&
+            newAmountToBeWithdrawn > 0.0 &&
+            newAmountToBeWithdrawn <= newAmountFree
         ? emit(WithdrawValid(
             amountFree: newAmountFree,
             amountToBeWithdrawn: newAmountToBeWithdrawn,
