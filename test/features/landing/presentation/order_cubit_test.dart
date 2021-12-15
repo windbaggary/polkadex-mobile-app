@@ -116,7 +116,7 @@ void main() {
               signature: any(named: 'signature'),
             ),
           ).thenAnswer(
-            (_) async => Left(ApiError()),
+            (_) async => Left(ApiError(message: '')),
           );
           return cubit;
         },

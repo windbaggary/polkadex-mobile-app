@@ -8,6 +8,7 @@ import 'package:polkadex/common/utils/styles.dart';
 class AppSlideButton extends StatefulWidget {
   final Widget icon;
   final String? label;
+  final bool enabled;
   final EdgeInsets padding;
   final BoxDecoration? decoration;
   final double height;
@@ -17,6 +18,7 @@ class AppSlideButton extends StatefulWidget {
   AppSlideButton({
     required this.icon,
     required this.height,
+    this.enabled = true,
     this.onComplete,
     this.iconRightSize = 45,
     this.label,
@@ -72,69 +74,75 @@ class _AppSlideButtonState extends State<AppSlideButton>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: widget.decoration,
-      height: widget.height,
-      padding: widget.padding,
-      child: LayoutBuilder(
-        builder: (context, constraints) => Stack(
-          children: [
-            Positioned(
-              left: widget.iconRightSize,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              child: Center(
-                child: AnimatedBuilder(
-                  animation: _animController,
-                  builder: (context, child) => Opacity(
-                    opacity: (1.0 - _animController.value).clamp(0.0, 1.0),
-                    child: child,
-                  ),
-                  child: Text(
-                    widget.label ?? "",
-                    style: tsS16W500CFF,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-            AnimatedBuilder(
-              animation: _animController,
-              builder: (context, child) {
-                final val = _animController.value;
-                return Positioned(
-                  left: (constraints.maxWidth.clamp(
-                          0.0, constraints.maxWidth - widget.iconRightSize)) *
-                      val,
-                  right: 0.0,
+    return IgnorePointer(
+      ignoring: !widget.enabled,
+      child: Opacity(
+        opacity: widget.enabled ? 1.0 : 0.3,
+        child: Container(
+          decoration: widget.decoration,
+          height: widget.height,
+          padding: widget.padding,
+          child: LayoutBuilder(
+            builder: (context, constraints) => Stack(
+              children: [
+                Positioned(
+                  left: widget.iconRightSize,
+                  right: 0,
                   top: 0,
                   bottom: 0,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: widget.icon,
+                  child: Center(
+                    child: AnimatedBuilder(
+                      animation: _animController,
+                      builder: (context, child) => Opacity(
+                        opacity: (1.0 - _animController.value).clamp(0.0, 1.0),
+                        child: child,
+                      ),
+                      child: Text(
+                        widget.label ?? "",
+                        style: tsS16W500CFF,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
-                );
-              },
+                ),
+                AnimatedBuilder(
+                  animation: _animController,
+                  builder: (context, child) {
+                    final val = _animController.value;
+                    return Positioned(
+                      left: (constraints.maxWidth.clamp(0.0,
+                              constraints.maxWidth - widget.iconRightSize)) *
+                          val,
+                      right: 0.0,
+                      top: 0,
+                      bottom: 0,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: widget.icon,
+                      ),
+                    );
+                  },
+                ),
+                Positioned.fill(
+                  child: GestureDetector(
+                    onHorizontalDragUpdate: (details) {
+                      final double val =
+                          (constraints.biggest.width - details.localPosition.dx)
+                                  .clamp(0.0, constraints.biggest.width) /
+                              (constraints.biggest.width);
+                      _animController.value = 1.0 - val;
+                    },
+                    onHorizontalDragCancel: () {
+                      _completeAnim();
+                    },
+                    onHorizontalDragEnd: (details) {
+                      _completeAnim();
+                    },
+                  ),
+                ),
+              ],
             ),
-            Positioned.fill(
-              child: GestureDetector(
-                onHorizontalDragUpdate: (details) {
-                  final double val =
-                      (constraints.biggest.width - details.localPosition.dx)
-                              .clamp(0.0, constraints.biggest.width) /
-                          (constraints.biggest.width);
-                  _animController.value = 1.0 - val;
-                },
-                onHorizontalDragCancel: () {
-                  _completeAnim();
-                },
-                onHorizontalDragEnd: (details) {
-                  _completeAnim();
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -51,8 +51,17 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.privacyPolicyScreen);
   }
 
-  static void goToCoinWithdrawScreen() {
-    _navigationKey.currentState?.pushNamed(Routes.coinWithdrawScreen);
+  static void goToCoinWithdrawScreen({
+    required String asset,
+    required double amount,
+  }) {
+    _navigationKey.currentState?.pushNamed(
+      Routes.coinWithdrawScreen,
+      arguments: {
+        'asset': asset,
+        'amount': amount,
+      },
+    );
   }
 
   static void goToCoinTradeScreen({EnumCardFlipState? enumCardFlipState}) {
@@ -96,8 +105,9 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.balanceSummaryScreen);
   }
 
-  static void goToQrCodeScanScreen() {
-    _navigationKey.currentState?.pushNamed(Routes.qrCodeScanScreen);
+  static Future<String?> goToQrCodeScanScreen() async {
+    return await _navigationKey.currentState
+        ?.pushNamed(Routes.qrCodeScanScreen);
   }
 
   static void goToTermsConditionsScreen() {

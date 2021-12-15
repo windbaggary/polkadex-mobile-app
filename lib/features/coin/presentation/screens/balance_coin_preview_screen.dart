@@ -144,7 +144,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           Expanded(
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
-                              onTap: () => Coordinator.goToCoinWithdrawScreen(),
+                              onTap: () => Coordinator.goToCoinWithdrawScreen(
+                                asset: 'PDEX',
+                                amount: 15.50,
+                              ),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.withdraw,
                               ),

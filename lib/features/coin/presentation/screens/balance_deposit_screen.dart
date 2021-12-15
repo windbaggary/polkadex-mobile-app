@@ -1,6 +1,6 @@
 // import 'package:clipboard/clipboard.dart';
 // import 'package:flutter/material.dart';
-// import 'package:polkadex/features/balance/screens/balance_deposit_screen_1.dart';
+// import 'package:polkadex/features/coin/screens/balance_deposit_screen_1.dart';
 // import 'package:polkadex/utils/colors.dart';
 // import 'package:polkadex/utils/extensions.dart';
 // import 'package:polkadex/utils/styles.dart';

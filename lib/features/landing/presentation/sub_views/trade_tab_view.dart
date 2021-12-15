@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
@@ -10,7 +11,6 @@ import 'package:polkadex/features/landing/presentation/providers/trade_tab_provi
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/trade/presentation/order_book_item_model.dart';
 import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -375,14 +375,15 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     FocusManager.instance.primaryFocus?.unfocus();
 
     final resultPlaceOrder = await placeOrderCubit.placeOrder(
-        nonce: 0,
-        baseAsset: leftAsset,
-        quoteAsset: 'USD',
-        orderType: side,
-        orderSide: type,
-        quantity: double.parse(amount),
-        price: double.parse(price),
-        signature: context.read<ImportedAccountEntity>().signature);
+      nonce: 0,
+      baseAsset: leftAsset,
+      quoteAsset: 'USD',
+      orderType: side,
+      orderSide: type,
+      quantity: double.parse(amount),
+      price: double.parse(price),
+      signature: context.read<AccountCubit>().accountSignature,
+    );
 
     if (price.isEmpty) {
       price = amount;
@@ -470,7 +471,7 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
                               .read<ListOrdersCubit>()
                               .cancelOrder(
                                 order,
-                                context.read<ImportedAccountEntity>().signature,
+                                context.read<AccountCubit>().accountSignature,
                               );
 
                           buildAppToast(

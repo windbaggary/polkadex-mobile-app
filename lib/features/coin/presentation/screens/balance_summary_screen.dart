@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/features/balance/widgets/app_circle_chart_graph_widget.dart';
+import 'package:polkadex/features/coin/presentation/widgets/app_circle_chart_graph_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';

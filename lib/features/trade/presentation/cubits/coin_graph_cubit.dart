@@ -22,7 +22,7 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
     result.fold(
       (error) => emit(CoinGraphError(
         timestampSelected: newTimestampChart,
-        errorMessage: error.message!,
+        errorMessage: error.message,
       )),
       (data) => emit(CoinGraphLoaded(
         timestampSelected: newTimestampChart,

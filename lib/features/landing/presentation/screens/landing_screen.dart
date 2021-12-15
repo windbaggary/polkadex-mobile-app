@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
@@ -19,16 +20,11 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34
 class LandingScreen extends StatefulWidget {
-  const LandingScreen({required this.account});
-
-  final ImportedAccountEntity account;
-
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
@@ -110,9 +106,6 @@ class _LandingScreenState extends State<LandingScreen>
               create: (context) => NotificationDrawerProvider()),
           ChangeNotifierProvider<HomeScrollNotifProvider>(
               create: (_) => HomeScrollNotifProvider()),
-          Provider(
-            create: (_) => widget.account,
-          ),
         ],
         builder: (context, child) => _ThisInheritedWidget(
           onOpenDrawer: _onOpenDrawer,
@@ -406,8 +399,8 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
             BlocProvider<ListOrdersCubit>(
               create: (_) => dependency<ListOrdersCubit>()
                 ..getOpenOrders(
-                  context.read<ImportedAccountEntity>().address,
-                  context.read<ImportedAccountEntity>().signature,
+                  context.read<AccountCubit>().accountAddress,
+                  context.read<AccountCubit>().accountSignature,
                 ),
             ),
           ],

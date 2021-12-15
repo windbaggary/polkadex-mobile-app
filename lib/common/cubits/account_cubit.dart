@@ -43,6 +43,18 @@ class AccountCubit extends Cubit<AccountState> {
   final ConfirmPasswordUseCase _confirmPasswordUseCase;
   final RegisterUserUseCase _registerUserUseCase;
 
+  String get accountAddress {
+    final currentState = state;
+
+    return currentState is AccountLoaded ? currentState.account.address : '';
+  }
+
+  String get accountSignature {
+    final currentState = state;
+
+    return currentState is AccountLoaded ? currentState.account.signature : '';
+  }
+
   Future<void> loadAccountData() async {
     final account = await _getAccountStorageUseCase();
 

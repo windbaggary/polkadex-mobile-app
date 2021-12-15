@@ -10,15 +10,14 @@ import 'package:polkadex/features/app_settings_info/screens/app_settings_securit
 import 'package:polkadex/features/app_settings_info/screens/my_account_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/terms_conditions_screen.dart';
-import 'package:polkadex/features/balance/screens/balance_coin_preview_screen.dart';
-import 'package:polkadex/features/balance/screens/balance_deposit_screen_1.dart';
-import 'package:polkadex/features/balance/screens/balance_summary_screen.dart';
-import 'package:polkadex/features/balance/screens/coin_withdraw_screen.dart';
+import 'package:polkadex/features/coin/presentation/screens/balance_coin_preview_screen.dart';
+import 'package:polkadex/features/coin/presentation/screens/balance_deposit_screen_1.dart';
+import 'package:polkadex/features/coin/presentation/screens/balance_summary_screen.dart';
+import 'package:polkadex/features/coin/presentation/screens/coin_withdraw_screen.dart';
 import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/backup_mnemonic_screen.dart';
@@ -149,7 +148,12 @@ abstract class Routes {
         break;
       case coinWithdrawScreen:
         builder = (_) {
-          return CoinWithdrawScreen();
+          final withdrawArguments = settings.arguments as Map;
+
+          return CoinWithdrawScreen(
+            asset: withdrawArguments['asset'],
+            amount: withdrawArguments['amount'],
+          );
         };
         break;
       case coinTradeScreen:
@@ -198,10 +202,12 @@ abstract class Routes {
         };
         break;
       case qrCodeScanScreen:
-        builder = (_) {
-          return QRCodeScanScreen();
-        };
-        break;
+        return MaterialPageRoute<String>(
+          builder: (_) {
+            return QRCodeScanScreen();
+          },
+          settings: settings,
+        );
       case termsConditionsScreen:
         builder = (_) {
           return TermsConditionsScreen();
@@ -246,9 +252,7 @@ abstract class Routes {
                 parent: animation,
                 curve: Interval(0.500, 1.00),
               ),
-              child: LandingScreen(
-                account: settings.arguments as ImportedAccountEntity,
-              ),
+              child: LandingScreen(),
             );
           },
         );

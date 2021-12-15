@@ -1,4 +1,3 @@
-import "dart:math";
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,11 +5,12 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
-import 'package:polkadex/features/landing/presentation/widgets/loading_dots_widget.dart';
+import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 
 /// The callback type for buy or sell
@@ -598,7 +598,7 @@ void _onProgressOrOrderSideUpdate(
   TextEditingController priceController,
   BuildContext context,
 ) {
-  double progressFloor = _floorDecimalPrecision(progressNotifier, 2);
+  double progressFloor = MathUtils.floorDecimalPrecision(progressNotifier, 2);
   double newAmount = walletBalance * progressFloor;
 
   final price = double.tryParse(priceController.text);
@@ -611,7 +611,7 @@ void _onProgressOrOrderSideUpdate(
     newAmount /= price;
   }
 
-  newAmount = _floorDecimalPrecision(newAmount, 4);
+  newAmount = MathUtils.floorDecimalPrecision(newAmount, 4);
   amountController.text = newAmount.toString();
 
   context.read<PlaceOrderCubit>().updateOrderParams(
@@ -620,9 +620,4 @@ void _onProgressOrOrderSideUpdate(
         amount: newAmount,
         price: price,
       );
-}
-
-double _floorDecimalPrecision(double value, int precision) {
-  num mod = pow(10, precision);
-  return (value * mod).floorToDouble() / mod;
 }

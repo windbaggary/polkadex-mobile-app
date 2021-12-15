@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
@@ -15,7 +16,6 @@ import 'package:polkadex/features/landing/presentation/widgets/balance_item_shim
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
@@ -60,8 +60,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
         BlocProvider(
           create: (_) => dependency<BalanceCubit>()
             ..getBalance(
-              context.read<ImportedAccountEntity>().address,
-              context.read<ImportedAccountEntity>().signature,
+              context.read<AccountCubit>().accountAddress,
+              context.read<AccountCubit>().accountSignature,
             ),
         ),
       ],
@@ -69,8 +69,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
         builder: (context, state) {
           return PolkadexProgressErrorWidget(
             onRefresh: () => context.read<BalanceCubit>().getBalance(
-                  context.read<ImportedAccountEntity>().address,
-                  context.read<ImportedAccountEntity>().signature,
+                  context.read<AccountCubit>().accountAddress,
+                  context.read<AccountCubit>().accountSignature,
                 ),
             errorMessage: state is BalanceError ? state.message : null,
             notificationPredicate: 1,
