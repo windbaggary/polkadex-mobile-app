@@ -79,8 +79,6 @@ class WebViewRunner {
       );
 
       await _web?.run();
-      _web?.webViewController.loadUrl(
-          urlRequest: URLRequest(url: Uri.parse("https://localhost:8080/")));
     } else {
       _tryReload();
     }
