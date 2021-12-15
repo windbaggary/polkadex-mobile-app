@@ -535,7 +535,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         amountDisplayed: !_areAmountUnitsSwapped
             ? (cubit.state.amountToBeWithdrawn * _conversionRate).toString()
             : cubit.state.amountToBeWithdrawn.toString());
-    _areAmountUnitsSwapped = !_areAmountUnitsSwapped;
+    setState(() => _areAmountUnitsSwapped = !_areAmountUnitsSwapped);
   }
 
   void _onSlideToWithdrawComplete(
@@ -683,7 +683,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String primaryAmount = '$amount $asset ';
-    String secondaryAmount = '\$${amount * conversionRate}';
+    String secondaryAmount = '\$${amount * conversionRate} ';
 
     if (areUnitsSwapped) {
       final temp = secondaryAmount;
