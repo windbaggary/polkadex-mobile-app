@@ -6,6 +6,7 @@ import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/app_slide_button.dart';
@@ -35,7 +36,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
   final TextEditingController _addressController = TextEditingController();
   final double _conversionRate = 20.0;
   bool _areAmountUnitsSwapped = false;
-  String _editableAmountString = '';
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +44,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         ..init(
           amountFree: widget.amount,
           amountToBeWithdrawn: 0.0,
+          amountDisplayed: '',
           address: '',
         ),
       child: ChangeNotifierProvider(
@@ -105,6 +106,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                         ),
                                         _ThisAmountWidget(
                                           amount: state.amountToBeWithdrawn,
+                                          amountDisplayed: context
+                                              .read<WithdrawCubit>()
+                                              .state
+                                              .amountDisplayed,
                                           conversionRate: _conversionRate,
                                           areUnitsSwapped:
                                               _areAmountUnitsSwapped,
@@ -427,14 +432,14 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                         right: 0.0,
                         bottom: provider.isKeyboardVisible ? 0.0 : -400.0,
                         child: AppCustomKeyboard(
-                          onSwapTapped: () => setState(() =>
-                              _areAmountUnitsSwapped = !_areAmountUnitsSwapped),
                           onKeypadNumberTapped: (number) =>
                               _onKeyboardNumberTapped(
                             number,
                             context.read<WithdrawCubit>(),
                             provider,
                           ),
+                          onSwapTapped: () =>
+                              _onSwapTapped(context.read<WithdrawCubit>()),
                           onEnterTapped: () => context
                               .read<_ThisProvider>()
                               .isKeyboardVisible = false,
@@ -457,9 +462,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     _ThisProvider provider,
   ) {
     final previousState = cubit.state;
-    String _newEditableValue = _areAmountUnitsSwapped
-        ? (double.tryParse(_editableAmountString)! * _conversionRate).toString()
-        : _editableAmountString;
+    String _newEditableValue = previousState.amountDisplayed;
 
     switch (numberTapped) {
       case _EnumKeypadNumbers.one:
@@ -491,8 +494,14 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         break;
       case _EnumKeypadNumbers.zero:
         _newEditableValue += "0";
+        if (_newEditableValue.length == 1) {
+          _newEditableValue = "";
+        }
         break;
       case _EnumKeypadNumbers.dot:
+        if (_newEditableValue.contains('.')) {
+          return;
+        }
         _newEditableValue += ".";
         if (_newEditableValue.length == 1) {
           _newEditableValue = "0.";
@@ -506,18 +515,27 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         }
         break;
     }
-    _newEditableValue = (_newEditableValue.isEmpty) ? "0" : _newEditableValue;
-    final double? valInDouble = double.tryParse(_newEditableValue);
 
-    if (valInDouble != null) {
-      _editableAmountString = _newEditableValue;
-      provider.progress =
-          (valInDouble / previousState.amountFree).clamp(0.0, 1.0);
-      cubit.updateWithdrawParams(
-          amountToBeWithdrawn: _areAmountUnitsSwapped
-              ? valInDouble * (1 / _conversionRate)
-              : valInDouble);
-    }
+    final double valInDouble = double.tryParse(_newEditableValue) ?? 0;
+    final double newAmountToBeWithdrawn = _areAmountUnitsSwapped
+        ? valInDouble * (1 / _conversionRate)
+        : valInDouble;
+
+    provider.progress =
+        (newAmountToBeWithdrawn / previousState.amountFree).clamp(0.0, 1.0);
+    cubit.updateWithdrawParams(
+        amountToBeWithdrawn: newAmountToBeWithdrawn,
+        amountDisplayed: _newEditableValue);
+  }
+
+  void _onSwapTapped(
+    WithdrawCubit cubit,
+  ) {
+    cubit.updateWithdrawParams(
+        amountDisplayed: !_areAmountUnitsSwapped
+            ? (cubit.state.amountToBeWithdrawn * _conversionRate).toString()
+            : cubit.state.amountToBeWithdrawn.toString());
+    _areAmountUnitsSwapped = !_areAmountUnitsSwapped;
   }
 
   void _onSlideToWithdrawComplete(
@@ -541,9 +559,15 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     _ThisProvider provider,
   ) {
     final previousState = cubit.state;
+    final amountSlide =
+        previousState.amountFree * MathUtils.floorDecimalPrecision(progress, 2);
+    final amountDisplayed =
+        _areAmountUnitsSwapped ? amountSlide * _conversionRate : amountSlide;
 
     cubit.updateWithdrawParams(
-        amountToBeWithdrawn: previousState.amountFree * progress);
+      amountToBeWithdrawn: amountSlide,
+      amountDisplayed: amountDisplayed.toString(),
+    );
     provider.progress = progress;
   }
 
@@ -579,11 +603,13 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
 class _ThisAmountWidget extends StatelessWidget {
   const _ThisAmountWidget({
     required this.amount,
+    required this.amountDisplayed,
     required this.conversionRate,
     required this.areUnitsSwapped,
   });
 
   final double amount;
+  final String amountDisplayed;
   final double conversionRate;
   final bool areUnitsSwapped;
 
@@ -613,7 +639,7 @@ class _ThisAmountWidget extends StatelessWidget {
           children: [
             Consumer<_ThisProvider>(
               builder: (context, provider, child) => Text(
-                primaryAmount,
+                amountDisplayed.isEmpty ? '0' : amountDisplayed,
                 style: tsS31W500CFF,
                 textAlign: TextAlign.center,
               ),
