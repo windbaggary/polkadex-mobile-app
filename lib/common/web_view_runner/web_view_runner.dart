@@ -99,10 +99,7 @@ class WebViewRunner {
 
   Future<void> _startJSCode() async {
     // inject js file to webView
-    await _web?.webViewController.evaluateJavascript(
-      source: _jsCode,
-      contentWorld: ContentWorld.DEFAULT_CLIENT,
-    );
+    await _web?.webViewController.evaluateJavascript(source: _jsCode);
   }
 
   int getEvalJavascriptUID() {
@@ -127,10 +124,8 @@ class WebViewRunner {
     }
 
     if (!wrapPromise) {
-      final res = await _web?.webViewController.evaluateJavascript(
-        source: code,
-        contentWorld: ContentWorld.DEFAULT_CLIENT,
-      );
+      final res =
+          await _web?.webViewController.evaluateJavascript(source: code);
       return res;
     }
 
@@ -150,10 +145,41 @@ class WebViewRunner {
           '});';
     }
 
-    _web?.webViewController.evaluateJavascript(
-      source: '$script$uid;',
-      contentWorld: ContentWorld.DEFAULT_CLIENT,
-    );
+    _web?.webViewController.evaluateJavascript(source: '$script$uid;');
     return c.future;
+  }
+
+  //Future<NetworkParams> connectNode(List<NetworkParams> nodes) async {
+  //  final String? res = await evalJavascript(
+  //      'settings.connect(${jsonEncode(nodes.map((e) => e.endpoint).toList())})');
+  //  if (res != null) {
+  //    final index = nodes.indexWhere((e) => e.endpoint.trim() == res.trim());
+  //    return nodes[index > -1 ? index : 0];
+  //  }
+  //  return null;
+  //}
+
+  Future<void> subscribeMessage(
+    String code,
+    String channel,
+    Function callback,
+  ) async {
+    addMsgHandler(channel, callback);
+    evalJavascript(code);
+  }
+
+  void unsubscribeMessage(String channel) {
+    print('unsubscribe $channel');
+    final unsubCall = 'unsub$channel';
+    _web?.webViewController
+        .evaluateJavascript(source: 'window.$unsubCall && window.$unsubCall()');
+  }
+
+  void addMsgHandler(String channel, Function onMessage) {
+    _msgHandlers[channel] = onMessage;
+  }
+
+  void removeMsgHandler(String channel) {
+    _msgHandlers.remove(channel);
   }
 }
