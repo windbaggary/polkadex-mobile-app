@@ -1,4 +1,4 @@
-package com.trade.polkadex
+package com.trade.polkadex.android
 import android.view.View;
 import io.flutter.embedding.android.FlutterFragmentActivity;
 
