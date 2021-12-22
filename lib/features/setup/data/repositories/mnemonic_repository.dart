@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
@@ -26,8 +28,11 @@ class MnemonicRepository implements IMnemonicRepository {
   @override
   Future<Either<ApiError, ImportedAccountEntity>> importAccount(
       String mnemonic, String password) async {
+    final passwordUtf8 = utf8.encode(password);
+    final passwordBase64 = base64.encode(passwordUtf8);
+
     final result =
-        await _mnemonicRemoteDatasource.importAccount(mnemonic, password);
+        await _mnemonicRemoteDatasource.importAccount(mnemonic, passwordBase64);
 
     if (result['error'] == null) {
       return Right(ImportedAccountModel.fromJson(result));
