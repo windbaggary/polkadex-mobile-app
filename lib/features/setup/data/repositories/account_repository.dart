@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
@@ -45,11 +45,8 @@ class AccountRepository implements IAccountRepository {
   @override
   Future<bool> confirmPassword(
       Map<String, dynamic> account, String password) async {
-    final passwordUtf8 = utf8.encode(password);
-    final passwordBase64 = base64.encode(passwordUtf8);
-
     return await _accountLocalDatasource.confirmPassword(
-        account, passwordBase64);
+        account, password.toBase64());
   }
 
   @override
