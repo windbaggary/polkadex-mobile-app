@@ -1,10 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:polkadex/common/widgets/chart/app_charts.dart';
-import 'package:polkadex/common/widgets/chart/chart_models.dart';
+import 'package:polkadex/common/graph/domain/entities/base_chart_entity.dart';
 
 /// The interface for the charts
 abstract class IBaseAppChartCustomWidget {
@@ -16,7 +13,7 @@ abstract class IBaseAppChartCustomWidget {
 /// The base class for drawing the charts
 ///
 /// This widget is used to draw the sub charts into canvas
-abstract class BaseAppChartCustomWidget<B extends BaseChartModel>
+abstract class BaseAppChartCustomWidget<B extends BaseChartEntity>
     extends LeafRenderObjectWidget implements IBaseAppChartCustomWidget {
   final List<B> parentData;
 

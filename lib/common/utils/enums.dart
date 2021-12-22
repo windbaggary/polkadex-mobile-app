@@ -72,11 +72,22 @@ enum EnumOrderTypes {
   stop,
 }
 
+enum EnumAppChartTimestampTypes {
+  oneMinute,
+  fiveMinutes,
+  thirtyMinutes,
+  oneHour,
+  fourHours,
+  twelveHours,
+  oneDay,
+  oneWeek,
+  oneMonth,
+}
+
 enum EnumAppChartDataTypes {
-  hour,
-  week,
-  day,
-  month,
+  average,
+  high,
+  low,
 }
 
 enum EnumBalanceChartDataTypes {

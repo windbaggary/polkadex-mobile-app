@@ -19,7 +19,7 @@ class MnemonicRepository implements IMnemonicRepository {
     if (result['mnemonic'] != null) {
       return Right(result['mnemonic'].split(' '));
     } else {
-      return Left(ApiError());
+      return Left(ApiError(message: ''));
     }
   }
 

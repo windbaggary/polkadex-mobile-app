@@ -19,11 +19,13 @@ void main() {
     );
 
     tImportedAccount = ImportedAccountModel(
-      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-      encoding: tEncoding,
-      address: "k9o1dxJxQE8Zwm5Fy",
-      meta: tMeta,
-    );
+        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+        encoding: tEncoding,
+        address: "k9o1dxJxQE8Zwm5Fy",
+        meta: tMeta,
+        name: "test",
+        biometricAccess: false,
+        signature: '');
   });
 
   test('ImportAccountModel must be a ImportAccountEntity', () async {

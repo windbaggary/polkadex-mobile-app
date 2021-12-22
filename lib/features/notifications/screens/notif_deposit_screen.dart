@@ -1,7 +1,7 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/features/app_settings_info/screens/app_settings_help_screen.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -278,10 +278,7 @@ class NotifDepositScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 40),
                         buildInkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => AppSettingsHelpScreen()));
-                          },
+                          onTap: () => Coordinator.goToAppSettingsHelpScreen(),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),

@@ -7,4 +7,6 @@ extension StringExtension on String {
 
   /// Append the image location to the string
   String asAssetImg() => 'assets/images/$this';
+
+  String capitalize() => "${this[0].toUpperCase()}${substring(1)}";
 }

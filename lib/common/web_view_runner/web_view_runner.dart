@@ -40,14 +40,18 @@ class WebViewRunner {
         onWebViewCreated: (controller) {
           print('HeadlessInAppWebView created!');
         },
-        onConsoleMessage: (controller, message) {
-          print("CONSOLE MESSAGE: " + message.message);
+        onConsoleMessage: (controller, message) async {
+          // prints hidden browser messages only if the app is in debug mode
+          if (!kReleaseMode) {
+            print("CONSOLE MESSAGE: " + message.message);
+          }
+
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
 
           String? path;
-          String? data;
+          dynamic data;
 
-          compute(jsonDecode, message.message).then((msg) {
+          await compute(jsonDecode, message.message).then((msg) {
             path = msg['path'];
             data = msg['data'];
           }, onError: (_) {
@@ -75,8 +79,6 @@ class WebViewRunner {
       );
 
       await _web?.run();
-      _web?.webViewController.loadUrl(
-          urlRequest: URLRequest(url: Uri.parse("https://localhost:8080/")));
     } else {
       _tryReload();
     }

@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/graph/data/models/line_chart_model.dart';
+import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/widgets/chart/app_charts.dart';
 
 /// The provider create a dummy data for line chart
 class AppChartDummyProvider extends ChangeNotifier {
-  final List<LineChartModel> _list = List<LineChartModel>.empty(growable: true);
+  final List<LineChartEntity> _list =
+      List<LineChartEntity>.empty(growable: true);
 
   AppChartDummyProvider() : super() {
     _list.addAll(_createHourDummyList());
@@ -24,16 +26,17 @@ class AppChartDummyProvider extends ChangeNotifier {
   DateTime? _filterStartDate;
   DateTime? _filterEndDate;
 
-  EnumAppChartDataTypes _chartDataType = EnumAppChartDataTypes.hour;
+  EnumAppChartTimestampTypes _chartDataType =
+      EnumAppChartTimestampTypes.oneHour;
   EnumBalanceChartDataTypes _balanceChartDataTypes =
       EnumBalanceChartDataTypes.hour;
 
   double get chartScale => _scale;
 
-  EnumAppChartDataTypes get chartDataType => _chartDataType;
+  EnumAppChartTimestampTypes get chartDataType => _chartDataType;
   EnumBalanceChartDataTypes get balanceChartDataType => _balanceChartDataTypes;
 
-  List<LineChartModel> get list {
+  List<LineChartEntity> get list {
     if (filterStartDate != null || _filterEndDate != null) {
       return _list.where((item) {
         bool hasThisItem = true;
@@ -70,26 +73,28 @@ class AppChartDummyProvider extends ChangeNotifier {
       : DateTime(
           _filterEndDate!.year, _filterEndDate!.month, _filterEndDate!.day);
 
-  set chartDataType(EnumAppChartDataTypes val) {
+  set chartDataType(EnumAppChartTimestampTypes val) {
     stopTimer();
     _list.clear();
     switch (val) {
-      case EnumAppChartDataTypes.hour:
+      case EnumAppChartTimestampTypes.oneMinute:
+      case EnumAppChartTimestampTypes.fiveMinutes:
+      case EnumAppChartTimestampTypes.thirtyMinutes:
+      case EnumAppChartTimestampTypes.oneHour:
+      case EnumAppChartTimestampTypes.fourHours:
+      case EnumAppChartTimestampTypes.twelveHours:
         _list.addAll(_createHourDummyList());
         _scale = 0.004;
         break;
-
-      case EnumAppChartDataTypes.week:
-        _list.addAll(_createWeekDummyList());
-        _scale = 0.000025;
-        break;
-
-      case EnumAppChartDataTypes.day:
+      case EnumAppChartTimestampTypes.oneDay:
         _list.addAll(_createDayDummyList());
         _scale = 0.00017;
         break;
-
-      case EnumAppChartDataTypes.month:
+      case EnumAppChartTimestampTypes.oneWeek:
+        _list.addAll(_createWeekDummyList());
+        _scale = 0.000025;
+        break;
+      case EnumAppChartTimestampTypes.oneMonth:
         _list.addAll(_createMonthDummyList());
         _scale = 0.000007;
         break;
@@ -201,12 +206,12 @@ class AppChartDummyProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  List<LineChartModel> _createHourDummyList() {
-    return List<LineChartModel>.generate(
+  List<LineChartEntity> _createHourDummyList() {
+    return List<LineChartEntity>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(hours: -index)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(hours: -index)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }
@@ -215,8 +220,8 @@ class AppChartDummyProvider extends ChangeNotifier {
     return List<LineChartModel>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(days: -index - 6 * index)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(days: -index - 6 * index)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }
@@ -225,8 +230,8 @@ class AppChartDummyProvider extends ChangeNotifier {
     return List<LineChartModel>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(days: -index)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(days: -index)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }
@@ -235,8 +240,8 @@ class AppChartDummyProvider extends ChangeNotifier {
     return List<LineChartModel>.generate(
       333,
       (index) => LineChartModel(
-        DateTime.now().add(Duration(days: -index * 30)),
-        _generateRandomNumber(),
+        date: DateTime.now().add(Duration(days: -index * 30)),
+        pointY: _generateRandomNumber(),
       ),
     ).reversed.toList();
   }

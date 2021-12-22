@@ -113,20 +113,6 @@ class MnemonicProvider extends ChangeNotifier {
     return result.isRight();
   }
 
-  Future<void> importAccount(String password) async {
-    final result = await _importAccountUseCase(
-      mnemonic: _mnemonicWords.join(' '),
-      password: password,
-    );
-
-    result.fold(
-      (_) {},
-      (importedAcc) {
-        //TODO: Use the imported in the app or store it
-      },
-    );
-  }
-
   Future<void> searchSuggestions(String inputWord) async {
     _suggestionsMnemonicWords.clear();
 

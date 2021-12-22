@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 /// The config class for the application
 class AppConfigs {
@@ -12,5 +12,6 @@ class AppConfigs {
   static const Duration animReverseDuration = Duration(milliseconds: 400);
 
   /// The app screen size
-  static Size? size;
+  static Size size =
+      MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size;
 }

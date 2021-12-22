@@ -30,11 +30,13 @@ void main() {
       type: ["none"],
     );
     tImportedAccount = ImportedAccountModel(
-      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-      encoding: tEncoding,
-      address: "k9o1dxJxQE8Zwm5Fy",
-      meta: tMeta,
-    );
+        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+        encoding: tEncoding,
+        address: "k9o1dxJxQE8Zwm5Fy",
+        meta: tMeta,
+        name: "test",
+        biometricAccess: false,
+        signature: '');
   });
 
   group('ImportAccountUsecase tests', () {
@@ -67,7 +69,7 @@ void main() {
       () async {
         // arrange
         when(() => _repository.importAccount(any(), any())).thenAnswer(
-          (_) async => Left(ApiError()),
+          (_) async => Left(ApiError(message: '')),
         );
         // act
         final result = await _usecase(mnemonic: '', password: '');

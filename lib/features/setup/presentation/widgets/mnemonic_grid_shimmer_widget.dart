@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:shimmer/shimmer.dart';
