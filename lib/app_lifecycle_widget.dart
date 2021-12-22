@@ -29,7 +29,7 @@ class _AppLifecycleWidgetState extends State<AppLifecycleWidget>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (context.read<AccountCubit>().state is AccountLoaded &&
-        state.index == 0) {
+        state == AppLifecycleState.paused) {
       MyApp.restartApp(context);
     }
   }
