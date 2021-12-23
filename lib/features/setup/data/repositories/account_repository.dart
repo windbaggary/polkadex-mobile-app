@@ -28,8 +28,13 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<void> deleteAccountAndPasswordStorage() async {
-    return await _accountLocalDatasource.deleteAccountAndPasswordStorage();
+  Future<void> deleteAccountStorage() async {
+    return await _accountLocalDatasource.deleteAccountStorage();
+  }
+
+  @override
+  Future<void> deletePasswordStorage() async {
+    return await _accountLocalDatasource.deletePasswordStorage();
   }
 
   @override

@@ -6,7 +6,8 @@ import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
@@ -17,8 +18,10 @@ import 'package:test/test.dart';
 
 class _MockGetAccountUseCase extends Mock implements GetAccountUseCase {}
 
-class _MockDeleteAccountAndPasswordUsecase extends Mock
-    implements DeleteAccountAndPasswordUseCase {}
+class _MockDeleteAccountUsecase extends Mock implements DeleteAccountUseCase {}
+
+class _MockDeletePasswordUsecase extends Mock implements DeletePasswordUseCase {
+}
 
 class _MockImportAccountUseCase extends Mock implements ImportAccountUseCase {}
 
@@ -35,8 +38,8 @@ class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
 
 void main() {
   late _MockGetAccountUseCase _mockGetAccountUseCase;
-  late _MockDeleteAccountAndPasswordUsecase
-      _mockDeleteAccountAndPasswordUsecase;
+  late _MockDeleteAccountUsecase _mockDeleteAccountUsecase;
+  late _MockDeletePasswordUsecase _mockDeletePasswordUsecase;
   late _MockImportAccountUseCase _mockImportAccountUseCase;
   late _MockSaveAccountUseCase _mockSaveAccountUseCase;
   late _MockSavePasswordUseCase _mockSavePasswordUseCase;
@@ -52,8 +55,8 @@ void main() {
 
   setUp(() {
     _mockGetAccountUseCase = _MockGetAccountUseCase();
-    _mockDeleteAccountAndPasswordUsecase =
-        _MockDeleteAccountAndPasswordUsecase();
+    _mockDeleteAccountUsecase = _MockDeleteAccountUsecase();
+    _mockDeletePasswordUsecase = _MockDeletePasswordUsecase();
     _mockImportAccountUseCase = _MockImportAccountUseCase();
     _mockSaveAccountUseCase = _MockSaveAccountUseCase();
     _mockSavePasswordUseCase = _MockSavePasswordUseCase();
@@ -63,7 +66,8 @@ void main() {
 
     cubit = AccountCubit(
       getAccountStorageUseCase: _mockGetAccountUseCase,
-      deleteAccountAndPasswordUseCase: _mockDeleteAccountAndPasswordUsecase,
+      deleteAccountUseCase: _mockDeleteAccountUsecase,
+      deletePasswordUseCase: _mockDeletePasswordUsecase,
       importAccountUseCase: _mockImportAccountUseCase,
       saveAccountUseCase: _mockSaveAccountUseCase,
       savePasswordUseCase: _mockSavePasswordUseCase,
@@ -143,7 +147,12 @@ void main() {
             (_) async => tImportedAccount,
           );
           when(
-            () => _mockDeleteAccountAndPasswordUsecase(),
+            () => _mockDeleteAccountUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
           ).thenAnswer(
             (_) async {},
           );

@@ -24,7 +24,8 @@ import 'package:polkadex/features/setup/data/repositories/account_repository.dar
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
@@ -106,7 +107,13 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => DeleteAccountAndPasswordUseCase(
+    () => DeleteAccountUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => DeletePasswordUseCase(
       accountRepository: dependency(),
     ),
   );
@@ -145,7 +152,8 @@ Future<void> init() async {
   dependency.registerFactory(
     () => AccountCubit(
       savePasswordUseCase: dependency(),
-      deleteAccountAndPasswordUseCase: dependency(),
+      deleteAccountUseCase: dependency(),
+      deletePasswordUseCase: dependency(),
       saveAccountUseCase: dependency(),
       importAccountUseCase: dependency(),
       getPasswordUseCase: dependency(),

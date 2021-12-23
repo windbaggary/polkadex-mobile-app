@@ -46,18 +46,22 @@ class AccountLocalDatasource {
     return await keypairFile.read();
   }
 
-  Future<void> deleteAccountAndPasswordStorage() async {
+  Future<void> deleteAccountStorage() async {
     final BiometricStorageFile keypairFile =
         await BiometricStorage().getStorage(
       'keypair',
       options: StorageFileInitOptions(authenticationRequired: false),
     );
+
+    await keypairFile.delete();
+    return;
+  }
+
+  Future<void> deletePasswordStorage() async {
     final BiometricStorageFile passwordFile =
         await BiometricStorage().getStorage('password');
 
-    await keypairFile.delete();
     await passwordFile.delete();
-
     return;
   }
 

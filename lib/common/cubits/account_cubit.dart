@@ -4,7 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
@@ -17,7 +18,8 @@ part 'account_state.dart';
 class AccountCubit extends Cubit<AccountState> {
   AccountCubit({
     required GetAccountUseCase getAccountStorageUseCase,
-    required DeleteAccountAndPasswordUseCase deleteAccountAndPasswordUseCase,
+    required DeleteAccountUseCase deleteAccountUseCase,
+    required DeletePasswordUseCase deletePasswordUseCase,
     required ImportAccountUseCase importAccountUseCase,
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
@@ -25,7 +27,8 @@ class AccountCubit extends Cubit<AccountState> {
     required ConfirmPasswordUseCase confirmPasswordUseCase,
     required RegisterUserUseCase registerUserUseCase,
   })  : _getAccountStorageUseCase = getAccountStorageUseCase,
-        _deleteAccountAndPasswordUseCase = deleteAccountAndPasswordUseCase,
+        _deleteAccountUseCase = deleteAccountUseCase,
+        _deletePasswordUseCase = deletePasswordUseCase,
         _importAccountUseCase = importAccountUseCase,
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
@@ -35,7 +38,8 @@ class AccountCubit extends Cubit<AccountState> {
         super(AccountInitial());
 
   final GetAccountUseCase _getAccountStorageUseCase;
-  final DeleteAccountAndPasswordUseCase _deleteAccountAndPasswordUseCase;
+  final DeleteAccountUseCase _deleteAccountUseCase;
+  final DeletePasswordUseCase _deletePasswordUseCase;
   final ImportAccountUseCase _importAccountUseCase;
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
@@ -66,7 +70,10 @@ class AccountCubit extends Cubit<AccountState> {
   Future<void> logout() async {
     emit(AccountNotLoaded());
 
-    return await _deleteAccountAndPasswordUseCase();
+    await _deleteAccountUseCase();
+    await _deletePasswordUseCase();
+
+    return;
   }
 
   Future<bool> savePassword(String password) async {
