@@ -19,9 +19,9 @@ class OrderItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color colorBuySell = color0CA564;
+    Color colorBuySell = AppColors.color0CA564;
     if (order.iEnumType == EnumBuySell.sell) {
-      colorBuySell = colorE6007A;
+      colorBuySell = AppColors.colorE6007A;
     }
     return IgnorePointer(
       ignoring: isProcessing,
@@ -31,7 +31,7 @@ class OrderItemWidget extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: colorFFFFFF.withOpacity(0.05),
+                color: AppColors.colorFFFFFF.withOpacity(0.05),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
@@ -50,7 +50,7 @@ class OrderItemWidget extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: color8BA1BE.withOpacity(0.20),
+                      color: AppColors.color8BA1BE.withOpacity(0.20),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     padding:
@@ -80,7 +80,7 @@ class OrderItemWidget extends StatelessWidget {
             ),
             Container(
               decoration: BoxDecoration(
-                color: color2E303C,
+                color: AppColors.color2E303C,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
@@ -104,7 +104,8 @@ class OrderItemWidget extends StatelessWidget {
                           children: [
                             Text(
                               'Type',
-                              style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                              style: tsS14W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -130,7 +131,8 @@ class OrderItemWidget extends StatelessWidget {
                           children: [
                             Text(
                               'Amount',
-                              style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                              style: tsS14W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
                             ),
                             SizedBox(height: 4),
                             Text(
@@ -145,7 +147,8 @@ class OrderItemWidget extends StatelessWidget {
                         children: [
                           Text(
                             'Price',
-                            style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                            style: tsS14W400CFF.copyWith(
+                                color: AppColors.colorABB2BC),
                           ),
                           Text(
                             order.iPrice,
@@ -159,7 +162,8 @@ class OrderItemWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 12),
                     child: Text(
                       order.iFormattedDate,
-                      style: tsS14W400CFF.copyWith(color: colorABB2BC),
+                      style:
+                          tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
                     ),
                   ),
                 ],

@@ -95,8 +95,9 @@ class AppButton extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color:
-                    enabled ? backgroundColor : color8BA1BE.withOpacity(0.20),
+                color: enabled
+                    ? backgroundColor
+                    : AppColors.color8BA1BE.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
@@ -105,7 +106,7 @@ class AppButton extends StatelessWidget {
                   label,
                   textAlign: TextAlign.center,
                   style: tsS18W600CFF.copyWith(
-                      color: enabled ? textColor : colorFFFFFF),
+                      color: enabled ? textColor : AppColors.colorFFFFFF),
                 ),
               ),
             ),

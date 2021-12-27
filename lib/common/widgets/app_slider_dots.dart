@@ -26,8 +26,8 @@ class AppSliderDots extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: selectedIndex == index
-              ? colorE6007A
-              : colorABB2BC.withOpacity(0.20),
+              ? AppColors.colorE6007A
+              : AppColors.colorABB2BC.withOpacity(0.20),
         ),
       );
 

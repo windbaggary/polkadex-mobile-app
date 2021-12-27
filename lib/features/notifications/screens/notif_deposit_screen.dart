@@ -33,14 +33,14 @@ class NotifDepositScreen extends StatelessWidget {
         break;
     }
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: SafeArea(
         child: CustomAppBar(
           onTapBack: () => Navigator.of(context).pop(),
           title: 'Transaction',
           child: Container(
             decoration: BoxDecoration(
-              color: color1C2023,
+              color: AppColors.color1C2023,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(40),
               ),
@@ -60,7 +60,7 @@ class NotifDepositScreen extends StatelessWidget {
                             width: 62,
                             height: 62,
                             decoration: BoxDecoration(
-                              color: color8BA1BE.withOpacity(0.20),
+                              color: AppColors.color8BA1BE.withOpacity(0.20),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             padding: const EdgeInsets.all(13),
@@ -86,7 +86,7 @@ class NotifDepositScreen extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: color2E303C,
+                      color: AppColors.color2E303C,
                       borderRadius: BorderRadius.only(
                         topRight: Radius.circular(40),
                         bottomLeft: Radius.circular(40),
@@ -150,7 +150,7 @@ class NotifDepositScreen extends StatelessWidget {
                                             margin:
                                                 const EdgeInsets.only(right: 4),
                                             decoration: BoxDecoration(
-                                              color: color0CA564,
+                                              color: AppColors.color0CA564,
                                               shape: BoxShape.circle,
                                             ),
                                             padding: const EdgeInsets.all(3),
@@ -266,7 +266,7 @@ class NotifDepositScreen extends StatelessWidget {
                                         height: 10,
                                         child: SvgPicture.asset(
                                           'arrow'.asAssetSvg(),
-                                          color: colorFFFFFF,
+                                          color: AppColors.colorFFFFFF,
                                         ),
                                       ),
                                     ),
@@ -300,7 +300,8 @@ class NotifDepositScreen extends StatelessWidget {
                                   height: 47,
                                   margin: const EdgeInsets.only(right: 14),
                                   decoration: BoxDecoration(
-                                    color: color8BA1BE.withOpacity(0.20),
+                                    color:
+                                        AppColors.color8BA1BE.withOpacity(0.20),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   padding: const EdgeInsets.all(13),

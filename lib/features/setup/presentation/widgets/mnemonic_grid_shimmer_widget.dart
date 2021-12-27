@@ -6,8 +6,8 @@ class MnemonicGridShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      highlightColor: color8BA1BE,
-      baseColor: color2E303C,
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 12),
         child: GridView.count(

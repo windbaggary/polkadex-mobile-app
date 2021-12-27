@@ -20,7 +20,9 @@ class PasswordValidationWidget extends StatelessWidget {
           child: Icon(
             Icons.check,
             size: 16,
-            color: isValid ? color02C076 : colorFFFFFF.withOpacity(0.5),
+            color: isValid
+                ? AppColors.color02C076
+                : AppColors.colorFFFFFF.withOpacity(0.5),
           ),
         ),
         Flexible(

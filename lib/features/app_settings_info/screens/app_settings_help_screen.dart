@@ -12,7 +12,7 @@ class AppSettingsHelpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: AppSettingsLayout(
         onBack: () => Navigator.of(context).pop(),
         childAlignment: null,
@@ -73,7 +73,7 @@ class AppSettingsHelpScreen extends StatelessWidget {
           border: Border(
             bottom: isShowBorder
                 ? BorderSide(
-                    color: colorFFFFFF.withOpacity(0.10),
+                    color: AppColors.colorFFFFFF.withOpacity(0.10),
                     width: 1,
                   )
                 : BorderSide.none,
@@ -87,7 +87,7 @@ class AppSettingsHelpScreen extends StatelessWidget {
               height: 48,
               margin: const EdgeInsets.only(right: 11),
               decoration: BoxDecoration(
-                color: color8BA1BE.withOpacity(0.2),
+                color: AppColors.color8BA1BE.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               padding: padding,
@@ -110,7 +110,7 @@ class AppSettingsHelpScreen extends StatelessWidget {
                           height: 8,
                           margin: const EdgeInsets.only(right: 4),
                           decoration: BoxDecoration(
-                            color: color0CA564,
+                            color: AppColors.color0CA564,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -127,7 +127,7 @@ class AppSettingsHelpScreen extends StatelessWidget {
             ),
             Icon(
               Icons.keyboard_arrow_right_outlined,
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
               size: 16,
             ),
           ],

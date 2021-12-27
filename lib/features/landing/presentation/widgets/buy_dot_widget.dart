@@ -127,7 +127,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
               builder: (context) => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: color2E303C,
+                  color: AppColors.color2E303C,
                   boxShadow: <BoxShadow>[
                     BoxShadow(
                       color: Colors.black.withOpacity(0.17),
@@ -150,7 +150,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                             margin: const EdgeInsets.only(right: 9),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: color8BA1BE.withOpacity(0.30),
+                              color: AppColors.color8BA1BE.withOpacity(0.30),
                             ),
                             padding: const EdgeInsets.all(11),
                             child: SvgPicture.asset('wallet'.asAssetSvg()),
@@ -162,7 +162,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                 Text(
                                   "My balance",
                                   style: tsS14W500CFF.copyWith(
-                                      color: colorFFFFFF.withOpacity(0.70)),
+                                      color: AppColors.colorFFFFFF
+                                          .withOpacity(0.70)),
                                 ),
                                 Text(
                                   '${_walletBalance.toStringAsFixed(2)} $_asset',
@@ -250,8 +251,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                   : {},
                               backgroundColor:
                                   state.orderSide == EnumBuySell.buy
-                                      ? color0CA564
-                                      : colorE6007A,
+                                      ? AppColors.color0CA564
+                                      : AppColors.colorE6007A,
                             );
                           },
                         ),
@@ -491,10 +492,10 @@ class _ThisTotalWidget extends StatelessWidget {
                 Color color;
                 switch (buyOrSell) {
                   case EnumBuySell.buy:
-                    color = color0CA564;
+                    color = AppColors.color0CA564;
                     break;
                   case EnumBuySell.sell:
-                    color = colorE6007A;
+                    color = AppColors.colorE6007A;
                     break;
                 }
                 return ValueListenableBuilder<double>(

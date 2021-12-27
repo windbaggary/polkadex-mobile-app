@@ -88,9 +88,9 @@ class AppLineChartOptions {
   }) =>
       AppLineChartOptions(
         chartScale: chartScale,
-        lineColor: lineColor ?? color8BA1BE,
+        lineColor: lineColor ?? AppColors.color8BA1BE,
         areaGradient: areaGradient,
-        gridColor: color8BA1BE.withOpacity(0.15),
+        gridColor: AppColors.color8BA1BE.withOpacity(0.15),
         gridStroke: 1,
         yLabelCount: yLabelCount,
         yLabelTextStyle: TextStyle(

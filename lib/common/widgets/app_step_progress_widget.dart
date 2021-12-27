@@ -40,8 +40,8 @@ class AppStepProgressWidget extends StatelessWidget {
         children: <TextSpan>[
           TextSpan(
               text: '/ $totalSteps',
-              style:
-                  tsS15W500CFF.copyWith(color: colorFFFFFF.withOpacity(0.50))),
+              style: tsS15W500CFF.copyWith(
+                  color: AppColors.colorFFFFFF.withOpacity(0.50))),
         ],
       ),
     );

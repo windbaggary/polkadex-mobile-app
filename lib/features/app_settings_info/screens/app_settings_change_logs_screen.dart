@@ -12,7 +12,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: AppSettingsLayout(
         subTitle: 'Changelog',
         mainTitle: 'Changelog',
@@ -72,7 +72,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
             ),
             Container(
               decoration: BoxDecoration(
-                color: color2E303C.withOpacity(0.30),
+                color: AppColors.color2E303C.withOpacity(0.30),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(40),
                   bottomLeft: Radius.circular(40),
@@ -87,7 +87,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: colorE6007A,
+                        color: AppColors.colorE6007A,
                         borderRadius: BorderRadius.circular(6),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -111,7 +111,7 @@ class AppSettingsChangeLogsScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: color8BA1BE.withOpacity(0.20),
+                        color: AppColors.color8BA1BE.withOpacity(0.20),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -233,7 +233,7 @@ class _ThisBulletItem extends StatelessWidget {
           height: 7,
           margin: padding,
           decoration: BoxDecoration(
-            color: colorE6007A,
+            color: AppColors.colorE6007A,
             shape: BoxShape.circle,
           ),
         ),
@@ -263,7 +263,7 @@ class _ThisItemWidget extends StatelessWidget {
           height: 48,
           margin: const EdgeInsets.only(right: 11),
           decoration: BoxDecoration(
-            color: color8BA1BE.withOpacity(0.20),
+            color: AppColors.color8BA1BE.withOpacity(0.20),
             borderRadius: BorderRadius.circular(12),
           ),
           padding: iconPadding,
