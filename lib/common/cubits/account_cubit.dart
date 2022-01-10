@@ -137,4 +137,18 @@ class AccountCubit extends Cubit<AccountState> {
 
     return false;
   }
+
+  Future<void> switchBiometricAccess() async {
+    final currentState = state;
+
+    if (currentState is AccountLoaded) {
+      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+          .copyWith(biometricAccess: !currentState.account.biometricAccess);
+
+      emit(AccountLoaded(account: acc));
+      await _saveAccountUseCase(keypairJson: json.encode(acc));
+    }
+
+    return;
+  }
 }
