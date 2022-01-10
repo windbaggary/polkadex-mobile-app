@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:provider/provider.dart';
+import 'package:polkadex/injection_container.dart';
 
 /// XD_PAGE: 42
 class AppSettingsSecurity extends StatelessWidget {
@@ -27,30 +29,38 @@ class AppSettingsSecurity extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 8),
+                if (dependency.get<bool>(instanceName: 'isBiometricAvailable'))
+                  Column(
+                    children: [
+                      SizedBox(height: 8),
+                      Consumer<_ThisProvider>(
+                        builder: (context, thisProvider, child) =>
+                            OptionTabSwitchWidget(
+                          enabled: context.read<AccountCubit>().state
+                              is AccountLoaded,
+                          svgAsset: "finger-print".asAssetSvg(),
+                          title: "Secure with Biometric",
+                          description:
+                              "Secure your access without typing your Pin Code.",
+                          isChecked: thisProvider.isFingerPrint,
+                          onSwitchChanged: (value) {
+                            thisProvider.isFingerPrint = value;
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6.0),
+                        child: Divider(
+                          color: Colors.white10,
+                          height: 1,
+                        ),
+                      ),
+                    ],
+                  ),
                 Consumer<_ThisProvider>(
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
-                    svgAsset: "finger-print".asAssetSvg(),
-                    title: "Secure with Biometric",
-                    description:
-                        "Secure your access without typing your Pin Code.",
-                    isChecked: thisProvider.isFingerPrint,
-                    onSwitchChanged: (value) {
-                      thisProvider.isFingerPrint = value;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 6.0),
-                  child: Divider(
-                    color: Colors.white10,
-                    height: 1,
-                  ),
-                ),
-                Consumer<_ThisProvider>(
-                  builder: (context, thisProvider, child) =>
-                      OptionTabSwitchWidget(
+                    enabled: false,
                     svgAsset: "keypad".asAssetSvg(),
                     title: "Secure with Pin Code",
                     description: "Your access are kept safe by Pin Code.",
@@ -70,6 +80,7 @@ class AppSettingsSecurity extends StatelessWidget {
                 Consumer<_ThisProvider>(
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
+                    enabled: false,
                     svgAsset: "security".asAssetSvg(),
                     title: "Two-Factor Authentication (2FA)",
                     description:
@@ -90,6 +101,7 @@ class AppSettingsSecurity extends StatelessWidget {
                 Consumer<_ThisProvider>(
                   builder: (context, thisProvider, child) =>
                       OptionTabSwitchWidget(
+                    enabled: false,
                     svgAsset: "tracker".asAssetSvg(),
                     title: "Tracking IP",
                     description: "Block access to suspicious IPs.",
