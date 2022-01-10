@@ -59,6 +59,14 @@ class AccountCubit extends Cubit<AccountState> {
     return currentState is AccountLoaded ? currentState.account.signature : '';
   }
 
+  bool get biometricAccess {
+    final currentState = state;
+
+    return currentState is AccountLoaded
+        ? currentState.account.biometricAccess
+        : false;
+  }
+
   Future<void> loadAccountData() async {
     final account = await _getAccountStorageUseCase();
 
@@ -142,6 +150,8 @@ class AccountCubit extends Cubit<AccountState> {
     final currentState = state;
 
     if (currentState is AccountLoaded) {
+      emit(AccountUpdatingBiometric(account: currentState.account));
+
       ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
           .copyWith(biometricAccess: !currentState.account.biometricAccess);
 

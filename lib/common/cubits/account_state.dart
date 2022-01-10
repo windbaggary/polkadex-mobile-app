@@ -20,6 +20,11 @@ class AccountLoaded extends AccountState {
   List<Object> get props => [account];
 }
 
+class AccountUpdatingBiometric extends AccountLoaded {
+  AccountUpdatingBiometric({required ImportedAccountEntity account})
+      : super(account: account);
+}
+
 class AccountPasswordValidating extends AccountLoaded {
   AccountPasswordValidating({required ImportedAccountEntity account})
       : super(account: account);

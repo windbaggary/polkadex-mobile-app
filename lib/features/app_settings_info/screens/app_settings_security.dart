@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
@@ -33,21 +34,22 @@ class AppSettingsSecurity extends StatelessWidget {
                   Column(
                     children: [
                       SizedBox(height: 8),
-                      Consumer<_ThisProvider>(
-                        builder: (context, thisProvider, child) =>
-                            OptionTabSwitchWidget(
+                      BlocBuilder<AccountCubit, AccountState>(
+                          builder: (context, state) {
+                        return OptionTabSwitchWidget(
                           enabled: context.read<AccountCubit>().state
                               is AccountLoaded,
                           svgAsset: "finger-print".asAssetSvg(),
                           title: "Secure with Biometric",
                           description:
                               "Secure your access without typing your Pin Code.",
-                          isChecked: thisProvider.isFingerPrint,
-                          onSwitchChanged: (value) {
-                            thisProvider.isFingerPrint = value;
-                          },
-                        ),
-                      ),
+                          isChecked:
+                              context.read<AccountCubit>().biometricAccess,
+                          onSwitchChanged: (_) => context
+                              .read<AccountCubit>()
+                              .switchBiometricAccess(),
+                        );
+                      }),
                       Padding(
                         padding: const EdgeInsets.only(left: 6.0),
                         child: Divider(
