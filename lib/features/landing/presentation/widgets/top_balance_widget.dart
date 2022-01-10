@@ -93,7 +93,7 @@ class TopBalanceWidget extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 9),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: color8BA1BE.withOpacity(0.30),
+                  color: AppColors.color8BA1BE.withOpacity(0.30),
                 ),
                 padding: const EdgeInsets.all(11),
                 child: SvgPicture.asset('wallet_selected'.asAssetSvg()),
@@ -101,7 +101,7 @@ class TopBalanceWidget extends StatelessWidget {
             ),
             Text(
               'Total Balance',
-              style: tsS15W400CFF.copyWith(color: colorABB2BC),
+              style: tsS15W400CFF.copyWith(color: AppColors.colorABB2BC),
               textAlign: TextAlign.center,
             ),
             mainBalanceValueWidget,
@@ -115,8 +115,8 @@ class TopBalanceWidget extends StatelessWidget {
 
   Widget _mainBTCBalanceShimmerWidget() {
     return Shimmer.fromColors(
-      highlightColor: color8BA1BE,
-      baseColor: color2E303C,
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -145,8 +145,8 @@ class TopBalanceWidget extends StatelessWidget {
 
   Widget _secondaryUSDBalanceShimmerWidget() {
     return Shimmer.fromColors(
-      highlightColor: color8BA1BE,
-      baseColor: color2E303C,
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),

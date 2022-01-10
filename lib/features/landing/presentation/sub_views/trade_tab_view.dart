@@ -150,7 +150,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     return Container(
       margin: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
-        color: color24252C,
+        color: AppColors.color24252C,
         borderRadius: BorderRadius.circular(20),
         boxShadow: <BoxShadow>[
           BoxShadow(
@@ -174,16 +174,17 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                       Color color;
                       switch (buyOrSell) {
                         case EnumBuySell.buy:
-                          color = color0CA564;
+                          color = AppColors.color0CA564;
                           break;
                         case EnumBuySell.sell:
-                          color = colorE6007A;
+                          color = AppColors.colorE6007A;
                           break;
                       }
                       return TabBar(
                         isScrollable: true,
                         labelStyle: tsS15W600CFF,
-                        unselectedLabelColor: colorFFFFFF.withOpacity(0.30),
+                        unselectedLabelColor:
+                            AppColors.colorFFFFFF.withOpacity(0.30),
                         indicatorColor: color,
                         indicatorSize: TabBarIndicatorSize.tab,
                         tabs: <Tab>[
@@ -216,7 +217,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                       ),
                       Icon(
                         Icons.keyboard_arrow_down,
-                        color: colorFFFFFF,
+                        color: AppColors.colorFFFFFF,
                         size: 16,
                       ),
                     ],
@@ -299,7 +300,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                         if (state is! ListOrdersError)
                           Container(
                             decoration: BoxDecoration(
-                              color: colorE6007A,
+                              color: AppColors.colorE6007A,
                               shape: BoxShape.circle,
                             ),
                             padding: EdgeInsets.all(
@@ -450,7 +451,7 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
             height: 4,
             margin: const EdgeInsets.only(bottom: 2.5, left: 40, right: 40),
             decoration: BoxDecoration(
-              color: colorE6007A,
+              color: AppColors.colorE6007A,
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -528,7 +529,7 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
               height: 33,
               padding: const EdgeInsets.symmetric(vertical: 7),
               decoration: BoxDecoration(
-                color: color8BA1BE.withOpacity(0.20),
+                color: AppColors.color8BA1BE.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: SvgPicture.asset('trading'.asAssetSvg()),
@@ -599,7 +600,7 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                   ),
                   Text(
                     coinProvider.tokenCoin.name,
-                    style: tsS15W500CFF.copyWith(color: colorABB2BC),
+                    style: tsS15W500CFF.copyWith(color: AppColors.colorABB2BC),
                   )
                 ],
               ),
@@ -607,7 +608,7 @@ class _ThisTopSelectableWidget extends StatelessWidget {
           ),
           Icon(
             Icons.keyboard_arrow_down,
-            color: colorFFFFFF,
+            color: AppColors.colorFFFFFF,
           ),
         ],
       ),

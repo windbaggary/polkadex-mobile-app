@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'dart:math' as math;
 
@@ -19,8 +20,8 @@ class AppHorizontalSlider extends StatefulWidget {
 
   const AppHorizontalSlider({
     this.initialProgress = 0.0,
-    this.bgColor = const Color(0xff141415),
-    this.activeColor = const Color(0xFFE6007A),
+    this.bgColor = AppColors.color141415,
+    this.activeColor = AppColors.colorE6007A,
     this.onProgressUpdate,
   }) : assert(initialProgress >= 0.0 && initialProgress <= 1.0, '''
     The [initialProgress] must be between 0.0 and 1.0

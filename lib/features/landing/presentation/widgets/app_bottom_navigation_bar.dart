@@ -25,7 +25,7 @@ class AppBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color1C2023,
+        color: AppColors.color1C2023,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -61,7 +61,7 @@ class AppBottomNavigationBar extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: color2E303C,
+                  color: AppColors.color2E303C,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(22),
                     bottomRight: Radius.circular(22),
@@ -118,7 +118,7 @@ class AppBottomNavigationBar extends StatelessWidget {
     Color containerColor;
     String svg;
     if (_selectedNotifier.value == EnumBottonBarItem.balance) {
-      containerColor = colorE6007A;
+      containerColor = AppColors.colorE6007A;
       svg = 'wallet_selected'.asAssetSvg();
     } else {
       containerColor = Colors.transparent;
@@ -150,7 +150,7 @@ class AppBottomNavigationBar extends StatelessWidget {
     String svg;
     Color containerColor;
     if (_selectedNotifier.value == EnumBottonBarItem.trade) {
-      containerColor = colorE6007A;
+      containerColor = AppColors.colorE6007A;
       svg = 'trade_selected'.asAssetSvg();
     } else {
       containerColor = Colors.transparent;
@@ -185,7 +185,7 @@ class AppBottomNavigationBar extends StatelessWidget {
     String svg;
     Color containerColor;
     if (_selectedNotifier.value == EnumBottonBarItem.exchange) {
-      containerColor = colorE6007A;
+      containerColor = AppColors.colorE6007A;
       svg = 'chart_selected'.asAssetSvg();
     } else {
       containerColor = Colors.transparent;

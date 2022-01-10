@@ -46,7 +46,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
       return WillPopScope(
         onWillPop: () => _onPop(context),
         child: Scaffold(
-          backgroundColor: color1C2023,
+          backgroundColor: AppColors.color1C2023,
           appBar: AppBar(
             title: Text(
               'Create Wallet',
@@ -81,7 +81,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                   (BuildContext context, int index) {
                     return Container(
                       decoration: BoxDecoration(
-                        color: color24252C,
+                        color: AppColors.color24252C,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: <BoxShadow>[
                           BoxShadow(
@@ -97,7 +97,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: color2E303C,
+                              color: AppColors.color2E303C,
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(20.0),
                                 bottomRight: Radius.circular(20.0),
@@ -153,8 +153,8 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                             child: Row(
                               children: [
                                 CheckBoxWidget(
-                                  checkColor: colorE6007A,
-                                  backgroundColor: color3B4150,
+                                  checkColor: AppColors.colorE6007A,
+                                  backgroundColor: AppColors.color3B4150,
                                   isChecked: _isButtonToBackupEnabled,
                                   onTap: (_) => setState(() =>
                                       _isButtonToBackupEnabled =

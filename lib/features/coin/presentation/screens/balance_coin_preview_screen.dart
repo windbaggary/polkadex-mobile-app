@@ -48,7 +48,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
         ),
       ],
       builder: (context, _) => Scaffold(
-        backgroundColor: color1C2023,
+        backgroundColor: AppColors.color1C2023,
         body: SafeArea(
           child: CustomAppBar(
             title: 'Polkadex (DEX)',
@@ -56,7 +56,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
             onTapBack: () => Navigator.of(context).pop(),
             child: Container(
               decoration: BoxDecoration(
-                color: color1C2023,
+                color: AppColors.color1C2023,
                 borderRadius: BorderRadius.only(topRight: Radius.circular(40)),
               ),
               child: SingleChildScrollView(
@@ -90,18 +90,21 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                       yAxisTopPaddingRatio: 0.05,
                                       yAxisBottomPaddingRatio: 0.00,
                                       chartScale: provider.chartScale,
-                                      lineColor: colorE6007A,
+                                      lineColor: AppColors.colorE6007A,
                                       yAxisLabelPrefix: "",
                                       areaGradient: LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
                                         colors: <Color>[
-                                          colorE6007A.withOpacity(0.50),
-                                          color8BA1BE.withOpacity(0.0),
+                                          AppColors.colorE6007A
+                                              .withOpacity(0.50),
+                                          AppColors.color8BA1BE
+                                              .withOpacity(0.0),
                                         ],
                                         // stops: [0.0, 0.40],
                                       ),
-                                      gridColor: color8BA1BE.withOpacity(0.15),
+                                      gridColor: AppColors.color8BA1BE
+                                          .withOpacity(0.15),
                                       gridStroke: 1,
                                       yLabelTextStyle: TextStyle(
                                         fontSize: 08,
@@ -209,8 +212,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                     child: Consumer<_ThisListDataProvider>(
                                       builder: (context, thisProvider, child) {
                                         String svg;
-                                        Color color =
-                                            color8BA1BE.withOpacity(0.2);
+                                        Color color = AppColors.color8BA1BE
+                                            .withOpacity(0.2);
                                         switch (e) {
                                           case _EnumListTypes.buy:
                                             if (thisProvider.filterType == e) {
@@ -268,10 +271,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           SizedBox(width: 14),
                           Theme(
                             data: Theme.of(context).copyWith(
-                                primaryColor: color1C2023,
+                                primaryColor: AppColors.color1C2023,
                                 cardColor: Colors.red,
                                 colorScheme: ColorScheme.fromSwatch()
-                                    .copyWith(secondary: colorE6007A),
+                                    .copyWith(secondary: AppColors.colorE6007A),
                                 buttonTheme: ButtonThemeData(
                                     highlightColor: Colors.green,
                                     buttonColor: Colors.green,
@@ -302,8 +305,9 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                                         vertical: 7.0, horizontal: 9),
                                     decoration: BoxDecoration(
                                         color: provider.hasFilterDate
-                                            ? colorE6007A
-                                            : color8BA1BE.withOpacity(0.2),
+                                            ? AppColors.colorE6007A
+                                            : AppColors.color8BA1BE
+                                                .withOpacity(0.2),
                                         borderRadius:
                                             BorderRadius.circular(12)),
                                     child: SvgPicture.asset(
@@ -319,7 +323,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: color2E303C,
+                        color: AppColors.color2E303C,
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: <BoxShadow>[bsDefault],
                       ),
@@ -490,7 +494,7 @@ class _ThisItemWidget extends StatelessWidget {
           margin: const EdgeInsets.only(right: 4.2),
           padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 13),
           decoration: BoxDecoration(
-              color: color8BA1BE.withOpacity(0.2),
+              color: AppColors.color8BA1BE.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)),
           child: SvgPicture.asset(
             'buy'.asAssetSvg(),
@@ -507,7 +511,7 @@ class _ThisItemWidget extends StatelessWidget {
               SizedBox(height: 1),
               Text(
                 DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
-                style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
+                style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -520,7 +524,7 @@ class _ThisItemWidget extends StatelessWidget {
                 Text(
                   iModel.fromUnit ?? "",
                   style: tsS14W500CFF.copyWith(
-                    color: color0CA564,
+                    color: AppColors.color0CA564,
                   ),
                 ),
                 Padding(
@@ -544,7 +548,7 @@ class _ThisItemWidget extends StatelessWidget {
             Text(
               iModel.fromUnit ?? "",
               style: tsS13W400CFFOP60.copyWith(
-                color: colorABB2BC,
+                color: AppColors.colorABB2BC,
               ),
             ),
           ],
@@ -562,7 +566,7 @@ class _ThisItemWidget extends StatelessWidget {
           margin: const EdgeInsets.only(right: 4.2),
           padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 13),
           decoration: BoxDecoration(
-              color: color8BA1BE.withOpacity(0.2),
+              color: AppColors.color8BA1BE.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)),
           child: SvgPicture.asset(
             'sell'.asAssetSvg(),
@@ -579,7 +583,7 @@ class _ThisItemWidget extends StatelessWidget {
               SizedBox(height: 1),
               Text(
                 DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
-                style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
+                style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -592,7 +596,7 @@ class _ThisItemWidget extends StatelessWidget {
                 Text(
                   iModel.fromUnit ?? "",
                   style: tsS14W500CFF.copyWith(
-                    color: colorE6007A,
+                    color: AppColors.colorE6007A,
                   ),
                 ),
                 Padding(
@@ -616,7 +620,7 @@ class _ThisItemWidget extends StatelessWidget {
             Text(
               iModel.point ?? "",
               style: tsS13W400CFFOP60.copyWith(
-                color: colorABB2BC,
+                color: AppColors.colorABB2BC,
               ),
             ),
           ],
@@ -634,7 +638,7 @@ class _ThisItemWidget extends StatelessWidget {
           margin: const EdgeInsets.only(right: 4.2),
           padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 13),
           decoration: BoxDecoration(
-              color: color8BA1BE.withOpacity(0.2),
+              color: AppColors.color8BA1BE.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)),
           child: SvgPicture.asset(
             'Deposit'.asAssetSvg(),
@@ -651,7 +655,7 @@ class _ThisItemWidget extends StatelessWidget {
               SizedBox(height: 1),
               Text(
                 DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
-                style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
+                style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -662,14 +666,14 @@ class _ThisItemWidget extends StatelessWidget {
             Text(
               iModel.unit ?? "",
               style: tsS14W500CFF.copyWith(
-                color: color0CA564,
+                color: AppColors.color0CA564,
               ),
             ),
             SizedBox(height: 1),
             Text(
               iModel.amount ?? "",
               style: tsS13W400CFFOP60.copyWith(
-                color: colorABB2BC,
+                color: AppColors.colorABB2BC,
               ),
             ),
           ],
@@ -687,7 +691,7 @@ class _ThisItemWidget extends StatelessWidget {
           margin: const EdgeInsets.only(right: 4.2),
           padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 13),
           decoration: BoxDecoration(
-              color: color8BA1BE.withOpacity(0.2),
+              color: AppColors.color8BA1BE.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)),
           child: SvgPicture.asset(
             'Withdraw'.asAssetSvg(),
@@ -704,7 +708,7 @@ class _ThisItemWidget extends StatelessWidget {
               SizedBox(height: 1),
               Text(
                 DateFormat("hh:mm:ss aa").format(iModel.date).toUpperCase(),
-                style: tsS13W400CFFOP60.copyWith(color: colorABB2BC),
+                style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -715,14 +719,14 @@ class _ThisItemWidget extends StatelessWidget {
             Text(
               iModel.unit ?? "",
               style: tsS14W500CFF.copyWith(
-                color: colorE6007A,
+                color: AppColors.colorE6007A,
               ),
             ),
             SizedBox(height: 1),
             Text(
               iModel.amount ?? "",
               style: tsS13W400CFFOP60.copyWith(
-                color: colorABB2BC,
+                color: AppColors.colorABB2BC,
               ),
             ),
           ],
@@ -762,7 +766,7 @@ class _ThisMenuItemWidget extends StatelessWidget {
     }
     return Container(
       decoration: BoxDecoration(
-        color: color2E303C.withOpacity(0.3),
+        color: AppColors.color2E303C.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20),
         boxShadow: <BoxShadow>[bsDefault],
       ),
@@ -778,7 +782,7 @@ class _ThisMenuItemWidget extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: 9.0, horizontal: 12),
               decoration: BoxDecoration(
-                  color: color8BA1BE.withOpacity(0.2),
+                  color: AppColors.color8BA1BE.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12)),
               child: SvgPicture.asset(
                 svgAssets,
@@ -804,7 +808,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
         onTap: () => Coordinator.goToCoinTradeScreen(),
         child: Container(
           decoration: BoxDecoration(
-            color: color2E303C.withOpacity(0.30),
+            color: AppColors.color2E303C.withOpacity(0.30),
             borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.fromLTRB(16, 16, 14, 16.0),
@@ -859,7 +863,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
                                 'gain_graph'.asAssetSvg(),
                                 width: 11,
                                 height: 8,
-                                color: color0CA564,
+                                color: AppColors.color0CA564,
                               ),
                             ),
                             Text(
@@ -893,7 +897,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
             ),
             width: 52,
             height: 52,
@@ -917,12 +921,13 @@ class _TopCoinTitleWidget extends StatelessWidget {
                   children: [
                     Text(
                       '~\$76.12',
-                      style: tsS15W400CFF.copyWith(color: colorABB2BC),
+                      style:
+                          tsS15W400CFF.copyWith(color: AppColors.colorABB2BC),
                     ),
                     SizedBox(width: 8),
                     Container(
                       decoration: BoxDecoration(
-                        color: color0CA564,
+                        color: AppColors.color0CA564,
                         borderRadius: BorderRadius.circular(5),
                       ),
                       padding: const EdgeInsets.symmetric(
@@ -935,7 +940,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
                             'gain_graph'.asAssetSvg(),
                             width: 8,
                             height: 7,
-                            color: colorFFFFFF,
+                            color: AppColors.colorFFFFFF,
                           ),
                           SizedBox(width: 2),
                           RichText(
@@ -970,7 +975,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
               SizedBox(height: 02),
               Text(
                 'Market Price',
-                style: tsS13W500CFF.copyWith(color: colorABB2BC),
+                style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -1025,14 +1030,15 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           color: item == appChartProvider.balanceChartDataType
-                              ? colorE6007A
+                              ? AppColors.colorE6007A
                               : null,
                         ),
                         child: Text(
                           text,
                           style: item == appChartProvider.balanceChartDataType
                               ? tsS13W600CFF
-                              : tsS12W400CFF.copyWith(color: colorABB2BC),
+                              : tsS12W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
                         ),
                       ),
                     );

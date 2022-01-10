@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:polkadex/common/utils/colors.dart';
 
 /// The direction for the gradient
 enum EnumGradientDirection {
@@ -19,7 +20,7 @@ class OrderBookChartItemWidget extends StatelessWidget {
     required this.child,
     this.percentage = 0.0,
     required this.direction,
-    this.color = const Color(0xFF0CA564),
+    this.color = AppColors.color0CA564,
   });
 
   @override

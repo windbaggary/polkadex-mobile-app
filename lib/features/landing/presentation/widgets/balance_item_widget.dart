@@ -29,7 +29,7 @@ class BalanceItemWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
             ),
             width: 42,
             height: 42,
@@ -49,7 +49,7 @@ class BalanceItemWidget extends StatelessWidget {
               ),
               Text(
                 tokenAcronym,
-                style: tsS13W500CFF.copyWith(color: colorABB2BC),
+                style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),
@@ -63,7 +63,7 @@ class BalanceItemWidget extends StatelessWidget {
               ),
               Text(
                 '~\$100.00',
-                style: tsS13W500CFF.copyWith(color: colorABB2BC),
+                style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
           ),

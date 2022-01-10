@@ -12,7 +12,7 @@ class AppSettingsAppearance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: AppSettingsLayout(
         onBack: () => Navigator.of(context).pop(),
         subTitle: 'Appearance',
@@ -58,7 +58,7 @@ class _ThisInterfaceWidget extends StatelessWidget {
             width: 47,
             height: 47,
             decoration: BoxDecoration(
-              color: color8BA1BE.withOpacity(0.20),
+              color: AppColors.color8BA1BE.withOpacity(0.20),
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.all(13),
@@ -113,7 +113,7 @@ class _ThisStyleSettingWidget extends StatelessWidget {
             width: 47,
             height: 47,
             decoration: BoxDecoration(
-              color: color8BA1BE.withOpacity(0.20),
+              color: AppColors.color8BA1BE.withOpacity(0.20),
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.all(13),
@@ -135,7 +135,7 @@ class _ThisStyleSettingWidget extends StatelessWidget {
                       width: 14,
                       height: 14,
                       decoration: BoxDecoration(
-                        color: color0CA564,
+                        color: AppColors.color0CA564,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -144,7 +144,7 @@ class _ThisStyleSettingWidget extends StatelessWidget {
                       width: 14,
                       height: 14,
                       decoration: BoxDecoration(
-                        color: colorE6007A,
+                        color: AppColors.colorE6007A,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),

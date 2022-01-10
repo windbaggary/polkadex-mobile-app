@@ -89,7 +89,8 @@ class PolkadexProgressErrorWidget extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: colorE6007A),
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.colorE6007A),
           width: 45,
           height: 45,
           child: Padding(

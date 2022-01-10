@@ -44,7 +44,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
         return WillPopScope(
           onWillPop: () => _onPop(context),
           child: Scaffold(
-            backgroundColor: color1C2023,
+            backgroundColor: AppColors.color1C2023,
             appBar: AppBar(
               title: Text(
                 'Create Wallet',
@@ -79,7 +79,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                     (BuildContext context, int index) {
                       return Container(
                         decoration: BoxDecoration(
-                          color: color2E303C,
+                          color: AppColors.color2E303C,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20.0),
                             bottomRight: Radius.circular(20.0),

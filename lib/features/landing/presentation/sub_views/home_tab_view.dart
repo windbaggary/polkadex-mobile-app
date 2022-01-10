@@ -340,31 +340,31 @@ class _ThisRankingListSortItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String? label;
     Color containerColor = Colors.transparent;
-    Color textColor = colorABB2BC.withOpacity(0.30);
+    Color textColor = AppColors.colorABB2BC.withOpacity(0.30);
 
     switch (item) {
       case EnumRankingListSorts.gainers:
         label = 'Gainers';
         if (isSelected) {
-          containerColor = color0CA564;
+          containerColor = AppColors.color0CA564;
         }
         break;
       case EnumRankingListSorts.losers:
         label = 'Losers';
         if (isSelected) {
-          containerColor = colorE6007A;
+          containerColor = AppColors.colorE6007A;
         }
         break;
       case EnumRankingListSorts.vol:
         label = 'Vol';
         if (isSelected) {
-          containerColor = colorE6007A;
+          containerColor = AppColors.colorE6007A;
         }
         break;
     }
 
     if (isSelected) {
-      textColor = colorFFFFFF;
+      textColor = AppColors.colorFFFFFF;
     }
 
     return AnimatedContainer(
@@ -388,7 +388,8 @@ class _ThisSliderItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: color2E303C, borderRadius: BorderRadius.circular(20)),
+          color: AppColors.color2E303C,
+          borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -412,7 +413,7 @@ class _ThisSliderItemWidget extends StatelessWidget {
                   right: 22,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: colorE6007A,
+                      color: AppColors.colorE6007A,
                       borderRadius: BorderRadius.circular(5),
                     ),
                     alignment: Alignment.center,
@@ -546,7 +547,7 @@ class _ThisTopPairsItemWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
-          color: color2E303C.withOpacity(0.30),
+          color: AppColors.color2E303C.withOpacity(0.30),
           borderRadius: BorderRadius.circular(20),
         ),
         margin: const EdgeInsets.only(right: 16),
@@ -638,7 +639,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
         onTap: () => Coordinator.goToCoinTradeScreen(),
         child: Container(
           decoration: BoxDecoration(
-            color: color2E303C.withOpacity(0.30),
+            color: AppColors.color2E303C.withOpacity(0.30),
             borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.fromLTRB(11, 17, 17, 16),
@@ -675,7 +676,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                   Text(
                     'VOL ${model.volume} BTC',
                     style: tsS12W400CFF.copyWith(
-                      color: colorABB2BC.withOpacity(0.70),
+                      color: AppColors.colorABB2BC.withOpacity(0.70),
                     ),
                   )
                 ],
@@ -691,7 +692,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                   Text(
                     '1 BTC',
                     style: tsS12W400CFF.copyWith(
-                      color: colorABB2BC.withOpacity(0.70),
+                      color: AppColors.colorABB2BC.withOpacity(0.70),
                     ),
                   ),
                 ],

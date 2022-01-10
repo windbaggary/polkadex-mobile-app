@@ -7,8 +7,8 @@ class BalanceItemShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      highlightColor: color8BA1BE,
-      baseColor: color2E303C,
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
       child: ListView.builder(
         padding: const EdgeInsets.only(bottom: 24),
         itemBuilder: (context, index) => Container(
@@ -23,7 +23,7 @@ class BalanceItemShimmerWidget extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
-                  color: colorFFFFFF,
+                  color: AppColors.colorFFFFFF,
                 ),
                 width: 42,
                 height: 42,
@@ -51,7 +51,8 @@ class BalanceItemShimmerWidget extends StatelessWidget {
                     ),
                     child: Text(
                       'Pdex',
-                      style: tsS13W500CFF.copyWith(color: colorABB2BC),
+                      style:
+                          tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
                     ),
                   ),
                 ],
@@ -78,7 +79,8 @@ class BalanceItemShimmerWidget extends StatelessWidget {
                     ),
                     child: Text(
                       '100.00',
-                      style: tsS13W500CFF.copyWith(color: colorABB2BC),
+                      style:
+                          tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
                     ),
                   ),
                 ],

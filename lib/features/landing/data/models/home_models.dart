@@ -50,9 +50,9 @@ class BasicCoinListModel {
   Color get color {
     switch (buySell) {
       case EnumBuySell.buy:
-        return color0CA564;
+        return AppColors.color0CA564;
       case EnumBuySell.sell:
-        return colorE6007A;
+        return AppColors.colorE6007A;
     }
   }
 }

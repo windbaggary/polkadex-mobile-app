@@ -50,7 +50,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
       child: ChangeNotifierProvider(
         create: (_) => _ThisProvider(),
         builder: (context, _) => Scaffold(
-          backgroundColor: color1C2023,
+          backgroundColor: AppColors.color1C2023,
           body: BlocConsumer<WithdrawCubit, WithdrawState>(
             listener: (context, state) {
               if (state is WithdrawSuccess) {
@@ -71,7 +71,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                     Positioned.fill(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: color2E303C,
+                          color: AppColors.color2E303C,
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(40),
                           ),
@@ -83,7 +83,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                             Expanded(
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: color1C2023,
+                                  color: AppColors.color1C2023,
                                   borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(35),
                                     topLeft: Radius.circular(35),
@@ -123,7 +123,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                               return AppHorizontalSlider(
                                                 bgColor:
                                                     const Color(0xFF313236),
-                                                activeColor: colorE6007A,
+                                                activeColor:
+                                                    AppColors.colorE6007A,
                                                 initialProgress:
                                                     thisProvider.progress,
                                                 onProgressUpdate: (progress) =>
@@ -142,8 +143,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                           padding: const EdgeInsets.fromLTRB(
                                               27, 14, 13, 13),
                                           decoration: BoxDecoration(
-                                            color:
-                                                colorFFFFFF.withOpacity(0.05),
+                                            color: AppColors.colorFFFFFF
+                                                .withOpacity(0.05),
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                             boxShadow: <BoxShadow>[bsDefault],
@@ -163,7 +164,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                         'Enter Dex address',
                                                     hintStyle:
                                                         tsS16W500CFF.copyWith(
-                                                      color: colorFFFFFF
+                                                      color: AppColors
+                                                          .colorFFFFFF
                                                           .withOpacity(0.5),
                                                     ),
                                                     border: InputBorder.none,
@@ -206,7 +208,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   width: 43,
                                                   height: 43,
                                                   decoration: BoxDecoration(
-                                                    color: color8BA1BE
+                                                    color: AppColors.color8BA1BE
                                                         .withOpacity(0.2),
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -237,7 +239,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   9,
                                                 ),
                                                 decoration: BoxDecoration(
-                                                  color: colorFFFFFF
+                                                  color: AppColors.colorFFFFFF
                                                       .withOpacity(0.05),
                                                   borderRadius:
                                                       BorderRadius.circular(20),
@@ -280,7 +282,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                           child: Icon(
                                                             Icons
                                                                 .keyboard_arrow_down_rounded,
-                                                            color: colorFFFFFF,
+                                                            color: AppColors
+                                                                .colorFFFFFF,
                                                             size: 16,
                                                           ),
                                                         ),
@@ -302,7 +305,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                         'Withdraw Fee',
                                                         style: tsS13W400CFFOP60
                                                             .copyWith(
-                                                                color: colorFFFFFF
+                                                                color: AppColors
+                                                                    .colorFFFFFF
                                                                     .withOpacity(
                                                                         0.5)),
                                                       ),
@@ -375,7 +379,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                       icon: Container(
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: color1C2023,
+                                                          color: AppColors
+                                                              .color1C2023,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(15),
@@ -388,11 +393,13 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                         child: SvgPicture.asset(
                                                           'arrow'.asAssetSvg(),
                                                           fit: BoxFit.contain,
-                                                          color: colorFFFFFF,
+                                                          color: AppColors
+                                                              .colorFFFFFF,
                                                         ),
                                                       ),
                                                       decoration: BoxDecoration(
-                                                        color: colorE6007A,
+                                                        color: AppColors
+                                                            .colorE6007A,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(20),
@@ -583,7 +590,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                 height: 50,
                 child: Icon(
                   Icons.close,
-                  color: colorFFFFFF,
+                  color: AppColors.colorFFFFFF,
                 ),
               ),
             ),
@@ -697,7 +704,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: colorFFFFFF,
+              color: AppColors.colorFFFFFF,
               borderRadius: BorderRadius.circular(16),
             ),
             margin: const EdgeInsets.only(right: 11),
@@ -715,7 +722,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                 Text(
                   'Available',
                   style: tsS16W400CFF.copyWith(
-                    color: colorFFFFFF.withOpacity(0.50),
+                    color: AppColors.colorFFFFFF.withOpacity(0.50),
                   ),
                 ),
                 SizedBox(height: 2),
@@ -724,12 +731,13 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                         text: primaryAmount,
-                        style: tsS17W600C0CA564.copyWith(color: colorFFFFFF),
+                        style: tsS17W600C0CA564.copyWith(
+                            color: AppColors.colorFFFFFF),
                       ),
                       TextSpan(
                         text: secondaryAmount,
                         style: tsS17W600C0CA564.copyWith(
-                          color: colorFFFFFF.withOpacity(0.5),
+                          color: AppColors.colorFFFFFF.withOpacity(0.5),
                         ),
                       ),
                     ],
@@ -809,7 +817,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color2E303C,
+        color: AppColors.color2E303C,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
@@ -918,7 +926,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                     onTap: widget.onSwapTapped,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: color1C2023,
+                        color: AppColors.color1C2023,
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: <BoxShadow>[bsDefault],
                       ),
@@ -927,7 +935,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: colorFFFFFF,
+                              color: AppColors.colorFFFFFF,
                               borderRadius: BorderRadius.circular(11),
                             ),
                             padding: const EdgeInsets.all(2.5),
@@ -949,7 +957,7 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                             opacity: 0.20,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: color8BA1BE,
+                                color: AppColors.color8BA1BE,
                                 borderRadius: BorderRadius.circular(11),
                               ),
                               padding: const EdgeInsets.all(8),
@@ -972,15 +980,15 @@ class AppCustomKeyboardState extends State<AppCustomKeyboard> {
                         aspectRatio: 118 / 150,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: colorE6007A,
+                            color: AppColors.colorE6007A,
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: <BoxShadow>[bsDefault],
                           ),
                           alignment: Alignment.center,
                           child: Text(
                             'Enter',
-                            style:
-                                tsS17W600C0CA564.copyWith(color: colorFFFFFF),
+                            style: tsS17W600C0CA564.copyWith(
+                                color: AppColors.colorFFFFFF),
                           ),
                         ),
                       ),
@@ -1011,7 +1019,7 @@ class _ThisNumberItemWidget extends StatelessWidget {
           fontFamily: 'Roboto',
           fontSize: 30,
           fontWeight: FontWeight.w400,
-          color: colorFFFFFF,
+          color: AppColors.colorFFFFFF,
         ),
         textAlign: TextAlign.center,
       ),

@@ -26,14 +26,14 @@ class MyAccountScreen extends StatelessWidget {
             create: (_) => MyAccountEditNameProvider()),
       ],
       builder: (context, _) => Scaffold(
-        backgroundColor: color1C2023,
+        backgroundColor: AppColors.color1C2023,
         body: SafeArea(
           child: CustomAppBar(
             onTapBack: () => Navigator.of(context).pop(),
             title: 'App Settings',
             child: Container(
               decoration: BoxDecoration(
-                color: color1C2023,
+                color: AppColors.color1C2023,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(40),
                 ),
@@ -107,7 +107,7 @@ class MyAccountScreen extends StatelessWidget {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: color2E303C,
+                        color: AppColors.color2E303C,
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(40),
                           bottomLeft: Radius.circular(40),
@@ -187,7 +187,8 @@ class MyAccountScreen extends StatelessWidget {
                                                     InputBorder.none,
                                                 isDense: true,
                                               ),
-                                              cursorColor: colorE6007A,
+                                              cursorColor:
+                                                  AppColors.colorE6007A,
                                               style: tsS16W500CFF,
                                             );
                                           }
@@ -215,7 +216,8 @@ class MyAccountScreen extends StatelessWidget {
                                     duration: AppConfigs.animDurationSmall,
                                     height: 32,
                                     decoration: BoxDecoration(
-                                      color: color8BA1BE.withOpacity(0.20),
+                                      color: AppColors.color8BA1BE
+                                          .withOpacity(0.20),
                                       borderRadius: BorderRadius.circular(11),
                                     ),
                                     padding: const EdgeInsets.all(9),
@@ -254,7 +256,8 @@ class MyAccountScreen extends StatelessWidget {
                                 width: 47,
                                 height: 47,
                                 decoration: BoxDecoration(
-                                  color: color8BA1BE.withOpacity(0.20),
+                                  color:
+                                      AppColors.color8BA1BE.withOpacity(0.20),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 padding: const EdgeInsets.all(11.5),
@@ -293,10 +296,10 @@ class MyAccountScreen extends StatelessWidget {
                                       },
                                       inactiveTrackColor:
                                           Colors.white.withOpacity(0.15),
-                                      activeColor: colorABB2BC,
+                                      activeColor: AppColors.colorABB2BC,
                                       activeTrackColor:
                                           Colors.white.withOpacity(0.15),
-                                      inactiveThumbColor: colorE6007A,
+                                      inactiveThumbColor: AppColors.colorE6007A,
                                     ),
                                   ),
                                 ),
@@ -316,7 +319,8 @@ class MyAccountScreen extends StatelessWidget {
                                 child: Text(
                                   'Current trading fee',
                                   style: tsS16W400CFF.copyWith(
-                                    color: colorFFFFFF.withOpacity(0.5),
+                                    color:
+                                        AppColors.colorFFFFFF.withOpacity(0.5),
                                   ),
                                 ),
                               ),

@@ -44,7 +44,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: color1C2023,
+        backgroundColor: AppColors.color1C2023,
         body: Center(
           child: Stack(
             alignment: AlignmentDirectional.center,
@@ -70,7 +70,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                     horizontal: 12,
                                     vertical: 16,
                                   ),
-                                  backgroundColor: colorFFFFFF,
+                                  backgroundColor: AppColors.colorFFFFFF,
                                   textColor: Colors.black,
                                   onTap: () async {
                                     await context.read<AccountCubit>().logout();

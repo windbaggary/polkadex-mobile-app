@@ -6,8 +6,8 @@ class CoinGraphShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      highlightColor: color8BA1BE,
-      baseColor: color2E303C,
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
       child: Column(
         children: [
           Padding(
@@ -27,7 +27,7 @@ class CoinGraphShimmerWidget extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: color1C2023,
+                color: AppColors.color1C2023,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -39,7 +39,7 @@ class CoinGraphShimmerWidget extends StatelessWidget {
 
   Widget _buildHeadingItemShimmerWidget() => Container(
         decoration: BoxDecoration(
-          color: color1C2023,
+          color: AppColors.color1C2023,
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text('000000000'),

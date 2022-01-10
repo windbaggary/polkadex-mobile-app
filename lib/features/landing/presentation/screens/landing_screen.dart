@@ -114,7 +114,7 @@ class _LandingScreenState extends State<LandingScreen>
           onNotificationTap: _onOpenRightDrawer,
           child: Scaffold(
             resizeToAvoidBottomInset: false,
-            backgroundColor: color1C2023,
+            backgroundColor: AppColors.color1C2023,
             body: SafeArea(
               child: GestureDetector(
                 onHorizontalDragCancel: _onHorizontalDragCancel,
@@ -167,7 +167,7 @@ class _LandingScreenState extends State<LandingScreen>
                             transform: Matrix4.translationValues(
                                 _leftDrawerWidthAnimation.value, 0.0, 0.0),
                             decoration: BoxDecoration(
-                              color: color1C2023,
+                              color: AppColors.color1C2023,
                               borderRadius: _drawerContentRadiusAnimation.value,
                             ),
                             foregroundDecoration: BoxDecoration(
@@ -225,7 +225,8 @@ class _LandingScreenState extends State<LandingScreen>
     ));
 
     _drawerContentColorAnimation = ColorTween(
-            begin: Colors.transparent, end: color1C2023.withOpacity(0.50))
+            begin: Colors.transparent,
+            end: AppColors.color1C2023.withOpacity(0.50))
         .animate(CurvedAnimation(
       parent: _contentAnimController,
       curve: Curves.decelerate,
@@ -542,14 +543,14 @@ class _ThisNotificationIcon extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: colorE6007A,
+                color: AppColors.colorE6007A,
               ),
               padding: const EdgeInsets.all(4),
               child: Text(
                 count,
                 style: TextStyle(
                   fontSize: 10,
-                  color: colorFFFFFF,
+                  color: AppColors.colorFFFFFF,
                   fontWeight: FontWeight.w600,
                 ),
               ),

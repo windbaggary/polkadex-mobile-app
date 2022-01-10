@@ -45,7 +45,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       appBar: AppBar(
         title: Text(
           'Security Password',
@@ -80,7 +80,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
               (BuildContext context, int index) {
                 return Container(
                   decoration: BoxDecoration(
-                    color: color2E303C,
+                    color: AppColors.color2E303C,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20.0),
                       bottomRight: Radius.circular(20.0),
