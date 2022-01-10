@@ -10,6 +10,7 @@ class OptionTabSwitchWidget extends StatelessWidget {
     required this.description,
     required this.isChecked,
     required this.onSwitchChanged,
+    this.loading = false,
     this.enabled = true,
   });
 
@@ -18,6 +19,7 @@ class OptionTabSwitchWidget extends StatelessWidget {
   final String? description;
   final bool isChecked;
   final ValueChanged<bool> onSwitchChanged;
+  final bool loading;
   final bool enabled;
 
   @override
@@ -25,7 +27,7 @@ class OptionTabSwitchWidget extends StatelessWidget {
     return Opacity(
       opacity: enabled ? 1.0 : 0.4,
       child: IgnorePointer(
-        ignoring: !enabled,
+        ignoring: !enabled || loading,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 32),
           child: Row(
@@ -58,17 +60,20 @@ class OptionTabSwitchWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.01800),
-              SizedBox(
-                width: 48,
-                height: 48,
-                child: FittedBox(
-                  child: Switch(
-                    value: isChecked,
-                    onChanged: onSwitchChanged,
-                    inactiveTrackColor: Colors.white.withOpacity(0.15),
-                    activeColor: AppColors.colorE6007A,
-                    activeTrackColor: Colors.white.withOpacity(0.15),
-                    inactiveThumbColor: AppColors.colorABB2BC,
+              Opacity(
+                opacity: loading ? 0.4 : 1.0,
+                child: SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: FittedBox(
+                    child: Switch(
+                      value: isChecked,
+                      onChanged: onSwitchChanged,
+                      inactiveTrackColor: Colors.white.withOpacity(0.15),
+                      activeColor: AppColors.colorE6007A,
+                      activeTrackColor: Colors.white.withOpacity(0.15),
+                      inactiveThumbColor: AppColors.colorABB2BC,
+                    ),
                   ),
                 ),
               ),

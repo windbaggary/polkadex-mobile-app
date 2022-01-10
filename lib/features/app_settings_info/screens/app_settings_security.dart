@@ -39,6 +39,7 @@ class AppSettingsSecurity extends StatelessWidget {
                         return OptionTabSwitchWidget(
                           enabled: context.read<AccountCubit>().state
                               is AccountLoaded,
+                          loading: state is AccountUpdatingBiometric,
                           svgAsset: "finger-print".asAssetSvg(),
                           title: "Secure with Biometric",
                           description:
