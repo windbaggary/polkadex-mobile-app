@@ -120,7 +120,7 @@ class AccountCubit extends Cubit<AccountState> {
 
         if (signature != null) {
           acc = (acc as ImportedAccountModel).copyWith(signature: signature);
-          emit(AccountLoaded(account: acc));
+          emit(AccountLoaded(account: acc, password: password));
           await _saveAccountUseCase(keypairJson: json.encode(acc));
         }
       },
@@ -138,7 +138,7 @@ class AccountCubit extends Cubit<AccountState> {
         password: password,
       );
 
-      emit(AccountLoaded(account: currentState.account));
+      emit(AccountLoaded(account: currentState.account, password: password));
 
       return confirmationResult;
     }
