@@ -149,14 +149,33 @@ class AccountCubit extends Cubit<AccountState> {
   Future<void> switchBiometricAccess() async {
     final currentState = state;
 
-    if (currentState is AccountLoaded) {
-      emit(AccountUpdatingBiometric(account: currentState.account));
+    if (currentState is AccountLoaded && currentState.password != null) {
+      final currentBioAccess = currentState.account.biometricAccess;
+      bool hasAuthNotFailed = true;
 
-      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
-          .copyWith(biometricAccess: !currentState.account.biometricAccess);
+      emit(AccountUpdatingBiometric(
+        account: currentState.account,
+        password: currentState.password,
+      ));
 
-      emit(AccountLoaded(account: acc));
-      await _saveAccountUseCase(keypairJson: json.encode(acc));
+      if (!currentBioAccess) {
+        hasAuthNotFailed =
+            await _savePasswordUseCase(password: currentState.password!);
+      }
+
+      if (hasAuthNotFailed) {
+        ImportedAccountEntity acc =
+            (currentState.account as ImportedAccountModel)
+                .copyWith(biometricAccess: !currentBioAccess);
+
+        await _saveAccountUseCase(keypairJson: json.encode(acc));
+        emit(AccountLoaded(
+          account: acc,
+          password: currentState.password,
+        ));
+      } else {
+        emit(currentState);
+      }
     }
 
     return;
