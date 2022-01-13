@@ -53,6 +53,7 @@ void main() {
   late ImportedAccountModel tImportedAccountBioOff;
   late ImportedAccountModel tImportedAccountBioOn;
   late List<String> tMnemonicWords;
+  late String tPassword;
 
   setUp(() {
     _mockGetAccountUseCase = _MockGetAccountUseCase();
@@ -100,6 +101,7 @@ void main() {
         name: 'test',
         signature: 'test');
     tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];
+    tPassword = 'test';
 
     registerFallbackValue(tImportedAccountBioOff);
     registerFallbackValue(tImportedAccountBioOn);
@@ -309,7 +311,7 @@ void main() {
           await cubit.saveAccount(tMnemonicWords, 'test', 'test', false);
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
         ],
       );
 
@@ -396,6 +398,11 @@ void main() {
           ).thenAnswer(
             (_) async {},
           );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
           return cubit;
         },
         act: (cubit) async {
@@ -403,9 +410,10 @@ void main() {
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
-          AccountUpdatingBiometric(account: tImportedAccountBioOff),
-          AccountLoaded(account: tImportedAccountBioOn),
+          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
+          AccountUpdatingBiometric(
+              account: tImportedAccountBioOff, password: tPassword),
+          AccountLoaded(account: tImportedAccountBioOn, password: tPassword),
         ],
       );
 
@@ -441,9 +449,10 @@ void main() {
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOn),
-          AccountUpdatingBiometric(account: tImportedAccountBioOn),
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(account: tImportedAccountBioOn, password: tPassword),
+          AccountUpdatingBiometric(
+              account: tImportedAccountBioOn, password: tPassword),
+          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
         ],
       );
     },
