@@ -100,8 +100,18 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("buy"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildBuyHeadingWidget(),
+            _buildHeadingWidget(),
             _buildBuyWidget(),
+          ],
+        );
+        break;
+      case EnumBuySellAll.sell:
+        child = Column(
+          key: ValueKey("sell"),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeadingWidget(),
+            _buildSellWidget(),
           ],
         );
         break;
@@ -113,11 +123,11 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildBuyHeadingWidget(),
+                  child: _buildHeadingWidget(),
                 ),
                 SizedBox(width: 7),
                 Expanded(
-                  child: _buildSellHeadingWidget(),
+                  child: _buildHeadingWidget(),
                 ),
               ],
             ),
@@ -135,16 +145,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           ],
         );
         break;
-      case EnumBuySellAll.sell:
-        child = Column(
-          key: ValueKey("sell"),
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildSellHeadingWidget(),
-            _buildSellWidget(),
-          ],
-        );
-        break;
     }
     return AnimatedSwitcher(
       duration: AppConfigs.animDurationSmall,
@@ -156,32 +156,13 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 
   Widget _buildBuyWidget() => _ThisOrderBuyWidget();
 
-  Widget _buildSellHeadingWidget() => Padding(
+  Widget _buildHeadingWidget() => Padding(
         padding: const EdgeInsets.only(top: 16, bottom: 10),
         child: Row(
           children: [
             Expanded(
               child: Text(
-                'Amount (BTC)',
-                style: tsS13W500CFFOP40,
-              ),
-            ),
-            Text(
-              'Price (USD)',
-              style: tsS13W500CFFOP40,
-              textAlign: TextAlign.end,
-            )
-          ],
-        ),
-      );
-
-  Widget _buildBuyHeadingWidget() => Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 10),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Amount (DOT)',
+                'Amount (PDEX)',
                 style: tsS13W500CFFOP40,
               ),
             ),
