@@ -253,12 +253,8 @@ class _ThisProfileWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Kas Pintxuki',
+                  context.read<AccountCubit>().accountName,
                   style: tsS21W600CFF,
-                ),
-                Text(
-                  'ID: 18592080',
-                  style: tsS13W500CFFOP50,
                 ),
               ],
             ),

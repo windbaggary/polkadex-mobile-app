@@ -19,7 +19,6 @@ import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
@@ -613,22 +612,6 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
     );
   }
 
-  Widget _buildName() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child:
-            // FadeTransition(
-            //   opacity: this.animation,
-            //   child:
-            Text(
-          title,
-          style: tsS19W600CFF,
-        ),
-      ),
-      // ),
-    );
-  }
   Widget _buildImage() {
     return InkWell(
       onTap: onAvatarTapped,
