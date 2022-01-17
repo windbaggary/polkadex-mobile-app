@@ -588,7 +588,7 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
         child: Row(
           children: [
             if (assetImg.isNotEmpty) _buildImage(),
-            if (title.isNotEmpty) _buildName() else Spacer(),
+            Spacer(),
             if (actions.isNotEmpty) _buildActions(),
           ],
         ),
@@ -629,20 +629,13 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
       // ),
     );
   }
-
   Widget _buildImage() {
     return InkWell(
       onTap: onAvatarTapped,
-      // child:
-      //  SlideTransition(
-      //   position: this.animation.drive<Offset>(Tween<Offset>(
-      //         begin: Offset(-1.0, 0.0),
-      //         end: Offset(0.0, 0.0),
-      //       )),
-      child: Image.asset(
-        assetImg,
-        width: 38,
-        height: 38,
+      child: SvgPicture.asset(
+        'drawer_avatar'.asAssetSvg(),
+        width: 35,
+        height: 35,
         fit: BoxFit.contain,
       ),
       // ),

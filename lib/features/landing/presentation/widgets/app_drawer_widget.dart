@@ -241,8 +241,8 @@ class _ThisProfileWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            'user_icon.png'.asAssetImg(),
+          SvgPicture.asset(
+            'drawer_avatar'.asAssetSvg(),
             width: 56,
             height: 56,
             fit: BoxFit.contain,
