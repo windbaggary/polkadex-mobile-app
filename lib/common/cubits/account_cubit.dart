@@ -4,7 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
@@ -17,7 +18,8 @@ part 'account_state.dart';
 class AccountCubit extends Cubit<AccountState> {
   AccountCubit({
     required GetAccountUseCase getAccountStorageUseCase,
-    required DeleteAccountAndPasswordUseCase deleteAccountAndPasswordUseCase,
+    required DeleteAccountUseCase deleteAccountUseCase,
+    required DeletePasswordUseCase deletePasswordUseCase,
     required ImportAccountUseCase importAccountUseCase,
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
@@ -25,7 +27,8 @@ class AccountCubit extends Cubit<AccountState> {
     required ConfirmPasswordUseCase confirmPasswordUseCase,
     required RegisterUserUseCase registerUserUseCase,
   })  : _getAccountStorageUseCase = getAccountStorageUseCase,
-        _deleteAccountAndPasswordUseCase = deleteAccountAndPasswordUseCase,
+        _deleteAccountUseCase = deleteAccountUseCase,
+        _deletePasswordUseCase = deletePasswordUseCase,
         _importAccountUseCase = importAccountUseCase,
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
@@ -35,7 +38,8 @@ class AccountCubit extends Cubit<AccountState> {
         super(AccountInitial());
 
   final GetAccountUseCase _getAccountStorageUseCase;
-  final DeleteAccountAndPasswordUseCase _deleteAccountAndPasswordUseCase;
+  final DeleteAccountUseCase _deleteAccountUseCase;
+  final DeletePasswordUseCase _deletePasswordUseCase;
   final ImportAccountUseCase _importAccountUseCase;
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
@@ -55,6 +59,14 @@ class AccountCubit extends Cubit<AccountState> {
     return currentState is AccountLoaded ? currentState.account.signature : '';
   }
 
+  bool get biometricAccess {
+    final currentState = state;
+
+    return currentState is AccountLoaded
+        ? currentState.account.biometricAccess
+        : false;
+  }
+
   Future<void> loadAccountData() async {
     final account = await _getAccountStorageUseCase();
 
@@ -66,7 +78,10 @@ class AccountCubit extends Cubit<AccountState> {
   Future<void> logout() async {
     emit(AccountNotLoaded());
 
-    return await _deleteAccountAndPasswordUseCase();
+    await _deleteAccountUseCase();
+    await _deletePasswordUseCase();
+
+    return;
   }
 
   Future<bool> savePassword(String password) async {
@@ -105,7 +120,7 @@ class AccountCubit extends Cubit<AccountState> {
 
         if (signature != null) {
           acc = (acc as ImportedAccountModel).copyWith(signature: signature);
-          emit(AccountLoaded(account: acc));
+          emit(AccountLoaded(account: acc, password: password));
           await _saveAccountUseCase(keypairJson: json.encode(acc));
         }
       },
@@ -123,11 +138,46 @@ class AccountCubit extends Cubit<AccountState> {
         password: password,
       );
 
-      emit(AccountLoaded(account: currentState.account));
+      emit(AccountLoaded(account: currentState.account, password: password));
 
       return confirmationResult;
     }
 
     return false;
+  }
+
+  Future<void> switchBiometricAccess() async {
+    final currentState = state;
+
+    if (currentState is AccountLoaded && currentState.password != null) {
+      final currentBioAccess = currentState.account.biometricAccess;
+      bool hasAuthNotFailed = true;
+
+      emit(AccountUpdatingBiometric(
+        account: currentState.account,
+        password: currentState.password,
+      ));
+
+      if (!currentBioAccess) {
+        hasAuthNotFailed =
+            await _savePasswordUseCase(password: currentState.password!);
+      }
+
+      if (hasAuthNotFailed) {
+        ImportedAccountEntity acc =
+            (currentState.account as ImportedAccountModel)
+                .copyWith(biometricAccess: !currentBioAccess);
+
+        await _saveAccountUseCase(keypairJson: json.encode(acc));
+        emit(AccountLoaded(
+          account: acc,
+          password: currentState.password,
+        ));
+      } else {
+        emit(currentState);
+      }
+    }
+
+    return;
   }
 }

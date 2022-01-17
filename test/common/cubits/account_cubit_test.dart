@@ -6,7 +6,8 @@ import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/delete_account_and_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
@@ -17,8 +18,10 @@ import 'package:test/test.dart';
 
 class _MockGetAccountUseCase extends Mock implements GetAccountUseCase {}
 
-class _MockDeleteAccountAndPasswordUsecase extends Mock
-    implements DeleteAccountAndPasswordUseCase {}
+class _MockDeleteAccountUsecase extends Mock implements DeleteAccountUseCase {}
+
+class _MockDeletePasswordUsecase extends Mock implements DeletePasswordUseCase {
+}
 
 class _MockImportAccountUseCase extends Mock implements ImportAccountUseCase {}
 
@@ -35,8 +38,8 @@ class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
 
 void main() {
   late _MockGetAccountUseCase _mockGetAccountUseCase;
-  late _MockDeleteAccountAndPasswordUsecase
-      _mockDeleteAccountAndPasswordUsecase;
+  late _MockDeleteAccountUsecase _mockDeleteAccountUsecase;
+  late _MockDeletePasswordUsecase _mockDeletePasswordUsecase;
   late _MockImportAccountUseCase _mockImportAccountUseCase;
   late _MockSaveAccountUseCase _mockSaveAccountUseCase;
   late _MockSavePasswordUseCase _mockSavePasswordUseCase;
@@ -47,13 +50,15 @@ void main() {
   late AccountCubit cubit;
   late MetaModel tMeta;
   late EncodingModel tEncoding;
-  late ImportedAccountModel tImportedAccount;
+  late ImportedAccountModel tImportedAccountBioOff;
+  late ImportedAccountModel tImportedAccountBioOn;
   late List<String> tMnemonicWords;
+  late String tPassword;
 
   setUp(() {
     _mockGetAccountUseCase = _MockGetAccountUseCase();
-    _mockDeleteAccountAndPasswordUsecase =
-        _MockDeleteAccountAndPasswordUsecase();
+    _mockDeleteAccountUsecase = _MockDeleteAccountUsecase();
+    _mockDeletePasswordUsecase = _MockDeletePasswordUsecase();
     _mockImportAccountUseCase = _MockImportAccountUseCase();
     _mockSaveAccountUseCase = _MockSaveAccountUseCase();
     _mockSavePasswordUseCase = _MockSavePasswordUseCase();
@@ -63,7 +68,8 @@ void main() {
 
     cubit = AccountCubit(
       getAccountStorageUseCase: _mockGetAccountUseCase,
-      deleteAccountAndPasswordUseCase: _mockDeleteAccountAndPasswordUsecase,
+      deleteAccountUseCase: _mockDeleteAccountUsecase,
+      deletePasswordUseCase: _mockDeletePasswordUsecase,
       importAccountUseCase: _mockImportAccountUseCase,
       saveAccountUseCase: _mockSaveAccountUseCase,
       savePasswordUseCase: _mockSavePasswordUseCase,
@@ -78,7 +84,7 @@ void main() {
       version: '3',
       type: ["none"],
     );
-    tImportedAccount = ImportedAccountModel(
+    tImportedAccountBioOff = ImportedAccountModel(
         encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
         encoding: tEncoding,
         address: "k9o1dxJxQE8Zwm5Fy",
@@ -86,9 +92,19 @@ void main() {
         biometricAccess: false,
         name: 'test',
         signature: 'test');
+    tImportedAccountBioOn = ImportedAccountModel(
+        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+        encoding: tEncoding,
+        address: "k9o1dxJxQE8Zwm5Fy",
+        meta: tMeta,
+        biometricAccess: true,
+        name: 'test',
+        signature: 'test');
     tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];
+    tPassword = 'test';
 
-    registerFallbackValue(tImportedAccount);
+    registerFallbackValue(tImportedAccountBioOff);
+    registerFallbackValue(tImportedAccountBioOn);
   });
 
   group(
@@ -104,7 +120,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccount,
+            (_) async => tImportedAccountBioOff,
           );
           return cubit;
         },
@@ -112,7 +128,7 @@ void main() {
           await cubit.loadAccountData();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccount),
+          AccountLoaded(account: tImportedAccountBioOff),
         ],
       );
 
@@ -140,10 +156,15 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccount,
+            (_) async => tImportedAccountBioOff,
           );
           when(
-            () => _mockDeleteAccountAndPasswordUsecase(),
+            () => _mockDeleteAccountUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
           ).thenAnswer(
             (_) async {},
           );
@@ -154,7 +175,7 @@ void main() {
           await cubit.logout();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccount),
+          AccountLoaded(account: tImportedAccountBioOff),
           AccountNotLoaded(),
         ],
       );
@@ -203,7 +224,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccount,
+            (_) async => tImportedAccountBioOff,
           );
           when(
             () => _mockGetPasswordUseCase(),
@@ -234,7 +255,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccount,
+            (_) async => tImportedAccountBioOff,
           );
           when(
             () => _mockGetPasswordUseCase(),
@@ -268,7 +289,7 @@ void main() {
               password: any(named: 'password'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccount),
+            (_) async => Right(tImportedAccountBioOff),
           );
           when(
             () => _mockRegisterUserUseCase(
@@ -290,7 +311,7 @@ void main() {
           await cubit.saveAccount(tMnemonicWords, 'test', 'test', false);
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccount),
+          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
         ],
       );
 
@@ -300,7 +321,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccount,
+            (_) async => tImportedAccountBioOff,
           );
           when(
             () => _mockConfirmPasswordUseCase(
@@ -329,7 +350,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccount,
+            (_) async => tImportedAccountBioOff,
           );
           when(
             () => _mockConfirmPasswordUseCase(
@@ -350,6 +371,89 @@ void main() {
               )).called(1);
           verifyNoMoreInteractions(_mockConfirmPasswordUseCase);
         },
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Account biometric access switched on',
+        build: () {
+          when(
+            () => _mockImportAccountUseCase(
+              mnemonic: any(named: 'mnemonic'),
+              password: any(named: 'password'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tImportedAccountBioOff),
+          );
+          when(
+            () => _mockRegisterUserUseCase(
+              account: any(named: 'account'),
+            ),
+          ).thenAnswer(
+            (_) async => 'test',
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false);
+          await cubit.switchBiometricAccess();
+        },
+        expect: () => [
+          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
+          AccountUpdatingBiometric(
+              account: tImportedAccountBioOff, password: tPassword),
+          AccountLoaded(account: tImportedAccountBioOn, password: tPassword),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Account biometric access switched off',
+        build: () {
+          when(
+            () => _mockImportAccountUseCase(
+              mnemonic: any(named: 'mnemonic'),
+              password: any(named: 'password'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tImportedAccountBioOn),
+          );
+          when(
+            () => _mockRegisterUserUseCase(
+              account: any(named: 'account'),
+            ),
+          ).thenAnswer(
+            (_) async => 'test',
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.saveAccount(tMnemonicWords, 'test', 'test', true);
+          await cubit.switchBiometricAccess();
+        },
+        expect: () => [
+          AccountLoaded(account: tImportedAccountBioOn, password: tPassword),
+          AccountUpdatingBiometric(
+              account: tImportedAccountBioOn, password: tPassword),
+          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
+        ],
       );
     },
   );

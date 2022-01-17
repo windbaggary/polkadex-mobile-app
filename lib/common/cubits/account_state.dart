@@ -1,10 +1,10 @@
 part of 'account_cubit.dart';
 
 abstract class AccountState extends Equatable {
-  const AccountState();
+  AccountState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AccountInitial extends AccountState {}
@@ -12,15 +12,31 @@ class AccountInitial extends AccountState {}
 class AccountNotLoaded extends AccountState {}
 
 class AccountLoaded extends AccountState {
-  const AccountLoaded({required this.account});
+  AccountLoaded({
+    required this.account,
+    this.password,
+  });
 
   final ImportedAccountEntity account;
+  final String? password;
 
   @override
-  List<Object> get props => [account];
+  List<Object?> get props => [
+        account,
+        password,
+      ];
+}
+
+class AccountUpdatingBiometric extends AccountLoaded {
+  AccountUpdatingBiometric({
+    required ImportedAccountEntity account,
+    String? password,
+  }) : super(account: account, password: password);
 }
 
 class AccountPasswordValidating extends AccountLoaded {
-  AccountPasswordValidating({required ImportedAccountEntity account})
-      : super(account: account);
+  AccountPasswordValidating({
+    required ImportedAccountEntity account,
+    String? password,
+  }) : super(account: account, password: password);
 }
