@@ -179,10 +179,12 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 class _ThisOrderSellWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    dummySellChartList.sort((a, b) => b.amount.compareTo(a.amount));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(dummyChartList.length,
-          (index) => _OrderSellItemWidget(model: dummyChartList[index])),
+      children: List.generate(dummySellChartList.length,
+          (index) => _OrderSellItemWidget(model: dummySellChartList[index])),
     );
   }
 }
@@ -190,10 +192,12 @@ class _ThisOrderSellWidget extends StatelessWidget {
 class _ThisOrderBuyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    dummyBuyChartList.sort((a, b) => a.amount.compareTo(b.amount));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(dummyChartList.length,
-          (index) => _OrderBuyItemWidget(model: dummyChartList[index])),
+      children: List.generate(dummyBuyChartList.length,
+          (index) => _OrderBuyItemWidget(model: dummyBuyChartList[index])),
     );
   }
 }
@@ -219,12 +223,12 @@ class _OrderBuyItemWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  model.price,
+                  '${model.amount}',
                   style: tsS14W500CFF,
                 ),
               ),
               Text(
-                model.amount,
+                '${model.price}',
                 style: tsS14W500CFF.copyWith(color: AppColors.color0CA564),
               ),
             ],
@@ -255,12 +259,12 @@ class _OrderSellItemWidget extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                model.amount,
+                '${model.amount}',
                 style: tsS14W500CFF.copyWith(color: AppColors.colorE6007A),
               ),
               Expanded(
                 child: Text(
-                  model.price,
+                  '${model.price}',
                   style: tsS14W500CFF,
                   textAlign: TextAlign.end,
                 ),
@@ -437,40 +441,78 @@ class _ThisInheritedWidget extends InheritedWidget {
       context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 }
 
-const dummyChartList = <OrderBookItemModel>[
+final dummyBuyChartList = List.from(<OrderBookItemModel>[
   OrderBookItemModel(
-    price: '55.0',
-    amount: '0.7262',
-    percentage: 0.20,
-  ),
-  OrderBookItemModel(
-    price: '65.0',
-    amount: '0.7262',
-    percentage: 0.30,
-  ),
-  OrderBookItemModel(
-    price: '90.0',
-    amount: '0.7562',
+    price: 0.7262,
+    amount: 55.0,
     percentage: 0.35,
   ),
   OrderBookItemModel(
-    price: '08.0',
-    amount: '0.0262',
+    price: 0.7262,
+    amount: 65.0,
     percentage: 0.45,
   ),
   OrderBookItemModel(
-    price: '100.0',
-    amount: '0.1562',
-    percentage: 0.50,
+    price: 0.7562,
+    amount: 90.0,
+    percentage: 0.80,
   ),
   OrderBookItemModel(
-    price: '87.0',
-    amount: '0.8653',
-    percentage: 0.60,
+    price: 0.0262,
+    amount: 8.0,
+    percentage: 0.10,
   ),
   OrderBookItemModel(
-    price: '65.0',
-    amount: '0.7262',
-    percentage: 0.68,
+    price: 0.1562,
+    amount: 100.0,
+    percentage: 0.95,
   ),
-];
+  OrderBookItemModel(
+    price: 0.8653,
+    amount: 87.0,
+    percentage: 0.7,
+  ),
+  OrderBookItemModel(
+    price: 0.7262,
+    amount: 65.0,
+    percentage: 0.45,
+  ),
+]);
+
+final dummySellChartList = List.from(<OrderBookItemModel>[
+  OrderBookItemModel(
+    price: 0.7162,
+    amount: 55.0,
+    percentage: 0.35,
+  ),
+  OrderBookItemModel(
+    price: 0.5609,
+    amount: 65.0,
+    percentage: 0.45,
+  ),
+  OrderBookItemModel(
+    price: 0.4398,
+    amount: 90.0,
+    percentage: 0.80,
+  ),
+  OrderBookItemModel(
+    price: 0.1853,
+    amount: 8.0,
+    percentage: 0.1,
+  ),
+  OrderBookItemModel(
+    price: 0.3640,
+    amount: 100.0,
+    percentage: 0.95,
+  ),
+  OrderBookItemModel(
+    price: 0.8219,
+    amount: 87.0,
+    percentage: 0.7,
+  ),
+  OrderBookItemModel(
+    price: 0.7761,
+    amount: 65.0,
+    percentage: 0.45,
+  ),
+]);

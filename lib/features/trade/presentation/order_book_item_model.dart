@@ -1,6 +1,6 @@
 class OrderBookItemModel {
-  final String amount;
-  final String price;
+  final double amount;
+  final double price;
   final double percentage;
 
   const OrderBookItemModel({
