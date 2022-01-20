@@ -269,8 +269,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
   }
 
   /// Update the price to [text]
-  void updatePrice(String text) {
-    _priceController.text = text;
+  void updatePrice(double price) {
+    _priceController.text = price.toString();
   }
 
   /// reset all the fields

@@ -53,6 +53,12 @@ class AccountCubit extends Cubit<AccountState> {
     return currentState is AccountLoaded ? currentState.account.address : '';
   }
 
+  String get accountName {
+    final currentState = state;
+
+    return currentState is AccountLoaded ? currentState.account.name : '';
+  }
+
   String get accountSignature {
     final currentState = state;
 

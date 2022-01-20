@@ -241,8 +241,8 @@ class _ThisProfileWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            'user_icon.png'.asAssetImg(),
+          SvgPicture.asset(
+            'drawer_avatar'.asAssetSvg(),
             width: 56,
             height: 56,
             fit: BoxFit.contain,
@@ -253,12 +253,8 @@ class _ThisProfileWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Kas Pintxuki',
+                  context.read<AccountCubit>().accountName,
                   style: tsS21W600CFF,
-                ),
-                Text(
-                  'ID: 18592080',
-                  style: tsS13W500CFFOP50,
                 ),
               ],
             ),
