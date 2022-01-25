@@ -4,7 +4,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 
 class OrderRemoteDatasource {
-  final _baseUrl = 'http://148.251.1.248:7777';
+  final _baseUrl = 'https://ramen-1.polkadex.trade:443/api/';
 
   Future<Response> placeOrder(
     int nonce,

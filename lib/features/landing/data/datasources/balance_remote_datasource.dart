@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class BalanceRemoteDatasource {
-  final _baseUrl = 'http://148.251.1.248:7777';
+  final _baseUrl = 'https://ramen-1.polkadex.trade:443/api/';
 
   Future<Response> fetchBalance(
     String address,
