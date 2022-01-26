@@ -40,6 +40,9 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# Prevents keystore from being pushed
+android/app/upload-keystore.jks
+
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 .metadata
