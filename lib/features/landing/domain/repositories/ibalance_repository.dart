@@ -7,4 +7,8 @@ abstract class IBalanceRepository {
     String address,
     String signature,
   );
+  Future<Either<ApiError, String>> testDeposit(
+    String address,
+    String signature,
+  );
 }
