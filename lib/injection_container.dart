@@ -248,6 +248,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
+      testDepositUseCase: dependency(),
     ),
   );
 

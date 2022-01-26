@@ -94,7 +94,13 @@ class _BalanceTabViewState extends State<BalanceTabView>
                             ),
                             backgroundColor: AppColors.colorE6007A,
                             textColor: Colors.white,
-                            onTap: () async {},
+                            onTap: () => context
+                                .read<BalanceCubit>()
+                                .testDeposit(
+                                    context.read<AccountCubit>().accountAddress,
+                                    context
+                                        .read<AccountCubit>()
+                                        .accountSignature),
                           ),
                         SizedBox(height: 24),
                         InkWell(

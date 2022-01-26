@@ -5,13 +5,17 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/landing/data/models/balance_model.dart';
 import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:test/test.dart';
 
 class _MockGetBalanceUsecase extends Mock implements GetBalanceUseCase {}
 
+class _MockTestDepositUsecase extends Mock implements TestDepositUseCase {}
+
 void main() {
   late _MockGetBalanceUsecase _mockGetBalanceUsecase;
+  late _MockTestDepositUsecase _mockTestDepositUsecase;
   late BalanceCubit cubit;
   late String address;
   late String signature;
@@ -19,9 +23,11 @@ void main() {
 
   setUp(() {
     _mockGetBalanceUsecase = _MockGetBalanceUsecase();
+    _mockTestDepositUsecase = _MockTestDepositUsecase();
 
     cubit = BalanceCubit(
       getBalanceUseCase: _mockGetBalanceUsecase,
+      testDepositUseCase: _mockTestDepositUsecase,
     );
 
     address = 'addressTest';
