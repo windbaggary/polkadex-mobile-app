@@ -319,11 +319,11 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                   onTap: () => Coordinator
                                       .goToBalanceCoinPreviewScreen(),
                                   child: BalanceItemWidget(
-                                    tokenAcronym: key,
+                                    tokenAcronym:
+                                        TokenUtils.tokenIdToAcronym(key),
                                     tokenFullName:
-                                        TokenUtils.tokenAcronymToFullName(key),
-                                    assetImg:
-                                        TokenUtils.tokenAcronymToAssetImg(key),
+                                        TokenUtils.tokenIdToFullName(key),
+                                    assetImg: TokenUtils.tokenIdToAssetImg(key),
                                     amount: state.free[key],
                                   ),
                                 );
