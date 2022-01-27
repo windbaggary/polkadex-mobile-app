@@ -40,11 +40,13 @@ class BalanceRepository implements IBalanceRepository {
 
   @override
   Future<Either<ApiError, String>> testDeposit(
+    int asset,
     String address,
     String signature,
   ) async {
     try {
       final result = await _balanceRemoteDatasource.testDeposit(
+        asset,
         address,
         signature,
       );

@@ -120,6 +120,7 @@ void main() {
           );
           when(
             () => _mockTestDepositUsecase(
+              asset: any(named: 'asset'),
               address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
@@ -134,6 +135,7 @@ void main() {
             signature,
           );
           await cubit.testDeposit(
+            0,
             address,
             signature,
           );
@@ -167,6 +169,7 @@ void main() {
           );
           when(
             () => _mockTestDepositUsecase(
+              asset: any(named: 'asset'),
               address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
@@ -181,6 +184,7 @@ void main() {
             signature,
           );
           await cubit.testDeposit(
+            0,
             address,
             signature,
           );

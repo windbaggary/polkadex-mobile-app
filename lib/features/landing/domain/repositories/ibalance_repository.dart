@@ -8,6 +8,7 @@ abstract class IBalanceRepository {
     String signature,
   );
   Future<Either<ApiError, String>> testDeposit(
+    int asset,
     String address,
     String signature,
   );

@@ -62,32 +62,34 @@ void main() {
     });
 
     test('Must return a successful test deposit response', () async {
-      when(() => dataSource.testDeposit(any(), any())).thenAnswer(
+      when(() => dataSource.testDeposit(any(), any(), any())).thenAnswer(
         (_) async => Response(jsonEncode({"Fine": "Ok"}), 200),
       );
 
       final result = await repository.testDeposit(
+        0,
         address,
         signature,
       );
 
       expect(result.isRight(), true);
-      verify(() => dataSource.testDeposit(address, signature)).called(1);
+      verify(() => dataSource.testDeposit(0, address, signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
     test('Must return a failed test deposit response', () async {
-      when(() => dataSource.testDeposit(any(), any())).thenAnswer(
+      when(() => dataSource.testDeposit(any(), any(), any())).thenAnswer(
         (_) async => Response(jsonEncode({"Bad": "error"}), 400),
       );
 
       final result = await repository.testDeposit(
+        0,
         address,
         signature,
       );
 
       expect(result.isLeft(), true);
-      verify(() => dataSource.testDeposit(address, signature)).called(1);
+      verify(() => dataSource.testDeposit(0, address, signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });

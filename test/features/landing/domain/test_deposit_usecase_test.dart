@@ -28,12 +28,14 @@ void main() {
         when(() => _repository.testDeposit(
               any(),
               any(),
+              any(),
             )).thenAnswer(
           (_) async => Right('ok'),
         );
         String? depositResult;
         // act
         final result = await _usecase(
+          asset: 0,
           address: address,
           signature: signature,
         );
@@ -45,7 +47,7 @@ void main() {
         );
 
         expect(depositResult, 'ok');
-        verify(() => _repository.testDeposit(any(), any())).called(1);
+        verify(() => _repository.testDeposit(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -54,18 +56,19 @@ void main() {
       "must fail to test a deposit",
       () async {
         // arrange
-        when(() => _repository.testDeposit(any(), any())).thenAnswer(
+        when(() => _repository.testDeposit(any(), any(), any())).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
         final result = await _usecase(
+          asset: 0,
           address: address,
           signature: signature,
         );
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.testDeposit(any(), any())).called(1);
+        verify(() => _repository.testDeposit(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

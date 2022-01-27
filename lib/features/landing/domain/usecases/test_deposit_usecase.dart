@@ -10,9 +10,14 @@ class TestDepositUseCase {
   final IBalanceRepository _balanceRepository;
 
   Future<Either<ApiError, String>> call({
+    required int asset,
     required String address,
     required String signature,
   }) async {
-    return await _balanceRepository.testDeposit(address, signature);
+    return await _balanceRepository.testDeposit(
+      asset,
+      address,
+      signature,
+    );
   }
 }

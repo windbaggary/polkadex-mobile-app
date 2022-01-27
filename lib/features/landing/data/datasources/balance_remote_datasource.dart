@@ -21,6 +21,7 @@ class BalanceRemoteDatasource {
   }
 
   Future<Response> testDeposit(
+    int asset,
     String address,
     String signature,
   ) async {
@@ -33,7 +34,7 @@ class BalanceRemoteDatasource {
         'signature': {'Sr25519': signature},
         'payload': {
           'account': address,
-          'asset': 1,
+          'asset': asset,
           'amount': '100000.0',
         },
       }),

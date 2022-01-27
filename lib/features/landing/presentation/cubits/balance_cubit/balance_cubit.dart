@@ -38,12 +38,13 @@ class BalanceCubit extends Cubit<BalanceState> {
     );
   }
 
-  Future<void> testDeposit(String address, String signature) async {
+  Future<void> testDeposit(int asset, String address, String signature) async {
     final previousState = state;
 
     emit(BalanceLoading());
 
     final result = await _testDepositUseCase(
+      asset: asset,
       address: address,
       signature: signature,
     );
