@@ -383,6 +383,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
       orderSide: type,
       quantity: double.parse(amount),
       price: double.parse(price),
+      address: context.read<AccountCubit>().accountAddress,
       signature: context.read<AccountCubit>().accountSignature,
     );
 

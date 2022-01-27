@@ -23,6 +23,7 @@ class OrderRepository implements IOrderRepository {
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String address,
     String signature,
   ) async {
     try {
@@ -34,6 +35,7 @@ class OrderRepository implements IOrderRepository {
         orderSide,
         price,
         quantity,
+        address,
         signature,
       );
       final newOrder = OrderModel(

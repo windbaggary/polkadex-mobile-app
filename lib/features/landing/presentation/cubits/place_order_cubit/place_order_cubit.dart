@@ -54,6 +54,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     required EnumBuySell orderSide,
     required double price,
     required double quantity,
+    required String address,
     required String signature,
   }) async {
     final previousState = state;
@@ -69,6 +70,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
         orderSide: orderSide,
         price: price,
         quantity: quantity,
+        address: address,
         signature: signature);
 
     result.fold(

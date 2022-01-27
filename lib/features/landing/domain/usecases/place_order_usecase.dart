@@ -19,6 +19,7 @@ class PlaceOrderUseCase {
     required EnumBuySell orderSide,
     required double price,
     required double quantity,
+    required String address,
     required String signature,
   }) async {
     return await _orderRepository.placeOrder(
@@ -29,6 +30,7 @@ class PlaceOrderUseCase {
       orderSide,
       price,
       quantity,
+      address,
       signature,
     );
   }

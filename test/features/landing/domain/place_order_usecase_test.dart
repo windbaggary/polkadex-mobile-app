@@ -21,6 +21,7 @@ void main() {
   late double quantity;
   late double price;
   late OrderEntity order;
+  late String address;
   late String signature;
 
   setUp(() {
@@ -33,6 +34,7 @@ void main() {
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
     price = 50.0;
+    address = 'test';
     signature = 'test';
     order = OrderModel(
       uuid: 'abcd',
@@ -58,7 +60,8 @@ void main() {
       () async {
         // arrange
         when(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
+                any(), any(), any(), any(), any(), any(), any(), any(), any()))
+            .thenAnswer(
           (_) async => Right(order),
         );
         OrderEntity? orderResult;
@@ -71,6 +74,7 @@ void main() {
             orderSide: orderSide,
             price: price,
             quantity: quantity,
+            address: address,
             signature: signature);
         // assert
 
@@ -81,7 +85,8 @@ void main() {
 
         expect(orderResult, order);
         verify(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any(), any())).called(1);
+                any(), any(), any(), any(), any(), any(), any(), any(), any()))
+            .called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -91,7 +96,8 @@ void main() {
       () async {
         // arrange
         when(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
+                any(), any(), any(), any(), any(), any(), any(), any(), any()))
+            .thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
@@ -103,13 +109,15 @@ void main() {
           orderSide: orderSide,
           price: price,
           quantity: quantity,
+          address: address,
           signature: signature,
         );
         // assert
 
         expect(result.isLeft(), true);
         verify(() => _repository.placeOrder(
-            any(), any(), any(), any(), any(), any(), any(), any())).called(1);
+                any(), any(), any(), any(), any(), any(), any(), any(), any()))
+            .called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

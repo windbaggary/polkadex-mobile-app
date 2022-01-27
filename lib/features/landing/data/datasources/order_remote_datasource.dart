@@ -14,6 +14,7 @@ class OrderRemoteDatasource {
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String address,
     String signature,
   ) async {
     return await post(
@@ -24,11 +25,12 @@ class OrderRemoteDatasource {
       body: jsonEncode(<String, dynamic>{
         'signature': {'Sr25519': signature},
         'payload': {
-          'symbol': [baseAsset, quoteAsset],
+          'account': address,
+          'symbol': [0, 1],
           'order_type': orderType.toString().split('.')[1].capitalize(),
           'order_side': orderSide.toString().split('.')[1].capitalize(),
-          'price': price,
-          'amount': quantity,
+          'price': price.toString(),
+          'amount': quantity.toString(),
         },
       }),
     );
