@@ -135,7 +135,6 @@ void main() {
             signature,
           );
           await cubit.testDeposit(
-            0,
             address,
             signature,
           );
@@ -184,7 +183,6 @@ void main() {
             signature,
           );
           await cubit.testDeposit(
-            0,
             address,
             signature,
           );

@@ -97,7 +97,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
                             onTap: () => context
                                 .read<BalanceCubit>()
                                 .testDeposit(
-                                    0,
                                     context.read<AccountCubit>().accountAddress,
                                     context
                                         .read<AccountCubit>()

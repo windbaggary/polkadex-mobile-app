@@ -38,20 +38,25 @@ class BalanceCubit extends Cubit<BalanceState> {
     );
   }
 
-  Future<void> testDeposit(int asset, String address, String signature) async {
+  Future<void> testDeposit(String address, String signature) async {
     final previousState = state;
 
     emit(BalanceLoading());
 
-    final result = await _testDepositUseCase(
-      asset: asset,
+    final result0 = await _testDepositUseCase(
+      asset: 0,
       address: address,
       signature: signature,
     );
 
-    result.fold(
-      (error) => emit(previousState),
-      (balance) => getBalance(address, signature),
+    final result1 = await _testDepositUseCase(
+      asset: 1,
+      address: address,
+      signature: signature,
     );
+
+    result0.isRight() || result1.isRight()
+        ? getBalance(address, signature)
+        : emit(previousState);
   }
 }
