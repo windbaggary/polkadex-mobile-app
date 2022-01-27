@@ -60,5 +60,35 @@ void main() {
       verify(() => dataSource.fetchBalance(address, signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
+
+    test('Must return a successful test deposit response', () async {
+      when(() => dataSource.testDeposit(any(), any())).thenAnswer(
+        (_) async => Response(jsonEncode({"Fine": "Ok"}), 200),
+      );
+
+      final result = await repository.testDeposit(
+        address,
+        signature,
+      );
+
+      expect(result.isRight(), true);
+      verify(() => dataSource.testDeposit(address, signature)).called(1);
+      verifyNoMoreInteractions(dataSource);
+    });
+
+    test('Must return a failed test deposit response', () async {
+      when(() => dataSource.testDeposit(any(), any())).thenAnswer(
+        (_) async => Response(jsonEncode({"Bad": "error"}), 400),
+      );
+
+      final result = await repository.testDeposit(
+        address,
+        signature,
+      );
+
+      expect(result.isLeft(), true);
+      verify(() => dataSource.testDeposit(address, signature)).called(1);
+      verifyNoMoreInteractions(dataSource);
+    });
   });
 }
