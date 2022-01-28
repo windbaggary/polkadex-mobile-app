@@ -10,6 +10,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -652,7 +653,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Image.asset(
-                  model.imgAsset,
+                  TokenUtils.tokenIdToAssetImg(model.baseTokenId),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -662,13 +663,13 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 children: [
                   Row(children: <Widget>[
                     Text(
-                      '${model.code} ',
+                      '${TokenUtils.tokenIdToAcronym(model.baseTokenId)} ',
                       style: tsS15W500CFF,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 1.0),
                       child: Text(
-                        '/${model.pair}',
+                        '/${TokenUtils.tokenIdToAcronym(model.pairTokenId)}',
                         style: tsS11W400CABB2BC,
                       ),
                     ),

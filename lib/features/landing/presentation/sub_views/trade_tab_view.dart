@@ -11,6 +11,7 @@ import 'package:polkadex/features/landing/presentation/providers/trade_tab_provi
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/data/models/order_book_item_model.dart';
 import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -568,7 +569,7 @@ class _ThisTopSelectableWidget extends StatelessWidget {
         children: [
           Consumer<TradeTabCoinProvider>(
             builder: (context, coinProvider, child) => Image.asset(
-              coinProvider.tokenCoin.imgAsset,
+              TokenUtils.tokenIdToAssetImg(coinProvider.tokenCoin.baseTokenId),
               width: 48,
               height: 48,
               fit: BoxFit.contain,
@@ -587,11 +588,13 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                       style: tsS14W500CFF,
                       children: <TextSpan>[
                         TextSpan(
-                          text: coinProvider.tokenCoin.code,
+                          text: TokenUtils.tokenIdToAcronym(
+                              coinProvider.tokenCoin.baseTokenId),
                           style: TextStyle(fontSize: 19),
                         ),
                         TextSpan(
-                          text: '/${coinProvider.pairCoin?.code}',
+                          text:
+                              '/${TokenUtils.tokenIdToAcronym(coinProvider.pairCoin?.baseTokenId ?? '')}',
                           style: TextStyle(
                             fontFamily: 'WorkSans',
                           ),
@@ -600,7 +603,8 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    coinProvider.tokenCoin.name,
+                    TokenUtils.tokenIdToFullName(
+                        coinProvider.tokenCoin.baseTokenId),
                     style: tsS15W500CFF.copyWith(color: AppColors.colorABB2BC),
                   )
                 ],

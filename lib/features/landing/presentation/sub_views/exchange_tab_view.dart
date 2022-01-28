@@ -13,6 +13,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_list_animated_widget.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/utils/maps.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -506,7 +507,7 @@ class _ThisListItemWidget extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(3),
                 child: Image.asset(
-                  model.imgAsset,
+                  TokenUtils.tokenIdToAssetImg(model.baseTokenId),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -521,11 +522,13 @@ class _ThisListItemWidget extends StatelessWidget {
                           child: RichText(
                               text: TextSpan(children: <TextSpan>[
                             TextSpan(
-                              text: model.code,
+                              text: TokenUtils.tokenIdToAcronym(
+                                  model.baseTokenId),
                               style: tsS15W500CFF,
                             ),
                             TextSpan(
-                              text: '/${model.token}',
+                              text: TokenUtils.tokenIdToAcronym(
+                                  model.baseTokenId),
                               style: tsS11W400CABB2BC,
                             ),
                           ])),
