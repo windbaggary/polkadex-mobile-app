@@ -15,9 +15,9 @@ abstract class TokenUtils {
   static String tokenIdToAcronym(String acronym) {
     switch (acronym) {
       case '0':
-        return 'PDOG';
+        return 'PDG';
       case '1':
-        return 'SDEX';
+        return 'SDX';
       default:
         return 'TKN';
     }
