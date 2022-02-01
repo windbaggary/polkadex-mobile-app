@@ -605,6 +605,7 @@ void _onProgressOrOrderSideUpdate(
   final price = double.tryParse(priceController.text);
 
   if (price == null) {
+    context.read<PlaceOrderCubit>().updateOrderParams(orderside: buyOrSell);
     return;
   }
 
