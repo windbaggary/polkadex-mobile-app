@@ -42,7 +42,7 @@ class ExchangeTabViewProvider extends ChangeNotifier {
 List<BasicCoinListModel> _generateList() {
   final list = basicCoinDummyList;
   list.shuffle();
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < list.length; i++) {
     list[i].isFavorite = true;
   }
   return list;
