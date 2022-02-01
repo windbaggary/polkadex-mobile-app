@@ -91,11 +91,11 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         builder: (context, buyOrSell, child) {
           switch (buyOrSell) {
             case EnumBuySell.buy:
-              _asset = 'BTC';
+              _asset = widget.leftAsset;
               _walletBalance = widget.leftBalance;
               break;
             case EnumBuySell.sell:
-              _asset = 'DOT';
+              _asset = widget.rightAsset;
               _walletBalance = widget.rightBalance;
               break;
           }
