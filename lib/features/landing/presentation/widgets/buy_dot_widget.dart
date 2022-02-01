@@ -12,6 +12,7 @@ import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 /// The callback type for buy or sell
 typedef OnBuyOrSell = void Function(String price, String amount);
@@ -27,6 +28,7 @@ class BuyDotWidget extends StatefulWidget {
   final ValueNotifier<EnumBuySell> buySellNotifier;
   final ValueNotifier<EnumOrderTypes> orderTypeNotifier;
   final VoidCallback? onSwapTab;
+  final bool isBalanceLoading;
 
   const BuyDotWidget({
     required Key key,
@@ -38,6 +40,7 @@ class BuyDotWidget extends StatefulWidget {
     required this.onSell,
     required this.onBuy,
     required this.orderTypeNotifier,
+    required this.isBalanceLoading,
     this.onSwapTab,
   }) : super(key: key);
 
@@ -157,7 +160,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                           ),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "My balance",
@@ -165,10 +168,12 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                       color: AppColors.colorFFFFFF
                                           .withOpacity(0.70)),
                                 ),
-                                Text(
-                                  '${_walletBalance.toStringAsFixed(2)} $_asset',
-                                  style: tsS20W500CFF,
-                                ),
+                                widget.isBalanceLoading
+                                    ? _orderBalanceShimmerWidget()
+                                    : Text(
+                                        '${_walletBalance.toStringAsFixed(2)} $_asset',
+                                        style: tsS20W500CFF,
+                                      ),
                               ],
                             ),
                           ),
@@ -278,6 +283,23 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     _amountController.text = "";
     _priceController.text = "";
     _progressNotifier.value = 0.00;
+  }
+
+  Widget _orderBalanceShimmerWidget() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.black,
+        ),
+        child: Text(
+          '0.00 PDOG',
+          style: tsS20W500CFF,
+        ),
+      ),
+    );
   }
 }
 

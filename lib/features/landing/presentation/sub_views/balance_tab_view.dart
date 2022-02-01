@@ -17,7 +17,6 @@ import 'package:polkadex/features/landing/presentation/widgets/balance_item_shim
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:provider/provider.dart';
@@ -57,13 +56,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
         ),
         ChangeNotifierProvider<BalanceChartDummyProvider>(
           create: (_) => BalanceChartDummyProvider(),
-        ),
-        BlocProvider(
-          create: (_) => dependency<BalanceCubit>()
-            ..getBalance(
-              context.read<AccountCubit>().accountAddress,
-              context.read<AccountCubit>().accountSignature,
-            ),
         ),
       ],
       builder: (context, _) => BlocBuilder<BalanceCubit, BalanceState>(
