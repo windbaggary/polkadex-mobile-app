@@ -27,8 +27,8 @@ void main() {
     dataSource = _MockOrderRemoteDatasource();
     repository = OrderRepository(orderRemoteDatasource: dataSource);
     nonce = 0;
-    baseAsset = "BTC";
-    quoteAsset = "USD";
+    baseAsset = "0";
+    quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
@@ -70,8 +70,16 @@ void main() {
       );
 
       expect(result.isRight(), true);
-      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset,
-          orderType, orderSide, price, quantity, address, signature)).called(1);
+      verify(() => dataSource.placeOrder(
+          nonce,
+          int.parse(baseAsset),
+          int.parse(baseAsset),
+          orderType,
+          orderSide,
+          price,
+          quantity,
+          address,
+          signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
@@ -95,8 +103,16 @@ void main() {
       );
 
       expect(result.isLeft(), true);
-      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset,
-          orderType, orderSide, price, quantity, address, signature)).called(1);
+      verify(() => dataSource.placeOrder(
+          nonce,
+          int.parse(baseAsset),
+          int.parse(baseAsset),
+          orderType,
+          orderSide,
+          price,
+          quantity,
+          address,
+          signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });

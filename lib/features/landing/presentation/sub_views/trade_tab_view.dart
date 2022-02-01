@@ -260,10 +260,8 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                   onBuy: (price, amount) => _onBuyOrSell(
                     EnumBuySell.buy,
                     _orderTypeSelNotifier.value,
-                    TokenUtils.tokenIdToAcronym(
-                        coinProvider.tokenCoin.baseTokenId),
-                    TokenUtils.tokenIdToAcronym(
-                        coinProvider.tokenCoin.pairTokenId),
+                    coinProvider.tokenCoin.baseTokenId,
+                    coinProvider.tokenCoin.pairTokenId,
                     price,
                     amount,
                     context,
@@ -271,8 +269,8 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                   onSell: (price, amount) => _onBuyOrSell(
                     EnumBuySell.sell,
                     _orderTypeSelNotifier.value,
-                    'BTC',
-                    'DOT',
+                    coinProvider.tokenCoin.baseTokenId,
+                    coinProvider.tokenCoin.pairTokenId,
                     price,
                     amount,
                     context,
@@ -407,7 +405,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     final resultPlaceOrder = await placeOrderCubit.placeOrder(
       nonce: 0,
       baseAsset: leftAsset,
-      quoteAsset: 'USD',
+      quoteAsset: rightAsset,
       orderType: side,
       orderSide: type,
       quantity: double.parse(amount),

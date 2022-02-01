@@ -33,8 +33,8 @@ void main() {
     );
 
     nonce = 0;
-    baseAsset = "BTC";
-    quoteAsset = "USD";
+    baseAsset = "0";
+    quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     quantity = 100.0;

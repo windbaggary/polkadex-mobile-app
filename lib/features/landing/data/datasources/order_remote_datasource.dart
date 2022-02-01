@@ -8,8 +8,8 @@ class OrderRemoteDatasource {
 
   Future<Response> placeOrder(
     int nonce,
-    String baseAsset,
-    String quoteAsset,
+    int baseAsset,
+    int quoteAsset,
     EnumOrderTypes orderType,
     EnumBuySell orderSide,
     double price,
@@ -26,7 +26,7 @@ class OrderRemoteDatasource {
         'signature': {'Sr25519': signature},
         'payload': {
           'account': address,
-          'symbol': [0, 1],
+          'symbol': [baseAsset, quoteAsset],
           'order_type': orderType.toString().split('.')[1].capitalize(),
           'order_side': orderSide.toString().split('.')[1].capitalize(),
           'price': price.toString(),
