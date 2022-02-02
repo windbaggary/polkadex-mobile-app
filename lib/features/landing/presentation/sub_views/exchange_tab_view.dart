@@ -623,87 +623,82 @@ class _ThisLoadingItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 9),
-      child: buildInkWell(
-        onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.color2E303C.withOpacity(0.30),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.fromLTRB(11, 17, 0, 16),
-          child: Row(
-            children: [
-              Container(
-                width: 43,
-                height: 43,
-                decoration: BoxDecoration(
-                  color: AppColors.colorFFFFFF,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                padding: EdgeInsets.all(3),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.color2E303C.withOpacity(0.30),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: const EdgeInsets.fromLTRB(11, 17, 0, 16),
+        child: Row(
+          children: [
+            Container(
+              width: 43,
+              height: 43,
+              decoration: BoxDecoration(
+                color: AppColors.colorFFFFFF,
+                borderRadius: BorderRadius.circular(14),
               ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 15,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 4),
-                    Container(
-                      width: 50,
-                      height: 8,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ),
-              Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              padding: EdgeInsets.all(3),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    color: Colors.grey,
-                    height: 15,
                     width: 50,
+                    height: 15,
+                    color: Colors.grey,
                   ),
                   SizedBox(height: 4),
                   Container(
-                    height: 8,
                     width: 50,
+                    height: 8,
                     color: Colors.grey,
                   ),
                 ],
               ),
-              SizedBox(width: 16),
-              Container(
-                width: 50,
-                height: 20,
-                decoration: BoxDecoration(
+            ),
+            Spacer(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
                   color: Colors.grey,
-                  borderRadius: BorderRadius.circular(7),
+                  height: 15,
+                  width: 50,
                 ),
-                padding: const EdgeInsets.all(5),
+                SizedBox(height: 4),
+                Container(
+                  height: 8,
+                  width: 50,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+            SizedBox(width: 16),
+            Container(
+              width: 50,
+              height: 20,
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(7),
               ),
-              Container(
-                margin: const EdgeInsets.only(left: 8),
-                width: 15 + 17.0,
-                height: 15 + 8.0,
-                padding:
-                    const EdgeInsets.only(right: 17, top: 4.0, bottom: 4.0),
-                child: Opacity(
-                  opacity: 1.0,
-                  child: SvgPicture.asset(
-                    'star-filled'.asAssetSvg(),
-                  ),
+              padding: const EdgeInsets.all(5),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 8),
+              width: 15 + 17.0,
+              height: 15 + 8.0,
+              padding: const EdgeInsets.only(right: 17, top: 4.0, bottom: 4.0),
+              child: Opacity(
+                opacity: 1.0,
+                child: SvgPicture.asset(
+                  'star-filled'.asAssetSvg(),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
