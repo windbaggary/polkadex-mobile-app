@@ -53,14 +53,14 @@ abstract class Coordinator {
   }
 
   static void goToCoinWithdrawScreen({
-    required String asset,
-    required double amount,
+    required String tokenId,
+    required BalanceCubit balanceCubit,
   }) {
     _navigationKey.currentState?.pushNamed(
       Routes.coinWithdrawScreen,
       arguments: {
-        'asset': asset,
-        'amount': amount,
+        'tokenId': tokenId,
+        'balanceCubit': balanceCubit,
       },
     );
   }
@@ -72,8 +72,13 @@ abstract class Coordinator {
     );
   }
 
-  static void goToBalanceDepositScreenOne() {
-    _navigationKey.currentState?.pushNamed(Routes.balanceDepositScreenOne);
+  static void goToBalanceDepositScreenOne(
+      {required String tokenId, required BalanceCubit balanceCubit}) {
+    _navigationKey.currentState
+        ?.pushNamed(Routes.balanceDepositScreenOne, arguments: {
+      'tokenId': tokenId,
+      'balanceCubit': balanceCubit,
+    });
   }
 
   static void goToNotifDepositScreen(

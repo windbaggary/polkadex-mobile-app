@@ -152,9 +152,11 @@ abstract class Routes {
         builder = (_) {
           final withdrawArguments = settings.arguments as Map;
 
-          return CoinWithdrawScreen(
-            asset: withdrawArguments['asset'],
-            amount: withdrawArguments['amount'],
+          return BlocProvider.value(
+            value: withdrawArguments['balanceCubit'] as BalanceCubit,
+            child: CoinWithdrawScreen(
+              tokenId: withdrawArguments['tokenId'],
+            ),
           );
         };
         break;
@@ -167,7 +169,14 @@ abstract class Routes {
         break;
       case balanceDepositScreenOne:
         builder = (_) {
-          return BalanceDepositScreenOne();
+          final balanceDepositArguments = settings.arguments as Map;
+
+          return BlocProvider.value(
+            value: balanceDepositArguments['balanceCubit'] as BalanceCubit,
+            child: BalanceDepositScreenOne(
+              tokenId: balanceDepositArguments['tokenId'] as String,
+            ),
+          );
         };
         break;
       case notifDepositScreen:

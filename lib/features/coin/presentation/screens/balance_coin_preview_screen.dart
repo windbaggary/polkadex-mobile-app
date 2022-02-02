@@ -149,7 +149,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
                               onTap: () =>
-                                  Coordinator.goToBalanceDepositScreenOne(),
+                                  Coordinator.goToBalanceDepositScreenOne(
+                                      tokenId: widget.tokenId,
+                                      balanceCubit:
+                                          context.read<BalanceCubit>()),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.deposit,
                               ),
@@ -162,9 +165,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
                               onTap: () => Coordinator.goToCoinWithdrawScreen(
-                                asset: 'PDEX',
-                                amount: 15.50,
-                              ),
+                                  tokenId: widget.tokenId,
+                                  balanceCubit: context.read<BalanceCubit>()),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.withdraw,
                               ),
