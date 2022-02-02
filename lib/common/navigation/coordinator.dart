@@ -65,10 +65,19 @@ abstract class Coordinator {
     );
   }
 
-  static void goToCoinTradeScreen({EnumCardFlipState? enumCardFlipState}) {
+  static void goToCoinTradeScreen(
+      {required BalanceCubit balanceCubit,
+      required String leftTokenId,
+      required String rightTokenId,
+      EnumCardFlipState? enumCardFlipState}) {
     _navigationKey.currentState?.pushNamed(
       Routes.coinTradeScreen,
-      arguments: enumCardFlipState ?? EnumCardFlipState.showFirst,
+      arguments: {
+        'balanceCubit': balanceCubit,
+        'enumCardFlipState': enumCardFlipState ?? EnumCardFlipState.showFirst,
+        'leftTokenId': leftTokenId,
+        'rightTokenId': rightTokenId,
+      },
     );
   }
 

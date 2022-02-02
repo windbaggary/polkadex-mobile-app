@@ -178,7 +178,13 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           Expanded(
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
-                              onTap: () => Coordinator.goToCoinTradeScreen(),
+                              onTap: () => Coordinator.goToCoinTradeScreen(
+                                  balanceCubit: context.read<BalanceCubit>(),
+                                  leftTokenId: widget.tokenId,
+                                  rightTokenId: basicCoinDummyList
+                                      .firstWhere((coin) =>
+                                          coin.baseTokenId != widget.tokenId)
+                                      .baseTokenId),
                               child: _ThisMenuItemWidget(
                                 menu: _EnumMenus.trade,
                               ),
@@ -201,6 +207,12 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                         itemBuilder: (context, index) => TopPairWidget(
                           rightAsset: basicCoinDummyList[index].baseTokenId,
                           leftAsset: basicCoinDummyList[index].pairTokenId,
+                          onTap: () => Coordinator.goToCoinTradeScreen(
+                              leftTokenId:
+                                  basicCoinDummyList[index].baseTokenId,
+                              rightTokenId:
+                                  basicCoinDummyList[index].pairTokenId,
+                              balanceCubit: context.read<BalanceCubit>()),
                         ),
                         itemCount: 2,
                         scrollDirection: Axis.horizontal,

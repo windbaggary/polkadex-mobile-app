@@ -11,17 +11,17 @@ class TopPairWidget extends StatelessWidget {
   const TopPairWidget({
     required this.leftAsset,
     required this.rightAsset,
+    required this.onTap,
   });
 
   final String leftAsset;
   final String rightAsset;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
-      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
-          tokenId: leftAsset, balanceCubit: context.read<BalanceCubit>()),
-      borderRadius: BorderRadius.circular(20),
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.color2E303C.withOpacity(0.30),

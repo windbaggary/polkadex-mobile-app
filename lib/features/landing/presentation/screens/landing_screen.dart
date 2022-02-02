@@ -10,6 +10,7 @@ import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/balance_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.dart';
@@ -106,6 +107,8 @@ class _LandingScreenState extends State<LandingScreen>
               create: (context) => NotificationDrawerProvider()),
           ChangeNotifierProvider<HomeScrollNotifProvider>(
               create: (_) => HomeScrollNotifProvider()),
+          ChangeNotifierProvider<TradeTabCoinProvider>(
+              create: (context) => TradeTabCoinProvider()),
         ],
         builder: (context, child) => _ThisInheritedWidget(
           onOpenDrawer: _onOpenDrawer,

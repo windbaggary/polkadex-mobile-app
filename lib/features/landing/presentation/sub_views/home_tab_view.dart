@@ -3,6 +3,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/rank_list_provider.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_slider_widget.dart';
@@ -201,6 +202,9 @@ class _HomeTabViewState extends State<HomeTabView>
                 itemBuilder: (context, index) => TopPairWidget(
                   rightAsset: basicCoinDummyList[index].baseTokenId,
                   leftAsset: basicCoinDummyList[index].pairTokenId,
+                  onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+                      tokenId: basicCoinDummyList[index].baseTokenId,
+                      balanceCubit: context.read<BalanceCubit>()),
                 ),
                 itemCount: 2,
                 scrollDirection: Axis.horizontal,
@@ -455,7 +459,10 @@ class _ThisRankingListItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () => Coordinator.goToCoinTradeScreen(),
+        onTap: () => Coordinator.goToCoinTradeScreen(
+            leftTokenId: model.baseTokenId,
+            rightTokenId: model.pairTokenId,
+            balanceCubit: context.read<BalanceCubit>()),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.color2E303C.withOpacity(0.30),

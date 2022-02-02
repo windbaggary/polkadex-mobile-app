@@ -162,8 +162,16 @@ abstract class Routes {
         break;
       case coinTradeScreen:
         builder = (_) {
-          return CoinTradeScreen(
-            enumInitalCardFlipState: settings.arguments as EnumCardFlipState,
+          final coinTradeArguments = settings.arguments as Map;
+
+          return BlocProvider.value(
+            value: coinTradeArguments['balanceCubit'] as BalanceCubit,
+            child: CoinTradeScreen(
+              enumInitalCardFlipState:
+                  coinTradeArguments['enumCardFlipState'] as EnumCardFlipState,
+              leftTokenId: coinTradeArguments['leftTokenId'] as String,
+              rightTokenId: coinTradeArguments['rightTokenId'] as String,
+            ),
           );
         };
         break;

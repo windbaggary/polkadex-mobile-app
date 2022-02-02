@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_loading_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_tab_view_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -488,7 +489,11 @@ class _ThisListItemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
-        onTap: () => Coordinator.goToCoinTradeScreen(),
+        onTap: () => Coordinator.goToCoinTradeScreen(
+          leftTokenId: model.baseTokenId,
+          rightTokenId: model.pairTokenId,
+          balanceCubit: context.read<BalanceCubit>(),
+        ),
         borderRadius: BorderRadius.circular(20),
         child: Container(
           decoration: BoxDecoration(

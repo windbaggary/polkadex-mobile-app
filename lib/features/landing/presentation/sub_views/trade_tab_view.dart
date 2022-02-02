@@ -63,8 +63,6 @@ class _TradeTabViewState extends State<TradeTabView>
       buySellTabController: _buySellDotController,
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider<TradeTabCoinProvider>(
-              create: (context) => TradeTabCoinProvider()),
           ChangeNotifierProvider<TradeTabViewProvider>(
               create: (context) => TradeTabViewProvider()),
           ChangeNotifierProvider<OrderBookWidgetFilterProvider>(
@@ -84,6 +82,10 @@ class _TradeTabViewState extends State<TradeTabView>
               ),
               OrderBookHeadingWidget(),
               OrderBookWidget(
+                amountTokenId:
+                    context.read<TradeTabCoinProvider>().tokenCoin.pairTokenId,
+                priceTokenId:
+                    context.read<TradeTabCoinProvider>().tokenCoin.baseTokenId,
                 onOrderBookItemClicked: (model) =>
                     _onOrderBookItemClicked(model, context),
               ),
@@ -530,12 +532,12 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 18, top: 8, right: 19),
-      child: Row(
-        children: [
-          _ThisTopSelectableWidget(onTap: () => _onMarketSelection(context)),
-          Spacer(),
-          Consumer<TradeTabCoinProvider>(
-            builder: (context, coinProvider, child) => Container(
+      child: Consumer<TradeTabCoinProvider>(
+        builder: (context, coinProvider, child) => Row(
+          children: [
+            _ThisTopSelectableWidget(onTap: () => _onMarketSelection(context)),
+            Spacer(),
+            Container(
               decoration: BoxDecoration(
                 color: coinProvider.tokenCoin.color,
                 borderRadius: BorderRadius.circular(5),
@@ -548,22 +550,25 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
                 style: tsS13W600CFF,
               ),
             ),
-          ),
-          buildInkWell(
-            borderRadius: BorderRadius.circular(8),
-            onTap: () => Coordinator.goToCoinTradeScreen(),
-            child: Container(
-              width: 33,
-              height: 33,
-              padding: const EdgeInsets.symmetric(vertical: 7),
-              decoration: BoxDecoration(
-                color: AppColors.color8BA1BE.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(8),
+            buildInkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () => Coordinator.goToCoinTradeScreen(
+                  leftTokenId: coinProvider.tokenCoin.baseTokenId,
+                  rightTokenId: coinProvider.tokenCoin.pairTokenId,
+                  balanceCubit: context.read<BalanceCubit>()),
+              child: Container(
+                width: 33,
+                height: 33,
+                padding: const EdgeInsets.symmetric(vertical: 7),
+                decoration: BoxDecoration(
+                  color: AppColors.color8BA1BE.withOpacity(0.20),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SvgPicture.asset('trading'.asAssetSvg()),
               ),
-              child: SvgPicture.asset('trading'.asAssetSvg()),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
