@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
+import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_book_chart_item.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/data/models/order_book_item_model.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -156,22 +158,24 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 
   Widget _buildBuyWidget() => _ThisOrderBuyWidget();
 
-  Widget _buildHeadingWidget() => Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 10),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Amount (PDEX)',
-                style: tsS13W500CFFOP40,
+  Widget _buildHeadingWidget() => Consumer<TradeTabCoinProvider>(
+        builder: (context, coinProvider, child) => Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Amount (${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.pairTokenId)})',
+                  style: tsS13W500CFFOP40,
+                ),
               ),
-            ),
-            Text(
-              'Price (BTC)',
-              style: tsS13W500CFFOP40,
-              textAlign: TextAlign.end,
-            )
-          ],
+              Text(
+                'Price (${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)})',
+                style: tsS13W500CFFOP40,
+                textAlign: TextAlign.end,
+              )
+            ],
+          ),
         ),
       );
 }
