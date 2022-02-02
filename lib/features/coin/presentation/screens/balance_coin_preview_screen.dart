@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
+import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -12,8 +14,13 @@ import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/widgets/top_pair_widget.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
+
+import 'package:shimmer/shimmer.dart';
 
 /// The screen enum menus only accessing inside this file.
 /// The enum represent the first top 3 menu of the screen
@@ -27,6 +34,10 @@ enum _EnumMenus {
 /// XD_PAGE: 20
 /// XD_PAGE: 31
 class BalanceCoinPreviewScreen extends StatefulWidget {
+  BalanceCoinPreviewScreen({required this.tokenId});
+
+  final String tokenId;
+
   @override
   _BalanceCoinPreviewScreenState createState() =>
       _BalanceCoinPreviewScreenState();
@@ -51,7 +62,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
         backgroundColor: AppColors.color1C2023,
         body: SafeArea(
           child: CustomAppBar(
-            title: 'Polkadex (DEX)',
+            title:
+                '${TokenUtils.tokenIdToFullName(widget.tokenId)} (${TokenUtils.tokenIdToAcronym(widget.tokenId)})',
             titleStyle: tsS19W700CFF,
             onTapBack: () => Navigator.of(context).pop(),
             child: Container(
@@ -70,7 +82,9 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           _isShowGraphNotifier.value =
                               !_isShowGraphNotifier.value;
                         },
-                        child: _TopCoinTitleWidget()),
+                        child: _TopCoinTitleWidget(
+                          tokenId: widget.tokenId,
+                        )),
                     ValueListenableBuilder<bool>(
                       valueListenable: _isShowGraphNotifier,
                       builder: (context, isShowGraph, child) {
@@ -182,9 +196,11 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                     SizedBox(
                       height: 108,
                       child: ListView.builder(
-                        itemBuilder: (context, index) =>
-                            _ThisTopPairsItemWidget(),
-                        itemCount: 20,
+                        itemBuilder: (context, index) => TopPairWidget(
+                          rightAsset: basicCoinDummyList[index].baseTokenId,
+                          leftAsset: basicCoinDummyList[index].pairTokenId,
+                        ),
+                        itemCount: 2,
                         scrollDirection: Axis.horizontal,
                         physics: BouncingScrollPhysics(),
                         padding: const EdgeInsets.only(left: 21),
@@ -797,189 +813,179 @@ class _ThisMenuItemWidget extends StatelessWidget {
   }
 }
 
-/// The content widget for the Top Pairs
-class _ThisTopPairsItemWidget extends StatelessWidget {
+/// The very top top widget includes the icon, name, value, price, etc
+class _TopCoinTitleWidget extends StatelessWidget {
+  const _TopCoinTitleWidget({required this.tokenId});
+
+  final String tokenId;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: buildInkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: () => Coordinator.goToCoinTradeScreen(),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.color2E303C.withOpacity(0.30),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: const EdgeInsets.fromLTRB(16, 16, 14, 16.0),
-          child: IntrinsicWidth(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                RichText(
-                    text: TextSpan(style: tsS14W400CFF, children: <TextSpan>[
-                  TextSpan(
-                      text: 'DEX/',
-                      style: TextStyle(
-                        fontFamily: 'WorkSans',
-                      )),
-                  TextSpan(
-                    text: 'USDT',
-                    style: tsS16W700CFF,
-                  ),
-                ])),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocBuilder<BalanceCubit, BalanceState>(
+      builder: (context, state) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 22),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: AppColors.colorFFFFFF,
+              ),
+              width: 52,
+              height: 52,
+              padding: const EdgeInsets.all(3),
+              child: Image.asset(
+                TokenUtils.tokenIdToAssetImg(tokenId),
+                fit: BoxFit.contain,
+              ),
+            ),
+            SizedBox(width: 11),
+            Expanded(
+              child: state is BalanceLoaded
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Price',
-                          style: tsS14W400CFFOP50,
+                          double.parse(state.free[tokenId] ?? '0')
+                              .toStringAsFixed(2),
+                          style: tsS25W500CFF,
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          '42.50',
-                          style: tsS16W600CFF,
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 36),
-                    Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Price',
-                          style: tsS14W400CFFOP50,
-                        ),
-                        SizedBox(height: 4),
+                        SizedBox(height: 1),
                         Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: SvgPicture.asset(
-                                'gain_graph'.asAssetSvg(),
-                                width: 11,
-                                height: 8,
-                                color: AppColors.color0CA564,
-                              ),
-                            ),
                             Text(
-                              ' 12.47%',
-                              style: tsS17W600C0CA564,
+                              '~\$76.12',
+                              style: tsS15W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
+                            ),
+                            SizedBox(width: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.color0CA564,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 1.5,
+                                horizontal: 3.5,
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'gain_graph'.asAssetSvg(),
+                                    width: 8,
+                                    height: 7,
+                                    color: AppColors.colorFFFFFF,
+                                  ),
+                                  SizedBox(width: 2),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: "12.57",
+                                          style: tsS13W600CFF,
+                                        ),
+                                        TextSpan(
+                                          text: "%",
+                                          style: tsS13W600CFF.copyWith(
+                                              fontSize: 9),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ],
-                    ),
-                  ],
-                ),
-              ],
+                    )
+                  : _orderBalanceShimmerWidget(),
             ),
-          ),
+            if (state is BalanceLoaded)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '\$42.50',
+                    style: tsS13W600CFF,
+                  ),
+                  SizedBox(height: 02),
+                  Text(
+                    'Market Price',
+                    style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
+                  ),
+                ],
+              ),
+          ],
         ),
       ),
     );
   }
-}
 
-/// The very top top widget includes the icon, name, value, price, etc
-class _TopCoinTitleWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 22),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: AppColors.colorFFFFFF,
+  Widget _orderBalanceShimmerWidget() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.black,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              '2.0000',
+              style: tsS25W500CFF,
             ),
-            width: 52,
-            height: 52,
-            padding: const EdgeInsets.all(3),
-            child: Image.asset(
-              'trade_open/trade_open_2.png'.asAssetImg(),
-              fit: BoxFit.contain,
-            ),
-          ),
-          SizedBox(width: 11),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            SizedBox(height: 1),
+            Row(
               children: [
                 Text(
-                  '2.0000',
-                  style: tsS25W500CFF,
+                  '~\$76.12',
+                  style: tsS15W400CFF.copyWith(color: AppColors.colorABB2BC),
                 ),
-                SizedBox(height: 1),
-                Row(
-                  children: [
-                    Text(
-                      '~\$76.12',
-                      style:
-                          tsS15W400CFF.copyWith(color: AppColors.colorABB2BC),
-                    ),
-                    SizedBox(width: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.color0CA564,
-                        borderRadius: BorderRadius.circular(5),
+                SizedBox(width: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.color0CA564,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 1.5,
+                    horizontal: 3.5,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'gain_graph'.asAssetSvg(),
+                        width: 8,
+                        height: 7,
+                        color: AppColors.colorFFFFFF,
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 1.5,
-                        horizontal: 3.5,
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'gain_graph'.asAssetSvg(),
-                            width: 8,
-                            height: 7,
-                            color: AppColors.colorFFFFFF,
-                          ),
-                          SizedBox(width: 2),
-                          RichText(
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: "12.57",
-                                  style: tsS13W600CFF,
-                                ),
-                                TextSpan(
-                                  text: "%",
-                                  style: tsS13W600CFF.copyWith(fontSize: 9),
-                                ),
-                              ],
+                      SizedBox(width: 2),
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: "12.57",
+                              style: tsS13W600CFF,
                             ),
-                          ),
-                        ],
+                            TextSpan(
+                              text: "%",
+                              style: tsS13W600CFF.copyWith(fontSize: 9),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '\$42.50',
-                style: tsS13W600CFF,
-              ),
-              SizedBox(height: 02),
-              Text(
-                'Market Price',
-                style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

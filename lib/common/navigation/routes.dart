@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/widgets/qr_code_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
@@ -14,6 +15,7 @@ import 'package:polkadex/features/coin/presentation/screens/balance_coin_preview
 import 'package:polkadex/features/coin/presentation/screens/balance_deposit_screen_1.dart';
 import 'package:polkadex/features/coin/presentation/screens/balance_summary_screen.dart';
 import 'package:polkadex/features/coin/presentation/screens/coin_withdraw_screen.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
@@ -181,7 +183,14 @@ abstract class Routes {
         break;
       case balanceCoinPreviewScreen:
         builder = (_) {
-          return BalanceCoinPreviewScreen();
+          final balanceCoinArguments = settings.arguments as Map;
+
+          return BlocProvider.value(
+            value: balanceCoinArguments['balanceCubit'] as BalanceCubit,
+            child: BalanceCoinPreviewScreen(
+              tokenId: balanceCoinArguments['tokenId'] as String,
+            ),
+          );
         };
         break;
       case marketTokenSelectionScreen:

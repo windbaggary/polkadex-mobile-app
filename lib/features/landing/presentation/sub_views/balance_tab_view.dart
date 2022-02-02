@@ -308,8 +308,11 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               itemBuilder: (context, index) {
                                 String key = state.free.keys.elementAt(index);
                                 return InkWell(
-                                  onTap: () => Coordinator
-                                      .goToBalanceCoinPreviewScreen(),
+                                  onTap: () =>
+                                      Coordinator.goToBalanceCoinPreviewScreen(
+                                          tokenId: key,
+                                          balanceCubit:
+                                              context.read<BalanceCubit>()),
                                   child: BalanceItemWidget(
                                     tokenAcronym:
                                         TokenUtils.tokenIdToAcronym(key),

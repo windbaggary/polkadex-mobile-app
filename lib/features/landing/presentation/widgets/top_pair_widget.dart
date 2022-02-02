@@ -1,9 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
+import 'package:provider/provider.dart';
 
 class TopPairWidget extends StatelessWidget {
   const TopPairWidget({
@@ -17,7 +19,8 @@ class TopPairWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return buildInkWell(
-      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
+      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+          tokenId: leftAsset, balanceCubit: context.read<BalanceCubit>()),
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(

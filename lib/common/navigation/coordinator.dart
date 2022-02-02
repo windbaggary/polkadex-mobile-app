@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/navigation/routes.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
@@ -87,8 +88,17 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.notifDetailsScreen);
   }
 
-  static void goToBalanceCoinPreviewScreen() {
-    _navigationKey.currentState?.pushNamed(Routes.balanceCoinPreviewScreen);
+  static void goToBalanceCoinPreviewScreen({
+    required String tokenId,
+    required BalanceCubit balanceCubit,
+  }) {
+    _navigationKey.currentState?.pushNamed(
+      Routes.balanceCoinPreviewScreen,
+      arguments: {
+        'tokenId': tokenId,
+        'balanceCubit': balanceCubit,
+      },
+    );
   }
 
   static Future<MarketSelectionResultModel?>
