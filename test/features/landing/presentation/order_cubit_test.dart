@@ -22,6 +22,7 @@ void main() {
   late double quantity;
   late double price;
   late OrderEntity order;
+  late String address;
   late String signature;
 
   setUp(() {
@@ -32,12 +33,13 @@ void main() {
     );
 
     nonce = 0;
-    baseAsset = "BTC";
-    quoteAsset = "USD";
+    baseAsset = "0";
+    quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
     price = 50.0;
+    address = 'test';
     signature = 'test';
     order = OrderModel(
       uuid: 'abcd',
@@ -76,6 +78,7 @@ void main() {
               orderSide: any(named: 'orderSide'),
               quantity: any(named: 'quantity'),
               baseAsset: any(named: 'baseAsset'),
+              address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
           ).thenAnswer(
@@ -92,6 +95,7 @@ void main() {
             orderSide: orderSide,
             price: price,
             quantity: quantity,
+            address: address,
             signature: signature,
           );
         },
@@ -113,6 +117,7 @@ void main() {
               orderSide: any(named: 'orderSide'),
               quantity: any(named: 'quantity'),
               baseAsset: any(named: 'baseAsset'),
+              address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
           ).thenAnswer(
@@ -129,6 +134,7 @@ void main() {
               orderSide: orderSide,
               price: price,
               quantity: quantity,
+              address: address,
               signature: signature);
         },
         expect: () => [

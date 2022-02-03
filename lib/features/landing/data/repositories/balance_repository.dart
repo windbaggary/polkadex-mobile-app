@@ -37,4 +37,28 @@ class BalanceRepository implements IBalanceRepository {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
+
+  @override
+  Future<Either<ApiError, String>> testDeposit(
+    int asset,
+    String address,
+    String signature,
+  ) async {
+    try {
+      final result = await _balanceRemoteDatasource.testDeposit(
+        asset,
+        address,
+        signature,
+      );
+      final Map<String, dynamic> body = jsonDecode(result.body);
+
+      if (result.statusCode == 200 && body.containsKey('Fine')) {
+        return Right(body['Fine']);
+      } else {
+        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      }
+    } catch (_) {
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
 }

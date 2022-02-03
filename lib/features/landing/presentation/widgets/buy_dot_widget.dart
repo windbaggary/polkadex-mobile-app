@@ -11,7 +11,9 @@ import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/common/widgets/loading_dots_widget.dart';
-import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
+import 'package:polkadex/features/landing/presentation/widgets/order_quantity_widget.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 /// The callback type for buy or sell
 typedef OnBuyOrSell = void Function(String price, String amount);
@@ -27,6 +29,7 @@ class BuyDotWidget extends StatefulWidget {
   final ValueNotifier<EnumBuySell> buySellNotifier;
   final ValueNotifier<EnumOrderTypes> orderTypeNotifier;
   final VoidCallback? onSwapTab;
+  final bool isBalanceLoading;
 
   const BuyDotWidget({
     required Key key,
@@ -38,6 +41,7 @@ class BuyDotWidget extends StatefulWidget {
     required this.onSell,
     required this.onBuy,
     required this.orderTypeNotifier,
+    required this.isBalanceLoading,
     this.onSwapTab,
   }) : super(key: key);
 
@@ -91,11 +95,11 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         builder: (context, buyOrSell, child) {
           switch (buyOrSell) {
             case EnumBuySell.buy:
-              _asset = 'BTC';
+              _asset = TokenUtils.tokenIdToAcronym(widget.leftAsset);
               _walletBalance = widget.leftBalance;
               break;
             case EnumBuySell.sell:
-              _asset = 'DOT';
+              _asset = TokenUtils.tokenIdToAcronym(widget.rightAsset);
               _walletBalance = widget.rightBalance;
               break;
           }
@@ -157,7 +161,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                           ),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "My balance",
@@ -165,10 +169,12 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                       color: AppColors.colorFFFFFF
                                           .withOpacity(0.70)),
                                 ),
-                                Text(
-                                  '${_walletBalance.toStringAsFixed(2)} $_asset',
-                                  style: tsS20W500CFF,
-                                ),
+                                widget.isBalanceLoading
+                                    ? _orderBalanceShimmerWidget()
+                                    : Text(
+                                        '${_walletBalance.toStringAsFixed(2)} $_asset',
+                                        style: tsS20W500CFF,
+                                      ),
                               ],
                             ),
                           ),
@@ -213,8 +219,21 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                             child: contentChild,
                           );
                         },
-                        child: _ThisAmountWidget()),
-                    _ThisPriceWidget(),
+                        child: OrderQuantityWidget(
+                          controller: _ThisInheritedWidget.of(context)
+                              ?.amountController,
+                          onChanged: (amount) =>
+                              _onAmountChanged(amount, context),
+                          tokenId: widget.rightAsset,
+                          hintText: 'Amount',
+                        )),
+                    OrderQuantityWidget(
+                      controller:
+                          _ThisInheritedWidget.of(context)?.priceController,
+                      onChanged: (price) => _onPriceChanged(price, context),
+                      tokenId: widget.leftAsset,
+                      hintText: 'Price',
+                    ),
                     _ThisTotalWidget(),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -241,7 +260,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                               padding: EdgeInsets.symmetric(
                                   vertical: 14, horizontal: 64),
                               label:
-                                  '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${widget.rightAsset}',
+                                  '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(widget.rightAsset)}',
                               enabled: state is! PlaceOrderNotValid,
                               onTap: () => state is PlaceOrderValid
                                   ? tapFunction(
@@ -279,52 +298,20 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     _priceController.text = "";
     _progressNotifier.value = 0.00;
   }
-}
 
-class _ThisAmountWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _ThisCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: QuantityInputWidget(
-              hintText: 'Amount',
-              controller: _ThisInheritedWidget.of(context)?.amountController,
-              onChanged: (amount) => _onAmountChanged(amount, context),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.17),
-                  blurRadius: 99,
-                  offset: Offset(0.0, 100.0),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.fromLTRB(13, 12, 13, 10),
-            child: Row(
-              children: [
-                Image.asset(
-                  'tokenIcon.png'.asAssetImg(),
-                  width: 17,
-                  height: 17,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: Text(
-                    'DOT',
-                    style: tsS13W600CFF,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+  Widget _orderBalanceShimmerWidget() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.black,
+        ),
+        child: Text(
+          '0.00 PDOG',
+          style: tsS20W500CFF,
+        ),
       ),
     );
   }
@@ -352,62 +339,8 @@ class _ThisAmountWidget extends StatelessWidget {
       print(ex);
     }
   }
-}
 
-class _ThisPriceWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _ThisCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: QuantityInputWidget(
-              hintText: "Price",
-              controller: _ThisInheritedWidget.of(context)?.priceController,
-              onChanged: (price) => _onPriceChanged(
-                _ThisInheritedWidget.of(context)?.buySellNotifier.value,
-                price,
-                context,
-              ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.17),
-                  blurRadius: 99,
-                  offset: Offset(0.0, 100.0),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.fromLTRB(13, 12, 13, 10),
-            child: Row(
-              children: [
-                Image.asset(
-                  'tokenIcon.png'.asAssetImg(),
-                  width: 17,
-                  height: 17,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: Text(
-                    'BTC',
-                    style: tsS13W600CFF,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onPriceChanged(
-      EnumBuySell? buyOrSell, String val, BuildContext context) {
+  void _onPriceChanged(String val, BuildContext context) {
     try {
       final double? amount = double.tryParse(
           _ThisInheritedWidget.of(context)!.amountController.text);
@@ -435,7 +368,13 @@ class _ThisPriceWidget extends StatelessWidget {
 class _ThisTotalWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _ThisCard(
+    return Container(
+      margin: const EdgeInsets.fromLTRB(13, 6.5, 13, 0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.black.withOpacity(0.20),
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 8, 13, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -528,27 +467,6 @@ class _ThisTotalWidget extends StatelessWidget {
   }
 }
 
-/// The common card layout for the widget
-class _ThisCard extends StatelessWidget {
-  final Widget? child;
-  const _ThisCard({
-    this.child,
-  }) : super();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(13, 6.5, 13, 0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: Colors.black.withOpacity(0.20),
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 8, 13, 8),
-      child: child,
-    );
-  }
-}
-
 /// The inherited widget for the screen to pass the parameters
 class _ThisInheritedWidget extends InheritedWidget {
   final TextEditingController priceController;
@@ -605,6 +523,7 @@ void _onProgressOrOrderSideUpdate(
   final price = double.tryParse(priceController.text);
 
   if (price == null) {
+    context.read<PlaceOrderCubit>().updateOrderParams(orderside: buyOrSell);
     return;
   }
 

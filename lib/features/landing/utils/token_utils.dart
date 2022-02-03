@@ -1,27 +1,34 @@
 import 'package:polkadex/common/utils/extensions.dart';
 
 abstract class TokenUtils {
-  static String tokenAcronymToFullName(String acronym) {
+  static String tokenIdToFullName(String acronym) {
     switch (acronym) {
-      case 'ETH':
-        return 'Ethereum';
-      case 'PDEX':
-        return 'Polkadex';
-      case 'LTC':
-        return 'Litecoin';
+      case '0':
+        return 'PolkaDoge';
+      case '1':
+        return 'ShibaDex';
       default:
-        return 'Bitcoin';
+        return 'Token';
     }
   }
 
-  static String tokenAcronymToAssetImg(String acronym) {
+  static String tokenIdToAcronym(String acronym) {
     switch (acronym) {
-      case 'ETH':
-        return 'trade_open/trade_open_1.png'.asAssetImg();
-      case 'PDEX':
-        return 'trade_open/trade_open_2.png'.asAssetImg();
-      case 'LTC':
-        return 'trade_open/trade_open_9.png'.asAssetImg();
+      case '0':
+        return 'PDG';
+      case '1':
+        return 'SDX';
+      default:
+        return 'TKN';
+    }
+  }
+
+  static String tokenIdToAssetImg(String acronym) {
+    switch (acronym) {
+      case '0':
+        return 'trade_open/trade_open_5.png'.asAssetImg();
+      case '1':
+        return 'trade_open/trade_open_13.png'.asAssetImg();
       default:
         return 'trade_open/trade_open_11.png'.asAssetImg();
     }

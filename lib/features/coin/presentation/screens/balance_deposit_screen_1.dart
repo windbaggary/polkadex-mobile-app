@@ -1,15 +1,25 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BalanceDepositScreenOne extends StatefulWidget {
+  BalanceDepositScreenOne({
+    required this.tokenId,
+  });
+
+  final String tokenId;
+
   @override
   _BalanceDepositScreenState createState() => _BalanceDepositScreenState();
 }
@@ -38,7 +48,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                 ),
                 Expanded(
                   child: Text(
-                    "Deposit Polkadex (DEX)",
+                    "Deposit ${TokenUtils.tokenIdToFullName(widget.tokenId)} (${TokenUtils.tokenIdToAcronym(widget.tokenId)})",
                     style: tsS19W700CFF,
                     textAlign: TextAlign.center,
                   ),
@@ -55,7 +65,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(height: 12),
-                    _ThisCoinTitleWidget(),
+                    _coinTileWidget(),
                     SizedBox(height: 16),
                     Container(
                       decoration: BoxDecoration(
@@ -258,6 +268,89 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
     );
   }
 
+  Widget _coinTileWidget() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.color0CA564,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 9),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.colorFFFFFF,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            margin: const EdgeInsets.only(right: 11),
+            padding: const EdgeInsets.all(5),
+            width: 51,
+            height: 51,
+            child: Image.asset(
+              TokenUtils.tokenIdToAssetImg(widget.tokenId),
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<BalanceCubit, BalanceState>(
+              builder: (context, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Available',
+                      style: tsS16W400CFF,
+                    ),
+                    SizedBox(height: 2),
+                    state is BalanceLoaded
+                        ? RichText(
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      '${double.parse(state.free[widget.tokenId] ?? '0').toStringAsFixed(2)} ${TokenUtils.tokenIdToAcronym(widget.tokenId)} ',
+                                  style: tsS17W600C0CA564.copyWith(
+                                      color: AppColors.colorFFFFFF),
+                                ),
+                                TextSpan(text: '\$31.25', style: tsS17W400CFF),
+                              ],
+                            ),
+                          )
+                        : _amountShimmerWidget(),
+                  ],
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _amountShimmerWidget() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.colorABB2BC,
+      baseColor: AppColors.color0CA564,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColors.color0CA564,
+        ),
+        child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: '1.5000 DEX',
+                style: tsS17W600C0CA564.copyWith(color: AppColors.colorFFFFFF),
+              ),
+              TextSpan(text: '\$31.25', style: tsS17W400CFF),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Share the qrcode to other apps
   _onShare(BuildContext context) async {
     final imgData = await rootBundle.load('qr-code.png'.asAssetImg());
@@ -291,60 +384,5 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
     //   'Polkadex DEX Address: 3P3QsMVK89JBNqZQv5zMAKG8FK3k',
     //   subject: 'Polkadex',
     // );
-  }
-}
-
-class _ThisCoinTitleWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.color0CA564,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 9),
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.colorFFFFFF,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            margin: const EdgeInsets.only(right: 11),
-            padding: const EdgeInsets.all(5),
-            width: 51,
-            height: 51,
-            child: Image.asset(
-              'trade_open/trade_open_2.png'.asAssetImg(),
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Available',
-                  style: tsS16W400CFF,
-                ),
-                SizedBox(height: 2),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '1.5000 DEX ',
-                        style: tsS17W600C0CA564.copyWith(
-                            color: AppColors.colorFFFFFF),
-                      ),
-                      TextSpan(text: '\$31.25', style: tsS17W400CFF),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
   }
 }

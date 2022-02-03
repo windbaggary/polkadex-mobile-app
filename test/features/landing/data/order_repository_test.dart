@@ -20,18 +20,20 @@ void main() {
   late EnumBuySell orderSide;
   late double quantity;
   late double price;
+  late String address;
   late String signature;
 
   setUp(() {
     dataSource = _MockOrderRemoteDatasource();
     repository = OrderRepository(orderRemoteDatasource: dataSource);
     nonce = 0;
-    baseAsset = "BTC";
-    quoteAsset = "USD";
+    baseAsset = "0";
+    quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     quantity = 100.0;
     price = 50.0;
+    address = 'test';
     signature = 'test';
   });
 
@@ -43,7 +45,8 @@ void main() {
   group('Order repository tests ', () {
     test('Must return a success order submit response', () async {
       when(() => dataSource.placeOrder(
-          any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
+              any(), any(), any(), any(), any(), any(), any(), any(), any()))
+          .thenAnswer(
         (_) async => Response(
             jsonEncode({
               "FineWithMessage": {
@@ -62,18 +65,28 @@ void main() {
         orderSide,
         price,
         quantity,
+        address,
         signature,
       );
 
       expect(result.isRight(), true);
-      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset,
-          orderType, orderSide, price, quantity, signature)).called(1);
+      verify(() => dataSource.placeOrder(
+          nonce,
+          int.parse(baseAsset),
+          int.parse(quoteAsset),
+          orderType,
+          orderSide,
+          price,
+          quantity,
+          address,
+          signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
     test('Must return a failed order submit response', () async {
       when(() => dataSource.placeOrder(
-          any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
+              any(), any(), any(), any(), any(), any(), any(), any(), any()))
+          .thenAnswer(
         (_) async => Response('', 400),
       );
 
@@ -85,12 +98,21 @@ void main() {
         orderSide,
         price,
         quantity,
+        address,
         signature,
       );
 
       expect(result.isLeft(), true);
-      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset,
-          orderType, orderSide, price, quantity, signature)).called(1);
+      verify(() => dataSource.placeOrder(
+          nonce,
+          int.parse(baseAsset),
+          int.parse(quoteAsset),
+          orderType,
+          orderSide,
+          price,
+          quantity,
+          address,
+          signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });

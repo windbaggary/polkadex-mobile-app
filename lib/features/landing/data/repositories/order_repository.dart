@@ -23,17 +23,19 @@ class OrderRepository implements IOrderRepository {
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String address,
     String signature,
   ) async {
     try {
       final result = await _orderRemoteDatasource.placeOrder(
         nonce,
-        baseAsset,
-        quoteAsset,
+        int.parse(baseAsset),
+        int.parse(quoteAsset),
         orderType,
         orderSide,
         price,
         quantity,
+        address,
         signature,
       );
       final newOrder = OrderModel(
@@ -43,8 +45,8 @@ class OrderRepository implements IOrderRepository {
         amount: quantity.toString(),
         price: price.toString(),
         dateTime: DateTime.now(),
-        amountCoin: baseAsset,
-        priceCoin: quoteAsset,
+        amountCoin: baseAsset.toString(),
+        priceCoin: quoteAsset.toString(),
         orderType: orderType,
         tokenPairName: '$baseAsset/$quoteAsset',
       );

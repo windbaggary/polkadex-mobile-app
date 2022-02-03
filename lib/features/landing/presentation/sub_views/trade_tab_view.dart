@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -11,6 +12,7 @@ import 'package:polkadex/features/landing/presentation/providers/trade_tab_provi
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/data/models/order_book_item_model.dart';
 import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -59,35 +61,41 @@ class _TradeTabViewState extends State<TradeTabView>
   Widget build(BuildContext context) {
     return _ThisInheritedWidget(
       buySellTabController: _buySellDotController,
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<TradeTabCoinProvider>(
-              create: (context) => TradeTabCoinProvider()),
-          ChangeNotifierProvider<TradeTabViewProvider>(
-              create: (context) => TradeTabViewProvider()),
-          ChangeNotifierProvider<OrderBookWidgetFilterProvider>(
-            create: (context) => OrderBookWidgetFilterProvider(),
-          ),
-        ],
-        builder: (context, _) => SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          controller: _scrollController,
-          padding: const EdgeInsets.only(bottom: 64),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _ThisTopRowSelectWidget(),
-              _ThisBuySellWidget(
-                key: _keyBuySellWidget,
-              ),
-              OrderBookHeadingWidget(),
-              OrderBookWidget(
-                onOrderBookItemClicked: (model) =>
-                    _onOrderBookItemClicked(model, context),
-              ),
-            ],
-          ),
-        ),
+      child: ChangeNotifierProvider<OrderBookWidgetFilterProvider>(
+        create: (context) => OrderBookWidgetFilterProvider(),
+        builder: (context, _) {
+          _ThisInheritedWidget.of(context)
+              ?.buySellTabController
+              .animateTo(context.read<TradeTabViewProvider>().orderSideIndex);
+
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            controller: _scrollController,
+            padding: const EdgeInsets.only(bottom: 64),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _ThisTopRowSelectWidget(),
+                _ThisBuySellWidget(
+                  key: _keyBuySellWidget,
+                ),
+                OrderBookHeadingWidget(),
+                OrderBookWidget(
+                  amountTokenId: context
+                      .read<TradeTabCoinProvider>()
+                      .tokenCoin
+                      .pairTokenId,
+                  priceTokenId: context
+                      .read<TradeTabCoinProvider>()
+                      .tokenCoin
+                      .baseTokenId,
+                  onOrderBookItemClicked: (model) =>
+                      _onOrderBookItemClicked(model, context),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -147,201 +155,226 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 8),
-      decoration: BoxDecoration(
-        color: AppColors.color24252C,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black.withOpacity(0.10),
-            blurRadius: 30,
-            offset: Offset(0.0, 20.0),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 30, 0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ValueListenableBuilder<EnumBuySell>(
-                    valueListenable: _buySellNotifier,
-                    builder: (context, buyOrSell, child) {
-                      Color color;
-                      switch (buyOrSell) {
-                        case EnumBuySell.buy:
-                          color = AppColors.color0CA564;
-                          break;
-                        case EnumBuySell.sell:
-                          color = AppColors.colorE6007A;
-                          break;
-                      }
-                      return TabBar(
-                        isScrollable: true,
-                        labelStyle: tsS15W600CFF,
-                        unselectedLabelColor:
-                            AppColors.colorFFFFFF.withOpacity(0.30),
-                        indicatorColor: color,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        tabs: <Tab>[
-                          Tab(
-                            text: 'Buy DOT',
-                          ),
-                          Tab(
-                            text: 'Sell DOT',
-                          ),
-                        ],
-                        controller: _ThisInheritedWidget.of(context)
-                            ?.buySellTabController,
-                      );
-                    },
-                  ),
+    return Consumer<TradeTabCoinProvider>(
+      builder: (context, coinProvider, child) =>
+          BlocBuilder<BalanceCubit, BalanceState>(
+        builder: (context, state) {
+          final currentState = context.read<BalanceCubit>().state;
+          double leftBalance = 0.0;
+          double rightBalance = 0.0;
+
+          if (currentState is BalanceLoaded && currentState.free.isNotEmpty) {
+            leftBalance = double.tryParse(
+                    currentState.free[coinProvider.tokenCoin.baseTokenId]) ??
+                0.0;
+            rightBalance = double.tryParse(
+                    currentState.free[coinProvider.tokenCoin.pairTokenId]) ??
+                0.0;
+          }
+
+          return Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: AppColors.color24252C,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.10),
+                  blurRadius: 30,
+                  offset: Offset(0.0, 20.0),
                 ),
-                InkWell(
-                  onTap: () => _onTapOrderType(context),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 30, 0),
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 2.0),
-                        child: ValueListenableBuilder<EnumOrderTypes>(
-                          valueListenable: _orderTypeSelNotifier,
-                          builder: (context, type, _) => Text(
-                            _getOrderTypeName(type),
-                            style: tsS15W600CFF,
-                          ),
+                      Expanded(
+                        child: ValueListenableBuilder<EnumBuySell>(
+                          valueListenable: _buySellNotifier,
+                          builder: (context, buyOrSell, child) {
+                            Color color;
+                            switch (buyOrSell) {
+                              case EnumBuySell.buy:
+                                color = AppColors.color0CA564;
+                                break;
+                              case EnumBuySell.sell:
+                                color = AppColors.colorE6007A;
+                                break;
+                            }
+                            return TabBar(
+                              isScrollable: true,
+                              labelStyle: tsS15W600CFF,
+                              unselectedLabelColor:
+                                  AppColors.colorFFFFFF.withOpacity(0.30),
+                              indicatorColor: color,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              tabs: <Tab>[
+                                Tab(
+                                  text:
+                                      'Buy ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.pairTokenId)}',
+                                ),
+                                Tab(
+                                  text:
+                                      'Sell ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.pairTokenId)}',
+                                ),
+                              ],
+                              controller: _ThisInheritedWidget.of(context)
+                                  ?.buySellTabController,
+                            );
+                          },
                         ),
                       ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.colorFFFFFF,
-                        size: 16,
+                      InkWell(
+                        onTap: () => _onTapOrderType(context),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 2.0),
+                              child: ValueListenableBuilder<EnumOrderTypes>(
+                                valueListenable: _orderTypeSelNotifier,
+                                builder: (context, type, _) => Text(
+                                  _getOrderTypeName(type),
+                                  style: tsS15W600CFF,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.colorFFFFFF,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                BuyDotWidget(
+                  key: _keyBuySellWidget,
+                  leftBalance: leftBalance,
+                  leftAsset: coinProvider.tokenCoin.baseTokenId,
+                  rightBalance: rightBalance,
+                  rightAsset: coinProvider.tokenCoin.pairTokenId,
+                  orderTypeNotifier: _orderTypeSelNotifier,
+                  buySellNotifier: _buySellNotifier,
+                  onSwapTab: () => _onClickArrowsBuySell(
+                      _ThisInheritedWidget.of(context)?.buySellTabController),
+                  onBuy: (price, amount) => _onBuyOrSell(
+                    EnumBuySell.buy,
+                    _orderTypeSelNotifier.value,
+                    coinProvider.tokenCoin.baseTokenId,
+                    coinProvider.tokenCoin.pairTokenId,
+                    price,
+                    amount,
+                    context,
+                  ),
+                  onSell: (price, amount) => _onBuyOrSell(
+                    EnumBuySell.sell,
+                    _orderTypeSelNotifier.value,
+                    coinProvider.tokenCoin.baseTokenId,
+                    coinProvider.tokenCoin.pairTokenId,
+                    price,
+                    amount,
+                    context,
+                  ),
+                  isBalanceLoading:
+                      context.read<BalanceCubit>().state is! BalanceLoaded,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 4.0,
+                    left: 41,
+                    right: 41,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          if (_orderDisplayTypeNotifier.value ==
+                              EnumTradeOrdersDisplayType.open) {
+                            if (_isOrdersExpanded.value) {
+                              _isOrdersExpanded.value = false;
+                            } else {
+                              _isOrdersExpanded.value = true;
+                            }
+                          } else {
+                            _orderDisplayTypeNotifier.value =
+                                EnumTradeOrdersDisplayType.open;
+                            if (!_isOrdersExpanded.value) {
+                              _isOrdersExpanded.value = true;
+                            }
+                          }
+                        },
+                        child: BlocBuilder<ListOrdersCubit, ListOrdersState>(
+                            builder: (context, state) {
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8, right: 12),
+                                child: Text(
+                                  "Open Orders",
+                                  style: state is ListOrdersLoaded &&
+                                          state.openOrders.isEmpty
+                                      ? tsS15W600CABB2BC
+                                      : tsS15W600CFF,
+                                ),
+                              ),
+                              if (state is! ListOrdersError)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.colorE6007A,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: EdgeInsets.all(
+                                      state is ListOrdersLoading ? 2.5 : 4),
+                                  margin: const EdgeInsets.only(bottom: 4),
+                                  child: state is ListOrdersLoaded
+                                      ? Text('${state.openOrders.length}',
+                                          style: tsS10W500CFF)
+                                      : SizedBox(
+                                          width: 6.0,
+                                          height: 6.0,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 1.5,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                ),
+                            ],
+                          );
+                        }),
                       ),
                     ],
                   ),
-                )
-              ],
-            ),
-          ),
-          BuyDotWidget(
-            key: _keyBuySellWidget,
-            leftBalance: 12000.89,
-            leftAsset: 'BTC',
-            rightBalance: 200000.72,
-            rightAsset: 'DOT',
-            orderTypeNotifier: _orderTypeSelNotifier,
-            buySellNotifier: _buySellNotifier,
-            onSwapTab: () => _onClickArrowsBuySell(
-                _ThisInheritedWidget.of(context)?.buySellTabController),
-            onBuy: (price, amount) => _onBuyOrSell(
-              EnumBuySell.buy,
-              _orderTypeSelNotifier.value,
-              'BTC',
-              'DOT',
-              price,
-              amount,
-              context,
-            ),
-            onSell: (price, amount) => _onBuyOrSell(
-              EnumBuySell.sell,
-              _orderTypeSelNotifier.value,
-              'BTC',
-              'DOT',
-              price,
-              amount,
-              context,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 4.0,
-              left: 41,
-              right: 41,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: () {
-                    if (_orderDisplayTypeNotifier.value ==
-                        EnumTradeOrdersDisplayType.open) {
-                      if (_isOrdersExpanded.value) {
-                        _isOrdersExpanded.value = false;
-                      } else {
-                        _isOrdersExpanded.value = true;
-                      }
-                    } else {
-                      _orderDisplayTypeNotifier.value =
-                          EnumTradeOrdersDisplayType.open;
-                      if (!_isOrdersExpanded.value) {
-                        _isOrdersExpanded.value = true;
-                      }
-                    }
-                  },
-                  child: BlocBuilder<ListOrdersCubit, ListOrdersState>(
-                      builder: (context, state) {
-                    return Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, right: 12),
-                          child: Text(
-                            "Open Orders",
-                            style: state is ListOrdersLoaded &&
-                                    state.openOrders.isEmpty
-                                ? tsS15W600CABB2BC
-                                : tsS15W600CFF,
-                          ),
-                        ),
-                        if (state is! ListOrdersError)
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.colorE6007A,
-                              shape: BoxShape.circle,
-                            ),
-                            padding: EdgeInsets.all(
-                                state is ListOrdersLoading ? 2.5 : 4),
-                            margin: const EdgeInsets.only(bottom: 4),
-                            child: state is ListOrdersLoaded
-                                ? Text('${state.openOrders.length}',
-                                    style: tsS10W500CFF)
-                                : SizedBox(
-                                    width: 6.0,
-                                    height: 6.0,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 1.5,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                          ),
-                      ],
-                    );
-                  }),
+                ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: _isOrdersExpanded,
+                  builder: (context, isShow, child) => AnimatedSize(
+                    duration: AppConfigs.animDurationSmall,
+                    alignment: Alignment.topCenter,
+                    child: ValueListenableBuilder<EnumTradeOrdersDisplayType?>(
+                      valueListenable: _orderDisplayTypeNotifier,
+                      builder: (context, orderDisplayType, child) {
+                        if (!(isShow)) return SizedBox(height: 15);
+                        return _ThisOpenOrderExpandedWidget(
+                          type: orderDisplayType,
+                        );
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-          ValueListenableBuilder<bool>(
-            valueListenable: _isOrdersExpanded,
-            builder: (context, isShow, child) => AnimatedSize(
-              duration: AppConfigs.animDurationSmall,
-              alignment: Alignment.topCenter,
-              child: ValueListenableBuilder<EnumTradeOrdersDisplayType?>(
-                valueListenable: _orderDisplayTypeNotifier,
-                builder: (context, orderDisplayType, child) {
-                  if (!(isShow)) return SizedBox(height: 15);
-                  return _ThisOpenOrderExpandedWidget(
-                    type: orderDisplayType,
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -378,11 +411,12 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     final resultPlaceOrder = await placeOrderCubit.placeOrder(
       nonce: 0,
       baseAsset: leftAsset,
-      quoteAsset: 'USD',
+      quoteAsset: rightAsset,
       orderType: side,
       orderSide: type,
       quantity: double.parse(amount),
       price: double.parse(price),
+      address: context.read<AccountCubit>().accountAddress,
       signature: context.read<AccountCubit>().accountSignature,
     );
 
@@ -502,12 +536,12 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 18, top: 8, right: 19),
-      child: Row(
-        children: [
-          _ThisTopSelectableWidget(onTap: () => _onMarketSelection(context)),
-          Spacer(),
-          Consumer<TradeTabCoinProvider>(
-            builder: (context, coinProvider, child) => Container(
+      child: Consumer<TradeTabCoinProvider>(
+        builder: (context, coinProvider, child) => Row(
+          children: [
+            _ThisTopSelectableWidget(onTap: () => _onMarketSelection(context)),
+            Spacer(),
+            Container(
               decoration: BoxDecoration(
                 color: coinProvider.tokenCoin.color,
                 borderRadius: BorderRadius.circular(5),
@@ -520,22 +554,25 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
                 style: tsS13W600CFF,
               ),
             ),
-          ),
-          buildInkWell(
-            borderRadius: BorderRadius.circular(8),
-            onTap: () => Coordinator.goToCoinTradeScreen(),
-            child: Container(
-              width: 33,
-              height: 33,
-              padding: const EdgeInsets.symmetric(vertical: 7),
-              decoration: BoxDecoration(
-                color: AppColors.color8BA1BE.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(8),
+            buildInkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () => Coordinator.goToCoinTradeScreen(
+                  leftTokenId: coinProvider.tokenCoin.baseTokenId,
+                  rightTokenId: coinProvider.tokenCoin.pairTokenId,
+                  balanceCubit: context.read<BalanceCubit>()),
+              child: Container(
+                width: 33,
+                height: 33,
+                padding: const EdgeInsets.symmetric(vertical: 7),
+                decoration: BoxDecoration(
+                  color: AppColors.color8BA1BE.withOpacity(0.20),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: SvgPicture.asset('trading'.asAssetSvg()),
               ),
-              child: SvgPicture.asset('trading'.asAssetSvg()),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -567,7 +604,7 @@ class _ThisTopSelectableWidget extends StatelessWidget {
         children: [
           Consumer<TradeTabCoinProvider>(
             builder: (context, coinProvider, child) => Image.asset(
-              coinProvider.tokenCoin.imgAsset,
+              TokenUtils.tokenIdToAssetImg(coinProvider.tokenCoin.baseTokenId),
               width: 48,
               height: 48,
               fit: BoxFit.contain,
@@ -586,11 +623,13 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                       style: tsS14W500CFF,
                       children: <TextSpan>[
                         TextSpan(
-                          text: coinProvider.tokenCoin.code,
+                          text: TokenUtils.tokenIdToAcronym(
+                              coinProvider.tokenCoin.baseTokenId),
                           style: TextStyle(fontSize: 19),
                         ),
                         TextSpan(
-                          text: '/${coinProvider.pairCoin?.code}',
+                          text:
+                              '/${TokenUtils.tokenIdToAcronym(coinProvider.pairCoin?.baseTokenId ?? '')}',
                           style: TextStyle(
                             fontFamily: 'WorkSans',
                           ),
@@ -599,7 +638,8 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    coinProvider.tokenCoin.name,
+                    TokenUtils.tokenIdToFullName(
+                        coinProvider.tokenCoin.baseTokenId),
                     style: tsS15W500CFF.copyWith(color: AppColors.colorABB2BC),
                   )
                 ],

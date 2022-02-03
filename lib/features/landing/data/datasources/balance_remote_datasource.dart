@@ -15,8 +15,27 @@ class BalanceRemoteDatasource {
       },
       body: jsonEncode(<String, dynamic>{
         'signature': {'Sr25519': signature},
+        'payload': {'account': address},
+      }),
+    );
+  }
+
+  Future<Response> testDeposit(
+    int asset,
+    String address,
+    String signature,
+  ) async {
+    return await post(
+      Uri.parse('$_baseUrl/test_deposit'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'signature': {'Sr25519': signature},
         'payload': {
-          'account': '5HGabetgTWWsoRJxdZP11ns2yi1oVaenXEBprfKHp7tpw7NH'
+          'account': address,
+          'asset': asset,
+          'amount': '100000.0',
         },
       }),
     );

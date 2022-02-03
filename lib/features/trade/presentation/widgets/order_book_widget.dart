@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_book_chart_item.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/data/models/order_book_item_model.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -15,10 +16,15 @@ typedef OnOrderBookItemClicked = void Function(OrderBookItemModel model);
 
 /// The order book widget
 class OrderBookWidget extends StatelessWidget {
-  final OnOrderBookItemClicked? onOrderBookItemClicked;
   const OrderBookWidget({
+    required this.amountTokenId,
+    required this.priceTokenId,
     this.onOrderBookItemClicked,
   });
+
+  final String amountTokenId;
+  final String priceTokenId;
+  final OnOrderBookItemClicked? onOrderBookItemClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +86,10 @@ class OrderBookWidget extends StatelessWidget {
               right: 23,
               bottom: 20,
             ),
-            child: _ThisOrderBookChartWidget(),
+            child: _ThisOrderBookChartWidget(
+              amountTokenId: amountTokenId,
+              priceTokenId: priceTokenId,
+            ),
           ),
         ],
       ),
@@ -90,6 +99,14 @@ class OrderBookWidget extends StatelessWidget {
 
 /// The widget displays the chart on order book content
 class _ThisOrderBookChartWidget extends StatelessWidget {
+  _ThisOrderBookChartWidget({
+    required this.amountTokenId,
+    required this.priceTokenId,
+  });
+
+  final String amountTokenId;
+  final String priceTokenId;
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrderBookWidgetFilterProvider>();
@@ -162,12 +179,12 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'Amount (PDEX)',
+                'Amount (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
                 style: tsS13W500CFFOP40,
               ),
             ),
             Text(
-              'Price (BTC)',
+              'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
               style: tsS13W500CFFOP40,
               textAlign: TextAlign.end,
             )

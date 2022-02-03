@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/widgets/qr_code_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
@@ -14,6 +15,7 @@ import 'package:polkadex/features/coin/presentation/screens/balance_coin_preview
 import 'package:polkadex/features/coin/presentation/screens/balance_deposit_screen_1.dart';
 import 'package:polkadex/features/coin/presentation/screens/balance_summary_screen.dart';
 import 'package:polkadex/features/coin/presentation/screens/coin_withdraw_screen.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/screens/landing_screen.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
@@ -150,22 +152,39 @@ abstract class Routes {
         builder = (_) {
           final withdrawArguments = settings.arguments as Map;
 
-          return CoinWithdrawScreen(
-            asset: withdrawArguments['asset'],
-            amount: withdrawArguments['amount'],
+          return BlocProvider.value(
+            value: withdrawArguments['balanceCubit'] as BalanceCubit,
+            child: CoinWithdrawScreen(
+              tokenId: withdrawArguments['tokenId'],
+            ),
           );
         };
         break;
       case coinTradeScreen:
         builder = (_) {
-          return CoinTradeScreen(
-            enumInitalCardFlipState: settings.arguments as EnumCardFlipState,
+          final coinTradeArguments = settings.arguments as Map;
+
+          return BlocProvider.value(
+            value: coinTradeArguments['balanceCubit'] as BalanceCubit,
+            child: CoinTradeScreen(
+              enumInitalCardFlipState:
+                  coinTradeArguments['enumCardFlipState'] as EnumCardFlipState,
+              leftTokenId: coinTradeArguments['leftTokenId'] as String,
+              rightTokenId: coinTradeArguments['rightTokenId'] as String,
+            ),
           );
         };
         break;
       case balanceDepositScreenOne:
         builder = (_) {
-          return BalanceDepositScreenOne();
+          final balanceDepositArguments = settings.arguments as Map;
+
+          return BlocProvider.value(
+            value: balanceDepositArguments['balanceCubit'] as BalanceCubit,
+            child: BalanceDepositScreenOne(
+              tokenId: balanceDepositArguments['tokenId'] as String,
+            ),
+          );
         };
         break;
       case notifDepositScreen:
@@ -181,7 +200,14 @@ abstract class Routes {
         break;
       case balanceCoinPreviewScreen:
         builder = (_) {
-          return BalanceCoinPreviewScreen();
+          final balanceCoinArguments = settings.arguments as Map;
+
+          return BlocProvider.value(
+            value: balanceCoinArguments['balanceCubit'] as BalanceCubit,
+            child: BalanceCoinPreviewScreen(
+              tokenId: balanceCoinArguments['tokenId'] as String,
+            ),
+          );
         };
         break;
       case marketTokenSelectionScreen:

@@ -13,19 +13,20 @@ import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/coin/presentation/cubits/withdraw_cubit.dart';
 import 'package:polkadex/common/widgets/loading_dots_widget.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart';
+import 'package:shimmer/shimmer.dart';
 
 /// XD_PAGE: 21
 /// XD_PAGE: 28
 class CoinWithdrawScreen extends StatefulWidget {
   const CoinWithdrawScreen({
-    required this.asset,
-    required this.amount,
+    required this.tokenId,
   });
 
-  final String asset;
-  final double amount;
+  final String tokenId;
 
   @override
   _CoinWithdrawScreenState createState() => _CoinWithdrawScreenState();
@@ -42,7 +43,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     return BlocProvider(
       create: (_) => dependency<WithdrawCubit>()
         ..init(
-          amountFree: widget.amount,
+          amountFree: 0.0,
           amountToBeWithdrawn: 0.0,
           amountDisplayed: '',
           address: '',
@@ -51,410 +52,454 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         create: (_) => _ThisProvider(),
         builder: (context, _) => Scaffold(
           backgroundColor: AppColors.color1C2023,
-          body: BlocConsumer<WithdrawCubit, WithdrawState>(
-            listener: (context, state) {
-              if (state is WithdrawSuccess) {
-                buildAppToast(msg: state.message, context: context);
+          body: BlocBuilder<BalanceCubit, BalanceState>(
+            builder: (context, balanceState) {
+              if (balanceState is BalanceLoaded) {
+                context.read<WithdrawCubit>().updateWithdrawParams(
+                    amountFree:
+                        double.parse(balanceState.free[widget.tokenId] ?? '0'));
               }
 
-              if (state is WithdrawError) {
-                buildAppToast(
-                    msg: '${widget.asset} withdraw failed. Please try again',
-                    context: context);
-              }
-            },
-            builder: (context, state) {
-              return SafeArea(
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.color2E303C,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(40),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            _buildAppbar(context),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors.color1C2023,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(35),
-                                    topLeft: Radius.circular(35),
-                                  ),
-                                ),
-                                child: SingleChildScrollView(
+              return BlocConsumer<WithdrawCubit, WithdrawState>(
+                listener: (context, withdrawState) {
+                  if (withdrawState is WithdrawSuccess) {
+                    buildAppToast(msg: withdrawState.message, context: context);
+                  }
+
+                  if (withdrawState is WithdrawError) {
+                    buildAppToast(
+                        msg:
+                            '${TokenUtils.tokenIdToAcronym(widget.tokenId)} withdraw failed. Please try again',
+                        context: context);
+                  }
+                },
+                builder: (context, withdrawState) {
+                  print(balanceState);
+                  return SafeArea(
+                    child: Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.color2E303C,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(40),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                _buildAppbar(context),
+                                Expanded(
                                   child: Container(
-                                    // height:
-                                    //     MediaQuery.of(context).size.height - 120,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        _ThisCoinTitleWidget(
-                                          asset: widget.asset,
-                                          amount: state.amountFree,
-                                          areUnitsSwapped:
-                                              _areAmountUnitsSwapped,
-                                          conversionRate: _conversionRate,
-                                        ),
-                                        _ThisAmountWidget(
-                                          amount: state.amountToBeWithdrawn,
-                                          amountDisplayed: context
-                                              .read<WithdrawCubit>()
-                                              .state
-                                              .amountDisplayed,
-                                          conversionRate: _conversionRate,
-                                          areUnitsSwapped:
-                                              _areAmountUnitsSwapped,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              22, 40, 24, 0),
-                                          child: Consumer<_ThisProvider>(
-                                            builder:
-                                                (context, thisProvider, _) {
-                                              return AppHorizontalSlider(
-                                                bgColor:
-                                                    const Color(0xFF313236),
-                                                activeColor:
-                                                    AppColors.colorE6007A,
-                                                initialProgress:
-                                                    thisProvider.progress,
-                                                onProgressUpdate: (progress) =>
-                                                    _onAmountSlideUpdate(
-                                                        progress,
-                                                        context.read<
-                                                            WithdrawCubit>(),
-                                                        thisProvider),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.fromLTRB(
-                                              22, 26, 22, 0.0),
-                                          padding: const EdgeInsets.fromLTRB(
-                                              27, 14, 13, 13),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.colorFFFFFF
-                                                .withOpacity(0.05),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            boxShadow: <BoxShadow>[bsDefault],
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: TextField(
-                                                  controller:
-                                                      _addressController,
-                                                  style: tsS16W500CFF,
-                                                  decoration: InputDecoration(
-                                                    isDense: true,
-                                                    contentPadding:
-                                                        EdgeInsets.zero,
-                                                    hintText:
-                                                        'Enter Dex address',
-                                                    hintStyle:
-                                                        tsS16W500CFF.copyWith(
-                                                      color: AppColors
-                                                          .colorFFFFFF
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                    border: InputBorder.none,
-                                                    errorBorder:
-                                                        InputBorder.none,
-                                                    enabledBorder:
-                                                        InputBorder.none,
-                                                    focusedBorder:
-                                                        InputBorder.none,
-                                                    disabledBorder:
-                                                        InputBorder.none,
-                                                    focusedErrorBorder:
-                                                        InputBorder.none,
-                                                  ),
-                                                  onChanged: (address) =>
-                                                      context
+                                    decoration: BoxDecoration(
+                                      color: AppColors.color1C2023,
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(35),
+                                        topLeft: Radius.circular(35),
+                                      ),
+                                    ),
+                                    child: SingleChildScrollView(
+                                      child: Container(
+                                        // height:
+                                        //     MediaQuery.of(context).size.height - 120,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            _ThisCoinTitleWidget(
+                                              tokenId: widget.tokenId,
+                                              amount: withdrawState.amountFree,
+                                              areUnitsSwapped:
+                                                  _areAmountUnitsSwapped,
+                                              conversionRate: _conversionRate,
+                                              isLoaded:
+                                                  balanceState is BalanceLoaded,
+                                            ),
+                                            _ThisAmountWidget(
+                                              amount: withdrawState
+                                                  .amountToBeWithdrawn,
+                                              amountDisplayed: context
+                                                  .read<WithdrawCubit>()
+                                                  .state
+                                                  .amountDisplayed,
+                                              conversionRate: _conversionRate,
+                                              areUnitsSwapped:
+                                                  _areAmountUnitsSwapped,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      22, 40, 24, 0),
+                                              child: Consumer<_ThisProvider>(
+                                                builder:
+                                                    (context, thisProvider, _) {
+                                                  return AppHorizontalSlider(
+                                                    bgColor:
+                                                        const Color(0xFF313236),
+                                                    activeColor:
+                                                        AppColors.colorE6007A,
+                                                    initialProgress:
+                                                        thisProvider.progress,
+                                                    onProgressUpdate: (progress) =>
+                                                        _onAmountSlideUpdate(
+                                                            progress,
+                                                            context.read<
+                                                                WithdrawCubit>(),
+                                                            thisProvider),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  22, 26, 22, 0.0),
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      27, 14, 13, 13),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.colorFFFFFF
+                                                    .withOpacity(0.05),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                boxShadow: <BoxShadow>[
+                                                  bsDefault
+                                                ],
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: TextField(
+                                                      controller:
+                                                          _addressController,
+                                                      style: tsS16W500CFF,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        isDense: true,
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
+                                                        hintText:
+                                                            'Enter Dex address',
+                                                        hintStyle: tsS16W500CFF
+                                                            .copyWith(
+                                                          color: AppColors
+                                                              .colorFFFFFF
+                                                              .withOpacity(0.5),
+                                                        ),
+                                                        border:
+                                                            InputBorder.none,
+                                                        errorBorder:
+                                                            InputBorder.none,
+                                                        enabledBorder:
+                                                            InputBorder.none,
+                                                        focusedBorder:
+                                                            InputBorder.none,
+                                                        disabledBorder:
+                                                            InputBorder.none,
+                                                        focusedErrorBorder:
+                                                            InputBorder.none,
+                                                      ),
+                                                      onChanged: (address) => context
                                                           .read<WithdrawCubit>()
                                                           .updateWithdrawParams(
                                                               address: address),
-                                                ),
-                                              ),
-                                              buildInkWell(
-                                                onTap: () async {
-                                                  final address =
-                                                      await Coordinator
-                                                          .goToQrCodeScanScreen();
+                                                    ),
+                                                  ),
+                                                  buildInkWell(
+                                                    onTap: () async {
+                                                      final address =
+                                                          await Coordinator
+                                                              .goToQrCodeScanScreen();
 
-                                                  if (address != null) {
-                                                    _addressController.text =
-                                                        address;
-                                                    context
-                                                        .read<WithdrawCubit>()
-                                                        .updateWithdrawParams(
-                                                            address: address);
-                                                  }
-                                                },
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                child: Container(
-                                                  width: 43,
-                                                  height: 43,
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.color8BA1BE
-                                                        .withOpacity(0.2),
+                                                      if (address != null) {
+                                                        _addressController
+                                                            .text = address;
+                                                        context
+                                                            .read<
+                                                                WithdrawCubit>()
+                                                            .updateWithdrawParams(
+                                                                address:
+                                                                    address);
+                                                      }
+                                                    },
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12),
+                                                    child: Container(
+                                                      width: 43,
+                                                      height: 43,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors
+                                                            .color8BA1BE
+                                                            .withOpacity(0.2),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              12),
+                                                      child: SvgPicture.asset(
+                                                          'scan'.asAssetSvg()),
+                                                    ),
                                                   ),
-                                                  padding:
-                                                      const EdgeInsets.all(12),
-                                                  child: SvgPicture.asset(
-                                                      'scan'.asAssetSvg()),
-                                                ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              22, 18, 22, 20.0),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    right: 18),
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                  27,
-                                                  9,
-                                                  22,
-                                                  9,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.colorFFFFFF
-                                                      .withOpacity(0.05),
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  boxShadow: <BoxShadow>[
-                                                    bsDefault
-                                                  ],
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: 100,
-                                                      child: DropdownButton<
-                                                          String>(
-                                                        items: [
-                                                          'DOT Chain',
-                                                          'DOT 1',
-                                                          'DOT 2'
-                                                        ]
-                                                            .map((e) =>
-                                                                DropdownMenuItem<
-                                                                    String>(
-                                                                  child: Text(
-                                                                    e,
-                                                                    style:
-                                                                        tsS16W600CFF,
-                                                                  ),
-                                                                  value: e,
-                                                                ))
-                                                            .toList(),
-                                                        value: 'DOT Chain',
-                                                        style: tsS16W600CFF,
-                                                        underline: Container(),
-                                                        onChanged: (val) {},
-                                                        isExpanded: true,
-                                                        icon: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 0.0),
-                                                          child: Icon(
-                                                            Icons
-                                                                .keyboard_arrow_down_rounded,
-                                                            color: AppColors
-                                                                .colorFFFFFF,
-                                                            size: 16,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      22, 18, 22, 20.0),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            right: 18),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(
+                                                      27,
+                                                      9,
+                                                      22,
+                                                      9,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors
+                                                          .colorFFFFFF
+                                                          .withOpacity(0.05),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      boxShadow: <BoxShadow>[
+                                                        bsDefault
+                                                      ],
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 100,
+                                                          child: DropdownButton<
+                                                              String>(
+                                                            items: [
+                                                              'DOT Chain',
+                                                              'DOT 1',
+                                                              'DOT 2'
+                                                            ]
+                                                                .map((e) =>
+                                                                    DropdownMenuItem<
+                                                                        String>(
+                                                                      child:
+                                                                          Text(
+                                                                        e,
+                                                                        style:
+                                                                            tsS16W600CFF,
+                                                                      ),
+                                                                      value: e,
+                                                                    ))
+                                                                .toList(),
+                                                            value: 'DOT Chain',
+                                                            style: tsS16W600CFF,
+                                                            underline:
+                                                                Container(),
+                                                            onChanged: (val) {},
+                                                            isExpanded: true,
+                                                            icon: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          0.0),
+                                                              child: Icon(
+                                                                Icons
+                                                                    .keyboard_arrow_down_rounded,
+                                                                color: AppColors
+                                                                    .colorFFFFFF,
+                                                                size: 16,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        'Withdraw Fee',
-                                                        style: tsS13W400CFFOP60
-                                                            .copyWith(
+                                                  ),
+                                                  Expanded(
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            'Withdraw Fee',
+                                                            style: tsS13W400CFFOP60.copyWith(
                                                                 color: AppColors
                                                                     .colorFFFFFF
                                                                     .withOpacity(
                                                                         0.5)),
-                                                      ),
-                                                      SizedBox(height: 4),
-                                                      Text(
-                                                        '0.012 DEX / \$0.02',
-                                                        style: tsS15W600CFF,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Consumer<_ThisProvider>(
-                                          builder: (context, provider, _) {
-                                            double height = 0;
-                                            if (!provider.isKeyboardVisible) {
-                                              height = (10 *
-                                                      (MediaQuery.of(context)
-                                                              .size
-                                                              .height /
-                                                          759.27272727))
-                                                  .clamp(0.0, double.infinity);
-                                            }
-                                            return AnimatedSize(
-                                              duration:
-                                                  AppConfigs.animDurationSmall,
-                                              child: SizedBox(
-                                                height: height,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        Consumer<_ThisProvider>(
-                                          builder: (context, provider, _) =>
-                                              AnimatedPadding(
-                                            duration:
-                                                AppConfigs.animDurationSmall,
-                                            padding: EdgeInsets.fromLTRB(
-                                              21,
-                                              0.0,
-                                              21.0,
-                                              provider.isKeyboardVisible
-                                                  ? 400.0
-                                                  : 0.0,
-                                            ),
-                                            child: Center(
-                                              child: state is WithdrawLoading
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 25.0),
-                                                      child: LoadingDotsWidget(
-                                                          dotSize: 10),
-                                                    )
-                                                  : AppSlideButton(
-                                                      enabled: state
-                                                          is WithdrawValid,
-                                                      height: 60,
-                                                      onComplete: () =>
-                                                          _onSlideToWithdrawComplete(
-                                                        context.read<
-                                                            WithdrawCubit>(),
-                                                        provider,
-                                                      ),
-                                                      label:
-                                                          'Slide to withdraw',
-                                                      icon: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: AppColors
-                                                              .color1C2023,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                        ),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(14),
-                                                        width: 45,
-                                                        height: 45,
-                                                        child: SvgPicture.asset(
-                                                          'arrow'.asAssetSvg(),
-                                                          fit: BoxFit.contain,
-                                                          color: AppColors
-                                                              .colorFFFFFF,
-                                                        ),
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors
-                                                            .colorE6007A,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
+                                                          ),
+                                                          SizedBox(height: 4),
+                                                          Text(
+                                                            '0.012 DEX / \$0.02',
+                                                            style: tsS15W600CFF,
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
+                                            Consumer<_ThisProvider>(
+                                              builder: (context, provider, _) {
+                                                double height = 0;
+                                                if (!provider
+                                                    .isKeyboardVisible) {
+                                                  height = (10 *
+                                                          (MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              759.27272727))
+                                                      .clamp(
+                                                          0.0, double.infinity);
+                                                }
+                                                return AnimatedSize(
+                                                  duration: AppConfigs
+                                                      .animDurationSmall,
+                                                  child: SizedBox(
+                                                    height: height,
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            Consumer<_ThisProvider>(
+                                              builder: (context, provider, _) =>
+                                                  AnimatedPadding(
+                                                duration: AppConfigs
+                                                    .animDurationSmall,
+                                                padding: EdgeInsets.fromLTRB(
+                                                  21,
+                                                  0.0,
+                                                  21.0,
+                                                  provider.isKeyboardVisible
+                                                      ? 400.0
+                                                      : 0.0,
+                                                ),
+                                                child: Center(
+                                                  child: withdrawState
+                                                          is WithdrawLoading
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 25.0),
+                                                          child:
+                                                              LoadingDotsWidget(
+                                                                  dotSize: 10),
+                                                        )
+                                                      : AppSlideButton(
+                                                          enabled: withdrawState
+                                                              is WithdrawValid,
+                                                          height: 60,
+                                                          onComplete: () =>
+                                                              _onSlideToWithdrawComplete(
+                                                            context.read<
+                                                                WithdrawCubit>(),
+                                                            provider,
+                                                          ),
+                                                          label:
+                                                              'Slide to withdraw',
+                                                          icon: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: AppColors
+                                                                  .color1C2023,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                            ),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(14),
+                                                            width: 45,
+                                                            height: 45,
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              'arrow'
+                                                                  .asAssetSvg(),
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                              color: AppColors
+                                                                  .colorFFFFFF,
+                                                            ),
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: AppColors
+                                                                .colorE6007A,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                          ),
+                                                        ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Consumer<_ThisProvider>(
-                      builder: (context, provider, child) => Positioned.fill(
-                        child: IgnorePointer(
-                          ignoring: !provider.isKeyboardVisible,
-                          child: GestureDetector(
-                              onTap: () {
-                                provider.isKeyboardVisible = false;
-                              },
-                              child: Container(
-                                color: Colors.transparent,
-                              )),
-                        ),
-                      ),
-                    ),
-                    Consumer<_ThisProvider>(
-                      builder: (context, provider, _) => AnimatedPositioned(
-                        duration: AppConfigs.animDurationSmall,
-                        left: 0.0,
-                        right: 0.0,
-                        bottom: provider.isKeyboardVisible ? 0.0 : -400.0,
-                        child: AppCustomKeyboard(
-                          onKeypadNumberTapped: (number) =>
-                              _onKeyboardNumberTapped(
-                            number,
-                            context.read<WithdrawCubit>(),
-                            provider,
                           ),
-                          onSwapTapped: () =>
-                              _onSwapTapped(context.read<WithdrawCubit>()),
-                          onEnterTapped: () => context
-                              .read<_ThisProvider>()
-                              .isKeyboardVisible = false,
                         ),
-                      ),
+                        Consumer<_ThisProvider>(
+                          builder: (context, provider, child) =>
+                              Positioned.fill(
+                            child: IgnorePointer(
+                              ignoring: !provider.isKeyboardVisible,
+                              child: GestureDetector(
+                                  onTap: () {
+                                    provider.isKeyboardVisible = false;
+                                  },
+                                  child: Container(
+                                    color: Colors.transparent,
+                                  )),
+                            ),
+                          ),
+                        ),
+                        Consumer<_ThisProvider>(
+                          builder: (context, provider, _) => AnimatedPositioned(
+                            duration: AppConfigs.animDurationSmall,
+                            left: 0.0,
+                            right: 0.0,
+                            bottom: provider.isKeyboardVisible ? 0.0 : -400.0,
+                            child: AppCustomKeyboard(
+                              onKeypadNumberTapped: (number) =>
+                                  _onKeyboardNumberTapped(
+                                number,
+                                context.read<WithdrawCubit>(),
+                                provider,
+                              ),
+                              onSwapTapped: () =>
+                                  _onSwapTapped(context.read<WithdrawCubit>()),
+                              onEnterTapped: () => context
+                                  .read<_ThisProvider>()
+                                  .isKeyboardVisible = false,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           ),
@@ -550,7 +595,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     final currentState = cubit.state;
 
     await cubit.withdraw(
-      asset: widget.asset,
+      asset: widget.tokenId,
       amountFree: currentState.amountFree,
       amountToBeWithdrawn: currentState.amountToBeWithdrawn,
       address: currentState.address,
@@ -596,7 +641,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
             ),
             Expanded(
               child: Text(
-                "Withdraw Polkadex (DEX)",
+                "Withdraw ${TokenUtils.tokenIdToFullName(widget.tokenId)} (${TokenUtils.tokenIdToAcronym(widget.tokenId)})",
                 style: tsS19W700CFF,
                 textAlign: TextAlign.center,
               ),
@@ -676,20 +721,22 @@ class _ThisAmountWidget extends StatelessWidget {
 
 class _ThisCoinTitleWidget extends StatelessWidget {
   const _ThisCoinTitleWidget({
-    required this.asset,
+    required this.tokenId,
     required this.amount,
     required this.areUnitsSwapped,
     required this.conversionRate,
+    required this.isLoaded,
   });
 
-  final String asset;
+  final String tokenId;
   final double amount;
   final bool areUnitsSwapped;
   final double conversionRate;
+  final bool isLoaded;
 
   @override
   Widget build(BuildContext context) {
-    String primaryAmount = '$amount $asset ';
+    String primaryAmount = '$amount ${TokenUtils.tokenIdToAcronym(tokenId)} ';
     String secondaryAmount = '\$${amount * conversionRate} ';
 
     if (areUnitsSwapped) {
@@ -712,7 +759,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
             width: 51,
             height: 51,
             child: Image.asset(
-              'trade_open/trade_open_2.png'.asAssetImg(),
+              TokenUtils.tokenIdToAssetImg(tokenId),
             ),
           ),
           Expanded(
@@ -726,28 +773,59 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 2),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: primaryAmount,
-                        style: tsS17W600C0CA564.copyWith(
-                            color: AppColors.colorFFFFFF),
-                      ),
-                      TextSpan(
-                        text: secondaryAmount,
-                        style: tsS17W600C0CA564.copyWith(
-                          color: AppColors.colorFFFFFF.withOpacity(0.5),
+                isLoaded
+                    ? RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: primaryAmount,
+                              style: tsS17W600C0CA564.copyWith(
+                                  color: AppColors.colorFFFFFF),
+                            ),
+                            TextSpan(
+                              text: secondaryAmount,
+                              style: tsS17W600C0CA564.copyWith(
+                                color: AppColors.colorFFFFFF.withOpacity(0.5),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
+                      )
+                    : _amountAvailableShimmerWidget(),
               ],
             ),
           )
         ],
       ),
+    );
+  }
+
+  Widget _amountAvailableShimmerWidget() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.black,
+          ),
+          child: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: '0.0',
+                  style:
+                      tsS17W600C0CA564.copyWith(color: AppColors.colorFFFFFF),
+                ),
+                TextSpan(
+                  text: '0.0',
+                  style: tsS17W600C0CA564.copyWith(
+                    color: AppColors.colorFFFFFF.withOpacity(0.5),
+                  ),
+                ),
+              ],
+            ),
+          )),
     );
   }
 }

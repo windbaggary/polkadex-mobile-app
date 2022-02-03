@@ -8,12 +8,13 @@ class OrderRemoteDatasource {
 
   Future<Response> placeOrder(
     int nonce,
-    String baseAsset,
-    String quoteAsset,
+    int baseAsset,
+    int quoteAsset,
     EnumOrderTypes orderType,
     EnumBuySell orderSide,
     double price,
     double quantity,
+    String address,
     String signature,
   ) async {
     return await post(
@@ -24,11 +25,12 @@ class OrderRemoteDatasource {
       body: jsonEncode(<String, dynamic>{
         'signature': {'Sr25519': signature},
         'payload': {
+          'account': address,
           'symbol': [baseAsset, quoteAsset],
           'order_type': orderType.toString().split('.')[1].capitalize(),
           'order_side': orderSide.toString().split('.')[1].capitalize(),
-          'price': price,
-          'amount': quantity,
+          'price': price.toString(),
+          'amount': quantity.toString(),
         },
       }),
     );

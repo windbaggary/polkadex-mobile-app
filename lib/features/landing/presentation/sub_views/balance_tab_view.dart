@@ -5,6 +5,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -16,7 +17,6 @@ import 'package:polkadex/features/landing/presentation/widgets/balance_item_shim
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:provider/provider.dart';
@@ -57,13 +57,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
         ChangeNotifierProvider<BalanceChartDummyProvider>(
           create: (_) => BalanceChartDummyProvider(),
         ),
-        BlocProvider(
-          create: (_) => dependency<BalanceCubit>()
-            ..getBalance(
-              context.read<AccountCubit>().accountAddress,
-              context.read<AccountCubit>().accountSignature,
-            ),
-        ),
       ],
       builder: (context, _) => BlocBuilder<BalanceCubit, BalanceState>(
         builder: (context, state) {
@@ -84,7 +77,24 @@ class _BalanceTabViewState extends State<BalanceTabView>
                       children: [
                         SizedBox(height: 24),
                         TopBalanceWidget(),
-                        SizedBox(height: 36),
+                        if (state is! BalanceLoading)
+                          AppButton(
+                            label: 'Get some money!',
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 16,
+                            ),
+                            backgroundColor: AppColors.colorE6007A,
+                            textColor: Colors.white,
+                            onTap: () => context
+                                .read<BalanceCubit>()
+                                .testDeposit(
+                                    context.read<AccountCubit>().accountAddress,
+                                    context
+                                        .read<AccountCubit>()
+                                        .accountSignature),
+                          ),
+                        SizedBox(height: 24),
                         InkWell(
                             onTap: () {
                               context
@@ -298,14 +308,17 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               itemBuilder: (context, index) {
                                 String key = state.free.keys.elementAt(index);
                                 return InkWell(
-                                  onTap: () => Coordinator
-                                      .goToBalanceCoinPreviewScreen(),
+                                  onTap: () =>
+                                      Coordinator.goToBalanceCoinPreviewScreen(
+                                          tokenId: key,
+                                          balanceCubit:
+                                              context.read<BalanceCubit>()),
                                   child: BalanceItemWidget(
-                                    tokenAcronym: key,
+                                    tokenAcronym:
+                                        TokenUtils.tokenIdToAcronym(key),
                                     tokenFullName:
-                                        TokenUtils.tokenAcronymToFullName(key),
-                                    assetImg:
-                                        TokenUtils.tokenAcronymToAssetImg(key),
+                                        TokenUtils.tokenIdToFullName(key),
+                                    assetImg: TokenUtils.tokenIdToAssetImg(key),
                                     amount: state.free[key],
                                   ),
                                 );

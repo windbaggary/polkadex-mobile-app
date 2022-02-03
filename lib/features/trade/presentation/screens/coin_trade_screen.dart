@@ -6,6 +6,9 @@ import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
@@ -20,6 +23,7 @@ import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:shimmer/shimmer.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:polkadex/common/widgets/chart/app_charts.dart' as app_charts;
@@ -31,11 +35,16 @@ import 'package:polkadex/injection_container.dart';
 /// XD_PAGE: 27
 /// XD_PAGE: 33
 class CoinTradeScreen extends StatefulWidget {
-  final EnumCardFlipState enumInitalCardFlipState;
-
   const CoinTradeScreen({
+    required this.leftTokenId,
+    required this.rightTokenId,
     this.enumInitalCardFlipState = EnumCardFlipState.showFirst,
   });
+
+  final EnumCardFlipState enumInitalCardFlipState;
+  final String leftTokenId;
+  final String rightTokenId;
+
   @override
   _CoinTradeScreenState createState() => _CoinTradeScreenState();
 }
@@ -92,7 +101,10 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                             topRight: Radius.circular(40),
                           ),
                         ),
-                        child: _ThisAppBar(),
+                        child: _ThisAppBar(
+                          leftTokenId: widget.leftTokenId,
+                          rightTokenId: widget.rightTokenId,
+                        ),
                       ),
                       ListView(
                         padding: const EdgeInsets.only(bottom: 88),
@@ -126,7 +138,10 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                                     //         ),
                                     //       )
                                     //     :
-                                    _ThisGrpahCard(),
+                                    _ThisGraphCard(
+                                  leftTokenId: widget.leftTokenId,
+                                  rightTokenId: widget.rightTokenId,
+                                ),
                                 secondChild:
                                     // false
                                     // ? InkWell(
@@ -142,13 +157,19 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                                     //     ),
                                     //   )
                                     // :
-                                    _ThisDetailCard(),
+                                    _ThisDetailCard(
+                                  leftTokenId: widget.leftTokenId,
+                                  rightTokenId: widget.rightTokenId,
+                                ),
                                 cardState: orderDisplayProvider.enumCoinDisplay,
                               ),
                             ),
                           ),
                           OrderBookHeadingWidget(),
-                          OrderBookWidget(),
+                          OrderBookWidget(
+                            amountTokenId: widget.rightTokenId,
+                            priceTokenId: widget.leftTokenId,
+                          ),
                         ],
                       ),
                     ],
@@ -171,6 +192,14 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
 
 /// The detail card on top that flip. This card list the details about the coin
 class _ThisDetailCard extends StatelessWidget {
+  const _ThisDetailCard({
+    required this.leftTokenId,
+    required this.rightTokenId,
+  });
+
+  final String leftTokenId;
+  final String rightTokenId;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -192,7 +221,10 @@ class _ThisDetailCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _TopCoinWidget(),
+                _TopCoinWidget(
+                  leftTokenId: leftTokenId,
+                  rightTokenId: rightTokenId,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(
                     top: 21.0,
@@ -367,7 +399,15 @@ class _ThisDetailCard extends StatelessWidget {
 }
 
 /// The card shows the graph on top section
-class _ThisGrpahCard extends StatelessWidget {
+class _ThisGraphCard extends StatelessWidget {
+  _ThisGraphCard({
+    required this.leftTokenId,
+    required this.rightTokenId,
+  });
+
+  final String leftTokenId;
+  final String rightTokenId;
+
   final ValueNotifier<EnumAppChartDataTypes> _dataTypeNotifier =
       ValueNotifier<EnumAppChartDataTypes>(EnumAppChartDataTypes.average);
 
@@ -395,7 +435,10 @@ class _ThisGrpahCard extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 25, right: 22),
-                  child: _TopCoinWidget(),
+                  child: _TopCoinWidget(
+                    leftTokenId: leftTokenId,
+                    rightTokenId: rightTokenId,
+                  ),
                 ),
                 BlocBuilder<CoinGraphCubit, CoinGraphState>(
                     builder: (context, state) {
@@ -694,11 +737,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
               highlightColor: AppColors.color0CA564,
               splashColor: AppColors.color0CA564,
               borderRadius: BorderRadius.circular(17),
-              onTap: () {
-                BottomNavigationProvider().enumBottomBarItem =
-                    EnumBottonBarItem.trade;
-                Coordinator.goBackToLandingScreen();
-              },
+              onTap: () => _onBuySellButtonClick(context, 0),
               child: Container(
                 width: math.max(MediaQuery.of(context).size.width * 0.30, 110),
                 decoration: BoxDecoration(
@@ -744,11 +783,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                 highlightColor: AppColors.colorE6007A,
                 splashColor: AppColors.colorE6007A,
                 borderRadius: BorderRadius.circular(17),
-                onTap: () {
-                  BottomNavigationProvider().enumBottomBarItem =
-                      EnumBottonBarItem.trade;
-                  Coordinator.goBackToLandingScreen();
-                },
+                onTap: () => _onBuySellButtonClick(context, 1),
                 child: Container(
                   width:
                       math.max(MediaQuery.of(context).size.width * 0.30, 110),
@@ -821,17 +856,26 @@ class _ThisBottomNavigationBar extends StatelessWidget {
       ),
     );
   }
+
+  void _onBuySellButtonClick(BuildContext context, int orderSideIndex) {
+    BottomNavigationProvider().enumBottomBarItem = EnumBottonBarItem.trade;
+    context.read<TradeTabViewProvider>().orderSideIndex = orderSideIndex;
+    Coordinator.goBackToLandingScreen();
+  }
 }
 
 class _ThisAppBar extends StatelessWidget {
+  const _ThisAppBar({required this.leftTokenId, required this.rightTokenId});
+
+  final String leftTokenId;
+  final String rightTokenId;
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<_ThisOrderDisplayProvider>();
     List<Widget> actions = <Widget>[];
-    String text = "PDEX";
     switch (provider.enumCoinDisplay) {
       case EnumCardFlipState.showFirst:
-        text = "PDEX";
         actions = [
           Icon(
             Icons.more_vert,
@@ -841,7 +885,6 @@ class _ThisAppBar extends StatelessWidget {
         ];
         break;
       case EnumCardFlipState.showSecond:
-        text = "DEX";
         actions = [
           SizedBox(
             width: 20,
@@ -879,11 +922,11 @@ class _ThisAppBar extends StatelessWidget {
         text: TextSpan(
           children: <TextSpan>[
             TextSpan(
-              text: text,
+              text: TokenUtils.tokenIdToAcronym(leftTokenId),
               style: tsS19W700CFF,
             ),
             TextSpan(
-              text: " /BTC",
+              text: " /${TokenUtils.tokenIdToAcronym(rightTokenId)}",
               style: tsS13W500CFFOP50,
             ),
           ],
@@ -907,6 +950,14 @@ class _ThisAppBar extends StatelessWidget {
 }
 
 class _TopCoinWidget extends StatelessWidget {
+  const _TopCoinWidget({
+    required this.leftTokenId,
+    required this.rightTokenId,
+  });
+
+  final String leftTokenId;
+  final String rightTokenId;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -918,7 +969,7 @@ class _TopCoinWidget extends StatelessWidget {
               width: 48,
               height: 48,
               child: Image.asset(
-                'trade_open/trade_open_2.png'.asAssetImg(),
+                TokenUtils.tokenIdToAssetImg(leftTokenId),
               ),
             ),
             SizedBox(width: 11),
@@ -927,12 +978,18 @@ class _TopCoinWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Polkadex',
+                    TokenUtils.tokenIdToFullName(leftTokenId),
                     style: tsS13W400CFFOP60,
                   ),
-                  Text(
-                    '0.0425',
-                    style: tsS26W500CFF,
+                  BlocBuilder<BalanceCubit, BalanceState>(
+                    builder: (context, state) {
+                      return state is BalanceLoaded
+                          ? Text(
+                              '${double.parse(state.free[leftTokenId] ?? '0')}',
+                              style: tsS26W500CFF,
+                            )
+                          : _amountCoinTradeShimmer();
+                    },
                   ),
                 ],
               ),
@@ -1049,6 +1106,23 @@ class _TopCoinWidget extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _amountCoinTradeShimmer() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.black,
+        ),
+        child: Text(
+          '0.0',
+          style: tsS26W500CFF,
+        ),
+      ),
     );
   }
 }

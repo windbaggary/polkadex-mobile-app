@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/rank_list_provider.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_slider_widget.dart';
@@ -10,6 +12,8 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/features/landing/presentation/widgets/top_pair_widget.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
@@ -195,12 +199,14 @@ class _HomeTabViewState extends State<HomeTabView>
             SizedBox(
               height: 108,
               child: ListView.builder(
-                itemBuilder: (context, index) => _ThisTopPairAnimatedWidget(
-                  child: _ThisTopPairsItemWidget(),
-                  index: index,
-                  // animationController: this._entryAnimationController,
+                itemBuilder: (context, index) => TopPairWidget(
+                  rightAsset: basicCoinDummyList[index].baseTokenId,
+                  leftAsset: basicCoinDummyList[index].pairTokenId,
+                  onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+                      tokenId: basicCoinDummyList[index].baseTokenId,
+                      balanceCubit: context.read<BalanceCubit>()),
                 ),
-                itemCount: 20,
+                itemCount: 2,
                 scrollDirection: Axis.horizontal,
                 physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(left: 21),
@@ -440,189 +446,6 @@ class _ThisSliderItemWidget extends StatelessWidget {
   }
 }
 
-/// The animated widget that animates the [child]
-/// for the Top Pairs
-///
-/// [child] should not be null
-/// [index] shpuld be passed to calculate the initial delay for [child]
-class _ThisTopPairAnimatedWidget extends StatefulWidget {
-  final _ThisTopPairsItemWidget child;
-  final int index;
-  // final Animation<double> animationController;
-  // final Duration initialDelay;
-  const _ThisTopPairAnimatedWidget({
-    required this.child,
-    required this.index,
-    // this.animationController,
-    // this.initialDelay,
-  });
-
-  @override
-  __ThisTopPairAnimatedWidgetState createState() =>
-      __ThisTopPairAnimatedWidgetState();
-}
-
-class __ThisTopPairAnimatedWidgetState extends State<_ThisTopPairAnimatedWidget>
-    with SingleTickerProviderStateMixin {
-  // AnimationController _animationController;
-  // Animation<double> _entryAnimation;
-
-  @override
-  void initState() {
-    // _animationController = widget.animationController ??
-    //     AnimationController(
-    //       vsync: this,
-    //       duration: AppConfigs.animDurationSmall,
-    //       reverseDuration: AppConfigs.animDurationSmall,
-    //     );
-    // _initEntryAnimation();
-    // Timer(
-    //     Duration(
-    //         milliseconds: widget.index *
-    //             AppConfigs.animDurationSmall.inMilliseconds), () {
-    //   if (_animationController != null) {
-    //     _animationController.forward();
-    //   }
-    // });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // if (widget.animationController == null) {
-    //   _disposeAnimationController();
-    // }
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant _ThisTopPairAnimatedWidget oldWidget) {
-    // if (oldWidget.animationController != widget.animationController) {
-    //   this._animationController = widget.animationController;
-    //   _initEntryAnimation();
-    // }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // return AnimatedBuilder(
-    //   animation: _entryAnimation,
-    //   child: widget.child,
-    //   builder: (context, child) => Opacity(
-    //     opacity: _entryAnimation.value,
-    //     child:
-    //     Align(
-    //       widthFactor: 1.0 + (0.5 * (1 - _animationController.value)),
-    //       child: child,
-    //     ),
-    //   ),
-    // );
-    return widget.child;
-  }
-
-  // void _disposeAnimationController() {
-  //   _animationController.dispose();
-  //   _animationController = null;
-  // }
-
-  // void _initEntryAnimation() {
-  //   _entryAnimation = CurvedAnimation(
-  //     parent: _animationController,
-  //     curve: Interval(
-  //       0.45,
-  //       0.60,
-  //       curve: Curves.decelerate,
-  //     ),
-  //   );
-  // }
-}
-
-/// The content widget for the Top Pairs
-class _ThisTopPairsItemWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return buildInkWell(
-      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(),
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.color2E303C.withOpacity(0.30),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        margin: const EdgeInsets.only(right: 16),
-        padding: const EdgeInsets.fromLTRB(16, 16, 14, 16.0),
-        child: IntrinsicWidth(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  RichText(
-                      text: TextSpan(style: tsS14W400CFF, children: <TextSpan>[
-                    TextSpan(text: 'DEX/'),
-                    TextSpan(
-                      text: 'USDT',
-                      style: tsS16W700CFF,
-                    ),
-                  ])),
-                  SizedBox(
-                    width: 36,
-                  ),
-                  Spacer(),
-                  // SvgPicture.asset(
-                  //   'gain_graph'.asAssetSvg(),
-                  //   width: 12,
-                  //   height: 9,
-                  //   ),
-                  Text(
-                    '12.47%',
-                    style: tsS17W600C0CA564,
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Price',
-                        style: tsS14W400CFFOP50,
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        '\$42.50',
-                        style: tsS16W600CFF,
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 10),
-                  Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Vol',
-                        style: tsS14W400CFFOP50,
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        '\$824.1mi',
-                        style: tsS16W600CFF,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// The item widget for the ranking list
 class _ThisRankingListItemWidget extends StatelessWidget {
   final BasicCoinListModel model;
@@ -636,7 +459,10 @@ class _ThisRankingListItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () => Coordinator.goToCoinTradeScreen(),
+        onTap: () => Coordinator.goToCoinTradeScreen(
+            leftTokenId: model.baseTokenId,
+            rightTokenId: model.pairTokenId,
+            balanceCubit: context.read<BalanceCubit>()),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.color2E303C.withOpacity(0.30),
@@ -652,7 +478,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Image.asset(
-                  model.imgAsset,
+                  TokenUtils.tokenIdToAssetImg(model.baseTokenId),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -662,13 +488,13 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 children: [
                   Row(children: <Widget>[
                     Text(
-                      '${model.code} ',
+                      '${TokenUtils.tokenIdToAcronym(model.baseTokenId)} ',
                       style: tsS15W500CFF,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 1.0),
                       child: Text(
-                        '/${model.pair}',
+                        '/${TokenUtils.tokenIdToAcronym(model.pairTokenId)}',
                         style: tsS11W400CABB2BC,
                       ),
                     ),

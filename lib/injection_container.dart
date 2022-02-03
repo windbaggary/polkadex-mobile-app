@@ -16,6 +16,7 @@ import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_open_orders.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
@@ -247,6 +248,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
+      testDepositUseCase: dependency(),
     ),
   );
 
@@ -269,6 +271,12 @@ Future<void> init() async {
   dependency.registerFactory(
     () => WithdrawCubit(
       withdrawUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => TestDepositUseCase(
+      balanceRepository: dependency(),
     ),
   );
 }

@@ -10,6 +10,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
 
 /// The width of the shrink widget for token and pairs
@@ -391,7 +392,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
           return Row(
             children: [
               Image.asset(
-                model.imgAsset,
+                TokenUtils.tokenIdToAssetImg(model.baseTokenId),
                 width: 43,
                 height: 43,
               ),
@@ -411,7 +412,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                               opacity: Interval(0.00, 0.50)
                                   .transform(_pairAnimation.value),
                               child: Text(
-                                model.name,
+                                TokenUtils.tokenIdToFullName(model.baseTokenId),
                                 style: tsS16W500CFF,
                                 textAlign: TextAlign.start,
                               ),
@@ -423,7 +424,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                     Transform.translate(
                       offset: Offset(0.0, -9 * (1.0 - _pairAnimation.value)),
                       child: Text(
-                        model.code,
+                        TokenUtils.tokenIdToAcronym(model.baseTokenId),
                         style: tsS12W400CFF.copyWith(
                           color: AppColors.colorFFFFFF
                               .withOpacity(isSelected ? 1.0 : 0.6),
@@ -515,7 +516,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
       child: Row(
         children: [
           Image.asset(
-            model.imgAsset,
+            TokenUtils.tokenIdToAssetImg(model.baseTokenId),
             width: 43,
             height: 43,
           ),
@@ -535,7 +536,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                           opacity: Interval(0.50, 1.0)
                               .transform(tokenAnimation.value),
                           child: Text(
-                            model.name,
+                            TokenUtils.tokenIdToFullName(model.baseTokenId),
                             style: tsS16W500CFF,
                             textAlign: TextAlign.start,
                           ),
@@ -547,7 +548,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                 Transform.translate(
                   offset: Offset(0.0, -9 * (1.0 - tokenAnimation.value)),
                   child: Text(
-                    model.code,
+                    TokenUtils.tokenIdToAcronym(model.baseTokenId),
                     style: tsS12W400CFF.copyWith(
                       color: AppColors.colorFFFFFF
                           .withOpacity(isSelected ? 1.0 : 0.6),
@@ -634,22 +635,34 @@ class _ThisProvider extends ChangeNotifier {
     if (_searchText?.isNotEmpty ?? false) {
       return _dummyTokenList
           .where((e) =>
-              e.name.toLowerCase().contains(_searchText!.toLowerCase()) ||
-              e.code.toLowerCase().contains(_searchText!.toLowerCase()))
+              TokenUtils.tokenIdToFullName(e.baseTokenId)
+                  .toLowerCase()
+                  .contains(_searchText!.toLowerCase()) ||
+              TokenUtils.tokenIdToAcronym(e.baseTokenId)
+                  .toLowerCase()
+                  .contains(_searchText!.toLowerCase()))
           .toList();
     }
     return _dummyTokenList;
   }
 
   List<BasicCoinListModel> get pairList {
+    final initialList = [..._dummyTokenList]..removeWhere(
+        (coin) => coin.baseTokenId == _selectedTokenModel.baseTokenId);
+
     if (_searchText?.isNotEmpty ?? false) {
-      return _dummyPairList
+      return initialList
           .where((e) =>
-              e.name.toLowerCase().contains(_searchText!.toLowerCase()) ||
-              e.code.toLowerCase().contains(_searchText!.toLowerCase()))
+              TokenUtils.tokenIdToFullName(e.baseTokenId)
+                  .toLowerCase()
+                  .contains(_searchText!.toLowerCase()) ||
+              TokenUtils.tokenIdToAcronym(e.baseTokenId)
+                  .toLowerCase()
+                  .contains(_searchText!.toLowerCase()))
           .toList();
     }
-    return _dummyPairList;
+
+    return initialList;
   }
 
   set selectedTokenModel(BasicCoinListModel value) {
@@ -776,5 +789,3 @@ class _ThisProvider extends ChangeNotifier {
 // ];
 
 final _dummyTokenList = basicCoinDummyList;
-final _dummyPairList = List<BasicCoinListModel>.generate(
-    3, (index) => basicCoinDummyList[basicCoinDummyList.length - index - 1]);

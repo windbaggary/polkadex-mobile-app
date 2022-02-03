@@ -5,23 +5,16 @@ import 'package:polkadex/common/utils/enums.dart';
 
 /// The basic coint model over all the features
 class BasicCoinListModel {
-  final String imgAsset;
-  final String code;
-  final String token;
-  final String pair;
+  final String baseTokenId;
+  final String pairTokenId;
   final String amount;
   final double _percentage;
-  final String name;
-
   final EnumBuySell buySell;
   final double? _volume;
 
   BasicCoinListModel({
-    required this.name,
-    required this.imgAsset,
-    required this.code,
-    required this.token,
-    required this.pair,
+    required this.baseTokenId,
+    required this.pairTokenId,
     required this.amount,
     required double percentage,
     required this.buySell,
