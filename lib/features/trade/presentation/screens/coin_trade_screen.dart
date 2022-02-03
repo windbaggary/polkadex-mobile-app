@@ -6,6 +6,7 @@ import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
@@ -21,6 +22,7 @@ import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:shimmer/shimmer.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:polkadex/common/widgets/chart/app_charts.dart' as app_charts;
@@ -980,9 +982,15 @@ class _TopCoinWidget extends StatelessWidget {
                     TokenUtils.tokenIdToFullName(leftTokenId),
                     style: tsS13W400CFFOP60,
                   ),
-                  Text(
-                    '0.0',
-                    style: tsS26W500CFF,
+                  BlocBuilder<BalanceCubit, BalanceState>(
+                    builder: (context, state) {
+                      return state is BalanceLoaded
+                          ? Text(
+                              '${double.parse(state.free[leftTokenId] ?? '0')}',
+                              style: tsS26W500CFF,
+                            )
+                          : _amountCoinTradeShimmer();
+                    },
                   ),
                 ],
               ),
@@ -1099,6 +1107,23 @@ class _TopCoinWidget extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _amountCoinTradeShimmer() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.black,
+        ),
+        child: Text(
+          '0.0',
+          style: tsS26W500CFF,
+        ),
+      ),
     );
   }
 }

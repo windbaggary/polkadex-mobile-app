@@ -763,18 +763,18 @@ class _ThisCoinTitleWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: isLoaded
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Available',
-                        style: tsS16W400CFF.copyWith(
-                          color: AppColors.colorFFFFFF.withOpacity(0.50),
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                      RichText(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Available',
+                  style: tsS16W400CFF.copyWith(
+                    color: AppColors.colorFFFFFF.withOpacity(0.50),
+                  ),
+                ),
+                SizedBox(height: 2),
+                isLoaded
+                    ? RichText(
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
@@ -790,10 +790,10 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  )
-                : _amountAvailableShimmerWidget(),
+                      )
+                    : _amountAvailableShimmerWidget(),
+              ],
+            ),
           )
         ],
       ),
@@ -809,34 +809,22 @@ class _ThisCoinTitleWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             color: Colors.black,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Available',
-                style: tsS16W400CFF.copyWith(
-                  color: AppColors.colorFFFFFF.withOpacity(0.50),
+          child: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: '0.0',
+                  style:
+                      tsS17W600C0CA564.copyWith(color: AppColors.colorFFFFFF),
                 ),
-              ),
-              SizedBox(height: 2),
-              RichText(
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '0.0',
-                      style: tsS17W600C0CA564.copyWith(
-                          color: AppColors.colorFFFFFF),
-                    ),
-                    TextSpan(
-                      text: '0.0',
-                      style: tsS17W600C0CA564.copyWith(
-                        color: AppColors.colorFFFFFF.withOpacity(0.5),
-                      ),
-                    ),
-                  ],
+                TextSpan(
+                  text: '0.0',
+                  style: tsS17W600C0CA564.copyWith(
+                    color: AppColors.colorFFFFFF.withOpacity(0.5),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )),
     );
   }

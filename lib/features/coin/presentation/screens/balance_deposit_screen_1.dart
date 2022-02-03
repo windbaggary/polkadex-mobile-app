@@ -294,33 +294,31 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
           Expanded(
             child: BlocBuilder<BalanceCubit, BalanceState>(
               builder: (context, state) {
-                if (state is BalanceLoaded) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Available',
-                        style: tsS16W400CFF,
-                      ),
-                      SizedBox(height: 2),
-                      RichText(
-                        text: TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                              text:
-                                  '${double.parse(state.free[widget.tokenId] ?? '0').toStringAsFixed(2)} ${TokenUtils.tokenIdToAcronym(widget.tokenId)} ',
-                              style: tsS17W600C0CA564.copyWith(
-                                  color: AppColors.colorFFFFFF),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Available',
+                      style: tsS16W400CFF,
+                    ),
+                    SizedBox(height: 2),
+                    state is BalanceLoaded
+                        ? RichText(
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      '${double.parse(state.free[widget.tokenId] ?? '0').toStringAsFixed(2)} ${TokenUtils.tokenIdToAcronym(widget.tokenId)} ',
+                                  style: tsS17W600C0CA564.copyWith(
+                                      color: AppColors.colorFFFFFF),
+                                ),
+                                TextSpan(text: '\$31.25', style: tsS17W400CFF),
+                              ],
                             ),
-                            TextSpan(text: '\$31.25', style: tsS17W400CFF),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }
-
-                return _amountShimmerWidget();
+                          )
+                        : _amountShimmerWidget(),
+                  ],
+                );
               },
             ),
           )
@@ -338,27 +336,16 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
           borderRadius: BorderRadius.circular(8),
           color: AppColors.color0CA564,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Available',
-              style: tsS16W400CFF,
-            ),
-            SizedBox(height: 2),
-            RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                    text: '1.5000 DEX',
-                    style:
-                        tsS17W600C0CA564.copyWith(color: AppColors.colorFFFFFF),
-                  ),
-                  TextSpan(text: '\$31.25', style: tsS17W400CFF),
-                ],
+        child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: '1.5000 DEX',
+                style: tsS17W600C0CA564.copyWith(color: AppColors.colorFFFFFF),
               ),
-            ),
-          ],
+              TextSpan(text: '\$31.25', style: tsS17W400CFF),
+            ],
+          ),
         ),
       ),
     );

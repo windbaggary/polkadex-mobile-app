@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:provider/provider.dart';
 
 class TopPairWidget extends StatelessWidget {
   const TopPairWidget({
