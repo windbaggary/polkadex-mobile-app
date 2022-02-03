@@ -61,37 +61,41 @@ class _TradeTabViewState extends State<TradeTabView>
   Widget build(BuildContext context) {
     return _ThisInheritedWidget(
       buySellTabController: _buySellDotController,
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<TradeTabViewProvider>(
-              create: (context) => TradeTabViewProvider()),
-          ChangeNotifierProvider<OrderBookWidgetFilterProvider>(
-            create: (context) => OrderBookWidgetFilterProvider(),
-          ),
-        ],
-        builder: (context, _) => SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          controller: _scrollController,
-          padding: const EdgeInsets.only(bottom: 64),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _ThisTopRowSelectWidget(),
-              _ThisBuySellWidget(
-                key: _keyBuySellWidget,
-              ),
-              OrderBookHeadingWidget(),
-              OrderBookWidget(
-                amountTokenId:
-                    context.read<TradeTabCoinProvider>().tokenCoin.pairTokenId,
-                priceTokenId:
-                    context.read<TradeTabCoinProvider>().tokenCoin.baseTokenId,
-                onOrderBookItemClicked: (model) =>
-                    _onOrderBookItemClicked(model, context),
-              ),
-            ],
-          ),
-        ),
+      child: ChangeNotifierProvider<OrderBookWidgetFilterProvider>(
+        create: (context) => OrderBookWidgetFilterProvider(),
+        builder: (context, _) {
+          _ThisInheritedWidget.of(context)
+              ?.buySellTabController
+              .animateTo(context.read<TradeTabViewProvider>().orderSideIndex);
+
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            controller: _scrollController,
+            padding: const EdgeInsets.only(bottom: 64),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _ThisTopRowSelectWidget(),
+                _ThisBuySellWidget(
+                  key: _keyBuySellWidget,
+                ),
+                OrderBookHeadingWidget(),
+                OrderBookWidget(
+                  amountTokenId: context
+                      .read<TradeTabCoinProvider>()
+                      .tokenCoin
+                      .pairTokenId,
+                  priceTokenId: context
+                      .read<TradeTabCoinProvider>()
+                      .tokenCoin
+                      .baseTokenId,
+                  onOrderBookItemClicked: (model) =>
+                      _onOrderBookItemClicked(model, context),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

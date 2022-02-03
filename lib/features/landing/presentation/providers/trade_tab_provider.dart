@@ -33,9 +33,9 @@ class TradeTabViewProvider extends ChangeNotifier {
       tokenPairName: "DOT/BTC",
     )
   ];
+  int orderSideIndex = 0;
 
   List<OrderEntity> get listOpenOrders => _listOrder;
-
   List<OrderEntity> get listOrdersHistory => _listOrderHistory;
 
   void removeItem(OrderEntity item) {

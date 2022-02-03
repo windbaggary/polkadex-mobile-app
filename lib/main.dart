@@ -14,6 +14,7 @@ import 'package:polkadex/generated/l10n.dart';
 
 import 'common/navigation/coordinator.dart';
 import 'common/navigation/routes.dart';
+import 'features/landing/presentation/providers/trade_tab_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +53,8 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<BottomNavigationProvider>(
             create: (_) => BottomNavigationProvider()),
+        ChangeNotifierProvider<TradeTabViewProvider>(
+            create: (context) => TradeTabViewProvider()),
       ],
       builder: (context, _) => MultiBlocProvider(
         providers: [

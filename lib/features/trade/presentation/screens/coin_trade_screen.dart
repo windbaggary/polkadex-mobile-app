@@ -7,6 +7,7 @@ import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
@@ -736,11 +737,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
               highlightColor: AppColors.color0CA564,
               splashColor: AppColors.color0CA564,
               borderRadius: BorderRadius.circular(17),
-              onTap: () {
-                BottomNavigationProvider().enumBottomBarItem =
-                    EnumBottonBarItem.trade;
-                Coordinator.goBackToLandingScreen();
-              },
+              onTap: () => _onBuySellButtonClick(context, 0),
               child: Container(
                 width: math.max(MediaQuery.of(context).size.width * 0.30, 110),
                 decoration: BoxDecoration(
@@ -786,11 +783,7 @@ class _ThisBottomNavigationBar extends StatelessWidget {
                 highlightColor: AppColors.colorE6007A,
                 splashColor: AppColors.colorE6007A,
                 borderRadius: BorderRadius.circular(17),
-                onTap: () {
-                  BottomNavigationProvider().enumBottomBarItem =
-                      EnumBottonBarItem.trade;
-                  Coordinator.goBackToLandingScreen();
-                },
+                onTap: () => _onBuySellButtonClick(context, 1),
                 child: Container(
                   width:
                       math.max(MediaQuery.of(context).size.width * 0.30, 110),
@@ -862,6 +855,12 @@ class _ThisBottomNavigationBar extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _onBuySellButtonClick(BuildContext context, int orderSideIndex) {
+    BottomNavigationProvider().enumBottomBarItem = EnumBottonBarItem.trade;
+    context.read<TradeTabViewProvider>().orderSideIndex = orderSideIndex;
+    Coordinator.goBackToLandingScreen();
   }
 }
 
