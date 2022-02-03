@@ -73,7 +73,7 @@ void main() {
       verify(() => dataSource.placeOrder(
           nonce,
           int.parse(baseAsset),
-          int.parse(baseAsset),
+          int.parse(quoteAsset),
           orderType,
           orderSide,
           price,
@@ -106,7 +106,7 @@ void main() {
       verify(() => dataSource.placeOrder(
           nonce,
           int.parse(baseAsset),
-          int.parse(baseAsset),
+          int.parse(quoteAsset),
           orderType,
           orderSide,
           price,
