@@ -99,7 +99,8 @@ class WebViewRunner {
 
   Future<void> _startJSCode() async {
     // inject js file to webView
-    await _web?.webViewController.evaluateJavascript(source: _jsCode);
+    await _web?.webViewController
+        .evaluateJavascript(source: _jsCode, contentWorld: ContentWorld.PAGE);
   }
 
   int getEvalJavascriptUID() {
@@ -124,8 +125,8 @@ class WebViewRunner {
     }
 
     if (!wrapPromise) {
-      final res =
-          await _web?.webViewController.evaluateJavascript(source: code);
+      final res = await _web?.webViewController
+          .evaluateJavascript(source: code, contentWorld: ContentWorld.PAGE);
       return res;
     }
 
@@ -145,7 +146,8 @@ class WebViewRunner {
           '});';
     }
 
-    _web?.webViewController.evaluateJavascript(source: '$script$uid;');
+    _web?.webViewController.evaluateJavascript(
+        source: '$script$uid;', contentWorld: ContentWorld.PAGE);
     return c.future;
   }
 
@@ -171,8 +173,10 @@ class WebViewRunner {
   void unsubscribeMessage(String channel) {
     print('unsubscribe $channel');
     final unsubCall = 'unsub$channel';
-    _web?.webViewController
-        .evaluateJavascript(source: 'window.$unsubCall && window.$unsubCall()');
+    _web?.webViewController.evaluateJavascript(
+      source: 'window.$unsubCall && window.$unsubCall()',
+      contentWorld: ContentWorld.PAGE,
+    );
   }
 
   void addMsgHandler(String channel, Function onMessage) {
