@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
+import 'package:k_chart/entity/k_line_entity.dart';
 import 'package:polkadex/common/graph/data/datasources/graph_remote_datasource.dart';
-import 'package:polkadex/common/graph/data/models/line_chart_model.dart';
-import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/network/error.dart';
@@ -15,45 +14,36 @@ class GraphRepository implements IGraphRepository {
   final GraphRemoteDatasource _graphLocalDatasource;
 
   @override
-  Future<Either<ApiError, Map<String, List<LineChartEntity>>>> getGraphData(
-      EnumAppChartTimestampTypes timestampType) async {
+  Future<Either<ApiError, List<KLineEntity>>> getGraphData(
+    String leftTokenId,
+    String rightTokenId,
+    EnumAppChartTimestampTypes timestampType,
+  ) async {
     try {
       final result = await _graphLocalDatasource.getCoinGraphData(
-          TimestampUtils.timestampTypeToString(timestampType));
+        leftTokenId,
+        rightTokenId,
+        TimestampUtils.timestampTypeToString(timestampType),
+      );
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('Fine')) {
         final listRawData = (body['Fine'] as List);
 
-        final List<LineChartEntity> dataOpen = List<LineChartEntity>.generate(
+        final List<KLineEntity> dataKcharts = List<KLineEntity>.generate(
           listRawData.length,
-          (index) => LineChartModel.fromJsonOpen(listRawData[index]),
-        ).toList();
-        final List<LineChartEntity> dataLow = List<LineChartEntity>.generate(
-          listRawData.length,
-          (index) => LineChartModel.fromJsonLow(listRawData[index]),
-        ).toList();
-        final List<LineChartEntity> dataHigh = List<LineChartEntity>.generate(
-          listRawData.length,
-          (index) => LineChartModel.fromJsonHigh(listRawData[index]),
-        ).toList();
-        final List<LineChartEntity> dataClose = List<LineChartEntity>.generate(
-          listRawData.length,
-          (index) => LineChartModel.fromJsonClose(listRawData[index]),
-        ).toList();
-        final List<LineChartEntity> dataAverage =
-            List<LineChartEntity>.generate(
-          listRawData.length,
-          (index) => LineChartModel.fromJsonAverage(listRawData[index]),
+          (index) => KLineEntity.fromCustom(
+            open: listRawData[index]['open'],
+            close: listRawData[index]['close'],
+            time: DateTime.parse(listRawData[index]['time'])
+                .millisecondsSinceEpoch,
+            high: listRawData[index]['high'],
+            low: listRawData[index]['low'],
+            vol: listRawData[index]['volume'],
+          ),
         ).toList();
 
-        return Right({
-          'open': dataOpen,
-          'low': dataLow,
-          'high': dataHigh,
-          'close': dataClose,
-          'average': dataAverage,
-        });
+        return Right(dataKcharts);
       } else {
         return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
       }
