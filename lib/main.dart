@@ -11,12 +11,15 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
 import 'package:polkadex/generated/l10n.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'common/navigation/coordinator.dart';
 import 'common/navigation/routes.dart';
 import 'features/landing/presentation/providers/trade_tab_provider.dart';
 
 void main() async {
+  // Load the secret keys from .env file
+  await dotenv.load(fileName: ".env");
+
   WidgetsFlutterBinding.ensureInitialized();
   await injection.init();
 

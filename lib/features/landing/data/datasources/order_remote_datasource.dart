@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class OrderRemoteDatasource {
-  final _baseUrl = 'https://ramen-1.polkadex.trade:443/api/';
+  final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
 
   Future<Response> placeOrder(
     int nonce,
