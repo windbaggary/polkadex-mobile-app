@@ -9,7 +9,7 @@ class GraphRemoteDatasource {
     String timestamp,
   ) async {
     return await post(
-      Uri.parse('${dotenv.get('INFLUX_DB_URL')}/fetchohlcv'),
+      Uri.parse('${dotenv.get('INFLUX_DB_URL')}/api/fetchohlcv'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
