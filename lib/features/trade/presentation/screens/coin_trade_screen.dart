@@ -7,6 +7,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
@@ -450,6 +451,7 @@ class _ThisGraphCard extends StatelessWidget {
                   ),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.5,
+                    width: double.infinity,
                     child: BlocBuilder<CoinGraphCubit, CoinGraphState>(
                       builder: (context, state) {
                         if (state is CoinGraphLoaded) {
@@ -480,14 +482,13 @@ class _ThisGraphCard extends StatelessWidget {
                               });
                         }
 
-                        if (state is CoinGraphError) {
-                          return Center(
-                            child: Text(
-                              state.errorMessage,
-                              textAlign: TextAlign.center,
-                              style: tsS16W500CFF,
-                            ),
-                          );
+                        if (state is CoinGraphLoaded) {
+                          return PolkadexErrorRefreshWidget(
+                              onRefresh: () =>
+                                  context.read<CoinGraphCubit>().loadGraph(
+                                        leftTokenId,
+                                        rightTokenId,
+                                      ));
                         }
 
                         return CoinGraphShimmerWidget();

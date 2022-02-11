@@ -7,7 +7,6 @@ import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dar
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
-import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -60,285 +59,273 @@ class _BalanceTabViewState extends State<BalanceTabView>
       ],
       builder: (context, _) => BlocBuilder<BalanceCubit, BalanceState>(
         builder: (context, state) {
-          return PolkadexProgressErrorWidget(
-            onRefresh: () => context.read<BalanceCubit>().getBalance(
-                  context.read<AccountCubit>().accountAddress,
-                  context.read<AccountCubit>().accountSignature,
-                ),
-            errorMessage: state is BalanceError ? state.message : null,
-            notificationPredicate: 1,
-            child: NestedScrollView(
-              controller: _scrollController,
-              headerSliverBuilder: (context, innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(height: 24),
-                        TopBalanceWidget(),
-                        if (state is! BalanceLoading)
-                          AppButton(
-                            label: 'Get some money!',
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 16,
-                            ),
-                            backgroundColor: AppColors.colorE6007A,
-                            textColor: Colors.white,
-                            onTap: () => context
-                                .read<BalanceCubit>()
-                                .testDeposit(
-                                    context.read<AccountCubit>().accountAddress,
-                                    context
-                                        .read<AccountCubit>()
-                                        .accountSignature),
+          return NestedScrollView(
+            controller: _scrollController,
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return <Widget>[
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(height: 24),
+                      TopBalanceWidget(),
+                      if (state is! BalanceLoading)
+                        AppButton(
+                          label: 'Get some money!',
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 16,
                           ),
-                        SizedBox(height: 24),
-                        InkWell(
-                            onTap: () {
-                              context
-                                  .read<_ThisIsChartVisibleProvider>()
-                                  .toggleVisible();
-                            },
-                            child: _ThisHoldingWidget()),
-                        Consumer<_ThisIsChartVisibleProvider>(
-                          builder: (context, isChartVisbileProvider, _) =>
-                              AnimatedSize(
-                            duration: AppConfigs.animDurationSmall,
-                            alignment: Alignment.topCenter,
-                            child: isChartVisbileProvider.isChartVisible
-                                ? Column(
-                                    children: [
-                                      _ThisGraphHeadingWidget(),
-                                      SizedBox(height: 8),
-                                      SizedBox(
-                                        height: 250,
-                                        child:
-                                            Consumer<BalanceChartDummyProvider>(
-                                          builder: (context, provider, child) =>
-                                              AppLineChartWidget(
-                                            data: provider.list,
-                                            options: AppLineChartOptions(
-                                              yLabelCount: 3,
-                                              yAxisTopPaddingRatio: 0.05,
-                                              yAxisBottomPaddingRatio: 0.15,
-                                              chartScale: provider.chartScale,
-                                              lineColor: AppColors.colorE6007A,
-                                              yAxisLabelPrefix: "\$ ",
-                                              areaGradient: LinearGradient(
-                                                begin: Alignment.topCenter,
-                                                end: Alignment.bottomCenter,
-                                                colors: <Color>[
-                                                  AppColors.colorE6007A
-                                                      .withOpacity(0.50),
-                                                  AppColors.color8BA1BE
-                                                      .withOpacity(0.0),
-                                                ],
-                                                // stops: [0.0, 0.40],
-                                              ),
-                                              gridColor: AppColors.color8BA1BE
-                                                  .withOpacity(0.15),
-                                              gridStroke: 1,
-                                              yLabelTextStyle: TextStyle(
-                                                fontSize: 08,
-                                                fontFamily: "WorkSans",
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey.shade400,
-                                              ),
+                          backgroundColor: AppColors.colorE6007A,
+                          textColor: Colors.white,
+                          onTap: () => context.read<BalanceCubit>().testDeposit(
+                              context.read<AccountCubit>().accountAddress,
+                              context.read<AccountCubit>().accountSignature),
+                        ),
+                      SizedBox(height: 24),
+                      InkWell(
+                          onTap: () {
+                            context
+                                .read<_ThisIsChartVisibleProvider>()
+                                .toggleVisible();
+                          },
+                          child: _ThisHoldingWidget()),
+                      Consumer<_ThisIsChartVisibleProvider>(
+                        builder: (context, isChartVisbileProvider, _) =>
+                            AnimatedSize(
+                          duration: AppConfigs.animDurationSmall,
+                          alignment: Alignment.topCenter,
+                          child: isChartVisbileProvider.isChartVisible
+                              ? Column(
+                                  children: [
+                                    _ThisGraphHeadingWidget(),
+                                    SizedBox(height: 8),
+                                    SizedBox(
+                                      height: 250,
+                                      child:
+                                          Consumer<BalanceChartDummyProvider>(
+                                        builder: (context, provider, child) =>
+                                            AppLineChartWidget(
+                                          data: provider.list,
+                                          options: AppLineChartOptions(
+                                            yLabelCount: 3,
+                                            yAxisTopPaddingRatio: 0.05,
+                                            yAxisBottomPaddingRatio: 0.15,
+                                            chartScale: provider.chartScale,
+                                            lineColor: AppColors.colorE6007A,
+                                            yAxisLabelPrefix: "\$ ",
+                                            areaGradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: <Color>[
+                                                AppColors.colorE6007A
+                                                    .withOpacity(0.50),
+                                                AppColors.color8BA1BE
+                                                    .withOpacity(0.0),
+                                              ],
+                                              // stops: [0.0, 0.40],
+                                            ),
+                                            gridColor: AppColors.color8BA1BE
+                                                .withOpacity(0.15),
+                                            gridStroke: 1,
+                                            yLabelTextStyle: TextStyle(
+                                              fontSize: 08,
+                                              fontFamily: "WorkSans",
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.grey.shade400,
                                             ),
                                           ),
                                         ),
                                       ),
-                                      _ThisGraphOptionWidget(),
-                                      SizedBox(height: 30),
-                                    ],
-                                  )
-                                : Container(),
-                          ),
+                                    ),
+                                    _ThisGraphOptionWidget(),
+                                    SizedBox(height: 30),
+                                  ],
+                                )
+                              : Container(),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+              ];
+            },
+            body: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: AppColors.color2E303C,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 30,
+                    offset: Offset(0.0, 20.0),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
+              child: CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    floating: false,
+                    pinned: true,
+                    delegate: _SliverPersistentHeaderDelegate(
+                      height: 115,
+                      child: Container(
+                        color: AppColors.color2E303C,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Center(
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 13),
+                                decoration: BoxDecoration(
+                                  color: AppColors.color1C2023,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 3,
+                                width: 51,
+                              ),
+                            ),
+                            Center(
+                              child: SizedBox(
+                                height: 35,
+                                child: DropdownButton<String>(
+                                  items: ['Main Wallet', 'Spot', 'Margin']
+                                      .map((e) => DropdownMenuItem<String>(
+                                            child: Text(
+                                              e,
+                                              style: tsS20W600CFF,
+                                            ),
+                                            value: e,
+                                          ))
+                                      .toList(),
+                                  value: 'Main Wallet',
+                                  style: tsS20W600CFF,
+                                  underline: Container(),
+                                  onChanged: (value) {},
+                                  isExpanded: false,
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: AppColors.colorFFFFFF,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                                bottom: 12,
+                                left: 10,
+                                right: 10,
+                              ),
+                              child: Row(
+                                children: [
+                                  Consumer<_ThisProvider>(
+                                    builder: (context, thisProvider, child) =>
+                                        CheckBoxWidget(
+                                      checkColor: AppColors.colorFFFFFF,
+                                      backgroundColor: AppColors.colorE6007A,
+                                      isChecked:
+                                          thisProvider.isHideSmallBalance,
+                                      isBackTransparentOnUnchecked: true,
+                                      onTap: (val) =>
+                                          thisProvider.isHideSmallBalance = val,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Hide small balances',
+                                    style: tsS14W400CFF,
+                                  ),
+                                  Spacer(),
+                                  InkWell(
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          12, 12, 6, 12),
+                                      child: Opacity(
+                                        opacity: 1.0,
+                                        child: Text(
+                                          'Tokens',
+                                          style: tsS15W600CFF,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      final thisProvider =
+                                          context.read<_ThisProvider>();
+                                      thisProvider.isHideFiat =
+                                          !thisProvider.isHideFiat;
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          6, 12, 12, 12),
+                                      child: Consumer<_ThisProvider>(
+                                        builder:
+                                            (context, thisProvider, child) =>
+                                                Opacity(
+                                          opacity: thisProvider.isHideFiat
+                                              ? 1.0
+                                              : 0.3,
+                                          child: child,
+                                        ),
+                                        child: Text(
+                                          'Fiat',
+                                          style: tsS15W600CFF,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ];
-              },
-              body: Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: AppColors.color2E303C,
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 30,
-                      offset: Offset(0.0, 20.0),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverPersistentHeader(
-                      floating: false,
-                      pinned: true,
-                      delegate: _SliverPersistentHeaderDelegate(
-                        height: 115,
-                        child: Container(
-                          color: AppColors.color2E303C,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Center(
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 13),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.color1C2023,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  height: 3,
-                                  width: 51,
+                  SliverToBoxAdapter(
+                    child: BlocBuilder<BalanceCubit, BalanceState>(
+                      builder: (context, state) {
+                        if (state is BalanceLoaded) {
+                          return ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 24),
+                            itemBuilder: (context, index) {
+                              String key = state.free.keys.elementAt(index);
+                              return InkWell(
+                                onTap: () =>
+                                    Coordinator.goToBalanceCoinPreviewScreen(
+                                        tokenId: key,
+                                        balanceCubit:
+                                            context.read<BalanceCubit>()),
+                                child: BalanceItemWidget(
+                                  tokenAcronym:
+                                      TokenUtils.tokenIdToAcronym(key),
+                                  tokenFullName:
+                                      TokenUtils.tokenIdToFullName(key),
+                                  assetImg: TokenUtils.tokenIdToAssetImg(key),
+                                  amount: state.free[key],
                                 ),
-                              ),
-                              Center(
-                                child: SizedBox(
-                                  height: 35,
-                                  child: DropdownButton<String>(
-                                    items: ['Main Wallet', 'Spot', 'Margin']
-                                        .map((e) => DropdownMenuItem<String>(
-                                              child: Text(
-                                                e,
-                                                style: tsS20W600CFF,
-                                              ),
-                                              value: e,
-                                            ))
-                                        .toList(),
-                                    value: 'Main Wallet',
-                                    style: tsS20W600CFF,
-                                    underline: Container(),
-                                    onChanged: (value) {},
-                                    isExpanded: false,
-                                    icon: Icon(
-                                      Icons.keyboard_arrow_down_rounded,
-                                      color: AppColors.colorFFFFFF,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 10,
-                                  bottom: 12,
-                                  left: 10,
-                                  right: 10,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Consumer<_ThisProvider>(
-                                      builder: (context, thisProvider, child) =>
-                                          CheckBoxWidget(
-                                        checkColor: AppColors.colorFFFFFF,
-                                        backgroundColor: AppColors.colorE6007A,
-                                        isChecked:
-                                            thisProvider.isHideSmallBalance,
-                                        isBackTransparentOnUnchecked: true,
-                                        onTap: (val) => thisProvider
-                                            .isHideSmallBalance = val,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Hide small balances',
-                                      style: tsS14W400CFF,
-                                    ),
-                                    Spacer(),
-                                    InkWell(
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            12, 12, 6, 12),
-                                        child: Opacity(
-                                          opacity: 1.0,
-                                          child: Text(
-                                            'Tokens',
-                                            style: tsS15W600CFF,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        final thisProvider =
-                                            context.read<_ThisProvider>();
-                                        thisProvider.isHideFiat =
-                                            !thisProvider.isHideFiat;
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            6, 12, 12, 12),
-                                        child: Consumer<_ThisProvider>(
-                                          builder:
-                                              (context, thisProvider, child) =>
-                                                  Opacity(
-                                            opacity: thisProvider.isHideFiat
-                                                ? 1.0
-                                                : 0.3,
-                                            child: child,
-                                          ),
-                                          child: Text(
-                                            'Fiat',
-                                            style: tsS15W600CFF,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: BlocBuilder<BalanceCubit, BalanceState>(
-                        builder: (context, state) {
-                          if (state is BalanceLoaded) {
-                            return ListView.builder(
-                              padding: const EdgeInsets.only(bottom: 24),
-                              itemBuilder: (context, index) {
-                                String key = state.free.keys.elementAt(index);
-                                return InkWell(
-                                  onTap: () =>
-                                      Coordinator.goToBalanceCoinPreviewScreen(
-                                          tokenId: key,
-                                          balanceCubit:
-                                              context.read<BalanceCubit>()),
-                                  child: BalanceItemWidget(
-                                    tokenAcronym:
-                                        TokenUtils.tokenIdToAcronym(key),
-                                    tokenFullName:
-                                        TokenUtils.tokenIdToFullName(key),
-                                    assetImg: TokenUtils.tokenIdToAssetImg(key),
-                                    amount: state.free[key],
-                                  ),
-                                );
-                              },
-                              itemCount: state.free.keys.length,
-                              shrinkWrap: true,
-                              physics: BouncingScrollPhysics(),
-                            );
-                          }
+                              );
+                            },
+                            itemCount: state.free.keys.length,
+                            shrinkWrap: true,
+                            physics: BouncingScrollPhysics(),
+                          );
+                        }
 
-                          if (state is BalanceLoading) {
-                            return BalanceItemShimmerWidget();
-                          }
+                        if (state is BalanceLoading) {
+                          return BalanceItemShimmerWidget();
+                        }
 
-                          return Container();
-                        },
-                      ),
+                        return Container();
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
