@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:k_chart/chart_style.dart';
+import 'package:k_chart/k_chart_widget.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
-import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
 import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
@@ -13,7 +15,6 @@ import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dar
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
 import 'package:polkadex/features/trade/presentation/widgets/coin_graph_shimmer_widget.dart';
-import 'package:polkadex/features/trade/presentation/widgets/graph_heading_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -26,7 +27,6 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-import 'package:polkadex/common/widgets/chart/app_charts.dart' as app_charts;
 import 'package:polkadex/injection_container.dart';
 
 /// XD_PAGE: 24
@@ -83,7 +83,11 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
         ),
       ],
       builder: (context, _) => BlocProvider<CoinGraphCubit>(
-        create: (_) => dependency<CoinGraphCubit>()..loadGraph(),
+        create: (_) => dependency<CoinGraphCubit>()
+          ..loadGraph(
+            widget.leftTokenId,
+            widget.rightTokenId,
+          ),
         child: Scaffold(
           backgroundColor: AppColors.color1C2023,
           body: SafeArea(
@@ -419,78 +423,51 @@ class _ThisGraphCard extends StatelessWidget {
                     rightTokenId: rightTokenId,
                   ),
                 ),
-                BlocBuilder<CoinGraphCubit, CoinGraphState>(
-                    builder: (context, state) {
-                  if (state is CoinGraphLoaded) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(25, 12, 22, 0.0),
-                      child: GraphHeadingWidget(
-                        open: state.selectedOpen,
-                        high: state.selectedHigh,
-                        low: state.selectedLow,
-                        close: state.selectedClose,
-                      ),
-                    );
-                  }
-
-                  return Container();
-                }),
                 Padding(
                   padding: const EdgeInsets.only(
                     top: 12.0,
                     bottom: 2,
                   ),
                   child: SizedBox(
-                    height: math.min(
-                        250, MediaQuery.of(context).size.width * 0.450),
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: double.infinity,
                     child: BlocBuilder<CoinGraphCubit, CoinGraphState>(
                       builder: (context, state) {
                         if (state is CoinGraphLoaded) {
                           return ValueListenableBuilder<EnumAppChartDataTypes>(
                               valueListenable: _dataTypeNotifier,
                               builder: (context, dataType, _) {
-                                final graphColor =
-                                    _getGraphColorTheme(dataType);
-
-                                return app_charts.AppLineChartWidget(
-                                  data: state.dataList[
-                                          _fromEnumChartDataTypeToString(
-                                              _dataTypeNotifier.value)] ??
-                                      [],
-                                  options: app_charts.AppLineChartOptions
-                                      .withDefaults(
-                                    chartScale: _calculateGraphScale(
-                                        context,
-                                        state.dataList[
-                                                _fromEnumChartDataTypeToString(
-                                                    _dataTypeNotifier.value)] ??
-                                            []),
-                                    lineColor: graphColor,
-                                    areaGradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: <Color>[
-                                        graphColor.withOpacity(0.50),
-                                        graphColor.withOpacity(0.0710),
-                                      ],
-                                    ),
-                                  ),
-                                  onPointSelected: (indexPoint) => context
-                                      .read<CoinGraphCubit>()
-                                      .updatePointValues(
-                                          indexPointSelected: indexPoint),
-                                );
+                                return Material(
+                                    type: MaterialType.transparency,
+                                    child: KChartWidget(
+                                      state.dataList,
+                                      ChartStyle(),
+                                      ChartColors()
+                                        ..upColor = AppColors.color0CA564
+                                        ..dnColor = AppColors.colorE6007A,
+                                      mainState: MainState.NONE,
+                                      secondaryState: SecondaryState.NONE,
+                                      onSecondaryTap: () {
+                                        print('Secondary Tap');
+                                      },
+                                      isTrendLine: false,
+                                      volHidden: true,
+                                      fixedLength: 6,
+                                      timeFormat:
+                                          TimeFormat.YEAR_MONTH_DAY_WITH_HOUR,
+                                      isTapShowInfoDialog: true,
+                                      maDayList: [1, 100, 1000],
+                                    ));
                               });
                         }
 
                         if (state is CoinGraphError) {
-                          return Center(
-                            child: Text(
-                              state.errorMessage,
-                              textAlign: TextAlign.center,
-                              style: tsS16W500CFF,
-                            ),
-                          );
+                          return PolkadexErrorRefreshWidget(
+                              onRefresh: () =>
+                                  context.read<CoinGraphCubit>().loadGraph(
+                                        leftTokenId,
+                                        rightTokenId,
+                                      ));
                         }
 
                         return CoinGraphShimmerWidget();
@@ -499,6 +476,8 @@ class _ThisGraphCard extends StatelessWidget {
                   ),
                 ),
                 _ThisGraphOptionWidget(
+                  leftTokenId: leftTokenId,
+                  rightTokenId: rightTokenId,
                   dataTypeNotifier: _dataTypeNotifier,
                 ),
               ],
@@ -531,32 +510,17 @@ class _ThisGraphCard extends StatelessWidget {
       ),
     );
   }
-
-  Color _getGraphColorTheme(EnumAppChartDataTypes dataType) {
-    switch (dataType) {
-      case EnumAppChartDataTypes.low:
-        return AppColors.colorE6007A;
-      case EnumAppChartDataTypes.high:
-        return AppColors.color0CA564;
-      default:
-        return AppColors.color8BA1BE;
-    }
-  }
-
-  double _calculateGraphScale(
-      BuildContext context, List<LineChartEntity> list) {
-    if (list.isEmpty) {
-      return 0.0;
-    }
-
-    return -MediaQuery.of(context).size.width /
-        (list.first.date.difference(list.last.date).inSeconds);
-  }
 }
 
 class _ThisGraphOptionWidget extends StatelessWidget {
-  _ThisGraphOptionWidget({required this.dataTypeNotifier});
+  _ThisGraphOptionWidget({
+    required this.leftTokenId,
+    required this.rightTokenId,
+    required this.dataTypeNotifier,
+  });
 
+  final String leftTokenId;
+  final String rightTokenId;
   final ValueNotifier<EnumAppChartDataTypes> dataTypeNotifier;
 
   @override
@@ -565,13 +529,12 @@ class _ThisGraphOptionWidget extends StatelessWidget {
     if (MediaQuery.of(context).size.width <= 385) {
       containerWidth = 30;
     }
-    List<DropdownMenuItem<EnumAppChartDataTypes>>? _dropdownItems =
-        EnumAppChartDataTypes.values.map((e) => _dropdownItem(e)).toList();
 
     return Center(
       child: SizedBox(
         height: 36 + 10 + 14.0,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
               child: ShaderMask(
@@ -595,7 +558,11 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                 .map<Widget>((item) => InkWell(
                                       onTap: () => context
                                           .read<CoinGraphCubit>()
-                                          .loadGraph(timestampSelected: item),
+                                          .loadGraph(
+                                            leftTokenId,
+                                            rightTokenId,
+                                            timestampSelected: item,
+                                          ),
                                       child: AnimatedContainer(
                                         duration: AppConfigs.animDurationSmall,
                                         width: containerWidth,
@@ -624,66 +591,9 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Container(
-                height: 36,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: AppColors.color8BA1BE.withOpacity(0.2),
-                ),
-                padding: const EdgeInsets.only(left: 8),
-                child: Row(
-                  children: [
-                    SvgPicture.asset('trade-candle'.asAssetSvg()),
-                    SizedBox(width: 5),
-                    Container(
-                      width: 65,
-                      child: ButtonTheme(
-                        alignedDropdown: false,
-                        child: ValueListenableBuilder<EnumAppChartDataTypes>(
-                          valueListenable: dataTypeNotifier,
-                          builder: (context, dataType, _) {
-                            return DropdownButton<EnumAppChartDataTypes>(
-                              items: _dropdownItems,
-                              value: dataType,
-                              style: tsS13W400CFF,
-                              underline: Container(),
-                              onChanged: (val) => dataTypeNotifier.value =
-                                  val ?? EnumAppChartDataTypes.average,
-                              iconEnabledColor: Colors.white,
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 2.0),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: AppColors.colorFFFFFF,
-                                  size: 16,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
-    );
-  }
-
-  DropdownMenuItem<EnumAppChartDataTypes> _dropdownItem(
-      EnumAppChartDataTypes dataType) {
-    return DropdownMenuItem<EnumAppChartDataTypes>(
-      child: Text(
-        _fromEnumChartDataTypeToString(dataType).capitalize(),
-        style: tsS13W400CFF,
-        textAlign: TextAlign.start,
-      ),
-      value: dataType,
     );
   }
 }
@@ -1126,10 +1036,6 @@ class _ThisOrderDisplayProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-}
-
-String _fromEnumChartDataTypeToString(EnumAppChartDataTypes dataType) {
-  return dataType.toString().split('.')[1];
 }
 
 typedef OnEnumCoinDisplayListener = void Function(EnumCardFlipState state);

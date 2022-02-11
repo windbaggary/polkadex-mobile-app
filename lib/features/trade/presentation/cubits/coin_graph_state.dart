@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:polkadex/common/graph/domain/entities/line_chart_entity.dart';
+import 'package:k_chart/entity/index.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
 abstract class CoinGraphState extends Equatable {
@@ -49,12 +49,12 @@ class CoinGraphLoaded extends CoinGraphState {
           timestampSelected: timestampSelected,
         );
 
-  final Map<String, List<LineChartEntity>> dataList;
+  final List<KLineEntity> dataList;
   final int? indexPointSelected;
 
   CoinGraphLoaded copyWith({
     EnumAppChartTimestampTypes? timestampSelected,
-    Map<String, List<LineChartEntity>>? dataList,
+    List<KLineEntity>? dataList,
     int? indexPointSelected,
   }) {
     return CoinGraphLoaded(
@@ -63,23 +63,6 @@ class CoinGraphLoaded extends CoinGraphState {
       indexPointSelected: indexPointSelected ?? this.indexPointSelected,
     );
   }
-
-  double? get selectedOpen =>
-      indexPointSelected != null && dataList['open'] != null
-          ? dataList['open']![indexPointSelected!].pointY
-          : null;
-  double? get selectedLow =>
-      indexPointSelected != null && dataList['low'] != null
-          ? dataList['low']![indexPointSelected!].pointY
-          : null;
-  double? get selectedHigh =>
-      indexPointSelected != null && dataList['high'] != null
-          ? dataList['high']![indexPointSelected!].pointY
-          : null;
-  double? get selectedClose =>
-      indexPointSelected != null && dataList['close'] != null
-          ? dataList['close']![indexPointSelected!].pointY
-          : null;
 
   @override
   List<Object?> get props => [

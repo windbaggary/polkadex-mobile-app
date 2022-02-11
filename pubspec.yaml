@@ -56,6 +56,7 @@ dependencies:
   biometric_storage: 4.0.0
   bloc_test: ^8.3.0
   dart_amqp: ^0.2.1
+  k_chart: ^0.6.0
 
 dev_dependencies:
   flutter_test:

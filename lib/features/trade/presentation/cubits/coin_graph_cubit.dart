@@ -12,12 +12,16 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
 
   final GetCoinGraphDataUseCase _getGraphDataUseCase;
 
-  Future<void> loadGraph(
+  Future<void> loadGraph(String leftTokenId, String rightTokenId,
       {EnumAppChartTimestampTypes? timestampSelected}) async {
     final newTimestampChart = timestampSelected ?? state.timestampSelected;
     emit(CoinGraphLoading(timestampSelected: newTimestampChart));
 
-    final result = await _getGraphDataUseCase(newTimestampChart);
+    final result = await _getGraphDataUseCase(
+      leftTokenId,
+      rightTokenId,
+      newTimestampChart,
+    );
 
     result.fold(
       (error) => emit(CoinGraphError(
