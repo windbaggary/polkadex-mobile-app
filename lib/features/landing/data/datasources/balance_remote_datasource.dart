@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class BalanceRemoteDatasource {
-  final _baseUrl = 'https://ramen-1.polkadex.trade:443/api/';
+  final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
 
   Future<Response> fetchBalance(
     String address,

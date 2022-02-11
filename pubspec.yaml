@@ -47,7 +47,7 @@ dependencies:
   shimmer: ^2.0.0
   path_provider: ^2.0.2
   file_saver: ^0.0.6
-  permission_handler: 8.1.1
+  permission_handler: ^8.3.0
   dotted_border: ^2.0.0
   flutter_inappwebview: ^5.3.2
   get_it: ^7.2.0
@@ -55,13 +55,14 @@ dependencies:
   flutter_localized_locales: ^2.0.3
   biometric_storage: 4.0.0
   bloc_test: ^8.3.0
-  custom_refresh_indicator: ^1.0.0
+  dart_amqp: ^0.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mocktail: ^0.1.4
   flutter_launcher_icons: ^0.9.2
+  flutter_dotenv: ^5.0.2
 
 flutter_icons:
   android: true
@@ -85,6 +86,7 @@ flutter:
     - assets/svgs/
     - assets/images/
     - assets/images/trade_open/
+    - .env
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

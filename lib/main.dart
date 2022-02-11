@@ -11,12 +11,15 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
 import 'package:polkadex/generated/l10n.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'common/navigation/coordinator.dart';
 import 'common/navigation/routes.dart';
 import 'features/landing/presentation/providers/trade_tab_provider.dart';
 
 void main() async {
+  // Load the secret keys from .env file
+  await dotenv.load(fileName: ".env");
+
   WidgetsFlutterBinding.ensureInitialized();
   await injection.init();
 
@@ -96,9 +99,9 @@ class _MyAppState extends State<MyApp> {
                     onPrimary: AppColors.color2E303C,
                     surface: AppColors.color2E303C,
                     onSurface: AppColors.color2E303C,
-                    primaryVariant: AppColors.color2E303C,
+                    primaryContainer: AppColors.color2E303C,
                     secondary: Colors.grey,
-                    secondaryVariant: Colors.grey,
+                    secondaryContainer: Colors.grey,
                     onSecondary: Colors.grey,
                     background: AppColors.color3B4150,
                     onBackground: AppColors.color3B4150,

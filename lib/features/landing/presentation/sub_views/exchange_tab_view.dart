@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_loading_provider.dart';
@@ -493,6 +494,7 @@ class _ThisListItemWidget extends StatelessWidget {
           leftTokenId: model.baseTokenId,
           rightTokenId: model.pairTokenId,
           balanceCubit: context.read<BalanceCubit>(),
+          orderbookCubit: context.read<OrderbookCubit>(),
         ),
         borderRadius: BorderRadius.circular(20),
         child: Container(

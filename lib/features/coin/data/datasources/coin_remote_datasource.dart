@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CoinRemoteDatasource {
-  final _baseUrl = 'https://ramen-1.polkadex.trade:443/api/';
+  final _baseUrl = dotenv.get('POLKADEX_HOST_URL');
 
   Future<Response> withdraw(
     String asset,

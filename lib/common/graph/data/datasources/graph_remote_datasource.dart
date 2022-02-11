@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GraphRemoteDatasource {
   Future<Response> getCoinGraphData(String timestamp) async {
     return await post(
-      Uri.parse('http://ec2-3-101-117-26.us-west-1.polkadex.trade/fetchohlcv'),
+      Uri.parse('${dotenv.get('INFLUX_DB_URL')}/fetchohlcv'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

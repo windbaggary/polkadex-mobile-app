@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
@@ -13,8 +14,7 @@ import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.da
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/features/trade/data/models/order_book_item_model.dart';
-import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
+import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -73,13 +73,12 @@ class _TradeTabViewState extends State<TradeTabView>
             controller: _scrollController,
             padding: const EdgeInsets.only(bottom: 64),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _ThisTopRowSelectWidget(),
                 _ThisBuySellWidget(
                   key: _keyBuySellWidget,
                 ),
-                OrderBookHeadingWidget(),
                 OrderBookWidget(
                   amountTokenId: context
                       .read<TradeTabCoinProvider>()
@@ -89,8 +88,6 @@ class _TradeTabViewState extends State<TradeTabView>
                       .read<TradeTabCoinProvider>()
                       .tokenCoin
                       .baseTokenId,
-                  onOrderBookItemClicked: (model) =>
-                      _onOrderBookItemClicked(model, context),
                 ),
               ],
             ),
@@ -98,10 +95,6 @@ class _TradeTabViewState extends State<TradeTabView>
         },
       ),
     );
-  }
-
-  void _onOrderBookItemClicked(OrderBookItemModel model, BuildContext context) {
-    _keyBuySellWidget.currentState?.onOrderBookModelSelected(model);
   }
 
   void _scrollListener() {
@@ -379,11 +372,6 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     );
   }
 
-  /// The callback listener when the order book item is selected
-  void onOrderBookModelSelected(OrderBookItemModel model) {
-    _keyBuySellWidget.currentState?.updatePrice(model.price);
-  }
-
   /// The callback listener for otder type selection
   void _onTapOrderType(BuildContext context) {
     showOrderTypeDialog(
@@ -557,9 +545,11 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
             buildInkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () => Coordinator.goToCoinTradeScreen(
-                  leftTokenId: coinProvider.tokenCoin.baseTokenId,
-                  rightTokenId: coinProvider.tokenCoin.pairTokenId,
-                  balanceCubit: context.read<BalanceCubit>()),
+                leftTokenId: coinProvider.tokenCoin.baseTokenId,
+                rightTokenId: coinProvider.tokenCoin.pairTokenId,
+                balanceCubit: context.read<BalanceCubit>(),
+                orderbookCubit: context.read<OrderbookCubit>(),
+              ),
               child: Container(
                 width: 33,
                 height: 33,
