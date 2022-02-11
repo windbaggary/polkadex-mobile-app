@@ -550,13 +550,12 @@ class _ThisGraphOptionWidget extends StatelessWidget {
     if (MediaQuery.of(context).size.width <= 385) {
       containerWidth = 30;
     }
-    List<DropdownMenuItem<EnumAppChartDataTypes>>? _dropdownItems =
-        EnumAppChartDataTypes.values.map((e) => _dropdownItem(e)).toList();
 
     return Center(
       child: SizedBox(
         height: 36 + 10 + 14.0,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
               child: ShaderMask(
@@ -613,66 +612,9 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Container(
-                height: 36,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: AppColors.color8BA1BE.withOpacity(0.2),
-                ),
-                padding: const EdgeInsets.only(left: 8),
-                child: Row(
-                  children: [
-                    SvgPicture.asset('trade-candle'.asAssetSvg()),
-                    SizedBox(width: 5),
-                    Container(
-                      width: 65,
-                      child: ButtonTheme(
-                        alignedDropdown: false,
-                        child: ValueListenableBuilder<EnumAppChartDataTypes>(
-                          valueListenable: dataTypeNotifier,
-                          builder: (context, dataType, _) {
-                            return DropdownButton<EnumAppChartDataTypes>(
-                              items: _dropdownItems,
-                              value: dataType,
-                              style: tsS13W400CFF,
-                              underline: Container(),
-                              onChanged: (val) => dataTypeNotifier.value =
-                                  val ?? EnumAppChartDataTypes.average,
-                              iconEnabledColor: Colors.white,
-                              icon: Padding(
-                                padding: const EdgeInsets.only(left: 2.0),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: AppColors.colorFFFFFF,
-                                  size: 16,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
-    );
-  }
-
-  DropdownMenuItem<EnumAppChartDataTypes> _dropdownItem(
-      EnumAppChartDataTypes dataType) {
-    return DropdownMenuItem<EnumAppChartDataTypes>(
-      child: Text(
-        _fromEnumChartDataTypeToString(dataType).capitalize(),
-        style: tsS13W400CFF,
-        textAlign: TextAlign.start,
-      ),
-      value: dataType,
     );
   }
 }
@@ -1115,10 +1057,6 @@ class _ThisOrderDisplayProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-}
-
-String _fromEnumChartDataTypeToString(EnumAppChartDataTypes dataType) {
-  return dataType.toString().split('.')[1];
 }
 
 typedef OnEnumCoinDisplayListener = void Function(EnumCardFlipState state);
