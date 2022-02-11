@@ -482,7 +482,7 @@ class _ThisGraphCard extends StatelessWidget {
                               });
                         }
 
-                        if (state is CoinGraphLoaded) {
+                        if (state is CoinGraphError) {
                           return PolkadexErrorRefreshWidget(
                               onRefresh: () =>
                                   context.read<CoinGraphCubit>().loadGraph(
