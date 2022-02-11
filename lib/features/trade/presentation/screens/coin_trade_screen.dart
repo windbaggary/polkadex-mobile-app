@@ -15,7 +15,7 @@ import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dar
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
 import 'package:polkadex/features/trade/presentation/widgets/coin_graph_shimmer_widget.dart';
-import 'package:polkadex/features/trade/presentation/widgets/order_book_widget.dart';
+import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -91,101 +91,80 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
         child: Scaffold(
           backgroundColor: AppColors.color1C2023,
           body: SafeArea(
-            child: Stack(
-              children: [
-                SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.color2E303C,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(40),
-                          ),
-                        ),
-                        child: _ThisAppBar(
-                          leftTokenId: widget.leftTokenId,
-                          rightTokenId: widget.rightTokenId,
-                        ),
-                      ),
-                      ListView(
-                        padding: const EdgeInsets.only(bottom: 88),
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.color2E303C,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25),
+            child: LayoutBuilder(
+              builder: (context, constraint) {
+                return Stack(
+                  children: [
+                    SingleChildScrollView(
+                      controller: _scrollController,
+                      child: ConstrainedBox(
+                        constraints:
+                            BoxConstraints(minHeight: constraint.maxHeight),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.color2E303C,
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(40),
+                                ),
+                              ),
+                              child: _ThisAppBar(
+                                leftTokenId: widget.leftTokenId,
+                                rightTokenId: widget.rightTokenId,
                               ),
                             ),
-                            child: Consumer<_ThisOrderDisplayProvider>(
-                              builder: (context, orderDisplayProvider, _) =>
-                                  CardFlipAnimation(
-                                duration: AppConfigs.animDuration,
-                                firstChild:
-                                    // false
-                                    //     ? InkWell(
-                                    //         onTap: () {
-                                    //           orderDisplayProvider.enumCoinDisplay =
-                                    //               EnumCardFlipState.showSecond;
-                                    //         },
-                                    //         child: Container(
-                                    //           margin: const EdgeInsets.all(32),
-                                    //           key: ValueKey("one"),
-                                    //           height: 250,
-                                    //           color: colorE6007A,
-                                    //         ),
-                                    //       )
-                                    //     :
-                                    _ThisGraphCard(
-                                  leftTokenId: widget.leftTokenId,
-                                  rightTokenId: widget.rightTokenId,
+                            Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.color2E303C,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(25),
+                                      bottomRight: Radius.circular(25),
+                                    ),
+                                  ),
+                                  child: Consumer<_ThisOrderDisplayProvider>(
+                                    builder:
+                                        (context, orderDisplayProvider, _) =>
+                                            CardFlipAnimation(
+                                      duration: AppConfigs.animDuration,
+                                      firstChild: _ThisGraphCard(
+                                        leftTokenId: widget.leftTokenId,
+                                        rightTokenId: widget.rightTokenId,
+                                      ),
+                                      secondChild: _ThisDetailCard(
+                                        leftTokenId: widget.leftTokenId,
+                                        rightTokenId: widget.rightTokenId,
+                                      ),
+                                      cardState:
+                                          orderDisplayProvider.enumCoinDisplay,
+                                    ),
+                                  ),
                                 ),
-                                secondChild:
-                                    // false
-                                    // ? InkWell(
-                                    //     onTap: () {
-                                    //       orderDisplayProvider.enumCoinDisplay =
-                                    //           EnumCardFlipState.showFirst;
-                                    //     },
-                                    //     child: Container(
-                                    //       margin: const EdgeInsets.all(32),
-                                    //       key: ValueKey("two"),
-                                    //       height: 250,
-                                    //       color: color0CA564,
-                                    //     ),
-                                    //   )
-                                    // :
-                                    _ThisDetailCard(
-                                  leftTokenId: widget.leftTokenId,
-                                  rightTokenId: widget.rightTokenId,
-                                ),
-                                cardState: orderDisplayProvider.enumCoinDisplay,
-                              ),
+                              ],
                             ),
-                          ),
-                          OrderBookHeadingWidget(),
-                          OrderBookWidget(
-                            amountTokenId: widget.rightTokenId,
-                            priceTokenId: widget.leftTokenId,
-                          ),
-                        ],
+                            OrderBookWidget(
+                              amountTokenId: widget.rightTokenId,
+                              priceTokenId: widget.leftTokenId,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: _ThisBottomNavigationBar(),
-                ),
-              ],
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: _ThisBottomNavigationBar(),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

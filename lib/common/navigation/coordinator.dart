@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/navigation/routes.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
@@ -65,14 +66,17 @@ abstract class Coordinator {
     );
   }
 
-  static void goToCoinTradeScreen(
-      {required BalanceCubit balanceCubit,
-      required String leftTokenId,
-      required String rightTokenId,
-      EnumCardFlipState? enumCardFlipState}) {
+  static void goToCoinTradeScreen({
+    required BalanceCubit balanceCubit,
+    required OrderbookCubit orderbookCubit,
+    required String leftTokenId,
+    required String rightTokenId,
+    EnumCardFlipState? enumCardFlipState,
+  }) {
     _navigationKey.currentState?.pushNamed(
       Routes.coinTradeScreen,
       arguments: {
+        'orderbookCubit': orderbookCubit,
         'balanceCubit': balanceCubit,
         'enumCardFlipState': enumCardFlipState ?? EnumCardFlipState.showFirst,
         'leftTokenId': leftTokenId,
@@ -105,12 +109,14 @@ abstract class Coordinator {
   static void goToBalanceCoinPreviewScreen({
     required String tokenId,
     required BalanceCubit balanceCubit,
+    required OrderbookCubit orderbookCubit,
   }) {
     _navigationKey.currentState?.pushNamed(
       Routes.balanceCoinPreviewScreen,
       arguments: {
         'tokenId': tokenId,
         'balanceCubit': balanceCubit,
+        'orderbookCubit': orderbookCubit,
       },
     );
   }

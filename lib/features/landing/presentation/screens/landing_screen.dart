@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
@@ -412,6 +413,13 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
                 ..getBalance(
                   context.read<AccountCubit>().accountAddress,
                   context.read<AccountCubit>().accountSignature,
+                ),
+            ),
+            BlocProvider<OrderbookCubit>(
+              create: (_) => dependency<OrderbookCubit>()
+                ..fetchOrderbookData(
+                  leftTokenId: '0',
+                  rightTokenId: '1',
                 ),
             ),
           ],

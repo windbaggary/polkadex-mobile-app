@@ -5,6 +5,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -298,9 +299,11 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               return InkWell(
                                 onTap: () =>
                                     Coordinator.goToBalanceCoinPreviewScreen(
-                                        tokenId: key,
-                                        balanceCubit:
-                                            context.read<BalanceCubit>()),
+                                  tokenId: key,
+                                  balanceCubit: context.read<BalanceCubit>(),
+                                  orderbookCubit:
+                                      context.read<OrderbookCubit>(),
+                                ),
                                 child: BalanceItemWidget(
                                   tokenAcronym:
                                       TokenUtils.tokenIdToAcronym(key),

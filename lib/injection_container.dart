@@ -1,6 +1,11 @@
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
+import 'package:polkadex/common/network/rabbit_mq_client.dart';
+import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
+import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
 import 'package:polkadex/features/coin/domain/repositories/icoin_repository.dart';
@@ -36,6 +41,8 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'common/graph/data/datasources/graph_remote_datasource.dart';
+import 'common/orderbook/data/repositories/orderbook_repository.dart';
+import 'common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
 import 'features/coin/domain/usecases/withdraw_usecase.dart';
 import 'features/coin/presentation/cubits/withdraw_cubit.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
@@ -54,6 +61,9 @@ Future<void> init() async {
       (await BiometricStorage().canAuthenticate()) ==
           CanAuthenticateResponse.success;
 
+  final RabbitMqClient rabbitMqClient = RabbitMqClient();
+  await rabbitMqClient.init();
+
   dependency.registerLazySingleton(
     () => isBiometricAvailable,
     instanceName: 'isBiometricAvailable',
@@ -62,6 +72,8 @@ Future<void> init() async {
   dependency.registerSingleton<WebViewRunner>(
     WebViewRunner()..launch(jsCode: 'assets/js/main.js'),
   );
+
+  dependency.registerSingleton<RabbitMqClient>(rabbitMqClient);
 
   dependency.registerFactory(
     () => MnemonicRemoteDatasource(),
@@ -277,6 +289,35 @@ Future<void> init() async {
   dependency.registerFactory(
     () => TestDepositUseCase(
       balanceRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => OrderbookRemoteDatasource(),
+  );
+
+  dependency.registerSingleton<IOrderbookRepository>(
+    OrderbookRepository(
+      orderbookRemoteDatasource: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => FetchOrderbookDataUseCase(
+      orderbookRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => FetchOrderbookLiveDataUseCase(
+      orderbookRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => OrderbookCubit(
+      fetchOrderbookDataUseCase: dependency(),
+      fetchOrderbookLiveDataUseCase: dependency(),
     ),
   );
 }

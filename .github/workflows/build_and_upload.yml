@@ -7,6 +7,11 @@ on:
     branches: [develop]
     types: [ready_for_review]
 
+env:
+  PROPERTIES_FILE_PATH: "android/key.properties"
+  ENV_FILE_PATH: ".env"
+  STORE_FILE_PATH: "../app/upload-keystore.jks"
+
 jobs:
   build:
     name: Build Polkadex App for Android and iOS
@@ -17,7 +22,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: '8'
+          java-version: '11'
           distribution: 'adopt'
       - name: Set up Flutter
         uses: subosito/flutter-action@v1
@@ -27,10 +32,25 @@ jobs:
         run: flutter pub get
       - name: Check for formatting issues in the code
         run: flutter format . --set-exit-if-changed
+      - name: Create .env file using repo secrets
+        run: |
+          echo RMQ_USERNAME=\${{ secrets.RMQ_USERNAME }} > ${{env.ENV_FILE_PATH}}
+          echo RMQ_VHOST=\${{ secrets.RMQ_VHOST }} >> ${{env.ENV_FILE_PATH}}
+          echo RMQ_KEY=\${{ secrets.RMQ_KEY }} >> ${{env.ENV_FILE_PATH}}
+          echo POLKADEX_HOST_URL=\${{ secrets.POLKADEX_HOST_URL }} >> ${{env.ENV_FILE_PATH}}
+          echo INFLUX_DB_URL=\${{ secrets.INFLUX_DB_URL }} >> ${{env.ENV_FILE_PATH}}
       - name: Check for errors in the code
         run: flutter analyze .
       - name: Run tests
         run: flutter test
+      - name: Create properties file using secrets
+        run: |
+          echo keyPassword=\${{ secrets.KEY_PASSWORD }} > ${{env.PROPERTIES_FILE_PATH}}
+          echo storePassword=\${{ secrets.KEYSTORE_PASSWORD }} >> ${{env.PROPERTIES_FILE_PATH}}
+          echo keyAlias=\${{ secrets.KEY_ALIAS }} >> ${{env.PROPERTIES_FILE_PATH}}
+          echo storeFile=../app/key.jks >> ${{env.PROPERTIES_FILE_PATH}}
+      - name: Create .jks signing file
+        run: echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > android/app/key.jks
       - name: Build Android App
         run: flutter build apk
       - name: Build iOS App

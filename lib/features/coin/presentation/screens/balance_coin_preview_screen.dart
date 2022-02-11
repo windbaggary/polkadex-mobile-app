@@ -6,6 +6,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -179,6 +180,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                             child: buildInkWell(
                               borderRadius: BorderRadius.circular(20),
                               onTap: () => Coordinator.goToCoinTradeScreen(
+                                  orderbookCubit:
+                                      context.read<OrderbookCubit>(),
                                   balanceCubit: context.read<BalanceCubit>(),
                                   leftTokenId: widget.tokenId,
                                   rightTokenId: basicCoinDummyList
@@ -208,6 +211,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinPreviewScreen>
                           rightAsset: basicCoinDummyList[index].baseTokenId,
                           leftAsset: basicCoinDummyList[index].pairTokenId,
                           onTap: () => Coordinator.goToCoinTradeScreen(
+                              orderbookCubit: context.read<OrderbookCubit>(),
                               leftTokenId:
                                   basicCoinDummyList[index].baseTokenId,
                               rightTokenId:

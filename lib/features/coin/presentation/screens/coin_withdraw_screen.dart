@@ -74,7 +74,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                   }
                 },
                 builder: (context, withdrawState) {
-                  print(balanceState);
                   return SafeArea(
                     child: Stack(
                       alignment: Alignment.topCenter,
