@@ -50,7 +50,7 @@ class _GeneratedMnemonicWordWidgetState
   Widget _placeholderWhileDragWidget() {
     return Container(
       decoration: BoxDecoration(
-        color: color8BA1BE.withOpacity(0.20),
+        color: AppColors.color8BA1BE.withOpacity(0.20),
         borderRadius: BorderRadius.circular(10),
       ),
     );
@@ -63,7 +63,7 @@ class _GeneratedMnemonicWordWidgetState
         width: constraints.maxWidth,
         height: constraints.maxHeight,
         decoration: BoxDecoration(
-          color: colorE6007A,
+          color: AppColors.colorE6007A,
           borderRadius: BorderRadius.circular(10),
         ),
         child: _mnemonicWordBaseWidget(),
@@ -85,12 +85,13 @@ class _GeneratedMnemonicWordWidgetState
               dashPattern: [6, 4],
               padding: EdgeInsets.zero,
               radius: Radius.circular(10),
-              color: accepted.isEmpty ? Colors.transparent : colorE6007A,
+              color:
+                  accepted.isEmpty ? Colors.transparent : AppColors.colorE6007A,
               child: Container(
                 decoration: BoxDecoration(
                   color: accepted.isEmpty
-                      ? color1C1C26
-                      : colorE6007A.withOpacity(0.20),
+                      ? AppColors.color1C1C26
+                      : AppColors.colorE6007A.withOpacity(0.20),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: _mnemonicWordBaseWidget(),

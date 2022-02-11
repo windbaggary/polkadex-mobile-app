@@ -42,11 +42,11 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            color: color2E303C,
+            color: AppColors.color2E303C,
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40),
             ),
@@ -58,7 +58,7 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: color1C2023,
+                    color: AppColors.color1C2023,
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(35),
                       topLeft: Radius.circular(35),
@@ -99,12 +99,14 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                                 height: 53,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: isFlashOn ? colorE6007A : color2E303C,
+                                  color: isFlashOn
+                                      ? AppColors.colorE6007A
+                                      : AppColors.color2E303C,
                                 ),
                                 padding: const EdgeInsets.all(16),
                                 child: SvgPicture.asset(
                                   'flashlight'.asAssetSvg(),
-                                  color: colorFFFFFF,
+                                  color: AppColors.colorFFFFFF,
                                 )),
                           ),
                         ),
@@ -131,7 +133,7 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                 height: 50,
                 child: Icon(
                   Icons.close,
-                  color: colorFFFFFF,
+                  color: AppColors.colorFFFFFF,
                 ),
               ),
             ),

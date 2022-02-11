@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
@@ -9,8 +9,6 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_shimmer_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
-
-import 'backup_mnemonic_screen.dart';
 
 class MnemonicGeneratedScreen extends StatefulWidget {
   @override
@@ -22,6 +20,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
+  bool _isButtonToBackupEnabled = false;
 
   @override
   void initState() {
@@ -47,7 +46,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
       return WillPopScope(
         onWillPop: () => _onPop(context),
         child: Scaffold(
-          backgroundColor: color1C2023,
+          backgroundColor: AppColors.color1C2023,
           appBar: AppBar(
             title: Text(
               'Create Wallet',
@@ -82,7 +81,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                   (BuildContext context, int index) {
                     return Container(
                       decoration: BoxDecoration(
-                        color: color24252C,
+                        color: AppColors.color24252C,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: <BoxShadow>[
                           BoxShadow(
@@ -98,7 +97,7 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: color2E303C,
+                              color: AppColors.color2E303C,
                               borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(20.0),
                                 bottomRight: Radius.circular(20.0),
@@ -154,11 +153,12 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                             child: Row(
                               children: [
                                 CheckBoxWidget(
-                                  checkColor: colorE6007A,
-                                  backgroundColor: color3B4150,
-                                  isChecked: provider.isButtonToBackupEnabled,
-                                  onTap: (_) =>
-                                      provider.changeButtonToBackupState(),
+                                  checkColor: AppColors.colorE6007A,
+                                  backgroundColor: AppColors.color3B4150,
+                                  isChecked: _isButtonToBackupEnabled,
+                                  onTap: (_) => setState(() =>
+                                      _isButtonToBackupEnabled =
+                                          !_isButtonToBackupEnabled),
                                 ),
                                 Flexible(
                                   child: Padding(
@@ -194,9 +194,10 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
                       Padding(
                         padding: const EdgeInsets.only(top: 28),
                         child: AppButton(
-                          onTap: () =>
-                              _onNavigateToBackupMnemonic(context, provider),
-                          enabled: provider.isButtonToBackupEnabled,
+                          onTap: () => Coordinator.goToBackupMnemonic(
+                              provider..shuffleMnemonicWords()),
+                          enabled:
+                              _isButtonToBackupEnabled && !provider.isLoading,
                           label: 'Next',
                         ),
                       ),
@@ -209,22 +210,6 @@ class _MnemonicGeneratedScreenState extends State<MnemonicGeneratedScreen>
         ),
       );
     });
-  }
-
-  void _onNavigateToBackupMnemonic(
-      BuildContext context, MnemonicProvider provider) async {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return ChangeNotifierProvider.value(
-          value: provider..shuffleMnemonicWords(),
-          child: FadeTransition(
-            opacity: CurvedAnimation(
-                parent: animation, curve: Interval(0.500, 1.00)),
-            child: BackupMnemonicScreen(),
-          ),
-        );
-      },
-    ));
   }
 
   /// Handling the back button animation

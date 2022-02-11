@@ -20,9 +20,9 @@ abstract class CustomDateRangePicker {
           return Theme(
             data: ThemeData.dark().copyWith(
               colorScheme: ColorScheme.dark(
-                primary: colorE6007A,
+                primary: AppColors.colorE6007A,
                 onPrimary: Colors.white,
-                surface: color2E303C,
+                surface: AppColors.color2E303C,
                 onSurface: Colors.white,
               ),
             ),

@@ -1,20 +1,16 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
-import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
-import 'package:polkadex/features/landing/screens/landing_screen.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
-import 'package:provider/provider.dart';
-import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
 
 /// The dummy data for the screen
 ///
@@ -71,7 +67,7 @@ class _IntroScreenState extends State<IntroScreen>
       //     _animationController.forward().orCancel;
       //   },
       // ),
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: Stack(
         children: [
           // // The background top image
@@ -117,17 +113,9 @@ class _IntroScreenState extends State<IntroScreen>
                     height: 54,
                     child: LoginButtonWidget(
                       text: 'Import Wallet',
-                      backgroundColor: colorE6007A,
+                      backgroundColor: AppColors.colorE6007A,
                       textStyle: tsS16W500CFF,
-                      onTap: () => Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return FadeTransition(
-                              opacity: CurvedAnimation(
-                                  parent: animation,
-                                  curve: Interval(0.500, 1.00)),
-                              child: LandingScreen());
-                        },
-                      )),
+                      onTap: () => Coordinator.goToimportWalletMethods(),
                     ),
                   ),
                 ),
@@ -137,9 +125,9 @@ class _IntroScreenState extends State<IntroScreen>
                     height: 54,
                     child: LoginButtonWidget(
                       text: 'Generate Wallet',
-                      backgroundColor: colorFFFFFF,
+                      backgroundColor: AppColors.colorFFFFFF,
                       textStyle: tsS16W500C24252C,
-                      onTap: () => _onNavigateToGenerateWallet(context),
+                      onTap: () => Coordinator.goToMnemonicGeneratedScreen(),
                     ),
                   ),
                 ),
@@ -163,11 +151,8 @@ class _IntroScreenState extends State<IntroScreen>
                           ),
                           text: 'Privacy Policy',
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PrivacyPolicyScreen(),
-                                  ),
-                                ),
+                            ..onTap =
+                                () => Coordinator.goToPrivacyPolicyScreen(),
                         ),
                       ],
                     ),
@@ -178,36 +163,83 @@ class _IntroScreenState extends State<IntroScreen>
             ),
           ),
           // The polkadex logo
-          Positioned(
-            top: 36 + MediaQuery.of(context).padding.top,
-            left: 26,
-            height: 36,
-            child: Image.asset(
-              'logo_name.png'.asAssetImg(),
-              fit: BoxFit.contain,
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 26,
+                top: 36 + MediaQuery.of(context).padding.top,
+                right: 26,
+              ),
+              child: Container(
+                height: 36,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'logo_name.png'.asAssetImg(),
+                      fit: BoxFit.contain,
+                    ),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.color8BA1BE.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: GestureDetector(
+                            onTapDown: (_) => showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(30),
+                                ),
+                              ),
+                              builder: (_) => SelectLanguageWidget(),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 10,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    LocaleNames.of(context)!.nameOf(
+                                        Localizations.localeOf(context)
+                                            .languageCode)!,
+                                    style: tsS16W600CFF,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  RotatedBox(
+                                    quarterTurns: 1,
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: AppColors.colorFFFFFF,
+                                      size: 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
-  }
-
-  /// Navigate to terms and condition screen
-  void _onNavigateToGenerateWallet(BuildContext context) async {
-    Navigator.of(context).push(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(
-          opacity:
-              CurvedAnimation(parent: animation, curve: Interval(0.500, 1.00)),
-          child: ChangeNotifierProvider(
-            create: (context) => dependency<MnemonicProvider>()..loadMnemonic(),
-            builder: (context, _) {
-              return MnemonicGeneratedScreen();
-            },
-          ),
-        );
-      },
-    ));
   }
 }
 
@@ -283,8 +315,8 @@ class __ThisPageViewState extends State<_ThisPageView> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        accentColor: Colors.transparent,
-        buttonColor: Colors.transparent,
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: Colors.transparent),
       ),
       child: PageView.builder(
         pageSnapping: true,

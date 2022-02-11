@@ -9,7 +9,7 @@ void buildAppToast({required String msg, required BuildContext context}) {
     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(25.0),
-      color: color2E303C.withOpacity(0.90),
+      color: AppColors.color2E303C.withOpacity(0.90),
       boxShadow: <BoxShadow>[
         BoxShadow(
           color: Colors.black.withOpacity(0.90),
@@ -37,8 +37,8 @@ Widget buildInkWell({
   required Widget child,
   required VoidCallback onTap,
   BorderRadius? borderRadius,
-  Color highlightColor = const Color(0x558BA1BE),
-  Color splashColor = const Color(0xFF8BA1BE),
+  Color highlightColor = AppColors.color558BA1BE,
+  Color splashColor = AppColors.color8BA1BE,
 }) {
   return Material(
       type: MaterialType.transparency,

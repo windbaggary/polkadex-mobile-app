@@ -11,3 +11,8 @@ import Flutter
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
+
+func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplication.ExtensionPointIdentifier) -> Bool
+{
+  return extensionPointIdentifier != UIApplication.ExtensionPointIdentifier.keyboard
+}

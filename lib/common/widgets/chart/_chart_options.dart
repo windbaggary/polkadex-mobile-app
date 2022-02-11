@@ -81,15 +81,16 @@ class AppLineChartOptions {
           ..strokeWidth = gridStroke;
 
   factory AppLineChartOptions.withDefaults({
+    required Gradient areaGradient,
     double chartScale = 0.004,
     int yLabelCount = 5,
-    required Gradient areaGradient,
+    Color? lineColor,
   }) =>
       AppLineChartOptions(
         chartScale: chartScale,
-        lineColor: color8BA1BE.withBlue(180),
+        lineColor: lineColor ?? AppColors.color8BA1BE,
         areaGradient: areaGradient,
-        gridColor: color8BA1BE.withOpacity(0.15),
+        gridColor: AppColors.color8BA1BE.withOpacity(0.15),
         gridStroke: 1,
         yLabelCount: yLabelCount,
         yLabelTextStyle: TextStyle(

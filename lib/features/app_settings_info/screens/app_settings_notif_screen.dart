@@ -49,7 +49,7 @@ class _AppSettingsNotificationScreenState
         WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: color1C2023,
+        backgroundColor: AppColors.color1C2023,
         // floatingActionButton: FloatingActionButton(
         //   onPressed: () {
         //     _animationController.reset();
@@ -151,7 +151,7 @@ class _ThisMenuItemWidget extends StatelessWidget {
             ? Border(
                 bottom: BorderSide(
                   width: 1.0,
-                  color: colorFFFFFF.withOpacity(0.10),
+                  color: AppColors.colorFFFFFF.withOpacity(0.10),
                 ),
               )
             : null,
@@ -275,7 +275,9 @@ class _ThisAlertItemWidget extends StatelessWidget {
         builder: (context, isSelected, child) => AnimatedContainer(
           duration: AppConfigs.animDurationSmall,
           decoration: BoxDecoration(
-              color: isSelected ? colorE6007A : color8BA1BE.withOpacity(0.20),
+              color: isSelected
+                  ? AppColors.colorE6007A
+                  : AppColors.color8BA1BE.withOpacity(0.20),
               borderRadius: BorderRadius.circular(8)),
           margin: const EdgeInsets.only(right: 8),
           padding: const EdgeInsets.fromLTRB(11, 11, 0, 12),

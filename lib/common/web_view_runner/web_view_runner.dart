@@ -40,24 +40,36 @@ class WebViewRunner {
         onWebViewCreated: (controller) {
           print('HeadlessInAppWebView created!');
         },
-        onConsoleMessage: (controller, message) {
-          print("CONSOLE MESSAGE: " + message.message);
+        onConsoleMessage: (controller, message) async {
+          // prints hidden browser messages only if the app is in debug mode
+          if (!kReleaseMode) {
+            print("CONSOLE MESSAGE: " + message.message);
+          }
+
           if (message.messageLevel != ConsoleMessageLevel.LOG) return;
 
-          compute(jsonDecode, message.message).then((msg) {
-            final String path = msg['path'];
-            if (_msgCompleters[path] != null) {
-              Completer? handler = _msgCompleters[path];
-              handler?.complete(msg['data']);
-              if (path.contains('uid=')) {
-                _msgCompleters.remove(path);
-              }
-            }
-            if (_msgHandlers[path] != null) {
-              Function? handler = _msgHandlers[path];
-              handler!(msg['data']);
-            }
+          String? path;
+          dynamic data;
+
+          await compute(jsonDecode, message.message).then((msg) {
+            path = msg['path'];
+            data = msg['data'];
+          }, onError: (_) {
+            path = 'log';
+            data = message.message;
           });
+
+          if (_msgCompleters[path] != null) {
+            Completer? handler = _msgCompleters[path];
+            handler?.complete(data);
+            if (path!.contains('uid=')) {
+              _msgCompleters.remove(path);
+            }
+          }
+          if (_msgHandlers[path] != null) {
+            Function? handler = _msgHandlers[path];
+            handler!(data);
+          }
         },
         onLoadStop: (controller, url) async {
           print('webview loaded');
@@ -67,8 +79,6 @@ class WebViewRunner {
       );
 
       await _web?.run();
-      _web?.webViewController.loadUrl(
-          urlRequest: URLRequest(url: Uri.parse("https://localhost:8080/")));
     } else {
       _tryReload();
     }
@@ -89,7 +99,8 @@ class WebViewRunner {
 
   Future<void> _startJSCode() async {
     // inject js file to webView
-    await _web?.webViewController.evaluateJavascript(source: _jsCode);
+    await _web?.webViewController
+        .evaluateJavascript(source: _jsCode, contentWorld: ContentWorld.PAGE);
   }
 
   int getEvalJavascriptUID() {
@@ -100,6 +111,7 @@ class WebViewRunner {
     String code, {
     bool wrapPromise = true,
     bool allowRepeat = true,
+    bool isSynchronous = false,
   }) async {
     // check if there's a same request loading
     if (!allowRepeat) {
@@ -113,24 +125,29 @@ class WebViewRunner {
     }
 
     if (!wrapPromise) {
-      final res =
-          await _web?.webViewController.evaluateJavascript(source: code);
+      final res = await _web?.webViewController
+          .evaluateJavascript(source: code, contentWorld: ContentWorld.PAGE);
       return res;
     }
 
+    String script;
     final c = Completer();
-
     final uid = getEvalJavascriptUID();
     final method = 'uid=$uid;${code.split('(')[0]}';
     _msgCompleters[method] = c;
 
-    final script = '$code.then(function(res) {'
-        '  console.log(JSON.stringify({ path: "$method", data: res }));'
-        '}).catch(function(err) {'
-        '  console.log(JSON.stringify({ path: "$method", data: err.message }));'
-        '});$uid;';
-    _web?.webViewController.evaluateJavascript(source: script);
+    if (isSynchronous) {
+      script = 'console.log(JSON.stringify({ path: "$method", data: $code }));';
+    } else {
+      script = '$code.then(function(res) {'
+          '  console.log(JSON.stringify({ path: "$method", data: res }));'
+          '}).catch(function(err) {'
+          '  console.log(JSON.stringify({ path: "$method", data: err.message }));'
+          '});';
+    }
 
+    _web?.webViewController.evaluateJavascript(
+        source: '$script$uid;', contentWorld: ContentWorld.PAGE);
     return c.future;
   }
 
@@ -156,8 +173,10 @@ class WebViewRunner {
   void unsubscribeMessage(String channel) {
     print('unsubscribe $channel');
     final unsubCall = 'unsub$channel';
-    _web?.webViewController
-        .evaluateJavascript(source: 'window.$unsubCall && window.$unsubCall()');
+    _web?.webViewController.evaluateJavascript(
+      source: 'window.$unsubCall && window.$unsubCall()',
+      contentWorld: ContentWorld.PAGE,
+    );
   }
 
   void addMsgHandler(String channel, Function onMessage) {

@@ -1,22 +1,34 @@
+import 'package:equatable/equatable.dart';
 import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
 import 'meta_entity.dart';
 
-class ImportedAccountEntity {
+class ImportedAccountEntity extends Equatable {
   const ImportedAccountEntity({
-    required this.pubKey,
-    required this.mnemonic,
-    required this.rawSeed,
     required this.encoded,
     required this.encoding,
     required this.address,
     required this.meta,
+    required this.name,
+    required this.biometricAccess,
+    required this.signature,
   });
 
-  final String pubKey;
-  final String mnemonic;
-  final String rawSeed;
   final String encoded;
-  final EncondingEntity encoding;
+  final EncodingEntity encoding;
   final String address;
   final MetaEntity meta;
+  final String name;
+  final bool biometricAccess;
+  final String signature;
+
+  @override
+  List<Object?> get props => [
+        encoded,
+        encoding,
+        address,
+        meta,
+        name,
+        biometricAccess,
+        signature,
+      ];
 }

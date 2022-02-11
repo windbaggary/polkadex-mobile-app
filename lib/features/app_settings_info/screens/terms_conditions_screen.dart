@@ -27,7 +27,7 @@ class TermsConditionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: AppSettingsLayout(
         subTitle: 'Terms and Conditions',
         mainTitle: 'Terms and Conditions',
@@ -35,7 +35,7 @@ class TermsConditionsScreen extends StatelessWidget {
         onBack: () => Navigator.of(context).pop(),
         contentChild: Container(
           decoration: BoxDecoration(
-            color: color2E303C,
+            color: AppColors.color2E303C,
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40),
               bottomLeft: Radius.circular(40),

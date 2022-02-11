@@ -98,7 +98,7 @@ class _ThisSubTitleWidget extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: Container(
         decoration: BoxDecoration(
-          color: color2E303C,
+          color: AppColors.color2E303C,
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(40),
             bottomLeft: Radius.circular(40),
@@ -132,7 +132,7 @@ class _ThisSubTitleWidget extends StatelessWidget {
     }
     return Container(
       decoration: BoxDecoration(
-        color: color1C2023,
+        color: AppColors.color1C2023,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(40),
         ),

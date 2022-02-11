@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 
@@ -9,7 +10,7 @@ class CustomAppBar extends StatelessWidget {
     required this.child,
     // @required AnimationController animationController,
     this.onTapBack,
-    this.bgColor = const Color(0xFF2E303C),
+    this.bgColor = AppColors.color2E303C,
     this.titleStyle,
     this.isExpanded = true,
   });

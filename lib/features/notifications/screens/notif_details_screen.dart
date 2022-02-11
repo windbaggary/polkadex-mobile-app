@@ -10,11 +10,11 @@ class NotifDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1C2023,
+      backgroundColor: AppColors.color1C2023,
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
-            color: color2E303C,
+            color: AppColors.color2E303C,
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40),
               bottomLeft: Radius.circular(40),
@@ -45,7 +45,7 @@ class NotifDetailsScreen extends StatelessWidget {
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: color8BA1BE.withOpacity(0.2),
+                          color: AppColors.color8BA1BE.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(17),
                         ),
                         padding: const EdgeInsets.all(13),
