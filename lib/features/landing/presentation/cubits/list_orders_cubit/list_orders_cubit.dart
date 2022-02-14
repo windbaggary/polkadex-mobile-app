@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/data/models/order_model.dart';
 import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_open_orders.dart';
@@ -21,7 +19,7 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
 
   Future<void> getOpenOrders(String address, String signature) async {
     final List<OrderEntity> _openOrders = [];
-    final List<String> _orderUuidsLoading = [];
+    final List<String> _orderIdsLoading = [];
 
     emit(ListOrdersLoading());
 
@@ -34,22 +32,9 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
       (_) => emit(ListOrdersError()),
       (orders) {
         _openOrders.addAll(orders);
-        _openOrders.add(
-          OrderModel(
-            uuid: 'b47d2527-5a0c-11ea-822c-1831bf9834b0',
-            type: EnumBuySell.buy,
-            amount: '0.2900',
-            price: '0.4423',
-            dateTime: DateTime.now(),
-            amountCoin: "0",
-            priceCoin: "1",
-            orderType: EnumOrderTypes.limit,
-            tokenPairName: "DOT/BTC",
-          ),
-        );
         emit(ListOrdersLoaded(
           openOrders: _openOrders,
-          orderUuidsLoading: _orderUuidsLoading,
+          orderIdsLoading: _orderIdsLoading,
         ));
       },
     );
@@ -62,30 +47,33 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
       emit(
         ListOrdersLoaded(
           openOrders: [...previousState.openOrders, newOrder],
-          orderUuidsLoading: [...previousState.orderUuidsLoading],
+          orderIdsLoading: [...previousState.orderIdsLoading],
         ),
       );
     }
   }
 
-  Future<bool> cancelOrder(OrderEntity order, String signature) async {
+  Future<bool> cancelOrder(
+    OrderEntity order,
+    String address,
+    String signature,
+  ) async {
     final firstPreviousState = state;
 
     if (firstPreviousState is ListOrdersLoaded &&
         firstPreviousState.openOrders.contains(order)) {
       emit(ListOrdersLoaded(
         openOrders: [...firstPreviousState.openOrders],
-        orderUuidsLoading: [
-          ...firstPreviousState.orderUuidsLoading,
-          order.uuid
+        orderIdsLoading: [
+          ...firstPreviousState.orderIdsLoading,
+          order.orderId,
         ],
       ));
 
       final result = await _cancelOrderUseCase(
         nonce: 0,
-        baseAsset: order.amountCoin,
-        quoteAsset: order.priceCoin,
-        orderUuid: order.uuid,
+        address: address,
+        orderId: order.orderId,
         signature: signature,
       );
 
@@ -96,8 +84,8 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
           openOrders: result.isRight()
               ? ([...secondPreviousState.openOrders]..remove(order))
               : [...secondPreviousState.openOrders],
-          orderUuidsLoading: [...secondPreviousState.orderUuidsLoading]
-            ..remove(order.uuid),
+          orderIdsLoading: [...secondPreviousState.orderIdsLoading]
+            ..remove(order.orderId),
         ));
       }
 

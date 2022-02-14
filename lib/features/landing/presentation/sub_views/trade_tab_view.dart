@@ -5,6 +5,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
@@ -283,69 +284,85 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                     left: 41,
                     right: 41,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          if (_orderDisplayTypeNotifier.value ==
-                              EnumTradeOrdersDisplayType.open) {
-                            if (_isOrdersExpanded.value) {
-                              _isOrdersExpanded.value = false;
-                            } else {
-                              _isOrdersExpanded.value = true;
-                            }
-                          } else {
-                            _orderDisplayTypeNotifier.value =
-                                EnumTradeOrdersDisplayType.open;
-                            if (!_isOrdersExpanded.value) {
-                              _isOrdersExpanded.value = true;
-                            }
-                          }
-                        },
-                        child: BlocBuilder<ListOrdersCubit, ListOrdersState>(
-                            builder: (context, state) {
-                          return Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8, right: 12),
-                                child: Text(
-                                  "Open Orders",
-                                  style: state is ListOrdersLoaded &&
-                                          state.openOrders.isEmpty
-                                      ? tsS15W600CABB2BC
-                                      : tsS15W600CFF,
-                                ),
-                              ),
-                              if (state is! ListOrdersError)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.colorE6007A,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  padding: EdgeInsets.all(
-                                      state is ListOrdersLoading ? 2.5 : 4),
-                                  margin: const EdgeInsets.only(bottom: 4),
-                                  child: state is ListOrdersLoaded
-                                      ? Text('${state.openOrders.length}',
-                                          style: tsS10W500CFF)
-                                      : SizedBox(
-                                          width: 6.0,
-                                          height: 6.0,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 1.5,
-                                            color: Colors.white,
-                                          ),
+                  child: InkWell(
+                    onTap: () {
+                      if (_orderDisplayTypeNotifier.value ==
+                          EnumTradeOrdersDisplayType.open) {
+                        if (_isOrdersExpanded.value) {
+                          _isOrdersExpanded.value = false;
+                        } else {
+                          _isOrdersExpanded.value = true;
+                        }
+                      } else {
+                        _orderDisplayTypeNotifier.value =
+                            EnumTradeOrdersDisplayType.open;
+                        if (!_isOrdersExpanded.value) {
+                          _isOrdersExpanded.value = true;
+                        }
+                      }
+                    },
+                    child: BlocBuilder<ListOrdersCubit, ListOrdersState>(
+                      builder: (context, state) {
+                        return Align(
+                          alignment: Alignment.center,
+                          child: state is ListOrdersError
+                              ? PolkadexErrorRefreshWidget(
+                                  textSize: 16,
+                                  onRefresh: () => context
+                                      .read<ListOrdersCubit>()
+                                      .getOpenOrders(
+                                        context
+                                            .read<AccountCubit>()
+                                            .accountAddress,
+                                        context
+                                            .read<AccountCubit>()
+                                            .accountSignature,
+                                      ),
+                                )
+                              : Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8, right: 12),
+                                      child: Text(
+                                        "Open Orders",
+                                        style: state is ListOrdersLoaded &&
+                                                state.openOrders.isEmpty
+                                            ? tsS15W600CABB2BC
+                                            : tsS15W600CFF,
+                                      ),
+                                    ),
+                                    if (state is! ListOrdersError)
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.colorE6007A,
+                                          shape: BoxShape.circle,
                                         ),
+                                        padding: EdgeInsets.all(
+                                            state is ListOrdersLoading
+                                                ? 2.5
+                                                : 4),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 4),
+                                        child: state is ListOrdersLoaded
+                                            ? Text('${state.openOrders.length}',
+                                                style: tsS10W500CFF)
+                                            : SizedBox(
+                                                width: 6.0,
+                                                height: 6.0,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 1.5,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                      ),
+                                  ],
                                 ),
-                            ],
-                          );
-                        }),
-                      ),
-                    ],
+                        );
+                      },
+                    ),
                   ),
                 ),
                 ValueListenableBuilder<bool>(
@@ -402,8 +419,8 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
       quoteAsset: rightAsset,
       orderType: side,
       orderSide: type,
-      quantity: double.parse(amount),
-      price: double.parse(price),
+      amount: amount,
+      price: price,
       address: context.read<AccountCubit>().accountAddress,
       signature: context.read<AccountCubit>().accountSignature,
     );
@@ -412,14 +429,15 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
       price = amount;
     }
 
-    if (resultPlaceOrder != null) {
+    if (resultPlaceOrder != null &&
+        resultPlaceOrder.orderType != EnumOrderTypes.market) {
       listOrdersCubit.addToOpenOrders(resultPlaceOrder);
     }
 
     final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
     final message = context.read<PlaceOrderCubit>().state is PlaceOrderAccepted
-        ? '$orderType added to open orders.'
-        : '$orderType not accepted. Please try again.';
+        ? '$orderType order placed successfully.'
+        : '$orderType order place failed. Please try again.';
     buildAppToast(msg: message, context: context);
     _keyBuySellWidget.currentState?.reset();
   }
@@ -488,12 +506,13 @@ class _ThisOpenOrderExpandedWidget extends StatelessWidget {
                       (order) => OrderItemWidget(
                         order: order,
                         isProcessing:
-                            state.orderUuidsLoading.contains(order.uuid),
+                            state.orderIdsLoading.contains(order.orderId),
                         onTapClose: () async {
                           final cancelSuccess = await context
                               .read<ListOrdersCubit>()
                               .cancelOrder(
                                 order,
+                                context.read<AccountCubit>().accountAddress,
                                 context.read<AccountCubit>().accountSignature,
                               );
 

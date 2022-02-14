@@ -13,8 +13,8 @@ class OrderRemoteDatasource {
     int quoteAsset,
     EnumOrderTypes orderType,
     EnumBuySell orderSide,
-    double price,
-    double quantity,
+    String price,
+    String amount,
     String address,
     String signature,
   ) async {
@@ -30,8 +30,8 @@ class OrderRemoteDatasource {
           'symbol': [baseAsset, quoteAsset],
           'order_type': orderType.toString().split('.')[1].capitalize(),
           'order_side': orderSide.toString().split('.')[1].capitalize(),
-          'price': price.toString(),
-          'amount': quantity.toString(),
+          'price': price,
+          'amount': amount,
         },
       }),
     );
@@ -39,9 +39,8 @@ class OrderRemoteDatasource {
 
   Future<Response> cancelOrder(
     int nonce,
-    String baseAsset,
-    String quoteAsset,
-    String orderUuid,
+    String address,
+    int orderUuid,
     String signature,
   ) async {
     return await post(
@@ -51,7 +50,10 @@ class OrderRemoteDatasource {
       },
       body: jsonEncode(<String, dynamic>{
         'signature': {'Sr25519': signature},
-        'payload': {'order_id': orderUuid},
+        'payload': {
+          'account': address,
+          'order_id': orderUuid,
+        },
       }),
     );
   }

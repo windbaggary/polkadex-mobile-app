@@ -2,39 +2,34 @@ import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/domain/entities/fee_entity.dart';
-import 'package:polkadex/features/landing/domain/entities/trade_entity.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 
-abstract class OrderEntity extends Equatable {
-  const OrderEntity({
-    required this.orderId,
-    required this.mainAcc,
-    required this.amount,
-    required this.price,
-    required this.orderSide,
-    required this.orderType,
+abstract class TradeEntity extends Equatable {
+  const TradeEntity({
+    required this.id,
     required this.timestamp,
+    required this.mainAcc,
     required this.baseAsset,
     required this.quoteAsset,
-    required this.status,
-    required this.filledQty,
+    required this.orderId,
+    required this.orderSide,
+    required this.orderType,
+    required this.price,
+    required this.amount,
     required this.fee,
-    required this.trades,
   });
 
-  final String orderId;
-  final String mainAcc;
-  final String amount;
-  final String price;
-  final EnumBuySell? orderSide;
-  final EnumOrderTypes? orderType;
+  final String id;
   final DateTime timestamp;
+  final String mainAcc;
   final String baseAsset;
   final String quoteAsset;
-  final String status;
-  final String filledQty;
+  final String orderId;
+  final EnumOrderTypes? orderType;
+  final EnumBuySell? orderSide;
+  final String price;
+  final String amount;
   final FeeEntity fee;
-  final List<TradeEntity> trades;
 
   String get iAmount => "$amount ${TokenUtils.tokenIdToAcronym(baseAsset)}";
 
@@ -76,15 +71,16 @@ abstract class OrderEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        orderId,
-        mainAcc,
-        amount,
-        price,
-        orderSide,
-        orderType,
+        id,
         timestamp,
+        mainAcc,
         baseAsset,
         quoteAsset,
-        status,
+        orderId,
+        orderSide,
+        orderType,
+        price,
+        amount,
+        fee,
       ];
 }

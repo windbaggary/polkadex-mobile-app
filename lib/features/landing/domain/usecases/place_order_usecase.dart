@@ -17,8 +17,8 @@ class PlaceOrderUseCase {
     required String quoteAsset,
     required EnumOrderTypes orderType,
     required EnumBuySell orderSide,
-    required double price,
-    required double quantity,
+    required String price,
+    required String amount,
     required String address,
     required String signature,
   }) async {
@@ -29,7 +29,7 @@ class PlaceOrderUseCase {
       orderType,
       orderSide,
       price,
-      quantity,
+      amount,
       address,
       signature,
     );

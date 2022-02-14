@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/landing/data/models/fee_model.dart';
 import 'package:polkadex/features/landing/data/models/order_model.dart';
 import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
@@ -19,8 +20,8 @@ void main() {
   late String quoteAsset;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
-  late double quantity;
-  late double price;
+  late String amount;
+  late String price;
   late OrderEntity order;
   late String address;
   late String signature;
@@ -37,20 +38,24 @@ void main() {
     quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
-    quantity = 100.0;
-    price = 50.0;
+    amount = '100.0';
+    price = '50.0';
     address = 'test';
     signature = 'test';
     order = OrderModel(
-      uuid: 'abcd',
-      type: orderSide,
-      amount: quantity.toString(),
-      price: price.toString(),
-      dateTime: DateTime.now(),
-      amountCoin: baseAsset,
-      priceCoin: quoteAsset,
+      orderId: '0',
+      mainAcc: address,
+      amount: amount,
+      price: price,
+      orderSide: orderSide,
       orderType: orderType,
-      tokenPairName: '$baseAsset/$quoteAsset',
+      timestamp: DateTime.now(),
+      baseAsset: baseAsset,
+      quoteAsset: quoteAsset,
+      status: 'Open',
+      filledQty: '0.0',
+      fee: FeeModel(currency: baseAsset.toString(), cost: '0'),
+      trades: [],
     );
   });
 
@@ -71,13 +76,13 @@ void main() {
         build: () {
           when(
             () => _mockPlaceOrderUsecase(
-              price: any(named: 'price'),
-              orderType: any(named: 'orderType'),
-              quoteAsset: any(named: 'quoteAsset'),
               nonce: any(named: 'nonce'),
-              orderSide: any(named: 'orderSide'),
-              quantity: any(named: 'quantity'),
               baseAsset: any(named: 'baseAsset'),
+              quoteAsset: any(named: 'quoteAsset'),
+              orderType: any(named: 'orderType'),
+              orderSide: any(named: 'orderSide'),
+              price: any(named: 'price'),
+              amount: any(named: 'amount'),
               address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
@@ -94,7 +99,7 @@ void main() {
             orderType: orderType,
             orderSide: orderSide,
             price: price,
-            quantity: quantity,
+            amount: amount,
             address: address,
             signature: signature,
           );
@@ -110,13 +115,13 @@ void main() {
         build: () {
           when(
             () => _mockPlaceOrderUsecase(
-              price: any(named: 'price'),
-              orderType: any(named: 'orderType'),
-              quoteAsset: any(named: 'quoteAsset'),
               nonce: any(named: 'nonce'),
-              orderSide: any(named: 'orderSide'),
-              quantity: any(named: 'quantity'),
               baseAsset: any(named: 'baseAsset'),
+              quoteAsset: any(named: 'quoteAsset'),
+              orderType: any(named: 'orderType'),
+              orderSide: any(named: 'orderSide'),
+              price: any(named: 'price'),
+              amount: any(named: 'amount'),
               address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
@@ -127,15 +132,16 @@ void main() {
         },
         act: (cubit) async {
           await cubit.placeOrder(
-              nonce: nonce,
-              baseAsset: baseAsset,
-              quoteAsset: quoteAsset,
-              orderType: orderType,
-              orderSide: orderSide,
-              price: price,
-              quantity: quantity,
-              address: address,
-              signature: signature);
+            nonce: nonce,
+            baseAsset: baseAsset,
+            quoteAsset: quoteAsset,
+            orderType: orderType,
+            orderSide: orderSide,
+            price: price,
+            amount: amount,
+            address: address,
+            signature: signature,
+          );
         },
         expect: () => [
           isA<PlaceOrderLoading>(),

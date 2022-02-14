@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/data/datasources/order_remote_datasource.dart';
+import 'package:polkadex/features/landing/data/models/fee_model.dart';
 import 'package:polkadex/features/landing/data/models/order_model.dart';
 import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
@@ -21,8 +21,8 @@ class OrderRepository implements IOrderRepository {
     String quoteAsset,
     EnumOrderTypes orderType,
     EnumBuySell orderSide,
-    double price,
-    double quantity,
+    String price,
+    String amount,
     String address,
     String signature,
   ) async {
@@ -34,25 +34,29 @@ class OrderRepository implements IOrderRepository {
         orderType,
         orderSide,
         price,
-        quantity,
+        amount,
         address,
         signature,
-      );
-      final newOrder = OrderModel(
-        //uuid will be a random string since we are working with mocks for now
-        uuid: UniqueKey().toString(),
-        type: orderSide,
-        amount: quantity.toString(),
-        price: price.toString(),
-        dateTime: DateTime.now(),
-        amountCoin: baseAsset.toString(),
-        priceCoin: quoteAsset.toString(),
-        orderType: orderType,
-        tokenPairName: '$baseAsset/$quoteAsset',
       );
       final Map<String, dynamic> body = jsonDecode(result.body);
 
       if (result.statusCode == 200 && body.containsKey('FineWithMessage')) {
+        final newOrder = OrderModel(
+          orderId: body['FineWithMessage']['data'],
+          mainAcc: address,
+          amount: amount,
+          price: price,
+          orderSide: orderSide,
+          orderType: orderType,
+          timestamp: DateTime.now(),
+          baseAsset: baseAsset.toString(),
+          quoteAsset: quoteAsset.toString(),
+          status: orderType == EnumOrderTypes.market ? 'Closed' : 'Open',
+          filledQty: orderType == EnumOrderTypes.market ? amount : '0.0',
+          fee: FeeModel(currency: baseAsset.toString(), cost: '0'),
+          trades: [],
+        );
+
         return Right(newOrder);
       } else {
         return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
@@ -65,17 +69,15 @@ class OrderRepository implements IOrderRepository {
   @override
   Future<Either<ApiError, String>> cancelOrder(
     int nonce,
-    String baseAsset,
-    String quoteAsset,
-    String orderUuid,
+    String address,
+    String orderId,
     String signature,
   ) async {
     try {
       final result = await _orderRemoteDatasource.cancelOrder(
         nonce,
-        baseAsset,
-        quoteAsset,
-        orderUuid,
+        address,
+        int.parse(orderId),
         signature,
       );
       final Map<String, dynamic> body = jsonDecode(result.body);

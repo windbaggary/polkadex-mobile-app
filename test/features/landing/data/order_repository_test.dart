@@ -18,8 +18,8 @@ void main() {
   late String quoteAsset;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
-  late double quantity;
-  late double price;
+  late String amount;
+  late String price;
   late String address;
   late String signature;
 
@@ -31,8 +31,8 @@ void main() {
     quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
-    quantity = 100.0;
-    price = 50.0;
+    amount = "100.0";
+    price = "50.0";
     address = 'test';
     signature = 'test';
   });
@@ -64,7 +64,7 @@ void main() {
         orderType,
         orderSide,
         price,
-        quantity,
+        amount,
         address,
         signature,
       );
@@ -77,7 +77,7 @@ void main() {
           orderType,
           orderSide,
           price,
-          quantity,
+          amount,
           address,
           signature)).called(1);
       verifyNoMoreInteractions(dataSource);
@@ -97,7 +97,7 @@ void main() {
         orderType,
         orderSide,
         price,
-        quantity,
+        amount,
         address,
         signature,
       );
@@ -110,7 +110,7 @@ void main() {
           orderType,
           orderSide,
           price,
-          quantity,
+          amount,
           address,
           signature)).called(1);
       verifyNoMoreInteractions(dataSource);

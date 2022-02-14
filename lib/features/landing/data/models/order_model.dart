@@ -1,54 +1,64 @@
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/landing/data/models/fee_model.dart';
+import 'package:polkadex/features/landing/data/models/trade_model.dart';
 import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
+import 'package:polkadex/features/landing/domain/entities/fee_entity.dart';
+import 'package:polkadex/common/utils/string_utils.dart';
+import 'package:polkadex/features/landing/domain/entities/trade_entity.dart';
 
 class OrderModel extends OrderEntity {
   const OrderModel({
-    required String uuid,
-    required EnumBuySell type,
+    required String orderId,
+    required String mainAcc,
     required String amount,
     required String price,
-    required DateTime dateTime,
-    required String amountCoin,
-    required String priceCoin,
-    required EnumOrderTypes orderType,
-    required String tokenPairName,
+    required EnumBuySell? orderSide,
+    required EnumOrderTypes? orderType,
+    required DateTime timestamp,
+    required String baseAsset,
+    required String quoteAsset,
+    required String status,
+    required String filledQty,
+    required FeeEntity fee,
+    required List<TradeEntity> trades,
   }) : super(
-          uuid: uuid,
-          type: type,
+          orderId: orderId,
+          mainAcc: mainAcc,
           amount: amount,
           price: price,
-          dateTime: dateTime,
-          amountCoin: amountCoin,
-          priceCoin: priceCoin,
+          orderSide: orderSide,
           orderType: orderType,
-          tokenPairName: tokenPairName,
+          timestamp: timestamp,
+          baseAsset: baseAsset,
+          quoteAsset: quoteAsset,
+          status: status,
+          filledQty: filledQty,
+          fee: fee,
+          trades: trades,
         );
 
   factory OrderModel.fromJson(Map<String, dynamic> map) {
+    final listTrades = List<TradeEntity>.generate(
+      map['trades'].length,
+      (index) => TradeModel.fromJson(map['trades'][index]),
+    ).toList();
+
     return OrderModel(
-      uuid: map['uuid'],
-      type: map['type'],
+      orderId: map['order_id'],
+      mainAcc: map['main_acc'],
       amount: map['amount'],
       price: map['price'],
-      dateTime: map['dateTime'],
-      amountCoin: map['amountCoin'],
-      priceCoin: map['priceCoin'],
-      orderType: map['orderType'],
-      tokenPairName: map['tokenPairName'],
+      orderSide: StringUtils.enumFromString<EnumBuySell>(
+          EnumBuySell.values, map['order_side']),
+      orderType: StringUtils.enumFromString<EnumOrderTypes>(
+          EnumOrderTypes.values, map['order_type']),
+      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
+      baseAsset: map['base_asset'].toString(),
+      quoteAsset: map['quote_asset'].toString(),
+      status: map['status'],
+      filledQty: map['filled_qty'],
+      fee: FeeModel.fromJson(map['fee']),
+      trades: listTrades,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'uuid': uuid,
-      'type': type,
-      'amount': amount,
-      'price': price,
-      'dateTime': dateTime,
-      'amountCoin': amountCoin,
-      'priceCoin': priceCoin,
-      'orderType': orderType,
-      'tokenPairName': tokenPairName,
-    };
   }
 }

@@ -4,9 +4,11 @@ import 'package:polkadex/common/widgets/build_methods.dart';
 
 class PolkadexErrorRefreshWidget extends StatelessWidget {
   const PolkadexErrorRefreshWidget({
+    this.textSize = 22,
     this.onRefresh,
   });
 
+  final double textSize;
   final Future<void> Function()? onRefresh;
 
   @override
@@ -25,11 +27,11 @@ class PolkadexErrorRefreshWidget extends StatelessWidget {
               Icon(
                 Icons.refresh,
                 color: Colors.white,
-                size: 26,
+                size: textSize + 4,
               ),
               Text(
                 'Refresh',
-                style: tsS22W600CFF,
+                style: tsS22W600CFF.copyWith(fontSize: textSize),
               ),
             ],
           ),

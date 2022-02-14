@@ -16,15 +16,15 @@ class ListOrdersError extends ListOrdersState {}
 class ListOrdersLoaded extends ListOrdersState {
   const ListOrdersLoaded({
     required this.openOrders,
-    required this.orderUuidsLoading,
+    required this.orderIdsLoading,
   });
 
   final List<OrderEntity> openOrders;
-  final List<String> orderUuidsLoading;
+  final List<String> orderIdsLoading;
 
   @override
   List<Object> get props => [
         openOrders,
-        orderUuidsLoading,
+        orderIdsLoading,
       ];
 }

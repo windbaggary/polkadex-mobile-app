@@ -52,8 +52,8 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     required String quoteAsset,
     required EnumOrderTypes orderType,
     required EnumBuySell orderSide,
-    required double price,
-    required double quantity,
+    required String price,
+    required String amount,
     required String address,
     required String signature,
   }) async {
@@ -69,7 +69,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
         orderType: orderType,
         orderSide: orderSide,
         price: price,
-        quantity: quantity,
+        amount: amount,
         address: address,
         signature: signature);
 
