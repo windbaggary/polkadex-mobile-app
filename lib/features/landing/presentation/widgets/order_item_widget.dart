@@ -5,6 +5,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
 
 class OrderItemWidget extends StatelessWidget {
   const OrderItemWidget({
@@ -57,12 +58,12 @@ class OrderItemWidget extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     margin: const EdgeInsets.only(right: 9),
                     child: Text(
-                      'Limit',
+                      order.iOrderTypeName,
                       style: tsS16W500CFF,
                     ),
                   ),
                   Text(
-                    'DOT/BTC',
+                    '${TokenUtils.tokenIdToAcronym(order.baseAsset)}/${TokenUtils.tokenIdToAcronym(order.quoteAsset)}',
                     style: tsS15W600CFF,
                   ),
                   Spacer(),

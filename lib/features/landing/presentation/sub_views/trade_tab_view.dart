@@ -80,15 +80,11 @@ class _TradeTabViewState extends State<TradeTabView>
                 _ThisBuySellWidget(
                   key: _keyBuySellWidget,
                 ),
-                OrderBookWidget(
-                  amountTokenId: context
-                      .read<TradeTabCoinProvider>()
-                      .tokenCoin
-                      .pairTokenId,
-                  priceTokenId: context
-                      .read<TradeTabCoinProvider>()
-                      .tokenCoin
-                      .baseTokenId,
+                Consumer<TradeTabCoinProvider>(
+                  builder: (context, provider, _) => OrderBookWidget(
+                    amountTokenId: provider.tokenCoin.pairTokenId,
+                    priceTokenId: provider.tokenCoin.baseTokenId,
+                  ),
                 ),
               ],
             ),
@@ -209,11 +205,11 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                               tabs: <Tab>[
                                 Tab(
                                   text:
-                                      'Buy ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.pairTokenId)}',
+                                      'Buy ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
                                 ),
                                 Tab(
                                   text:
-                                      'Sell ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.pairTokenId)}',
+                                      'Sell ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
                                 ),
                               ],
                               controller: _ThisInheritedWidget.of(context)

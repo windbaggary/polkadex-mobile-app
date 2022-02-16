@@ -224,14 +224,14 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                               ?.amountController,
                           onChanged: (amount) =>
                               _onAmountChanged(amount, context),
-                          tokenId: widget.rightAsset,
+                          tokenId: widget.leftAsset,
                           hintText: 'Amount',
                         )),
                     OrderQuantityWidget(
                       controller:
                           _ThisInheritedWidget.of(context)?.priceController,
                       onChanged: (price) => _onPriceChanged(price, context),
-                      tokenId: widget.leftAsset,
+                      tokenId: widget.rightAsset,
                       hintText: 'Price',
                     ),
                     _ThisTotalWidget(),
@@ -260,7 +260,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                               padding: EdgeInsets.symmetric(
                                   vertical: 14, horizontal: 64),
                               label:
-                                  '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(widget.rightAsset)}',
+                                  '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(widget.leftAsset)}',
                               enabled: state is! PlaceOrderNotValid,
                               onTap: () => state is PlaceOrderValid
                                   ? tapFunction(
@@ -318,14 +318,10 @@ class BuyDotWidgetState extends State<BuyDotWidget>
 
   void _onAmountChanged(String val, BuildContext context) {
     try {
-      final double? amount = double.tryParse(val);
-      final double? price = double.tryParse(
-          _ThisInheritedWidget.of(context)!.priceController.text);
-
-      if (amount == null || price == null) {
-        _ThisInheritedWidget.of(context)?.progressNotifier.value = 0.0;
-        return;
-      }
+      final double amount = double.tryParse(val) ?? 0.0;
+      final double price = double.tryParse(
+              _ThisInheritedWidget.of(context)!.priceController.text) ??
+          0.0;
 
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
           (amount * price) / _ThisInheritedWidget.of(context)!.walletBalance;
@@ -342,14 +338,10 @@ class BuyDotWidgetState extends State<BuyDotWidget>
 
   void _onPriceChanged(String val, BuildContext context) {
     try {
-      final double? amount = double.tryParse(
-          _ThisInheritedWidget.of(context)!.amountController.text);
-      final double? price = double.tryParse(val);
-
-      if (amount == null || price == null) {
-        _ThisInheritedWidget.of(context)?.progressNotifier.value = 0.0;
-        return;
-      }
+      final double amount = double.tryParse(
+              _ThisInheritedWidget.of(context)!.amountController.text) ??
+          0.0;
+      final double price = double.tryParse(val) ?? 0.0;
 
       _ThisInheritedWidget.of(context)?.progressNotifier.value =
           ((amount * price) / _ThisInheritedWidget.of(context)!.walletBalance);
