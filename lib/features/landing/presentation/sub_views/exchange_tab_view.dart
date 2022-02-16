@@ -534,8 +534,8 @@ class _ThisListItemWidget extends StatelessWidget {
                               style: tsS15W500CFF,
                             ),
                             TextSpan(
-                              text: TokenUtils.tokenIdToAcronym(
-                                  model.baseTokenId),
+                              text:
+                                  '/${TokenUtils.tokenIdToAcronym(model.pairTokenId)}',
                               style: tsS11W400CABB2BC,
                             ),
                           ])),
