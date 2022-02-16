@@ -1,4 +1,4 @@
-import 'package:polkadex/features/landing/domain/entities/fee_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
 
 class FeeModel extends FeeEntity {
   const FeeModel({

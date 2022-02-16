@@ -12,7 +12,7 @@ import 'package:polkadex/features/app_settings_info/screens/app_settings_securit
 import 'package:polkadex/features/app_settings_info/screens/my_account_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/privacy_policy_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/terms_conditions_screen.dart';
-import 'package:polkadex/features/coin/presentation/screens/balance_coin_preview_screen.dart';
+import 'package:polkadex/features/coin/presentation/screens/balance_coin_screen.dart';
 import 'package:polkadex/features/coin/presentation/screens/balance_deposit_screen_1.dart';
 import 'package:polkadex/features/coin/presentation/screens/balance_summary_screen.dart';
 import 'package:polkadex/features/coin/presentation/screens/coin_withdraw_screen.dart';
@@ -216,7 +216,7 @@ abstract class Routes {
                   value:
                       balanceCoinArguments['orderbookCubit'] as OrderbookCubit)
             ],
-            child: BalanceCoinPreviewScreen(
+            child: BalanceCoinScreen(
               tokenId: balanceCoinArguments['tokenId'] as String,
             ),
           );

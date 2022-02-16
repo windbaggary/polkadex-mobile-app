@@ -1,10 +1,10 @@
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/data/models/fee_model.dart';
-import 'package:polkadex/features/landing/data/models/trade_model.dart';
-import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
-import 'package:polkadex/features/landing/domain/entities/fee_entity.dart';
+import 'package:polkadex/common/orders/data/models/fee_model.dart';
+import 'package:polkadex/common/orders/data/models/trade_model.dart';
+import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
-import 'package:polkadex/features/landing/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/trade_entity.dart';
 
 class OrderModel extends OrderEntity {
   const OrderModel({

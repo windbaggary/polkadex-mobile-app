@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/domain/entities/fee_entity.dart';
-import 'package:polkadex/features/landing/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/trade_entity.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 
 abstract class OrderEntity extends Equatable {
@@ -70,7 +70,8 @@ abstract class OrderEntity extends Equatable {
     }
   }
 
-  String get iTokenPairName => 'tokenPairName';
+  String get iTokenPairName =>
+      "${TokenUtils.tokenIdToAcronym(baseAsset)}/${TokenUtils.tokenIdToAcronym(quoteAsset)}";
 
   EnumOrderTypes? get iEnumOrderType => orderType;
 

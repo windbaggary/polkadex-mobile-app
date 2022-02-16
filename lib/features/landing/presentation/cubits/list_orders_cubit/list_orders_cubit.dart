@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
-import 'package:polkadex/features/landing/domain/usecases/cancel_order_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_open_orders.dart';
+import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
+import 'package:polkadex/common/orders/domain/usecases/get_open_orders.dart';
 
 part 'list_orders_state.dart';
 

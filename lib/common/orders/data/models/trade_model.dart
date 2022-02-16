@@ -1,7 +1,7 @@
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/data/models/fee_model.dart';
-import 'package:polkadex/features/landing/domain/entities/trade_entity.dart';
-import 'package:polkadex/features/landing/domain/entities/fee_entity.dart';
+import 'package:polkadex/common/orders/data/models/fee_model.dart';
+import 'package:polkadex/common/orders/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
 
 class TradeModel extends TradeEntity {
@@ -34,13 +34,13 @@ class TradeModel extends TradeEntity {
   factory TradeModel.fromJson(Map<String, dynamic> map) {
     return TradeModel(
       id: map['id'],
-      timestamp: map['timestamp'],
+      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
       mainAcc: map['main_acc'],
-      baseAsset: map['base_asset'],
-      quoteAsset: map['quote_asset'],
-      orderId: map['orderId'],
+      baseAsset: map['base_asset'].toString(),
+      quoteAsset: map['quote_asset'].toString(),
+      orderId: map['order_id'],
       orderSide: StringUtils.enumFromString<EnumBuySell>(
-          EnumBuySell.values, map['base_asset']),
+          EnumBuySell.values, map['order_side']),
       orderType: StringUtils.enumFromString<EnumOrderTypes>(
           EnumOrderTypes.values, map['order_type']),
       price: map['price'],

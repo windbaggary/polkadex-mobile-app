@@ -4,7 +4,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 
 class OrderItemWidget extends StatelessWidget {

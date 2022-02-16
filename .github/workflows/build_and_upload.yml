@@ -5,7 +5,6 @@ on:
     branches: [main]
   pull_request:
     branches: [develop]
-    types: [ready_for_review]
 
 env:
   PROPERTIES_FILE_PATH: "android/key.properties"
@@ -55,10 +54,15 @@ jobs:
         run: flutter build apk
       - name: Build iOS App
         run: flutter build ios --no-codesign
-      - name: Upload .apk and .ipa to artifacts
+      - name: Upload .ipa to artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: app-builds
+          name: app-builds-ios
+          path: |
+            build/ios/iphoneos/*.app
+      - name: Upload .apk to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-builds-apk
           path: |
             build/app/outputs/apk/release/*.apk
-            build/ios/iphoneos/*.app

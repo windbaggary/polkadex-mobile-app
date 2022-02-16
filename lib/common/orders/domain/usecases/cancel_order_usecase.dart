@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
 
 class CancelOrderUseCase {
   CancelOrderUseCase({

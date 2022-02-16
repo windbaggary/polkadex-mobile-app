@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
-import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
 
 class PlaceOrderUseCase {
   PlaceOrderUseCase({

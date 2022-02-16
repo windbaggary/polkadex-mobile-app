@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 
 abstract class IOrderRepository {
   Future<Either<ApiError, OrderEntity>> placeOrder(
@@ -22,6 +22,10 @@ abstract class IOrderRepository {
     String signature,
   );
   Future<Either<ApiError, List<OrderEntity>>> fetchOpenOrders(
+    String address,
+    String signature,
+  );
+  Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
     String address,
     String signature,
   );

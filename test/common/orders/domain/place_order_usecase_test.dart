@@ -3,11 +3,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/data/models/fee_model.dart';
-import 'package:polkadex/features/landing/data/models/order_model.dart';
-import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
-import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
-import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
+import 'package:polkadex/common/orders/data/models/fee_model.dart';
+import 'package:polkadex/common/orders/data/models/order_model.dart';
+import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
 
 class _OrderRepositoryMock extends Mock implements IOrderRepository {}
 
@@ -61,7 +61,7 @@ void main() {
 
   group('PlaceOrderUsecase tests', () {
     test(
-      'must place an order successfully',
+      'must place an orders successfully',
       () async {
         // arrange
         when(() => _repository.placeOrder(
@@ -98,7 +98,7 @@ void main() {
     );
 
     test(
-      'must fail to place an order',
+      'must fail to place an orders',
       () async {
         // arrange
         when(() => _repository.placeOrder(

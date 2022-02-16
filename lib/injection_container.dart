@@ -9,18 +9,19 @@ import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dar
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
 import 'package:polkadex/features/coin/domain/repositories/icoin_repository.dart';
+import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
-import 'package:polkadex/features/landing/data/datasources/order_remote_datasource.dart';
+import 'package:polkadex/common/orders/data/datasources/order_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/repositories/balance_repository.dart';
-import 'package:polkadex/features/landing/data/repositories/order_repository.dart';
+import 'package:polkadex/common/orders/data/repositories/order_repository.dart';
 import 'package:polkadex/features/landing/domain/repositories/ibalance_repository.dart';
-import 'package:polkadex/features/landing/domain/repositories/iorder_repository.dart';
-import 'package:polkadex/features/landing/domain/usecases/cancel_order_usecase.dart';
+import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_open_orders.dart';
-import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
+import 'package:polkadex/common/orders/domain/usecases/get_open_orders.dart';
+import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
@@ -43,6 +44,7 @@ import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dar
 import 'common/graph/data/datasources/graph_remote_datasource.dart';
 import 'common/orderbook/data/repositories/orderbook_repository.dart';
 import 'common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
+import 'common/orders/domain/usecases/get_orders_usecase.dart';
 import 'features/coin/domain/usecases/withdraw_usecase.dart';
 import 'features/coin/presentation/cubits/withdraw_cubit.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
@@ -318,6 +320,18 @@ Future<void> init() async {
     () => OrderbookCubit(
       fetchOrderbookDataUseCase: dependency(),
       fetchOrderbookLiveDataUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => GetOrdersUseCase(
+      orderRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => OrderHistoryCubit(
+      getOrdersUseCase: dependency(),
     ),
   );
 }

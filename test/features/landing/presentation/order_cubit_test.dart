@@ -3,10 +3,10 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/landing/data/models/fee_model.dart';
-import 'package:polkadex/features/landing/data/models/order_model.dart';
-import 'package:polkadex/features/landing/domain/entities/order_entity.dart';
-import 'package:polkadex/features/landing/domain/usecases/place_order_usecase.dart';
+import 'package:polkadex/common/orders/data/models/fee_model.dart';
+import 'package:polkadex/common/orders/data/models/order_model.dart';
+import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:test/test.dart';
 
