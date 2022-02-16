@@ -13,8 +13,8 @@ env:
 
 jobs:
   build:
-    name: Build Polkadex App for Android and iOS
-    runs-on: macos-latest
+    name: Build Polkadex App for Android
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -52,14 +52,6 @@ jobs:
         run: echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > android/app/key.jks
       - name: Build Android App
         run: flutter build apk
-      - name: Build iOS App
-        run: flutter build ios --no-codesign
-      - name: Upload .ipa to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-builds-ios
-          path: |
-            build/ios/iphoneos/*.app
       - name: Upload .apk to artifacts
         uses: actions/upload-artifact@v2
         with:
