@@ -206,33 +206,33 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                       ),
                     ),
                     ValueListenableBuilder<EnumOrderTypes>(
-                        valueListenable: _ThisInheritedWidget.of(context)
-                                ?.orderTypeNotifier ??
-                            ValueNotifier(EnumOrderTypes.market),
-                        builder: (context, orderType, child) {
-                          Widget contentChild = child!;
-                          // if (orderType == EnumOrderTypes.Market) {
-                          //   contentChild = Container();
-                          // }
-                          return AnimatedSize(
-                            duration: AppConfigs.animDurationSmall,
-                            child: contentChild,
-                          );
-                        },
-                        child: OrderQuantityWidget(
-                          controller: _ThisInheritedWidget.of(context)
-                              ?.amountController,
-                          onChanged: (amount) =>
-                              _onAmountChanged(amount, context),
-                          tokenId: widget.leftAsset,
-                          hintText: 'Amount',
-                        )),
+                      valueListenable:
+                          _ThisInheritedWidget.of(context)?.orderTypeNotifier ??
+                              ValueNotifier(EnumOrderTypes.market),
+                      builder: (context, orderType, child) {
+                        Widget contentChild = child!;
+                        // if (orderType == EnumOrderTypes.Market) {
+                        //   contentChild = Container();
+                        // }
+                        return AnimatedSize(
+                          duration: AppConfigs.animDurationSmall,
+                          child: contentChild,
+                        );
+                      },
+                      child: OrderQuantityWidget(
+                        controller:
+                            _ThisInheritedWidget.of(context)?.priceController,
+                        onChanged: (price) => _onPriceChanged(price, context),
+                        tokenId: widget.rightAsset,
+                        hintText: 'Price',
+                      ),
+                    ),
                     OrderQuantityWidget(
                       controller:
-                          _ThisInheritedWidget.of(context)?.priceController,
-                      onChanged: (price) => _onPriceChanged(price, context),
-                      tokenId: widget.rightAsset,
-                      hintText: 'Price',
+                          _ThisInheritedWidget.of(context)?.amountController,
+                      onChanged: (amount) => _onAmountChanged(amount, context),
+                      tokenId: widget.leftAsset,
+                      hintText: 'Amount',
                     ),
                     _ThisTotalWidget(),
                     Padding(
