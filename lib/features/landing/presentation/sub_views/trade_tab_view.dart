@@ -8,6 +8,7 @@ import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dar
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
@@ -21,6 +22,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 /// The tab view of trade for Homescreen
@@ -69,24 +71,51 @@ class _TradeTabViewState extends State<TradeTabView>
               ?.buySellTabController
               .animateTo(context.read<TradeTabViewProvider>().orderSideIndex);
 
-          return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            controller: _scrollController,
-            padding: const EdgeInsets.only(bottom: 64),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _ThisTopRowSelectWidget(),
-                _ThisBuySellWidget(
-                  key: _keyBuySellWidget,
-                ),
-                Consumer<TradeTabCoinProvider>(
-                  builder: (context, provider, _) => OrderBookWidget(
-                    amountTokenId: provider.tokenCoin.pairTokenId,
-                    priceTokenId: provider.tokenCoin.baseTokenId,
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider<PlaceOrderCubit>(
+                create: (_) => dependency<PlaceOrderCubit>(),
+              ),
+              BlocProvider<ListOrdersCubit>(
+                create: (_) => dependency<ListOrdersCubit>()
+                  ..getOpenOrders(
+                    context.read<AccountCubit>().accountAddress,
+                    context.read<AccountCubit>().accountSignature,
                   ),
-                ),
-              ],
+              ),
+              BlocProvider<TickerCubit>(
+                create: (_) => dependency<TickerCubit>()
+                  ..getLastTicker(
+                    leftTokenId: context
+                        .read<TradeTabCoinProvider>()
+                        .tokenCoin
+                        .baseTokenId,
+                    rightTokenId: context
+                        .read<TradeTabCoinProvider>()
+                        .tokenCoin
+                        .pairTokenId,
+                  ),
+              ),
+            ],
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              controller: _scrollController,
+              padding: const EdgeInsets.only(bottom: 64),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _ThisTopRowSelectWidget(),
+                  _ThisBuySellWidget(
+                    key: _keyBuySellWidget,
+                  ),
+                  Consumer<TradeTabCoinProvider>(
+                    builder: (context, provider, _) => OrderBookWidget(
+                      amountTokenId: provider.tokenCoin.pairTokenId,
+                      priceTokenId: provider.tokenCoin.baseTokenId,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -219,7 +248,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                         ),
                       ),
                       InkWell(
-                        onTap: () => _onTapOrderType(context),
+                        onTap: () => _onTapOrderType(context, coinProvider),
                         child: Row(
                           children: [
                             Padding(
@@ -386,11 +415,23 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
   }
 
   /// The callback listener for otder type selection
-  void _onTapOrderType(BuildContext context) {
+  void _onTapOrderType(
+    BuildContext context,
+    TradeTabCoinProvider coinProvider,
+  ) {
     showOrderTypeDialog(
       context: context,
       selectedIndex: _orderTypeSelNotifier.value,
-      onItemSelected: (index) => _orderTypeSelNotifier.value = index,
+      onItemSelected: (index) {
+        _orderTypeSelNotifier.value = index;
+
+        if (index == EnumOrderTypes.market) {
+          context.read<TickerCubit>().getLastTicker(
+                leftTokenId: coinProvider.tokenCoin.baseTokenId,
+                rightTokenId: coinProvider.tokenCoin.pairTokenId,
+              );
+        }
+      },
     );
   }
 
@@ -588,6 +629,11 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
         final provider = context.read<TradeTabCoinProvider>();
         provider.tokenCoin = model.tokenModel;
         provider.pairCoin = model.pairModel;
+
+        context.read<TickerCubit>().getLastTicker(
+              leftTokenId: model.tokenModel.baseTokenId,
+              rightTokenId: model.tokenModel.pairTokenId,
+            );
       }
     });
   }

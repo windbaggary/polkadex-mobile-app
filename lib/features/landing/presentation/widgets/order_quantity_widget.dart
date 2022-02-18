@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 class OrderQuantityWidget extends StatelessWidget {
   const OrderQuantityWidget({
@@ -9,12 +12,16 @@ class OrderQuantityWidget extends StatelessWidget {
     required this.tokenId,
     required this.controller,
     required this.onChanged,
+    this.isLoading = false,
+    this.onError,
   });
 
   final String hintText;
   final String tokenId;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
+  final bool isLoading;
+  final Future<void> Function()? onError;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +34,7 @@ class OrderQuantityWidget extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 8, 13, 8),
       child: Row(
         children: [
-          Expanded(
-            child: QuantityInputWidget(
-              hintText: hintText,
-              controller: controller,
-              onChanged: onChanged,
-            ),
-          ),
+          Expanded(child: _mainWidget()),
           Container(
             decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.15),
@@ -67,5 +68,36 @@ class OrderQuantityWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _mainWidget() {
+    if (onError != null) {
+      return Row(
+        children: [
+          PolkadexErrorRefreshWidget(
+            textSize: 16,
+            onRefresh: onError,
+          ),
+        ],
+      );
+    } else {
+      return isLoading
+          ? Shimmer.fromColors(
+              highlightColor: AppColors.color8BA1BE,
+              baseColor: AppColors.color2E303C,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black,
+                ),
+                child: Text('placeholder'),
+              ),
+            )
+          : QuantityInputWidget(
+              hintText: hintText,
+              controller: controller,
+              onChanged: onChanged,
+            );
+    }
   }
 }

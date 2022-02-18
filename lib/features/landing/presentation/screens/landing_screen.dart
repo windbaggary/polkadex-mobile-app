@@ -7,8 +7,6 @@ import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
-import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
-import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
@@ -398,16 +396,6 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
       builder: (context, selectedMenu, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider<PlaceOrderCubit>(
-              create: (_) => dependency<PlaceOrderCubit>(),
-            ),
-            BlocProvider<ListOrdersCubit>(
-              create: (_) => dependency<ListOrdersCubit>()
-                ..getOpenOrders(
-                  context.read<AccountCubit>().accountAddress,
-                  context.read<AccountCubit>().accountSignature,
-                ),
-            ),
             BlocProvider<BalanceCubit>(
               create: (_) => dependency<BalanceCubit>()
                 ..getBalance(
