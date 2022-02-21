@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/injection_container.dart';
 
 class AccountLocalDatasource {
@@ -100,10 +99,9 @@ class AccountLocalDatasource {
     return result;
   }
 
-  Future<Map<String, dynamic>> registerUser(
-      ImportedAccountEntity account) async {
+  Future<Map<String, dynamic>> registerUser(String address) async {
     final String _callRegister =
-        'polkadexWorker.register(keyring.getPair("${account.address}"), keyring.getPair("${account.address}"))';
+        'polkadexWorker.register(keyring.getPair("$address"), keyring.getPair("$address"))';
 
     final Map<String, dynamic> result =
         await dependency<WebViewRunner>().evalJavascript(_callRegister);

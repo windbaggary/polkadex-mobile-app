@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 
 part 'balance_state.dart';
 
@@ -9,12 +10,15 @@ class BalanceCubit extends Cubit<BalanceState> {
   BalanceCubit({
     required GetBalanceUseCase getBalanceUseCase,
     required TestDepositUseCase testDepositUseCase,
+    required RegisterUserUseCase registerUserUseCase,
   })  : _getBalanceUseCase = getBalanceUseCase,
         _testDepositUseCase = testDepositUseCase,
+        _registerUserUseCase = registerUserUseCase,
         super(BalanceInitial());
 
   final GetBalanceUseCase _getBalanceUseCase;
   final TestDepositUseCase _testDepositUseCase;
+  final RegisterUserUseCase _registerUserUseCase;
 
   Future<void> getBalance(String address, String signature) async {
     emit(BalanceLoading());
@@ -42,6 +46,8 @@ class BalanceCubit extends Cubit<BalanceState> {
     final previousState = state;
 
     emit(BalanceLoading());
+
+    await _registerUserUseCase(address: address);
 
     final result0 = await _testDepositUseCase(
       asset: 0,

@@ -268,6 +268,7 @@ Future<void> init() async {
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
       testDepositUseCase: dependency(),
+      registerUserUseCase: dependency(),
     ),
   );
 

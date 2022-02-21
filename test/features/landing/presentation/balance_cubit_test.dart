@@ -7,15 +7,19 @@ import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:test/test.dart';
 
 class _MockGetBalanceUsecase extends Mock implements GetBalanceUseCase {}
 
 class _MockTestDepositUsecase extends Mock implements TestDepositUseCase {}
 
+class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
+
 void main() {
   late _MockGetBalanceUsecase _mockGetBalanceUsecase;
   late _MockTestDepositUsecase _mockTestDepositUsecase;
+  late _MockRegisterUserUseCase _mockRegisterUserUseCase;
   late BalanceCubit cubit;
   late String address;
   late String signature;
@@ -24,10 +28,12 @@ void main() {
   setUp(() {
     _mockGetBalanceUsecase = _MockGetBalanceUsecase();
     _mockTestDepositUsecase = _MockTestDepositUsecase();
+    _mockRegisterUserUseCase = _MockRegisterUserUseCase();
 
     cubit = BalanceCubit(
       getBalanceUseCase: _mockGetBalanceUsecase,
       testDepositUseCase: _mockTestDepositUsecase,
+      registerUserUseCase: _mockRegisterUserUseCase,
     );
 
     address = 'addressTest';
@@ -111,6 +117,13 @@ void main() {
         'Test balance successful',
         build: () {
           when(
+            () => _mockRegisterUserUseCase(
+              address: any(named: 'address'),
+            ),
+          ).thenAnswer(
+            (_) async => 'test',
+          );
+          when(
             () => _mockGetBalanceUsecase(
               address: any(named: 'address'),
               signature: any(named: 'signature'),
@@ -158,6 +171,13 @@ void main() {
       blocTest<BalanceCubit, BalanceState>(
         'Test balance failed',
         build: () {
+          when(
+            () => _mockRegisterUserUseCase(
+              address: any(named: 'address'),
+            ),
+          ).thenAnswer(
+            (_) async => 'test',
+          );
           when(
             () => _mockGetBalanceUsecase(
               address: any(named: 'address'),

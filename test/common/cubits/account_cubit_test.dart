@@ -293,7 +293,7 @@ void main() {
           );
           when(
             () => _mockRegisterUserUseCase(
-              account: any(named: 'account'),
+              address: any(named: 'address'),
             ),
           ).thenAnswer(
             (_) async => 'test',
@@ -386,7 +386,7 @@ void main() {
           );
           when(
             () => _mockRegisterUserUseCase(
-              account: any(named: 'account'),
+              address: any(named: 'address'),
             ),
           ).thenAnswer(
             (_) async => 'test',
@@ -430,7 +430,7 @@ void main() {
           );
           when(
             () => _mockRegisterUserUseCase(
-              account: any(named: 'account'),
+              address: any(named: 'address'),
             ),
           ).thenAnswer(
             (_) async => 'test',

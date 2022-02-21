@@ -36,7 +36,7 @@ class BalanceRemoteDatasource {
         'payload': {
           'account': address,
           'asset': asset,
-          'amount': '100000.0',
+          'amount': '100.0',
         },
       }),
     );

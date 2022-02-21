@@ -122,7 +122,7 @@ class AccountCubit extends Cubit<AccountState> {
           biometricAccess: useBiometric,
         );
 
-        final signature = await _registerUserUseCase(account: acc);
+        final signature = await _registerUserUseCase(address: acc.address);
 
         if (signature != null) {
           acc = (acc as ImportedAccountModel).copyWith(signature: signature);

@@ -1,4 +1,3 @@
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 
 class RegisterUserUseCase {
@@ -8,7 +7,7 @@ class RegisterUserUseCase {
 
   final IAccountRepository _accountRepository;
 
-  Future<String?> call({required ImportedAccountEntity account}) async {
-    return await _accountRepository.register(account);
+  Future<String?> call({required String address}) async {
+    return await _accountRepository.register(address);
   }
 }
