@@ -110,7 +110,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                                       height: 16,
                                     ),
                                     Text(
-                                      'Please enter the 12-24 words in the correct order.',
+                                      'Please drag each of the 12-24 words to put them back in the correct order.',
                                       style: tsS18W400CFF,
                                     ),
                                     SizedBox(
