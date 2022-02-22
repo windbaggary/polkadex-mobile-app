@@ -9,6 +9,7 @@ class ImportedAccountEntity extends Equatable {
     required this.address,
     required this.meta,
     required this.name,
+    required this.biometricOnly,
     required this.biometricAccess,
     required this.signature,
   });
@@ -18,6 +19,7 @@ class ImportedAccountEntity extends Equatable {
   final String address;
   final MetaEntity meta;
   final String name;
+  final bool biometricOnly;
   final bool biometricAccess;
   final String signature;
 

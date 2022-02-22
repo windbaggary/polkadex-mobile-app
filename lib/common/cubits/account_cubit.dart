@@ -73,6 +73,14 @@ class AccountCubit extends Cubit<AccountState> {
         : false;
   }
 
+  bool get biometricOnly {
+    final currentState = state;
+
+    return currentState is AccountLoaded
+        ? currentState.account.biometricOnly
+        : true;
+  }
+
   Future<void> loadAccountData() async {
     final account = await _getAccountStorageUseCase();
 
@@ -107,7 +115,7 @@ class AccountCubit extends Cubit<AccountState> {
   }
 
   Future<void> saveAccount(List<String> mnemonicWords, String password,
-      String name, bool useBiometric) async {
+      String name, bool biometricOnly, bool useBiometric) async {
     final resultImport = await _importAccountUseCase(
       mnemonic: mnemonicWords.join(' '),
       password: password,
@@ -119,6 +127,7 @@ class AccountCubit extends Cubit<AccountState> {
         ImportedAccountEntity acc =
             (importedAcc as ImportedAccountModel).copyWith(
           name: name,
+          biometricOnly: biometricOnly,
           biometricAccess: useBiometric,
         );
 

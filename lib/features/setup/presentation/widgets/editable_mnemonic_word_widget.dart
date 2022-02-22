@@ -2,19 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
-class EditableMnemonicWordWidget extends StatelessWidget {
-  const EditableMnemonicWordWidget(
-      {required this.wordNumber,
-      this.initialText = '',
-      this.onChanged,
-      this.onTap,
-      this.controller});
+class EditableMnemonicWordWidget extends StatefulWidget {
+  EditableMnemonicWordWidget({
+    required this.wordNumber,
+    this.focusNode,
+    this.initialText = '',
+    this.onChanged,
+    this.onTap,
+    this.controller,
+  });
 
   final int wordNumber;
+  final FocusNode? focusNode;
   final String initialText;
   final Function(String)? onChanged;
   final VoidCallback? onTap;
   final TextEditingController? controller;
+
+  @override
+  State<EditableMnemonicWordWidget> createState() =>
+      _EditableMnemonicWordWidgetState();
+}
+
+class _EditableMnemonicWordWidgetState
+    extends State<EditableMnemonicWordWidget> {
+  String _previousValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +43,15 @@ class EditableMnemonicWordWidget extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              '$wordNumber',
+              '${widget.wordNumber}',
               style: tsS16W600CFF,
             ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: 12),
                 child: TextField(
-                  controller: controller,
+                  controller: widget.controller,
+                  focusNode: widget.focusNode,
                   decoration: InputDecoration(
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(
@@ -54,8 +67,15 @@ class EditableMnemonicWordWidget extends StatelessWidget {
                   style: tsS16W400CFF,
                   cursorWidth: 1,
                   cursorColor: AppColors.colorFFFFFF,
-                  onChanged: onChanged,
-                  onTap: onTap,
+                  onChanged: (newValue) {
+                    if (newValue != _previousValue &&
+                        widget.onChanged != null) {
+                      _previousValue = newValue;
+
+                      widget.onChanged!(newValue);
+                    }
+                  },
+                  onTap: widget.onTap,
                 ),
               ),
             )

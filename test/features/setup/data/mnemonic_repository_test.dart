@@ -55,6 +55,7 @@ void main() {
         address: "k9o1dxJxQE8Zwm5Fy",
         meta: tMeta,
         name: "",
+        biometricOnly: false,
         biometricAccess: false,
         signature: '');
   });

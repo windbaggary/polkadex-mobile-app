@@ -11,6 +11,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
     required String address,
     required MetaEntity meta,
     required String name,
+    required bool biometricOnly,
     required bool biometricAccess,
     required String signature,
   }) : super(
@@ -19,6 +20,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
           address: address,
           meta: meta,
           name: name,
+          biometricOnly: biometricOnly,
           biometricAccess: biometricAccess,
           signature: signature,
         );
@@ -30,6 +32,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
       address: map['address'],
       meta: MetaModel.fromJson(map['meta']),
       name: map['name'] ?? '',
+      biometricOnly: map['biometricOnly'] ?? false,
       biometricAccess: map['biometricAccess'] ?? false,
       signature: map['signature'] ?? '',
     );
@@ -42,6 +45,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
       'address': address,
       'meta': (meta as MetaModel).toJson(),
       'name': name,
+      'biometricOnly': biometricOnly,
       'biometricAccess': biometricAccess,
       'signature': signature
     };
@@ -53,6 +57,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
     String? address,
     MetaEntity? meta,
     String? name,
+    bool? biometricOnly,
     bool? biometricAccess,
     String? signature,
   }) {
@@ -62,6 +67,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
         address: address ?? this.address,
         meta: meta ?? this.meta,
         name: name ?? this.name,
+        biometricOnly: biometricOnly ?? this.biometricOnly,
         biometricAccess: biometricAccess ?? this.biometricAccess,
         signature: signature ?? this.signature);
   }

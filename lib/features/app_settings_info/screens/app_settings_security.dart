@@ -30,7 +30,9 @@ class AppSettingsSecurity extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (dependency.get<bool>(instanceName: 'isBiometricAvailable'))
+                if (dependency.get<bool>(
+                        instanceName: 'isBiometricAvailable') &&
+                    !context.read<AccountCubit>().biometricOnly)
                   Column(
                     children: [
                       SizedBox(height: 8),

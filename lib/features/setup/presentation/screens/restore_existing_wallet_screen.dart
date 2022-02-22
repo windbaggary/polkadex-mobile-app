@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
+import 'package:polkadex/features/setup/presentation/utils/import_wallet_utils.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/suggestions_widget.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,10 @@ import 'package:polkadex/features/setup/presentation/widgets/mnemonic_pages_inpu
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 
 class RestoreExistingWalletScreen extends StatefulWidget {
+  const RestoreExistingWalletScreen({required this.mnemonicLenght});
+
+  final int mnemonicLenght;
+
   @override
   _RestoreExistingWalletScreenState createState() =>
       _RestoreExistingWalletScreenState();
@@ -23,11 +28,9 @@ class _RestoreExistingWalletScreenState
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
   late PageController _mnemonicPageController;
+  late List<TextEditingController> _editControllers;
+  late List<FocusNode> _focusNodes;
 
-  final List<TextEditingController> _editControllers = List.generate(
-    24,
-    (_) => TextEditingController(),
-  );
   final int _itemsPerPage = 6;
   final Duration _transitionDuration = const Duration(milliseconds: 300);
   final Cubic _pageTransition = Curves.ease;
@@ -44,6 +47,15 @@ class _RestoreExistingWalletScreenState
     _mnemonicPageController = PageController(
         initialPage: 0,
         viewportFraction: (AppConfigs.size.width - 40) / AppConfigs.size.width);
+
+    _editControllers = List.generate(
+      widget.mnemonicLenght,
+      (_) => TextEditingController(),
+    );
+    _focusNodes = List.generate(
+      widget.mnemonicLenght,
+      (_) => FocusNode(),
+    );
 
     super.initState();
     Future.microtask(() => _animationController.forward());
@@ -148,13 +160,33 @@ class _RestoreExistingWalletScreenState
                                         height: 20,
                                       ),
                                       MnemonicPagesInputWidget(
-                                          pageController:
+                                        pageController: _mnemonicPageController,
+                                        currentPage: _currentPage,
+                                        itemsPerPage: _itemsPerPage,
+                                        pageCount:
+                                            ImportWalletUtils.pageMnemonicCount(
+                                          context,
+                                          provider,
+                                          _itemsPerPage,
+                                        ),
+                                        controllers: _editControllers,
+                                        focusNodes: _focusNodes,
+                                        onChanged: (wordIndex) {
+                                          ImportWalletUtils.editNextMnemonic(
+                                              wordIndex,
+                                              _itemsPerPage,
+                                              ImportWalletUtils
+                                                  .pageMnemonicCount(
+                                                context,
+                                                provider,
+                                                _itemsPerPage,
+                                              ),
+                                              _editControllers,
+                                              _focusNodes,
                                               _mnemonicPageController,
-                                          currentPage: _currentPage,
-                                          itemsPerPage: _itemsPerPage,
-                                          pageCount: _pageMnemonicCount(
-                                              context, provider),
-                                          controllers: _editControllers),
+                                              provider);
+                                        },
+                                      ),
                                       Padding(
                                         padding: EdgeInsets.only(
                                           left: 42,
@@ -166,6 +198,22 @@ class _RestoreExistingWalletScreenState
                                           suggestions:
                                               provider.suggestionsMnemonicWords,
                                           controllers: _editControllers,
+                                          focusNodes: _focusNodes,
+                                          onTapDown: (wordIndex) {
+                                            ImportWalletUtils.editNextMnemonic(
+                                                wordIndex,
+                                                _itemsPerPage,
+                                                ImportWalletUtils
+                                                    .pageMnemonicCount(
+                                                  context,
+                                                  provider,
+                                                  _itemsPerPage,
+                                                ),
+                                                _editControllers,
+                                                _focusNodes,
+                                                _mnemonicPageController,
+                                                provider);
+                                          },
                                         ),
                                       ),
                                     ],
@@ -285,11 +333,8 @@ class _RestoreExistingWalletScreenState
   }
 
   bool _isLastPage(BuildContext context, MnemonicProvider provider) {
-    return _currentPage.value + 1 >= _pageMnemonicCount(context, provider);
-  }
-
-  int _pageMnemonicCount(BuildContext context, MnemonicProvider provider) {
-    return (provider.mnemonicWords.length / _itemsPerPage).ceil();
+    return _currentPage.value + 1 >=
+        ImportWalletUtils.pageMnemonicCount(context, provider, _itemsPerPage);
   }
 
   bool _isInteger(double value) {

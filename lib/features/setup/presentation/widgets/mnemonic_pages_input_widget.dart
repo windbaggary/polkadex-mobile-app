@@ -10,6 +10,8 @@ class MnemonicPagesInputWidget extends StatelessWidget {
     required this.itemsPerPage,
     required this.pageCount,
     required this.controllers,
+    required this.focusNodes,
+    this.onChanged,
   });
 
   final PageController pageController;
@@ -17,6 +19,8 @@ class MnemonicPagesInputWidget extends StatelessWidget {
   final int itemsPerPage;
   final int pageCount;
   final List<TextEditingController> controllers;
+  final List<FocusNode> focusNodes;
+  final Function(int)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +54,16 @@ class MnemonicPagesInputWidget extends StatelessWidget {
                   onChanged: (newValue) {
                     provider.changeMnemonicWord(wordIndex, newValue);
                     provider.searchSuggestions(newValue);
+
+                    if (onChanged != null) {
+                      onChanged!(wordIndex);
+                    }
                   },
                   onTap: () {
                     provider.indexWordEdited = wordIndex;
                   },
                   controller: controllers[wordIndex],
+                  focusNode: focusNodes[wordIndex],
                 ),
               );
             },

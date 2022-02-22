@@ -89,6 +89,7 @@ void main() {
         encoding: tEncoding,
         address: "k9o1dxJxQE8Zwm5Fy",
         meta: tMeta,
+        biometricOnly: false,
         biometricAccess: false,
         name: 'test',
         signature: 'test');
@@ -97,6 +98,7 @@ void main() {
         encoding: tEncoding,
         address: "k9o1dxJxQE8Zwm5Fy",
         meta: tMeta,
+        biometricOnly: false,
         biometricAccess: true,
         name: 'test',
         signature: 'test');
@@ -308,7 +310,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false);
+          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false, false);
         },
         expect: () => [
           AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
@@ -406,7 +408,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false);
+          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false, false);
           await cubit.switchBiometricAccess();
         },
         expect: () => [
@@ -445,7 +447,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.saveAccount(tMnemonicWords, 'test', 'test', true);
+          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false, true);
           await cubit.switchBiometricAccess();
         },
         expect: () => [

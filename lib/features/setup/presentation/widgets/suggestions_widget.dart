@@ -8,10 +8,14 @@ class SuggestionsWidget extends StatelessWidget {
   const SuggestionsWidget({
     required this.suggestions,
     required this.controllers,
+    required this.focusNodes,
+    this.onTapDown,
   });
 
   final List<String> suggestions;
   final List<TextEditingController> controllers;
+  final List<FocusNode> focusNodes;
+  final Function(int)? onTapDown;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +37,17 @@ class SuggestionsWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 12),
                   child: GestureDetector(
                     onTapDown: (_) {
-                      final indexWordEdited =
-                          context.read<MnemonicProvider>().indexWordEdited;
+                      final provider = context.read<MnemonicProvider>();
+                      final indexWordEdited = provider.indexWordEdited;
 
                       if (indexWordEdited != null) {
                         controllers[indexWordEdited].text = suggestions[index];
-                        context.read<MnemonicProvider>().changeMnemonicWord(
+                        provider.changeMnemonicWord(
                             indexWordEdited, suggestions[index]);
+
+                        if (onTapDown != null) {
+                          onTapDown!(index);
+                        }
                       }
                     },
                     child: Container(
