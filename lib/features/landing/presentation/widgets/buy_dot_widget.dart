@@ -94,12 +94,12 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         builder: (context, buyOrSell, child) {
           switch (buyOrSell) {
             case EnumBuySell.buy:
-              _asset = TokenUtils.tokenIdToAcronym(widget.leftAsset);
-              _walletBalance = widget.leftBalance;
-              break;
-            case EnumBuySell.sell:
               _asset = TokenUtils.tokenIdToAcronym(widget.rightAsset);
               _walletBalance = widget.rightBalance;
+              break;
+            case EnumBuySell.sell:
+              _asset = TokenUtils.tokenIdToAcronym(widget.leftAsset);
+              _walletBalance = widget.leftBalance;
               break;
           }
 
@@ -205,8 +205,9 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                 : state.ticker.previousClose;
 
                             _priceController.text = newPrice;
-                            WidgetsBinding.instance?.addPostFrameCallback(
-                                (_) => _onPriceChanged(newPrice, context));
+                            WidgetsBinding.instance?.addPostFrameCallback((_) =>
+                                _onPriceAmountChanged(
+                                    context, newPrice, false));
                           }
 
                           return IgnorePointer(
@@ -215,7 +216,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                             child: OrderQuantityWidget(
                               controller: _priceController,
                               onChanged: (price) =>
-                                  _onPriceChanged(price, context),
+                                  _onPriceAmountChanged(context, price, false),
                               tokenId: widget.rightAsset,
                               hintText: 'Price',
                               isLoading: orderType == EnumOrderTypes.market &&
@@ -237,7 +238,11 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                 ),
                 OrderQuantityWidget(
                   controller: _amountController,
-                  onChanged: (amount) => _onAmountChanged(amount, context),
+                  onChanged: (amount) => _onPriceAmountChanged(
+                    context,
+                    amount,
+                    true,
+                  ),
                   tokenId: widget.leftAsset,
                   hintText: 'Amount',
                 ),
@@ -400,29 +405,28 @@ class BuyDotWidgetState extends State<BuyDotWidget>
     );
   }
 
-  void _onAmountChanged(String val, BuildContext context) {
+  void _onPriceAmountChanged(
+    BuildContext context,
+    String val,
+    bool isAmount,
+  ) {
+    double amount;
+    double price;
+
     try {
-      final double amount = double.tryParse(val) ?? 0.0;
-      final double price = double.tryParse(_priceController.text) ?? 0.0;
+      if (isAmount) {
+        amount = double.tryParse(val) ?? 0.0;
+        price = double.tryParse(_priceController.text) ?? 0.0;
+      } else {
+        amount = double.tryParse(_amountController.text) ?? 0.0;
+        price = double.tryParse(val) ?? 0.0;
+      }
 
-      _progressNotifier.value = (amount * price) / _walletBalance;
-
-      context.read<PlaceOrderCubit>().updateOrderParams(
-            orderside: widget.buySellNotifier.value,
-            amount: amount,
-            price: price,
-          );
-    } catch (ex) {
-      print(ex);
-    }
-  }
-
-  void _onPriceChanged(String val, BuildContext context) {
-    try {
-      final double amount = double.tryParse(_amountController.text) ?? 0.0;
-      final double price = double.tryParse(val) ?? 0.0;
-
-      _progressNotifier.value = ((amount * price) / _walletBalance);
+      if (_walletBalance > 0.0) {
+        _progressNotifier.value = ((amount * price) / _walletBalance);
+      } else {
+        _progressNotifier.value = 0.0;
+      }
 
       context.read<PlaceOrderCubit>().updateOrderParams(
             orderside: widget.buySellNotifier.value,
