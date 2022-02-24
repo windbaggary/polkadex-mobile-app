@@ -15,13 +15,14 @@ import 'package:polkadex/common/utils/styles.dart';
 
 /// The order book widget
 class OrderBookWidget extends StatelessWidget {
-  const OrderBookWidget({
+  OrderBookWidget({
     required this.amountTokenId,
     required this.priceTokenId,
   });
 
   final String amountTokenId;
   final String priceTokenId;
+  final ValueNotifier<int> priceLengthNotifier = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,9 @@ class OrderBookWidget extends StatelessWidget {
         if (state is OrderbookLoaded) {
           return Column(
             children: [
-              OrderBookHeadingWidget(),
+              OrderBookHeadingWidget(
+                priceLengthNotifier: priceLengthNotifier,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -90,11 +93,18 @@ class OrderBookWidget extends StatelessWidget {
                       right: 23,
                       bottom: 20,
                     ),
-                    child: _ThisOrderBookChartWidget(
-                      amountTokenId: amountTokenId,
-                      priceTokenId: priceTokenId,
-                      buyItems: state.orderbook.bid,
-                      sellItems: state.orderbook.ask,
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: priceLengthNotifier,
+                      builder: (context, selectedPriceLenIndex, child) {
+                        print(selectedPriceLenIndex);
+                        return _ThisOrderBookChartWidget(
+                          amountTokenId: amountTokenId,
+                          priceTokenId: priceTokenId,
+                          buyItems: state.orderbook.bid,
+                          sellItems: state.orderbook.ask,
+                          priceLengthNotifier: priceLengthNotifier,
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -123,12 +133,14 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     required this.priceTokenId,
     required this.buyItems,
     required this.sellItems,
+    required this.priceLengthNotifier,
   });
 
   final String amountTokenId;
   final String priceTokenId;
   final List<OrderbookItemEntity> buyItems;
   final List<OrderbookItemEntity> sellItems;
+  final ValueNotifier<int> priceLengthNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +153,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildHeadingWidget(),
-            _buildBuyWidget(buyItems),
+            _buildBuyWidget(buyItems, priceLengthNotifier),
           ],
         );
         break;
@@ -151,7 +163,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildHeadingWidget(isBuyHeader: false),
-            _buildSellWidget(sellItems),
+            _buildSellWidget(sellItems, priceLengthNotifier),
           ],
         );
         break;
@@ -175,11 +187,17 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: _buildBuyWidget(buyItems),
+                  child: _buildBuyWidget(
+                    buyItems,
+                    priceLengthNotifier,
+                  ),
                 ),
                 SizedBox(width: 7),
                 Expanded(
-                  child: _buildSellWidget(sellItems),
+                  child: _buildSellWidget(
+                    sellItems,
+                    priceLengthNotifier,
+                  ),
                 ),
               ],
             ),
@@ -193,7 +211,10 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSellWidget(List<OrderbookItemEntity> sellItems) {
+  Widget _buildSellWidget(
+    List<OrderbookItemEntity> sellItems,
+    ValueNotifier<int> priceLengthNotifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(
@@ -202,11 +223,15 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                 orderbookItem: sellItems[index],
                 percentageFilled: sellItems[index].cumulativeAmount /
                     sellItems.last.cumulativeAmount,
+                priceLengthNotifier: priceLengthNotifier,
               )),
     );
   }
 
-  Widget _buildBuyWidget(List<OrderbookItemEntity> buyItems) {
+  Widget _buildBuyWidget(
+    List<OrderbookItemEntity> buyItems,
+    ValueNotifier<int> priceLengthNotifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(
@@ -215,6 +240,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                 orderbookItem: buyItems[index],
                 percentageFilled: buyItems[index].cumulativeAmount /
                     buyItems.last.cumulativeAmount,
+                priceLengthNotifier: priceLengthNotifier,
               )),
     );
   }

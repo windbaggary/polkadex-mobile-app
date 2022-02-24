@@ -8,10 +8,12 @@ class OrderSellItemWidget extends StatelessWidget {
   const OrderSellItemWidget({
     required this.orderbookItem,
     required this.percentageFilled,
+    required this.priceLengthNotifier,
   });
 
   final OrderbookItemEntity orderbookItem;
   final double percentageFilled;
+  final ValueNotifier<int> priceLengthNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +26,14 @@ class OrderSellItemWidget extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              orderbookItem.price.toStringAsFixed(4),
+              orderbookItem.price
+                  .toStringAsFixed(priceLengthNotifier.value + 1),
               style: tsS14W500CFF.copyWith(color: AppColors.colorE6007A),
             ),
             Expanded(
               child: Text(
-                orderbookItem.amount.toStringAsFixed(4),
+                orderbookItem.amount
+                    .toStringAsFixed(priceLengthNotifier.value + 1),
                 style: tsS14W500CFF,
                 textAlign: TextAlign.end,
               ),

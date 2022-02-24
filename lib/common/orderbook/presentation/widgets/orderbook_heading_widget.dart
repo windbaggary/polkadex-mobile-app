@@ -12,7 +12,9 @@ import 'order_book_widget.dart';
 
 /// The heading widget for the order book
 class OrderBookHeadingWidget extends StatelessWidget {
-  final _priceLengthNotifier = ValueNotifier<int>(0);
+  OrderBookHeadingWidget({required this.priceLengthNotifier});
+
+  final ValueNotifier<int> priceLengthNotifier;
   final _dropDownValueNotifier = ValueNotifier<String>("Order Book");
 
   @override
@@ -117,8 +119,8 @@ class OrderBookHeadingWidget extends StatelessWidget {
             onTap: () {
               showPriceLengthDialog(
                 context: context,
-                selectedIndex: _priceLengthNotifier.value,
-                onItemSelected: (index) => _priceLengthNotifier.value = index,
+                selectedIndex: priceLengthNotifier.value,
+                onItemSelected: (index) => priceLengthNotifier.value = index,
               );
             },
             child: Row(
@@ -126,7 +128,7 @@ class OrderBookHeadingWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 2, right: 4),
                   child: ValueListenableBuilder<int>(
-                    valueListenable: _priceLengthNotifier,
+                    valueListenable: priceLengthNotifier,
                     builder: (context, selectedPriceLenIndex, child) => Text(
                       dummyPriceLengthData[selectedPriceLenIndex].price,
                       style: tsS15W600CFF.copyWith(

@@ -425,21 +425,21 @@ const dummyPriceLengthData = <PriceLengthModel>[
   PriceLengthModel(
     id: 1,
     price: "0.9",
-    likePrice: '0.095 (BTC)',
+    likePrice: '0.9 (BTC)',
   ),
   PriceLengthModel(
     id: 2,
     price: "0.95",
-    likePrice: '0.0951 (BTC)',
+    likePrice: '0.95 (BTC)',
   ),
   PriceLengthModel(
     id: 1,
     price: "0.951",
-    likePrice: '0.9518 (BTC)',
+    likePrice: '0.951 (BTC)',
   ),
   PriceLengthModel(
     id: 1,
     price: "0.9518",
-    likePrice: '0.5185 (BTC)',
+    likePrice: '0.9518 (BTC)',
   ),
 ];

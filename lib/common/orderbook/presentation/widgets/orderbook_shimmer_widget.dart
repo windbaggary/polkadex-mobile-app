@@ -21,7 +21,9 @@ class OrderBookShimmerWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            OrderBookHeadingWidget(),
+            OrderBookHeadingWidget(
+              priceLengthNotifier: ValueNotifier<int>(0),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
