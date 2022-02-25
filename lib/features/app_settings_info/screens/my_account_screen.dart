@@ -62,11 +62,7 @@ class MyAccountScreen extends StatelessWidget {
                             ),
                           ),
                           InkWell(
-                            onTap: () {
-                              context
-                                  .read<MyAccountProfileProvider>()
-                                  .pickImgFile();
-                            },
+                            onTap: () {},
                             child: SizedBox(
                               width: 56,
                               height: 56,

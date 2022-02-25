@@ -43,9 +43,7 @@ dependencies:
   qr_code_scanner: ^0.5.1
   url_launcher: ^6.0.7
   share_plus: ^2.1.4
-  image_picker: ^0.8.2
   shimmer: ^2.0.0
-  path_provider: ^2.0.2
   file_saver: ^0.0.6
   permission_handler: ^8.3.0
   dotted_border: ^2.0.0

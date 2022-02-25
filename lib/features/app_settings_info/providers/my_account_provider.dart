@@ -1,29 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 /// The provider to handle the image selection and displays
 class MyAccountProfileProvider extends ChangeNotifier {
   /// The local image path
-  String _imgFilePath = "";
+  final String _imgFilePath = "";
 
   bool get hasImg => _imgFilePath.isNotEmpty;
 
   String get imgFile => _imgFilePath;
-
-  /// Pick the image from system
-  void pickImgFile() async {
-    try {
-      final file = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-      );
-      if (file != null) {
-        _imgFilePath = file.path;
-        notifyListeners();
-      }
-    } catch (ex) {
-      print(ex);
-    }
-  }
 }
 
 /// The provider to handle the edit texts on profile
