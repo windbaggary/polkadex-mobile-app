@@ -126,6 +126,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                 left: 20,
                                 top: 20,
                                 right: 20,
+                                bottom: 32,
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -321,15 +322,19 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     bool onlyBiometric,
   ) async {
     final accountCubit = context.read<AccountCubit>();
+    final isBiometricAvailable =
+        dependency.get<bool>(instanceName: 'isBiometricAvailable');
 
     FocusScope.of(context).unfocus();
 
-    final hasImported = await accountCubit.savePassword(
-      password,
-    );
+    if (isBiometricAvailable) {
+      final hasImported = await accountCubit.savePassword(
+        password,
+      );
 
-    if (!hasImported) {
-      return;
+      if (!hasImported) {
+        return;
+      }
     }
 
     LoadingPopup.show(
@@ -342,7 +347,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       password,
       name,
       onlyBiometric,
-      dependency.get<bool>(instanceName: 'isBiometricAvailable'),
+      isBiometricAvailable,
     );
     final accountState = accountCubit.state;
 
