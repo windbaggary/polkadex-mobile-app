@@ -10,6 +10,7 @@ class OptionTabSwitchWidget extends StatelessWidget {
     required this.description,
     required this.isChecked,
     required this.onSwitchChanged,
+    this.padding = const EdgeInsets.only(top: 32),
     this.loading = false,
     this.enabled = true,
   });
@@ -19,6 +20,7 @@ class OptionTabSwitchWidget extends StatelessWidget {
   final String? description;
   final bool isChecked;
   final ValueChanged<bool> onSwitchChanged;
+  final EdgeInsets padding;
   final bool loading;
   final bool enabled;
 
@@ -29,7 +31,7 @@ class OptionTabSwitchWidget extends StatelessWidget {
       child: IgnorePointer(
         ignoring: !enabled || loading,
         child: Padding(
-          padding: const EdgeInsets.only(top: 32),
+          padding: padding,
           child: Row(
             children: [
               Container(
