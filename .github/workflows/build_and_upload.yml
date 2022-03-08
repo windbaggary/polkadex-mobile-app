@@ -12,9 +12,9 @@ env:
   STORE_FILE_PATH: "../app/upload-keystore.jks"
 
 jobs:
-  build:
-    name: Build Polkadex App for iOS
-    runs-on: macos-latest
+  buildapk:
+    name: Build Polkadex App for Android
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -42,6 +42,48 @@ jobs:
         run: flutter analyze .
       - name: Run tests
         run: flutter test
+      - name: Create properties file using secrets
+        run: |
+          echo keyPassword=\${{ secrets.KEY_PASSWORD }} > ${{env.PROPERTIES_FILE_PATH}}
+          echo storePassword=\${{ secrets.KEYSTORE_PASSWORD }} >> ${{env.PROPERTIES_FILE_PATH}}
+          echo keyAlias=\${{ secrets.KEY_ALIAS }} >> ${{env.PROPERTIES_FILE_PATH}}
+          echo storeFile=../app/key.jks >> ${{env.PROPERTIES_FILE_PATH}}
+      - name: Create .jks signing file
+        run: echo "${{ secrets.KEYSTORE_CONTENT }}" | base64 --decode > android/app/key.jks
+      - name: Build Android App
+        run: flutter build apk
+      - name: Upload .apk to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-builds-apk
+          path: |
+            build/app/outputs/apk/release/*.apk
+  buildios:
+    name: Build Polkadex App for iOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - name: Install pub Dependencies
+        run: flutter pub get
+      - name: Check for formatting issues in the code
+        run: flutter format . --set-exit-if-changed
+      - name: Create .env file using repo secrets
+        run: |
+          echo RMQ_USERNAME=\${{ secrets.RMQ_USERNAME }} > ${{env.ENV_FILE_PATH}}
+          echo RMQ_VHOST=\${{ secrets.RMQ_VHOST }} >> ${{env.ENV_FILE_PATH}}
+          echo RMQ_KEY=\${{ secrets.RMQ_KEY }} >> ${{env.ENV_FILE_PATH}}
+          echo POLKADEX_HOST_URL=\${{ secrets.POLKADEX_HOST_URL }} >> ${{env.ENV_FILE_PATH}}
+          echo INFLUX_DB_URL=\${{ secrets.INFLUX_DB_URL }} >> ${{env.ENV_FILE_PATH}}
       - name: Create properties file using secrets
         run: |
           echo keyPassword=\${{ secrets.KEY_PASSWORD }} > ${{env.PROPERTIES_FILE_PATH}}

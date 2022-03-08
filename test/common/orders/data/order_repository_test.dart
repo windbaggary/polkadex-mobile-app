@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,6 +22,7 @@ void main() {
   late String price;
   late String address;
   late String signature;
+  late List orderList;
 
   setUp(() {
     dataSource = _MockOrderRemoteDatasource();
@@ -36,6 +36,38 @@ void main() {
     price = "50.0";
     address = 'test';
     signature = 'test';
+    orderList = [
+      {
+        "order_id": "786653432",
+        "main_acc": "5HDnQBPKDNUXL9qvWVzP8j3pgoh6Sa",
+        "price": "7",
+        "amount": "25.0",
+        "order_side": "Buy",
+        "order_type": "Market",
+        "timestamp": 1644853305519,
+        "base_asset": 0,
+        "quote_asset": 1,
+        "status": "Open",
+        "filled_qty": "2.5",
+        "fee": {"currency": 0, "cost": "0"},
+        "trades": []
+      },
+      {
+        "order_id": "786653433",
+        "main_acc": "5HDnQBPKDNUXL9qvWVzP8j3pgoh6Sa",
+        "price": "7",
+        "amount": "25.0",
+        "order_side": "Buy",
+        "order_type": "Limit",
+        "timestamp": 1644853305519,
+        "base_asset": 0,
+        "quote_asset": 1,
+        "status": "Open",
+        "filled_qty": "2.5",
+        "fee": {"currency": 0, "cost": "0"},
+        "trades": []
+      }
+    ];
   });
 
   setUpAll(() {
@@ -123,27 +155,7 @@ void main() {
           any(),
           any(),
         )).thenAnswer(
-      (_) async => Response(
-          jsonEncode({
-            "Fine": [
-              {
-                "order_id": "786653432",
-                "main_acc": "5HDnQBPKDNUXL9qvWVzP8j3pgoh6Sa",
-                "price": "7",
-                "amount": "25.0",
-                "order_side": "Buy",
-                "order_type": "Market",
-                "timestamp": 1644853305519,
-                "base_asset": 0,
-                "quote_asset": 1,
-                "status": "Open",
-                "filled_qty": "2.5",
-                "fee": {"currency": 0, "cost": "0"},
-                "trades": []
-              }
-            ]
-          }),
-          200),
+      (_) async => Response(jsonEncode({"Fine": orderList}), 200),
     );
 
     final result = await repository.fetchOpenOrders(

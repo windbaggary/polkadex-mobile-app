@@ -46,7 +46,7 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
     if (previousState is ListOrdersLoaded) {
       emit(
         ListOrdersLoaded(
-          openOrders: [...previousState.openOrders, newOrder],
+          openOrders: [newOrder, ...previousState.openOrders],
           orderIdsLoading: [...previousState.orderIdsLoading],
         ),
       );

@@ -447,9 +447,6 @@ class _ThisGraphCard extends StatelessWidget {
                                         ..dnColor = AppColors.colorE6007A,
                                       mainState: MainState.NONE,
                                       secondaryState: SecondaryState.NONE,
-                                      onSecondaryTap: () {
-                                        print('Secondary Tap');
-                                      },
                                       isTrendLine: false,
                                       volHidden: true,
                                       fixedLength: 6,

@@ -106,8 +106,12 @@ class OrderRepository implements IOrderRepository {
 
       if (result.statusCode == 200 && body.containsKey('Fine')) {
         final orderList = (body['Fine'] as List)
+            .reversed
             .map((dynamic json) => OrderModel.fromJson(json))
             .toList();
+
+        orderList.removeWhere((order) =>
+            order.orderType == EnumOrderTypes.market && order.status == 'Open');
 
         return Right(orderList);
       } else {
