@@ -96,7 +96,6 @@ class OrderBookWidget extends StatelessWidget {
                     child: ValueListenableBuilder<int>(
                       valueListenable: priceLengthNotifier,
                       builder: (context, selectedPriceLenIndex, child) {
-                        print(selectedPriceLenIndex);
                         return _ThisOrderBookChartWidget(
                           amountTokenId: amountTokenId,
                           priceTokenId: priceTokenId,
@@ -252,12 +251,12 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
               ? [
                   Expanded(
                     child: Text(
-                      'Amount (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
+                      'Amount (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
                       style: tsS13W500CFFOP40,
                     ),
                   ),
                   Text(
-                    'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
+                    'Price (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
                     style: tsS13W500CFFOP40,
                     textAlign: TextAlign.end,
                   )
