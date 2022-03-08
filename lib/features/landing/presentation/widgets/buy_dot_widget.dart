@@ -207,7 +207,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                             _priceController.text = newPrice;
                             WidgetsBinding.instance?.addPostFrameCallback((_) =>
                                 _onPriceAmountChanged(
-                                    context, newPrice, false));
+                                    context, _walletBalance, newPrice, false));
                           }
 
                           return IgnorePointer(
@@ -215,8 +215,8 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                                 state is TickerLoaded,
                             child: OrderQuantityWidget(
                               controller: _priceController,
-                              onChanged: (price) =>
-                                  _onPriceAmountChanged(context, price, false),
+                              onChanged: (price) => _onPriceAmountChanged(
+                                  context, _walletBalance, price, false),
                               tokenId: widget.rightAsset,
                               hintText: 'Price',
                               isLoading: orderType == EnumOrderTypes.market &&
@@ -240,6 +240,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                   controller: _amountController,
                   onChanged: (amount) => _onPriceAmountChanged(
                     context,
+                    _walletBalance,
                     amount,
                     true,
                   ),
@@ -347,22 +348,24 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                           );
                         }
 
-                        return AppButton(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 14, horizontal: 64),
-                          label:
-                              '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(widget.leftAsset)}',
-                          enabled: state is! PlaceOrderNotValid &&
-                              context.read<TickerCubit>().state is TickerLoaded,
-                          onTap: () => state is PlaceOrderValid
-                              ? tapFunction(
-                                  state.price.toString(),
-                                  state.amount.toString(),
-                                )
-                              : {},
-                          backgroundColor: state.orderSide == EnumBuySell.buy
-                              ? AppColors.color0CA564
-                              : AppColors.colorE6007A,
+                        return ValueListenableBuilder<EnumOrderTypes>(
+                          valueListenable: widget.orderTypeNotifier,
+                          builder: (_, __, ___) => AppButton(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 64),
+                            label:
+                                '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(widget.leftAsset)}',
+                            enabled: _isPlaceOrderButtonEnabled(),
+                            onTap: () => state is PlaceOrderValid
+                                ? tapFunction(
+                                    state.price.toString(),
+                                    state.amount.toString(),
+                                  )
+                                : {},
+                            backgroundColor: state.orderSide == EnumBuySell.buy
+                                ? AppColors.color0CA564
+                                : AppColors.colorE6007A,
+                          ),
                         );
                       },
                     ),
@@ -374,6 +377,13 @@ class BuyDotWidgetState extends State<BuyDotWidget>
         },
       ),
     );
+  }
+
+  bool _isPlaceOrderButtonEnabled() {
+    return widget.orderTypeNotifier.value == EnumOrderTypes.market
+        ? context.read<TickerCubit>().state is TickerLoaded &&
+            context.read<PlaceOrderCubit>().state is! PlaceOrderNotValid
+        : context.read<PlaceOrderCubit>().state is! PlaceOrderNotValid;
   }
 
   /// Update the price to [text]
@@ -407,6 +417,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
 
   void _onPriceAmountChanged(
     BuildContext context,
+    double walletBalance,
     String val,
     bool isAmount,
   ) {
@@ -430,6 +441,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
 
       context.read<PlaceOrderCubit>().updateOrderParams(
             orderside: widget.buySellNotifier.value,
+            balance: walletBalance,
             amount: amount,
             price: price,
           );
