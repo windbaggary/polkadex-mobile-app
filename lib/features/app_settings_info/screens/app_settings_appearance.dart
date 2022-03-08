@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -21,15 +22,17 @@ class AppSettingsAppearance extends StatelessWidget {
         childAlignment: null,
         contentChild: Padding(
           padding: const EdgeInsets.only(right: 17, left: 22),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 16),
-              _ThisInterfaceWidget(),
-              _ThisStyleSettingWidget(),
-              SizedBox(height: 18),
-            ],
+          child: SoonWidget(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 16),
+                _ThisInterfaceWidget(),
+                _ThisStyleSettingWidget(),
+                SizedBox(height: 18),
+              ],
+            ),
           ),
         ),
       ),

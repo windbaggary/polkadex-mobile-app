@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -21,38 +22,40 @@ class AppSettingsHelpScreen extends StatelessWidget {
         isShowSubTitle: false,
         contentChild: Padding(
           padding: const EdgeInsets.fromLTRB(22.0, 18.0, 17.0, 11.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildItem(
-                isShowActive: true,
-                svgIcon: 'wifi'.asAssetSvg(),
-                description: 'Polkadex Status',
-                title: 'Online',
-                padding: EdgeInsets.all(16),
-              ),
-              _buildItem(
-                svgIcon: 'support'.asAssetSvg(),
-                description: 'Get in touch with us',
-                title: 'Contact',
-              ),
-              _buildItem(
-                svgIcon: 'thumb-up'.asAssetSvg(),
-                description: 'Help make Polkadex Better',
-                title: 'Leave us feedback',
-              ),
-              _buildItem(
-                svgIcon: 'contact-mobile'.asAssetSvg(),
-                description: 'Polkadex interface tour',
-                title: 'Start Tour',
-              ),
-              _buildItem(
-                svgIcon: 'question'.asAssetSvg(),
-                description: 'Common questions and support docs',
-                title: 'Frequently Asked Questions',
-                isShowBorder: false,
-              ),
-            ],
+          child: SoonWidget(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildItem(
+                  isShowActive: true,
+                  svgIcon: 'wifi'.asAssetSvg(),
+                  description: 'Polkadex Status',
+                  title: 'Online',
+                  padding: EdgeInsets.all(16),
+                ),
+                _buildItem(
+                  svgIcon: 'support'.asAssetSvg(),
+                  description: 'Get in touch with us',
+                  title: 'Contact',
+                ),
+                _buildItem(
+                  svgIcon: 'thumb-up'.asAssetSvg(),
+                  description: 'Help make Polkadex Better',
+                  title: 'Leave us feedback',
+                ),
+                _buildItem(
+                  svgIcon: 'contact-mobile'.asAssetSvg(),
+                  description: 'Polkadex interface tour',
+                  title: 'Start Tour',
+                ),
+                _buildItem(
+                  svgIcon: 'question'.asAssetSvg(),
+                  description: 'Common questions and support docs',
+                  title: 'Frequently Asked Questions',
+                  isShowBorder: false,
+                ),
+              ],
+            ),
           ),
         ),
       ),
