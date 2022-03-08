@@ -110,6 +110,9 @@ class OrderRepository implements IOrderRepository {
             .map((dynamic json) => OrderModel.fromJson(json))
             .toList();
 
+        orderList.removeWhere((order) =>
+            order.orderType == EnumOrderTypes.market && order.status == 'Open');
+
         return Right(orderList);
       } else {
         return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
