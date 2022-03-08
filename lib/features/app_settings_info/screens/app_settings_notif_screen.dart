@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -71,11 +72,12 @@ class _AppSettingsNotificationScreenState
               top: 16,
               bottom: 14,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: EnumNotificationsMenu.values
-                  .map((e) => _buildMenuItem(e))
-                  .toList(),
+            child: SoonWidget(
+              child: Column(
+                children: EnumNotificationsMenu.values
+                    .map((e) => _buildMenuItem(e))
+                    .toList(),
+              ),
             ),
           ),
         ),

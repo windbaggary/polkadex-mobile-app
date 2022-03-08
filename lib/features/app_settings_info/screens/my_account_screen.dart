@@ -11,6 +11,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 41
@@ -249,17 +250,18 @@ class MyAccountScreen extends StatelessWidget {
                           SizedBox(height: 42),
                           ValueListenableBuilder<bool>(
                             valueListenable: _isCheckedNotifier,
-                            builder: (context, value, child) =>
-                                OptionTabSwitchWidget(
-                              enabled: false,
-                              svgAsset: 'deposit_download'.asAssetSvg(),
-                              title: 'Use DEX to pay fees',
-                              description: 'Enjoy 25% discount when trading.',
-                              isChecked: value,
-                              padding: EdgeInsets.zero,
-                              onSwitchChanged: (newValue) {
-                                _isCheckedNotifier.value = newValue;
-                              },
+                            builder: (context, value, child) => SoonWidget(
+                              child: OptionTabSwitchWidget(
+                                enabled: false,
+                                svgAsset: 'deposit_download'.asAssetSvg(),
+                                title: 'Use DEX to pay fees',
+                                description: 'Enjoy 25% discount when trading.',
+                                isChecked: value,
+                                padding: EdgeInsets.zero,
+                                onSwitchChanged: (newValue) {
+                                  _isCheckedNotifier.value = newValue;
+                                },
+                              ),
                             ),
                           ),
                           Padding(
