@@ -84,13 +84,31 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               context.read<AccountCubit>().accountSignature),
                         ),
                       SizedBox(height: 24),
+                      _ThisHoldingWidget(),
                       InkWell(
-                          onTap: () {
-                            context
-                                .read<_ThisIsChartVisibleProvider>()
-                                .toggleVisible();
-                          },
-                          child: _ThisHoldingWidget()),
+                        onTap: () {
+                          context
+                              .read<_ThisIsChartVisibleProvider>()
+                              .toggleVisible();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Summary',
+                                style: tsS18W600CFF,
+                                textAlign: TextAlign.center,
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: AppColors.colorFFFFFF,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       Consumer<_ThisIsChartVisibleProvider>(
                         builder: (context, isChartVisbileProvider, _) =>
                             AnimatedSize(
@@ -349,7 +367,6 @@ class _ThisHoldingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        bottom: 8,
         left: 21,
         right: 21,
       ),
@@ -479,11 +496,6 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            "Summary",
-            style: tsS20W500CFF,
-          ),
-          SizedBox(height: 20),
           Row(
             children: [
               Expanded(
