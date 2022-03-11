@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -21,39 +22,41 @@ class AppSettingsLangCurrScreen extends StatelessWidget {
         onBack: () => Navigator.of(context).pop(),
         contentChild: Padding(
           padding: const EdgeInsets.fromLTRB(17, 15, 17, 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _ThisItemWidget(
-                svgAsset: 'translate'.asAssetSvg(),
-                title: 'Polkadex Language',
-                description: 'English - EN',
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: Divider(
-                  color: Colors.white10,
-                  height: 1,
+          child: SoonWidget(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _ThisItemWidget(
+                  svgAsset: 'translate'.asAssetSvg(),
+                  title: 'Polkadex Language',
+                  description: 'English - EN',
                 ),
-              ),
-              _ThisItemWidget(
-                svgAsset: 'alarm-clock'.asAssetSvg(),
-                title: 'Timezone',
-                description: 'Chicago (GTM-06:00)',
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 6.0),
-                child: Divider(
-                  color: Colors.white10,
-                  height: 1,
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Divider(
+                    color: Colors.white10,
+                    height: 1,
+                  ),
                 ),
-              ),
-              _ThisItemWidget(
-                svgAsset: 'currency'.asAssetSvg(),
-                title: 'Currency',
-                description: 'USD',
-              ),
-            ],
+                _ThisItemWidget(
+                  svgAsset: 'alarm-clock'.asAssetSvg(),
+                  title: 'Timezone',
+                  description: 'Chicago (GTM-06:00)',
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
+                  child: Divider(
+                    color: Colors.white10,
+                    height: 1,
+                  ),
+                ),
+                _ThisItemWidget(
+                  svgAsset: 'currency'.asAssetSvg(),
+                  title: 'Currency',
+                  description: 'USD',
+                ),
+              ],
+            ),
           ),
         ),
       ),

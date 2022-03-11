@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/app_settings_info/providers/my_account_provider.dart';
+import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 41
@@ -246,61 +248,21 @@ class MyAccountScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 42),
-                          Row(
-                            children: [
-                              Container(
-                                width: 47,
-                                height: 47,
-                                decoration: BoxDecoration(
-                                  color:
-                                      AppColors.color8BA1BE.withOpacity(0.20),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding: const EdgeInsets.all(11.5),
-                                child: SvgPicture.asset(
-                                    'deposit_download'.asAssetSvg()),
+                          ValueListenableBuilder<bool>(
+                            valueListenable: _isCheckedNotifier,
+                            builder: (context, value, child) => SoonWidget(
+                              child: OptionTabSwitchWidget(
+                                enabled: false,
+                                svgAsset: 'deposit_download'.asAssetSvg(),
+                                title: 'Use DEX to pay fees',
+                                description: 'Enjoy 25% discount when trading.',
+                                isChecked: value,
+                                padding: EdgeInsets.zero,
+                                onSwitchChanged: (newValue) {
+                                  _isCheckedNotifier.value = newValue;
+                                },
                               ),
-                              SizedBox(width: 11.4),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      'Use DEX to pay fees',
-                                      style: tsS16W400CFF,
-                                    ),
-                                    SizedBox(height: 2),
-                                    Text(
-                                      'Enjoy 25% discount when trading.',
-                                      style: tsS13W400CFFOP60,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 11.4),
-                              SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: FittedBox(
-                                  child: ValueListenableBuilder<bool>(
-                                    valueListenable: _isCheckedNotifier,
-                                    builder: (context, value, child) => Switch(
-                                      value: value,
-                                      onChanged: (val) {
-                                        _isCheckedNotifier.value = val;
-                                      },
-                                      inactiveTrackColor:
-                                          Colors.white.withOpacity(0.15),
-                                      activeColor: AppColors.colorABB2BC,
-                                      activeTrackColor:
-                                          Colors.white.withOpacity(0.15),
-                                      inactiveThumbColor: AppColors.colorE6007A,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 36, bottom: 36),
