@@ -120,3 +120,8 @@ enum EnumDepositScreenTypes {
   withdraw,
   deposit,
 }
+
+enum EnumMarketDropdownTypes {
+  orderbook,
+  depthmarket,
+}

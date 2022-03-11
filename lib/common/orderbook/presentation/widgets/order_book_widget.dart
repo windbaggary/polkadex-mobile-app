@@ -23,6 +23,8 @@ class OrderBookWidget extends StatelessWidget {
   final String amountTokenId;
   final String priceTokenId;
   final ValueNotifier<int> priceLengthNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<EnumMarketDropdownTypes> marketDropDownNotifier =
+      ValueNotifier<EnumMarketDropdownTypes>(EnumMarketDropdownTypes.orderbook);
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class OrderBookWidget extends StatelessWidget {
           return Column(
             children: [
               OrderBookHeadingWidget(
+                marketDropDownNotifier: marketDropDownNotifier,
                 priceLengthNotifier: priceLengthNotifier,
               ),
               Column(
@@ -93,15 +96,21 @@ class OrderBookWidget extends StatelessWidget {
                       right: 23,
                       bottom: 20,
                     ),
-                    child: ValueListenableBuilder<int>(
-                      valueListenable: priceLengthNotifier,
-                      builder: (context, selectedPriceLenIndex, child) {
-                        return _ThisOrderBookChartWidget(
-                          amountTokenId: amountTokenId,
-                          priceTokenId: priceTokenId,
-                          buyItems: state.orderbook.bid,
-                          sellItems: state.orderbook.ask,
-                          priceLengthNotifier: priceLengthNotifier,
+                    child: ValueListenableBuilder<EnumMarketDropdownTypes>(
+                      valueListenable: marketDropDownNotifier,
+                      builder: (context, dropdownMarketIndex, child) {
+                        return ValueListenableBuilder<int>(
+                          valueListenable: priceLengthNotifier,
+                          builder: (context, selectedPriceLenIndex, child) {
+                            return _ThisOrderBookChartWidget(
+                              amountTokenId: amountTokenId,
+                              priceTokenId: priceTokenId,
+                              buyItems: state.orderbook.bid,
+                              sellItems: state.orderbook.ask,
+                              marketDropDownNotifier: marketDropDownNotifier,
+                              priceLengthNotifier: priceLengthNotifier,
+                            );
+                          },
                         );
                       },
                     ),
@@ -132,6 +141,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     required this.priceTokenId,
     required this.buyItems,
     required this.sellItems,
+    required this.marketDropDownNotifier,
     required this.priceLengthNotifier,
   });
 
@@ -139,6 +149,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   final String priceTokenId;
   final List<OrderbookItemEntity> buyItems;
   final List<OrderbookItemEntity> sellItems;
+  final ValueNotifier<EnumMarketDropdownTypes> marketDropDownNotifier;
   final ValueNotifier<int> priceLengthNotifier;
 
   @override
@@ -152,7 +163,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildHeadingWidget(),
-            _buildBuyWidget(buyItems, priceLengthNotifier),
+            _buildBuyWidget(buyItems),
           ],
         );
         break;
@@ -162,7 +173,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildHeadingWidget(isBuyHeader: false),
-            _buildSellWidget(sellItems, priceLengthNotifier),
+            _buildSellWidget(sellItems),
           ],
         );
         break;
@@ -186,17 +197,11 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: _buildBuyWidget(
-                    buyItems,
-                    priceLengthNotifier,
-                  ),
+                  child: _buildBuyWidget(buyItems),
                 ),
                 SizedBox(width: 7),
                 Expanded(
-                  child: _buildSellWidget(
-                    sellItems,
-                    priceLengthNotifier,
-                  ),
+                  child: _buildSellWidget(sellItems),
                 ),
               ],
             ),
@@ -210,10 +215,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSellWidget(
-    List<OrderbookItemEntity> sellItems,
-    ValueNotifier<int> priceLengthNotifier,
-  ) {
+  Widget _buildSellWidget(List<OrderbookItemEntity> sellItems) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(
@@ -222,15 +224,13 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                 orderbookItem: sellItems[index],
                 percentageFilled: sellItems[index].cumulativeAmount /
                     sellItems.last.cumulativeAmount,
+                marketDropDownNotifier: marketDropDownNotifier,
                 priceLengthNotifier: priceLengthNotifier,
               )),
     );
   }
 
-  Widget _buildBuyWidget(
-    List<OrderbookItemEntity> buyItems,
-    ValueNotifier<int> priceLengthNotifier,
-  ) {
+  Widget _buildBuyWidget(List<OrderbookItemEntity> buyItems) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(
@@ -239,43 +239,51 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                 orderbookItem: buyItems[index],
                 percentageFilled: buyItems[index].cumulativeAmount /
                     buyItems.last.cumulativeAmount,
+                marketDropDownNotifier: marketDropDownNotifier,
                 priceLengthNotifier: priceLengthNotifier,
               )),
     );
   }
 
-  Widget _buildHeadingWidget({bool isBuyHeader = true}) => Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 10),
-        child: Row(
-          children: isBuyHeader
-              ? [
-                  Expanded(
-                    child: Text(
-                      'Amount (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
-                      style: tsS13W500CFFOP40,
-                    ),
-                  ),
-                  Text(
-                    'Price (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
+  Widget _buildHeadingWidget({bool isBuyHeader = true}) {
+    final String amountColumnTitle =
+        marketDropDownNotifier.value == EnumMarketDropdownTypes.depthmarket
+            ? 'Cum'
+            : 'Amount';
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, bottom: 10),
+      child: Row(
+        children: isBuyHeader
+            ? [
+                Expanded(
+                  child: Text(
+                    '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
                     style: tsS13W500CFFOP40,
-                    textAlign: TextAlign.end,
-                  )
-                ]
-              : [
-                  Expanded(
-                    child: Text(
-                      'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
-                      style: tsS13W500CFFOP40,
-                    ),
                   ),
-                  Text(
-                    'Amount (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
+                ),
+                Text(
+                  'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
+                  style: tsS13W500CFFOP40,
+                  textAlign: TextAlign.end,
+                )
+              ]
+            : [
+                Expanded(
+                  child: Text(
+                    'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
                     style: tsS13W500CFFOP40,
-                    textAlign: TextAlign.end,
-                  )
-                ],
-        ),
-      );
+                  ),
+                ),
+                Text(
+                  '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
+                  style: tsS13W500CFFOP40,
+                  textAlign: TextAlign.end,
+                )
+              ],
+      ),
+    );
+  }
 }
 
 class OrderBookWidgetFilterProvider extends ChangeNotifier {

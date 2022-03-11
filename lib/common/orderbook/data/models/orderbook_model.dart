@@ -24,7 +24,7 @@ class OrderbookModel extends OrderbookEntity {
     double? bidCumulativeAmount;
 
     listAskData.sort(
-        (a, b) => double.parse(b['price']).compareTo(double.parse(a['price'])));
+        (a, b) => double.parse(a['price']).compareTo(double.parse(b['price'])));
     listBidData.sort(
         (a, b) => double.parse(b['price']).compareTo(double.parse(a['price'])));
 

@@ -146,8 +146,8 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                               ],
                             ),
                             OrderBookWidget(
-                              amountTokenId: widget.rightTokenId,
-                              priceTokenId: widget.leftTokenId,
+                              amountTokenId: widget.leftTokenId,
+                              priceTokenId: widget.rightTokenId,
                             ),
                           ],
                         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_heading_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -22,6 +23,8 @@ class OrderBookShimmerWidget extends StatelessWidget {
         child: Column(
           children: [
             OrderBookHeadingWidget(
+              marketDropDownNotifier: ValueNotifier<EnumMarketDropdownTypes>(
+                  EnumMarketDropdownTypes.orderbook),
               priceLengthNotifier: ValueNotifier<int>(0),
             ),
             Column(

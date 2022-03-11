@@ -12,10 +12,12 @@ import 'order_book_widget.dart';
 
 /// The heading widget for the order book
 class OrderBookHeadingWidget extends StatelessWidget {
-  OrderBookHeadingWidget({required this.priceLengthNotifier});
+  OrderBookHeadingWidget(
+      {required this.marketDropDownNotifier,
+      required this.priceLengthNotifier});
 
+  final ValueNotifier<EnumMarketDropdownTypes> marketDropDownNotifier;
   final ValueNotifier<int> priceLengthNotifier;
-  final _dropDownValueNotifier = ValueNotifier<String>("Order Book");
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +27,34 @@ class OrderBookHeadingWidget extends StatelessWidget {
         children: [
           Expanded(
             // width: 100,
-            child: ValueListenableBuilder<String>(
-              valueListenable: _dropDownValueNotifier,
+            child: ValueListenableBuilder<EnumMarketDropdownTypes>(
+              valueListenable: marketDropDownNotifier,
               builder: (context, dropDownValue, child) =>
-                  DropdownButton<String>(
-                items: ['Order Book', 'Deep Market']
-                    .map((e) => DropdownMenuItem<String>(
-                          child: Text(
-                            e,
-                            style: tsS20W600CFF,
-                          ),
-                          value: e,
-                        ))
-                    .toList(),
+                  DropdownButton<EnumMarketDropdownTypes>(
+                items: EnumMarketDropdownTypes.values.map((type) {
+                  String title;
+
+                  switch (type) {
+                    case EnumMarketDropdownTypes.orderbook:
+                      title = 'Order Book';
+                      break;
+                    default:
+                      title = 'Depth Market';
+                  }
+
+                  return DropdownMenuItem<EnumMarketDropdownTypes>(
+                    child: Text(
+                      title,
+                      style: tsS20W600CFF,
+                    ),
+                    value: type,
+                  );
+                }).toList(),
                 value: dropDownValue,
                 style: tsS20W600CFF,
                 underline: Container(),
                 onChanged: (val) {
-                  _dropDownValueNotifier.value = val!;
+                  marketDropDownNotifier.value = val!;
                 },
                 isExpanded: false,
                 icon: Padding(

@@ -110,8 +110,8 @@ class _TradeTabViewState extends State<TradeTabView>
                   ),
                   Consumer<TradeTabCoinProvider>(
                     builder: (context, provider, _) => OrderBookWidget(
-                      amountTokenId: provider.tokenCoin.pairTokenId,
-                      priceTokenId: provider.tokenCoin.baseTokenId,
+                      amountTokenId: provider.tokenCoin.baseTokenId,
+                      priceTokenId: provider.tokenCoin.pairTokenId,
                     ),
                   ),
                 ],
