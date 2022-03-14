@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
@@ -32,13 +34,36 @@ class BalanceCubit extends Cubit<BalanceState> {
       (error) => emit(
         BalanceError(message: error.message),
       ),
-      (balance) => emit(
-        BalanceLoaded(
-          free: balance.free,
-          used: balance.used,
-          total: balance.total,
-        ),
-      ),
+      (balance) {
+        emit(
+          BalanceLoaded(
+            free: balance.free,
+            used: balance.used,
+            total: balance.total,
+          ),
+        );
+
+        Timer.periodic(
+          Duration(seconds: 5),
+          (timer) async {
+            final resultPeriodic = await _getBalanceUseCase(
+              address: address,
+              signature: signature,
+            );
+
+            resultPeriodic.fold(
+              (_) => timer.cancel(),
+              (balancePeriodic) => emit(
+                BalanceLoaded(
+                  free: balancePeriodic.free,
+                  used: balancePeriodic.used,
+                  total: balancePeriodic.total,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
