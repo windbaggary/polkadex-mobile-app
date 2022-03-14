@@ -21,6 +21,9 @@ class BalanceCubit extends Cubit<BalanceState> {
   final GetBalanceUseCase _getBalanceUseCase;
   final TestDepositUseCase _testDepositUseCase;
   final RegisterUserUseCase _registerUserUseCase;
+  Timer? _balanceTimer;
+
+  Timer? get balanceTimer => _balanceTimer;
 
   Future<void> getBalance(String address, String signature) async {
     emit(BalanceLoading());
@@ -43,7 +46,7 @@ class BalanceCubit extends Cubit<BalanceState> {
           ),
         );
 
-        Timer.periodic(
+        _balanceTimer = Timer.periodic(
           Duration(seconds: 5),
           (timer) async {
             final resultPeriodic = await _getBalanceUseCase(
