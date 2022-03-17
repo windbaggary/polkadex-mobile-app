@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'common/cubits/account_cubit.dart';
@@ -14,6 +15,8 @@ class AppLifecycleWidget extends StatefulWidget {
 
 class _AppLifecycleWidgetState extends State<AppLifecycleWidget>
     with WidgetsBindingObserver {
+  Timer? lockTimer;
+
   @override
   void initState() {
     super.initState();
@@ -28,9 +31,18 @@ class _AppLifecycleWidgetState extends State<AppLifecycleWidget>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (context.read<AccountCubit>().state is AccountLoaded &&
-        state == AppLifecycleState.paused) {
-      MyApp.restartApp(context);
+    if (context.read<AccountCubit>().state is AccountLoaded) {
+      if (state == AppLifecycleState.paused) {
+        lockTimer = Timer(
+          Duration(minutes: 5),
+              () async {
+            MyApp.restartApp(context);
+          },
+        );
+      }
+      else if (state == AppLifecycleState.resumed) {
+        lockTimer?.cancel();
+      }
     }
   }
 
