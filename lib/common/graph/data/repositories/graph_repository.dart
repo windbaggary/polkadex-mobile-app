@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:k_chart/entity/k_line_entity.dart';
 import 'package:polkadex/common/graph/data/datasources/graph_remote_datasource.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
-import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
+import 'package:polkadex/common/utils/time_utils.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
@@ -23,7 +23,7 @@ class GraphRepository implements IGraphRepository {
       final result = await _graphLocalDatasource.getCoinGraphData(
         leftTokenId,
         rightTokenId,
-        TimestampUtils.timestampTypeToString(timestampType),
+        TimeUtils.timestampTypeToString(timestampType),
       );
       final Map<String, dynamic> body = jsonDecode(result.body);
 

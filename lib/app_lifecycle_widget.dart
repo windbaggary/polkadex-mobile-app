@@ -35,12 +35,11 @@ class _AppLifecycleWidgetState extends State<AppLifecycleWidget>
       if (state == AppLifecycleState.paused) {
         lockTimer = Timer(
           Duration(minutes: 5),
-              () async {
+          () async {
             MyApp.restartApp(context);
           },
         );
-      }
-      else if (state == AppLifecycleState.resumed) {
+      } else if (state == AppLifecycleState.resumed) {
         lockTimer?.cancel();
       }
     }

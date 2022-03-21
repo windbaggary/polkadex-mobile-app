@@ -1,6 +1,6 @@
 import 'package:polkadex/common/utils/enums.dart';
 
-abstract class TimestampUtils {
+abstract class TimeUtils {
   static String timestampTypeToString(
       EnumAppChartTimestampTypes timestampType) {
     switch (timestampType) {
@@ -22,6 +22,24 @@ abstract class TimestampUtils {
         return "1w";
       case EnumAppChartTimestampTypes.oneMonth:
         return "1M";
+    }
+  }
+
+  static String timerIntervalTypeToString(
+      EnumTimerIntervalTypes timestampType) {
+    switch (timestampType) {
+      case EnumTimerIntervalTypes.oneMinute:
+        return "1m";
+      case EnumTimerIntervalTypes.twoMinutes:
+        return "2m";
+      case EnumTimerIntervalTypes.threeMinutes:
+        return "3m";
+      case EnumTimerIntervalTypes.fiveMinutes:
+        return "5m";
+      case EnumTimerIntervalTypes.tenMinutes:
+        return "10m";
+      case EnumTimerIntervalTypes.thirtyMinutes:
+        return "1h";
     }
   }
 }
