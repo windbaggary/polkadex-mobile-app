@@ -31,10 +31,15 @@ class BalanceTabView extends StatefulWidget {
 class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
   late ScrollController _scrollController;
+  late AnimationController _controller;
 
   @override
   void initState() {
     _scrollController = ScrollController()..addListener(_onScrollListener);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
     super.initState();
   }
 
@@ -42,6 +47,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
   void dispose() {
     _scrollController.removeListener(_onScrollListener);
     _scrollController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -84,13 +90,40 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               context.read<AccountCubit>().accountSignature),
                         ),
                       SizedBox(height: 24),
+                      _ThisHoldingWidget(),
                       InkWell(
-                          onTap: () {
-                            context
-                                .read<_ThisIsChartVisibleProvider>()
-                                .toggleVisible();
-                          },
-                          child: _ThisHoldingWidget()),
+                        onTap: () {
+                          final summaryVisProvider =
+                              context.read<_ThisIsChartVisibleProvider>();
+
+                          summaryVisProvider.isChartVisible
+                              ? _controller.reverse()
+                              : _controller.forward();
+
+                          summaryVisProvider.toggleVisible();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Summary',
+                                style: tsS18W600CFF,
+                                textAlign: TextAlign.center,
+                              ),
+                              RotationTransition(
+                                turns: Tween(begin: 0.0, end: 0.5)
+                                    .animate(_controller),
+                                child: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: AppColors.colorFFFFFF,
+                                  size: 16,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                       Consumer<_ThisIsChartVisibleProvider>(
                         builder: (context, isChartVisbileProvider, _) =>
                             AnimatedSize(
@@ -349,7 +382,6 @@ class _ThisHoldingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        bottom: 8,
         left: 21,
         right: 21,
       ),
@@ -479,11 +511,6 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            "Summary",
-            style: tsS20W500CFF,
-          ),
-          SizedBox(height: 20),
           Row(
             children: [
               Expanded(
