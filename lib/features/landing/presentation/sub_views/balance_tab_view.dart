@@ -564,7 +564,7 @@ class _ThisGraphHeadingWidget extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.color8BA1BE.withOpacity(0.2),
+                    color: AppColors.colorE6007A,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(10),
