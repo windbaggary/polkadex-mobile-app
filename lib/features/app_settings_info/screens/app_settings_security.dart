@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
-import 'package:polkadex/common/widgets/option_tab_dropdown_widget.dart';
+import 'package:polkadex/features/app_settings_info/widgets/option_tab_timer_dropdown_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
