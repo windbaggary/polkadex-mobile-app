@@ -100,104 +100,126 @@ class _LandingScreenState extends State<LandingScreen>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: MultiProvider(
+      child: MultiBlocProvider(
         providers: [
-          ChangeNotifierProvider<NotificationDrawerProvider>(
-              create: (context) => NotificationDrawerProvider()),
-          ChangeNotifierProvider<HomeScrollNotifProvider>(
-              create: (_) => HomeScrollNotifProvider()),
-          ChangeNotifierProvider<TradeTabCoinProvider>(
-              create: (context) => TradeTabCoinProvider()),
+          BlocProvider<BalanceCubit>(
+            create: (_) => dependency<BalanceCubit>()
+              ..getBalance(
+                context.read<AccountCubit>().accountAddress,
+                context.read<AccountCubit>().accountSignature,
+              ),
+          ),
+          BlocProvider<OrderbookCubit>(
+            create: (_) => dependency<OrderbookCubit>()
+              ..fetchOrderbookData(
+                leftTokenId: '0',
+                rightTokenId: '1',
+              ),
+          ),
         ],
-        builder: (context, child) => _ThisInheritedWidget(
-          onOpenDrawer: _onOpenDrawer,
-          onOpenRightDrawer: _onOpenRightDrawer,
-          appbarTitleNotifier: _titleNotifier,
-          onNotificationTap: _onOpenRightDrawer,
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: AppColors.color1C2023,
-            body: SafeArea(
-              child: GestureDetector(
-                onHorizontalDragCancel: _onHorizontalDragCancel,
-                onHorizontalDragEnd: _onHorizontalDragEnd,
-                onHorizontalDragStart: _onHorizontalDragStart,
-                onHorizontalDragUpdate: (details) =>
-                    _onHorizontalDragUpdate(details),
-                child: Stack(
-                  alignment: Alignment.topLeft,
-                  children: [
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: AnimatedBuilder(
-                        animation: _leftDrawerWidthAnimation,
-                        builder: (context, child) {
-                          return Transform.translate(
-                            offset:
-                                Offset(_leftDrawerWidthAnimation.value, 0.0),
-                            child: child,
-                          );
-                        },
-                        child: NotificationDrawerWidget(
-                          onClearTap: () {
-                            context
-                                .read<NotificationDrawerProvider>()
-                                .seenAll();
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<NotificationDrawerProvider>(
+                create: (context) => NotificationDrawerProvider()),
+            ChangeNotifierProvider<HomeScrollNotifProvider>(
+                create: (_) => HomeScrollNotifProvider()),
+            ChangeNotifierProvider<TradeTabCoinProvider>(
+                create: (context) => TradeTabCoinProvider()),
+          ],
+          builder: (context, child) => _ThisInheritedWidget(
+            onOpenDrawer: _onOpenDrawer,
+            onOpenRightDrawer: _onOpenRightDrawer,
+            appbarTitleNotifier: _titleNotifier,
+            onNotificationTap: _onOpenRightDrawer,
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: AppColors.color1C2023,
+              body: SafeArea(
+                child: GestureDetector(
+                  onHorizontalDragCancel: _onHorizontalDragCancel,
+                  onHorizontalDragEnd: _onHorizontalDragEnd,
+                  onHorizontalDragStart: _onHorizontalDragStart,
+                  onHorizontalDragUpdate: (details) =>
+                      _onHorizontalDragUpdate(details),
+                  child: Stack(
+                    alignment: Alignment.topLeft,
+                    children: [
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: AnimatedBuilder(
+                          animation: _leftDrawerWidthAnimation,
+                          builder: (context, child) {
+                            return Transform.translate(
+                              offset:
+                                  Offset(_leftDrawerWidthAnimation.value, 0.0),
+                              child: child,
+                            );
                           },
+                          child: NotificationDrawerWidget(
+                            onClearTap: () {
+                              context
+                                  .read<NotificationDrawerProvider>()
+                                  .seenAll();
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                    AnimatedBuilder(
-                        animation: _rightDrawerWidthAnimation,
-                        builder: (context, child) => Transform.translate(
-                              offset:
-                                  Offset(_rightDrawerWidthAnimation.value, 0.0),
-                              child: child,
-                            ),
-                        child: AppDrawerWidget()),
-                    AnimatedBuilder(
-                      animation: _rightDrawerWidthAnimation,
-                      builder: (context, child) => Transform.translate(
-                          offset: Offset(_rightDrawerWidthAnimation.value, 0.0),
-                          child: child),
-                      child: AnimatedBuilder(
-                        animation: _contentAnimController,
-                        builder: (context, child) {
-                          return Container(
-                            transform: Matrix4.translationValues(
-                                _leftDrawerWidthAnimation.value, 0.0, 0.0),
-                            decoration: BoxDecoration(
-                              color: AppColors.color1C2023,
-                              borderRadius: _drawerContentRadiusAnimation.value,
-                            ),
-                            foregroundDecoration: BoxDecoration(
-                              color: _drawerContentColorAnimation.value,
-                              borderRadius: _drawerContentRadiusAnimation.value,
-                            ),
-                            width: MediaQuery.of(context).size.width,
-                            child: InkWell(
-                              onTap: (_isDrawerVisible || _isNotifDrawerVisible)
-                                  ? () {
-                                      if (_isDrawerVisible) _onHideDrawer();
-                                      if (_isNotifDrawerVisible) {
-                                        _onHideRightDrawer();
-                                      }
-                                    }
-                                  : null,
-                              child: IgnorePointer(
-                                ignoring:
-                                    _isDrawerVisible || _isNotifDrawerVisible,
+                      AnimatedBuilder(
+                          animation: _rightDrawerWidthAnimation,
+                          builder: (context, child) => Transform.translate(
+                                offset: Offset(
+                                    _rightDrawerWidthAnimation.value, 0.0),
                                 child: child,
                               ),
-                            ),
-                          );
-                        },
-                        child: _ThisContentWidget(),
+                          child: AppDrawerWidget()),
+                      AnimatedBuilder(
+                        animation: _rightDrawerWidthAnimation,
+                        builder: (context, child) => Transform.translate(
+                            offset:
+                                Offset(_rightDrawerWidthAnimation.value, 0.0),
+                            child: child),
+                        child: AnimatedBuilder(
+                          animation: _contentAnimController,
+                          builder: (context, child) {
+                            return Container(
+                              transform: Matrix4.translationValues(
+                                  _leftDrawerWidthAnimation.value, 0.0, 0.0),
+                              decoration: BoxDecoration(
+                                color: AppColors.color1C2023,
+                                borderRadius:
+                                    _drawerContentRadiusAnimation.value,
+                              ),
+                              foregroundDecoration: BoxDecoration(
+                                color: _drawerContentColorAnimation.value,
+                                borderRadius:
+                                    _drawerContentRadiusAnimation.value,
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              child: InkWell(
+                                onTap: (_isDrawerVisible ||
+                                        _isNotifDrawerVisible)
+                                    ? () {
+                                        if (_isDrawerVisible) _onHideDrawer();
+                                        if (_isNotifDrawerVisible) {
+                                          _onHideRightDrawer();
+                                        }
+                                      }
+                                    : null,
+                                child: IgnorePointer(
+                                  ignoring:
+                                      _isDrawerVisible || _isNotifDrawerVisible,
+                                  child: child,
+                                ),
+                              ),
+                            );
+                          },
+                          child: _ThisContentWidget(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -361,11 +383,10 @@ class _ThisContentWidget extends StatefulWidget {
 }
 
 class __ThisContentWidgetState extends State<_ThisContentWidget>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late TabController _tabController;
-  StreamSubscription<EnumBottonBarItem>? _bottomBarStreamSubScription;
-
   late ValueNotifier<EnumBottonBarItem> _bottomNavbarNotifier;
+  StreamSubscription<EnumBottonBarItem>? _bottomBarStreamSubScription;
 
   @override
   void initState() {
@@ -377,8 +398,11 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
           ..addListener(() {
             context.read<HomeScrollNotifProvider>().scrollOffset = 0.0;
           });
-    super.initState();
+
+    WidgetsBinding.instance!.addObserver(this);
     _subscribeBottomBarStream();
+
+    super.initState();
   }
 
   @override
@@ -386,7 +410,16 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
     _tabController.dispose();
     _bottomNavbarNotifier.dispose();
     _unsubscribeBottomBar();
+    WidgetsBinding.instance!.removeObserver(this);
+
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      context.read<BalanceCubit>().balanceTimer?.cancel();
+    }
   }
 
   @override
@@ -394,71 +427,53 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
     return ValueListenableBuilder<EnumBottonBarItem>(
       valueListenable: _bottomNavbarNotifier,
       builder: (context, selectedMenu, child) {
-        return MultiBlocProvider(
-          providers: [
-            BlocProvider<BalanceCubit>(
-              create: (_) => dependency<BalanceCubit>()
-                ..getBalance(
-                  context.read<AccountCubit>().accountAddress,
-                  context.read<AccountCubit>().accountSignature,
-                ),
-            ),
-            BlocProvider<OrderbookCubit>(
-              create: (_) => dependency<OrderbookCubit>()
-                ..fetchOrderbookData(
-                  leftTokenId: '0',
-                  rightTokenId: '1',
-                ),
-            ),
-          ],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              _ThisAppBar(),
-              Expanded(
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: TabBarView(
-                        controller: _tabController,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: EnumBottonBarItem.values
-                            .map((e) => _buildBottomBarTab(e))
-                            .toList(),
-                      ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            _ThisAppBar(),
+            Expanded(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: TabBarView(
+                      controller: _tabController,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: EnumBottonBarItem.values
+                          .map((e) => _buildBottomBarTab(e))
+                          .toList(),
                     ),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: Consumer2<BottomNavigationProvider,
-                          HomeScrollNotifProvider>(
-                        builder: (context, bottomNavigationProvider,
-                            homeScrollProvider, child) {
-                          return Container(
-                            height: homeScrollProvider.bottombarSize -
-                                homeScrollProvider.bottombarValue,
-                            child: SingleChildScrollView(
-                              physics: NeverScrollableScrollPhysics(),
-                              child: Container(
-                                transform: Matrix4.identity(),
-                                height: homeScrollProvider.bottombarSize,
-                                child: AppBottomNavigationBar(
-                                  onSelected: _onBottomNavigationSelected,
-                                  initialItem: EnumBottonBarItem
-                                      .values[_tabController.index],
-                                ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Consumer2<BottomNavigationProvider,
+                        HomeScrollNotifProvider>(
+                      builder: (context, bottomNavigationProvider,
+                          homeScrollProvider, child) {
+                        return Container(
+                          height: homeScrollProvider.bottombarSize -
+                              homeScrollProvider.bottombarValue,
+                          child: SingleChildScrollView(
+                            physics: NeverScrollableScrollPhysics(),
+                            child: Container(
+                              transform: Matrix4.identity(),
+                              height: homeScrollProvider.bottombarSize,
+                              child: AppBottomNavigationBar(
+                                onSelected: _onBottomNavigationSelected,
+                                initialItem: EnumBottonBarItem
+                                    .values[_tabController.index],
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
