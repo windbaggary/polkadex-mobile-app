@@ -1,4 +1,5 @@
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/string_utils.dart';
 import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
@@ -38,7 +39,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
       biometricOnly: map['biometricOnly'] ?? false,
       biometricAccess: map['biometricAccess'] ?? false,
       signature: map['signature'] ?? '',
-      timerInterval: map['timerInterval'] ?? EnumTimerIntervalTypes.oneMinute,
+      timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
+          EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
     );
   }
 
@@ -51,7 +53,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
       'name': name,
       'biometricOnly': biometricOnly,
       'biometricAccess': biometricAccess,
-      'signature': signature
+      'signature': signature,
+      'timerInterval': timerInterval.toString(),
     };
   }
 
