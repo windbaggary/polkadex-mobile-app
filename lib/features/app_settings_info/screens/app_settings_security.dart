@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/option_tab_timer_dropdown_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -44,93 +45,96 @@ class AppSettingsSecurity extends StatelessWidget {
                         .changeLockTimer(newInterval!),
                     loading: state is AccountUpdatingTimer,
                   ),
-                  Column(
-                    children: [
-                      if (dependency.get<bool>(
-                              instanceName: 'isBiometricAvailable') &&
-                          !context.read<AccountCubit>().biometricOnly)
-                        Column(
-                          children: [
-                            SizedBox(height: 8),
-                            OptionTabSwitchWidget(
-                              enabled: context.read<AccountCubit>().state
-                                  is AccountLoaded,
-                              loading: state is AccountUpdatingBiometric,
-                              svgAsset: "finger-print".asAssetSvg(),
-                              title: "Secure with Biometric",
-                              description:
-                                  "Secure your access without typing your Pin Code.",
-                              isChecked:
-                                  context.read<AccountCubit>().biometricAccess,
-                              onSwitchChanged: (newInterval) => context
-                                  .read<AccountCubit>()
-                                  .switchBiometricAccess(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 6.0),
-                              child: Divider(
-                                color: Colors.white10,
-                                height: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      Consumer<_ThisProvider>(
-                        builder: (context, thisProvider, child) =>
-                            OptionTabSwitchWidget(
-                          enabled: false,
-                          svgAsset: "keypad".asAssetSvg(),
-                          title: "Secure with Pin Code",
-                          description: "Your access are kept safe by Pin Code.",
-                          isChecked: thisProvider.isPinCode,
-                          onSwitchChanged: (value) {
-                            thisProvider.isPinCode = value;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6.0),
-                        child: Divider(
-                          color: Colors.white10,
-                          height: 1,
-                        ),
-                      ),
-                      Consumer<_ThisProvider>(
-                        builder: (context, thisProvider, child) =>
-                            OptionTabSwitchWidget(
-                          enabled: false,
-                          svgAsset: "security".asAssetSvg(),
-                          title: "Two-Factor Authentication (2FA)",
+                  if (dependency.get<bool>(
+                          instanceName: 'isBiometricAvailable') &&
+                      !context.read<AccountCubit>().biometricOnly)
+                    Column(
+                      children: [
+                        SizedBox(height: 8),
+                        OptionTabSwitchWidget(
+                          enabled: context.read<AccountCubit>().state
+                              is AccountLoaded,
+                          loading: state is AccountUpdatingBiometric,
+                          svgAsset: "finger-print".asAssetSvg(),
+                          title: "Secure with Biometric",
                           description:
-                              "Use the Google Authentication or Authy app to generate one time security codes.",
-                          isChecked: thisProvider.isTwoFactor,
-                          onSwitchChanged: (value) {
-                            thisProvider.isTwoFactor = value;
-                          },
+                              "Secure your access without typing your Pin Code.",
+                          isChecked:
+                              context.read<AccountCubit>().biometricAccess,
+                          onSwitchChanged: (newInterval) => context
+                              .read<AccountCubit>()
+                              .switchBiometricAccess(),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6.0),
-                        child: Divider(
-                          color: Colors.white10,
-                          height: 1,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: Divider(
+                            color: Colors.white10,
+                            height: 1,
+                          ),
                         ),
-                      ),
-                      Consumer<_ThisProvider>(
-                        builder: (context, thisProvider, child) =>
-                            OptionTabSwitchWidget(
-                          enabled: false,
-                          svgAsset: "tracker".asAssetSvg(),
-                          title: "Tracking IP",
-                          description: "Block access to suspicious IPs.",
-                          isChecked: thisProvider.isIp,
-                          onSwitchChanged: (value) {
-                            thisProvider.isIp = value;
-                          },
+                      ],
+                    ),
+                  SoonWidget(
+                    child: Column(
+                      children: [
+                        Consumer<_ThisProvider>(
+                          builder: (context, thisProvider, child) =>
+                              OptionTabSwitchWidget(
+                            enabled: false,
+                            svgAsset: "keypad".asAssetSvg(),
+                            title: "Secure with Pin Code",
+                            description:
+                                "Your access are kept safe by Pin Code.",
+                            isChecked: thisProvider.isPinCode,
+                            onSwitchChanged: (value) {
+                              thisProvider.isPinCode = value;
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 8),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: Divider(
+                            color: Colors.white10,
+                            height: 1,
+                          ),
+                        ),
+                        Consumer<_ThisProvider>(
+                          builder: (context, thisProvider, child) =>
+                              OptionTabSwitchWidget(
+                            enabled: false,
+                            svgAsset: "security".asAssetSvg(),
+                            title: "Two-Factor Authentication (2FA)",
+                            description:
+                                "Use the Google Authentication or Authy app to generate one time security codes.",
+                            isChecked: thisProvider.isTwoFactor,
+                            onSwitchChanged: (value) {
+                              thisProvider.isTwoFactor = value;
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: Divider(
+                            color: Colors.white10,
+                            height: 1,
+                          ),
+                        ),
+                        Consumer<_ThisProvider>(
+                          builder: (context, thisProvider, child) =>
+                              OptionTabSwitchWidget(
+                            enabled: false,
+                            svgAsset: "tracker".asAssetSvg(),
+                            title: "Tracking IP",
+                            description: "Block access to suspicious IPs.",
+                            isChecked: thisProvider.isIp,
+                            onSwitchChanged: (value) {
+                              thisProvider.isIp = value;
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                    ),
                   )
                 ],
               ),
