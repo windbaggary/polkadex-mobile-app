@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
@@ -85,23 +86,27 @@ void main() {
       type: ["none"],
     );
     tImportedAccountBioOff = ImportedAccountModel(
-        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-        encoding: tEncoding,
-        address: "k9o1dxJxQE8Zwm5Fy",
-        meta: tMeta,
-        biometricOnly: false,
-        biometricAccess: false,
-        name: 'test',
-        signature: 'test');
+      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+      encoding: tEncoding,
+      address: "k9o1dxJxQE8Zwm5Fy",
+      meta: tMeta,
+      biometricOnly: false,
+      biometricAccess: false,
+      name: 'test',
+      signature: 'test',
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
     tImportedAccountBioOn = ImportedAccountModel(
-        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-        encoding: tEncoding,
-        address: "k9o1dxJxQE8Zwm5Fy",
-        meta: tMeta,
-        biometricOnly: false,
-        biometricAccess: true,
-        name: 'test',
-        signature: 'test');
+      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+      encoding: tEncoding,
+      address: "k9o1dxJxQE8Zwm5Fy",
+      meta: tMeta,
+      biometricOnly: false,
+      biometricAccess: true,
+      name: 'test',
+      signature: 'test',
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
     tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];
     tPassword = 'test';
 

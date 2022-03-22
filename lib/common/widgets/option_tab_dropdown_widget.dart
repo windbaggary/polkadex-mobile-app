@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/time_utils.dart';
 
-class OptionTabDropdownWidget extends StatelessWidget {
-  OptionTabDropdownWidget({
+class OptionTabTimerDropdownWidget extends StatelessWidget {
+  OptionTabTimerDropdownWidget({
     required this.options,
+    required this.activeOption,
     required this.svgAsset,
     required this.title,
     required this.description,
@@ -15,11 +17,12 @@ class OptionTabDropdownWidget extends StatelessWidget {
     this.enabled = true,
   });
 
-  final List options;
+  final List<EnumTimerIntervalTypes> options;
+  final EnumTimerIntervalTypes activeOption;
   final String svgAsset;
   final String? title;
   final String? description;
-  final Function(Object?) onChanged;
+  final Function(EnumTimerIntervalTypes?) onChanged;
   final EdgeInsets padding;
   final bool loading;
   final bool enabled;
@@ -76,7 +79,7 @@ class OptionTabDropdownWidget extends StatelessWidget {
                             value: e,
                           ))
                       .toList(),
-                  value: options.first,
+                  value: activeOption,
                   style: tsS16W600CFF,
                   underline: Container(),
                   onChanged: onChanged,

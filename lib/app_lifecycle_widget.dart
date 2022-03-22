@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/utils/time_utils.dart';
 import 'package:provider/provider.dart';
 import 'common/cubits/account_cubit.dart';
 import 'main.dart';
@@ -34,7 +35,10 @@ class _AppLifecycleWidgetState extends State<AppLifecycleWidget>
     if (context.read<AccountCubit>().state is AccountLoaded) {
       if (state == AppLifecycleState.paused) {
         lockTimer = Timer(
-          Duration(minutes: 5),
+          Duration(
+            minutes: TimeUtils.timerIntervalTypeToInt(
+                context.read<AccountCubit>().timerInterval),
+          ),
           () async {
             MyApp.restartApp(context);
           },

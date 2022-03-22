@@ -42,4 +42,21 @@ abstract class TimeUtils {
         return "1h";
     }
   }
+
+  static int timerIntervalTypeToInt(EnumTimerIntervalTypes timestampType) {
+    switch (timestampType) {
+      case EnumTimerIntervalTypes.oneMinute:
+        return 1;
+      case EnumTimerIntervalTypes.twoMinutes:
+        return 2;
+      case EnumTimerIntervalTypes.threeMinutes:
+        return 3;
+      case EnumTimerIntervalTypes.fiveMinutes:
+        return 5;
+      case EnumTimerIntervalTypes.tenMinutes:
+        return 10;
+      case EnumTimerIntervalTypes.thirtyMinutes:
+        return 60;
+    }
+  }
 }

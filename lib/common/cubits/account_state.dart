@@ -40,3 +40,10 @@ class AccountPasswordValidating extends AccountLoaded {
     String? password,
   }) : super(account: account, password: password);
 }
+
+class AccountUpdatingTimer extends AccountLoaded {
+  AccountUpdatingTimer({
+    required ImportedAccountEntity account,
+    String? password,
+  }) : super(account: account, password: password);
+}

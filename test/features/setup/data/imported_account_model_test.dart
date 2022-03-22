@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
@@ -19,14 +20,16 @@ void main() {
     );
 
     tImportedAccount = ImportedAccountModel(
-        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-        encoding: tEncoding,
-        address: "k9o1dxJxQE8Zwm5Fy",
-        meta: tMeta,
-        name: "test",
-        biometricOnly: false,
-        biometricAccess: false,
-        signature: '');
+      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+      encoding: tEncoding,
+      address: "k9o1dxJxQE8Zwm5Fy",
+      meta: tMeta,
+      name: "test",
+      biometricOnly: false,
+      biometricAccess: false,
+      signature: '',
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
   });
 
   test('ImportAccountModel must be a ImportAccountEntity', () async {
