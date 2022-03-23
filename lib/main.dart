@@ -88,6 +88,11 @@ class _MyAppState extends State<MyApp> {
                   focusColor: Colors.transparent,
                   buttonTheme:
                       ButtonThemeData(buttonColor: AppColors.color1C2023),
+                  textSelectionTheme: TextSelectionThemeData(
+                    cursorColor: AppColors.colorE6007A,
+                    selectionColor: AppColors.color8E8E93,
+                    selectionHandleColor: AppColors.colorE6007A,
+                  ),
                   canvasColor: AppColors.color2E303C,
                   fontFamily: 'WorkSans',
                   dialogTheme: DialogTheme(
