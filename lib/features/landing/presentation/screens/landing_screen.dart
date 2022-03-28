@@ -306,6 +306,7 @@ class _LandingScreenState extends State<LandingScreen>
       _contentAnimController.value = perc;
     } else {
       perc = (diff / getAppDrawerNotifWidth()).clamp(0.0, 1.0);
+      _drawerAnimationController.value = 0.0;
       _drawerNotifAnimController.value = perc;
       _contentAnimController.value = perc;
     }
@@ -317,9 +318,13 @@ class _LandingScreenState extends State<LandingScreen>
     if (_drawerNotifAnimController.value > 0.0) {
       final animVal = _drawerNotifAnimController.value;
       isOpen = animVal > 0.5;
+
       if (velocity.pixelsPerSecond.dx.abs() > 1000.0) {
         isOpen = !_isNotifDrawerVisible;
       }
+
+      _drawerAnimationController.value = 0.0;
+
       if (isOpen) {
         _isNotifDrawerVisible = true;
         _drawerNotifAnimController.forward(from: animVal).orCancel;
@@ -333,9 +338,13 @@ class _LandingScreenState extends State<LandingScreen>
     }
     final animVal = _drawerAnimationController.value;
     isOpen = animVal > 0.5;
+
     if (velocity.pixelsPerSecond.dx.abs() > 1000.0) {
       isOpen = !_isDrawerVisible;
     }
+
+    _drawerNotifAnimController.value = 0.0;
+
     if (isOpen) {
       _isDrawerVisible = true;
       _drawerAnimationController.forward(from: animVal).orCancel;
