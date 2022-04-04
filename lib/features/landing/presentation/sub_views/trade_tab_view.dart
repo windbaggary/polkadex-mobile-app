@@ -106,6 +106,7 @@ class _TradeTabViewState extends State<TradeTabView>
                 children: [
                   _ThisTopRowSelectWidget(),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         constraints: BoxConstraints.tightForFinite(

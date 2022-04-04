@@ -9,7 +9,6 @@ import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_buy_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_sell_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_shimmer_widget.dart';
-import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
@@ -42,36 +41,23 @@ class OrderBookWidget extends StatelessWidget {
                   priceLengthNotifier: priceLengthNotifier,
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.color2E303C,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
-                ),
-                padding: const EdgeInsets.only(
-                  bottom: 20,
-                ),
-                child: ValueListenableBuilder<EnumMarketDropdownTypes>(
-                  valueListenable: marketDropDownNotifier,
-                  builder: (context, dropdownMarketIndex, child) {
-                    return ValueListenableBuilder<int>(
-                      valueListenable: priceLengthNotifier,
-                      builder: (context, selectedPriceLenIndex, child) {
-                        return _ThisOrderBookChartWidget(
-                          amountTokenId: amountTokenId,
-                          priceTokenId: priceTokenId,
-                          buyItems: state.orderbook.bid,
-                          sellItems: state.orderbook.ask,
-                          marketDropDownNotifier: marketDropDownNotifier,
-                          priceLengthNotifier: priceLengthNotifier,
-                        );
-                      },
-                    );
-                  },
-                ),
+              ValueListenableBuilder<EnumMarketDropdownTypes>(
+                valueListenable: marketDropDownNotifier,
+                builder: (context, dropdownMarketIndex, child) {
+                  return ValueListenableBuilder<int>(
+                    valueListenable: priceLengthNotifier,
+                    builder: (context, selectedPriceLenIndex, child) {
+                      return _ThisOrderBookChartWidget(
+                        amountTokenId: amountTokenId,
+                        priceTokenId: priceTokenId,
+                        buyItems: state.orderbook.bid,
+                        sellItems: state.orderbook.ask,
+                        marketDropDownNotifier: marketDropDownNotifier,
+                        priceLengthNotifier: priceLengthNotifier,
+                      );
+                    },
+                  );
+                },
               ),
             ],
           );
@@ -155,7 +141,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width: 7),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
