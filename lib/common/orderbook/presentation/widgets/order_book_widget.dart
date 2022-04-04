@@ -35,88 +35,44 @@ class OrderBookWidget extends StatelessWidget {
         if (state is OrderbookLoaded) {
           return Column(
             children: [
-              OrderBookHeadingWidget(
-                marketDropDownNotifier: marketDropDownNotifier,
-                priceLengthNotifier: priceLengthNotifier,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: OrderBookHeadingWidget(
+                  marketDropDownNotifier: marketDropDownNotifier,
+                  priceLengthNotifier: priceLengthNotifier,
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    padding: const EdgeInsets.only(top: 15, bottom: 13),
-                    decoration: BoxDecoration(
-                      color: AppColors.color24252C,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        topLeft: Radius.circular(20),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.17),
-                          blurRadius: 99,
-                          offset: Offset(0.0, 100.0),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Latest transaction',
-                          style: tsS15W400CFF,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 4),
-                          child: Text(
-                            '0.0006673',
-                            style: tsS20W600CFF.copyWith(
-                                color: AppColors.color0CA564),
-                          ),
-                        ),
-                        Text(
-                          '~\$32.88',
-                          style: tsS15W600CABB2BC,
-                        ),
-                      ],
-                    ),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.color2E303C,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.color2E303C,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(
-                      left: 23,
-                      right: 23,
-                      bottom: 20,
-                    ),
-                    child: ValueListenableBuilder<EnumMarketDropdownTypes>(
-                      valueListenable: marketDropDownNotifier,
-                      builder: (context, dropdownMarketIndex, child) {
-                        return ValueListenableBuilder<int>(
-                          valueListenable: priceLengthNotifier,
-                          builder: (context, selectedPriceLenIndex, child) {
-                            return _ThisOrderBookChartWidget(
-                              amountTokenId: amountTokenId,
-                              priceTokenId: priceTokenId,
-                              buyItems: state.orderbook.bid,
-                              sellItems: state.orderbook.ask,
-                              marketDropDownNotifier: marketDropDownNotifier,
-                              priceLengthNotifier: priceLengthNotifier,
-                            );
-                          },
+                ),
+                padding: const EdgeInsets.only(
+                  bottom: 20,
+                ),
+                child: ValueListenableBuilder<EnumMarketDropdownTypes>(
+                  valueListenable: marketDropDownNotifier,
+                  builder: (context, dropdownMarketIndex, child) {
+                    return ValueListenableBuilder<int>(
+                      valueListenable: priceLengthNotifier,
+                      builder: (context, selectedPriceLenIndex, child) {
+                        return _ThisOrderBookChartWidget(
+                          amountTokenId: amountTokenId,
+                          priceTokenId: priceTokenId,
+                          buyItems: state.orderbook.bid,
+                          sellItems: state.orderbook.ask,
+                          marketDropDownNotifier: marketDropDownNotifier,
+                          priceLengthNotifier: priceLengthNotifier,
                         );
                       },
-                    ),
-                  ),
-                ],
-              )
+                    );
+                  },
+                ),
+              ),
             ],
           );
         }
@@ -143,6 +99,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     required this.sellItems,
     required this.marketDropDownNotifier,
     required this.priceLengthNotifier,
+    this.horizontalPadding = 8,
   });
 
   final String amountTokenId;
@@ -151,6 +108,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   final List<OrderbookItemEntity> sellItems;
   final ValueNotifier<EnumMarketDropdownTypes> marketDropDownNotifier;
   final ValueNotifier<int> priceLengthNotifier;
+  final double horizontalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -185,10 +143,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildHeadingWidget(),
-                ),
-                SizedBox(width: 7),
-                Expanded(
                   child: _buildHeadingWidget(isBuyHeader: false),
                 ),
               ],
@@ -197,11 +151,16 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: _buildBuyWidget(buyItems),
-                ),
-                SizedBox(width: 7),
-                Expanded(
                   child: _buildSellWidget(sellItems),
+                ),
+              ],
+            ),
+            SizedBox(width: 7),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: _buildBuyWidget(buyItems),
                 ),
               ],
             ),
@@ -216,32 +175,38 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   }
 
   Widget _buildSellWidget(List<OrderbookItemEntity> sellItems) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(
-          sellItems.length,
-          (index) => OrderSellItemWidget(
-                orderbookItem: sellItems[index],
-                percentageFilled: sellItems[index].cumulativeAmount /
-                    sellItems.last.cumulativeAmount,
-                marketDropDownNotifier: marketDropDownNotifier,
-                priceLengthNotifier: priceLengthNotifier,
-              )),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: List.generate(
+            sellItems.length,
+            (index) => OrderSellItemWidget(
+                  orderbookItem: sellItems[index],
+                  percentageFilled: sellItems[index].cumulativeAmount /
+                      sellItems.last.cumulativeAmount,
+                  marketDropDownNotifier: marketDropDownNotifier,
+                  priceLengthNotifier: priceLengthNotifier,
+                )),
+      ),
     );
   }
 
   Widget _buildBuyWidget(List<OrderbookItemEntity> buyItems) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(
-          buyItems.length,
-          (index) => OrderBuyItemWidget(
-                orderbookItem: buyItems[index],
-                percentageFilled: buyItems[index].cumulativeAmount /
-                    buyItems.last.cumulativeAmount,
-                marketDropDownNotifier: marketDropDownNotifier,
-                priceLengthNotifier: priceLengthNotifier,
-              )),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: List.generate(
+            buyItems.length,
+            (index) => OrderBuyItemWidget(
+                  orderbookItem: buyItems[index],
+                  percentageFilled: buyItems[index].cumulativeAmount /
+                      buyItems.last.cumulativeAmount,
+                  marketDropDownNotifier: marketDropDownNotifier,
+                  priceLengthNotifier: priceLengthNotifier,
+                )),
+      ),
     );
   }
 
@@ -252,7 +217,12 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
             : 'Amount';
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 10),
+      padding: EdgeInsets.only(
+        left: horizontalPadding,
+        top: 16,
+        right: horizontalPadding,
+        bottom: 10,
+      ),
       child: Row(
         children: isBuyHeader
             ? [
