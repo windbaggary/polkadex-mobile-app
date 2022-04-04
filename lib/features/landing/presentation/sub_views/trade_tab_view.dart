@@ -105,8 +105,26 @@ class _TradeTabViewState extends State<TradeTabView>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _ThisTopRowSelectWidget(),
-                  _ThisBuySellWidget(
-                    key: _keyBuySellWidget,
+                  Row(
+                    children: [
+                      Container(
+                        constraints: BoxConstraints.tightForFinite(
+                            width: AppConfigs.size.width / 2),
+                        child: Consumer<TradeTabCoinProvider>(
+                          builder: (context, provider, _) => OrderBookWidget(
+                            amountTokenId: provider.tokenCoin.baseTokenId,
+                            priceTokenId: provider.tokenCoin.pairTokenId,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        constraints: BoxConstraints.tightForFinite(
+                            width: AppConfigs.size.width / 2),
+                        child: _ThisBuySellWidget(
+                          key: _keyBuySellWidget,
+                        ),
+                      ),
+                    ],
                   ),
                   Consumer<TradeTabCoinProvider>(
                     builder: (context, provider, _) => OrderBookWidget(
