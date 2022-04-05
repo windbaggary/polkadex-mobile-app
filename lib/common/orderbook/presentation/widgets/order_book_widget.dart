@@ -9,6 +9,7 @@ import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_buy_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_sell_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_shimmer_widget.dart';
+import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
@@ -108,6 +109,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           children: [
             _buildHeadingWidget(),
             _buildBuyWidget(buyItems),
+            _buildLatestTransactionWidget(),
           ],
         );
         break;
@@ -118,6 +120,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           children: [
             _buildHeadingWidget(isBuyHeader: false),
             _buildSellWidget(sellItems),
+            _buildLatestTransactionWidget(),
           ],
         );
         break;
@@ -126,29 +129,10 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("all"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: _buildHeadingWidget(isBuyHeader: false),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildSellWidget(sellItems),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildBuyWidget(buyItems),
-                ),
-              ],
-            ),
+            _buildHeadingWidget(isBuyHeader: false),
+            _buildSellWidget(sellItems),
+            _buildBuyWidget(buyItems),
+            _buildLatestTransactionWidget(),
           ],
         );
         break;
@@ -236,6 +220,53 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                   textAlign: TextAlign.end,
                 )
               ],
+      ),
+    );
+  }
+
+  Widget _buildLatestTransactionWidget({bool isDownTendency = true}) {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 8.0,
+        right: horizontalPadding,
+        bottom: 8.0,
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: horizontalPadding,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(15),
+            bottomRight: Radius.circular(15),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  isDownTendency ? Icons.arrow_downward : Icons.arrow_upward,
+                  color: isDownTendency
+                      ? AppColors.colorE6007A
+                      : AppColors.color0CA564,
+                  size: 18,
+                ),
+                Text(
+                  '0.218580',
+                  style: isDownTendency ? tsS18W600CE6007A : tsS18W600C0CA564,
+                ),
+              ],
+            ),
+            Text(
+              '\$24.00',
+              style: tsS14W400C93949A,
+            )
+          ],
+        ),
       ),
     );
   }
