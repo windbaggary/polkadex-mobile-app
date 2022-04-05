@@ -114,7 +114,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("sell"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildHeadingWidget(isBuyHeader: false),
+            _buildHeadingWidget(),
             _buildSellWidget(sellItems),
             _buildLatestTransactionWidget(),
           ],
@@ -125,10 +125,10 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("all"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildHeadingWidget(isBuyHeader: false),
+            _buildHeadingWidget(),
             _buildSellWidget(sellItems),
-            _buildBuyWidget(buyItems),
             _buildLatestTransactionWidget(),
+            _buildBuyWidget(buyItems),
           ],
         );
         break;
@@ -175,7 +175,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildHeadingWidget({bool isBuyHeader = true}) {
+  Widget _buildHeadingWidget() {
     final String amountColumnTitle =
         marketDropDownNotifier.value == EnumMarketDropdownTypes.depthmarket
             ? 'Cum'
@@ -188,33 +188,19 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
         bottom: 10,
       ),
       child: Row(
-        children: isBuyHeader
-            ? [
-                Expanded(
-                  child: Text(
-                    '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
-                    style: tsS13W500CFFOP40,
-                  ),
-                ),
-                Text(
-                  'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
-                  style: tsS13W500CFFOP40,
-                  textAlign: TextAlign.end,
-                )
-              ]
-            : [
-                Expanded(
-                  child: Text(
-                    'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
-                    style: tsS13W500CFFOP40,
-                  ),
-                ),
-                Text(
-                  '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
-                  style: tsS13W500CFFOP40,
-                  textAlign: TextAlign.end,
-                )
-              ],
+        children: [
+          Expanded(
+            child: Text(
+              'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
+              style: tsS13W500CFFOP40,
+            ),
+          ),
+          Text(
+            '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
+            style: tsS13W500CFFOP40,
+            textAlign: TextAlign.end,
+          )
+        ],
       ),
     );
   }
