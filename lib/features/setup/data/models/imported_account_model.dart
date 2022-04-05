@@ -1,3 +1,5 @@
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/string_utils.dart';
 import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
@@ -14,6 +16,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
     required bool biometricOnly,
     required bool biometricAccess,
     required String signature,
+    required EnumTimerIntervalTypes timerInterval,
   }) : super(
           encoded: encoded,
           encoding: encoding,
@@ -23,6 +26,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
           biometricOnly: biometricOnly,
           biometricAccess: biometricAccess,
           signature: signature,
+          timerInterval: timerInterval,
         );
 
   factory ImportedAccountModel.fromJson(Map<String, dynamic> map) {
@@ -35,6 +39,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
       biometricOnly: map['biometricOnly'] ?? false,
       biometricAccess: map['biometricAccess'] ?? false,
       signature: map['signature'] ?? '',
+      timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
+          EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
     );
   }
 
@@ -47,7 +53,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
       'name': name,
       'biometricOnly': biometricOnly,
       'biometricAccess': biometricAccess,
-      'signature': signature
+      'signature': signature,
+      'timerInterval': timerInterval.toString(),
     };
   }
 
@@ -60,15 +67,18 @@ class ImportedAccountModel extends ImportedAccountEntity {
     bool? biometricOnly,
     bool? biometricAccess,
     String? signature,
+    EnumTimerIntervalTypes? timerInterval,
   }) {
     return ImportedAccountModel(
-        encoded: encoded ?? this.encoded,
-        encoding: encoding ?? this.encoding,
-        address: address ?? this.address,
-        meta: meta ?? this.meta,
-        name: name ?? this.name,
-        biometricOnly: biometricOnly ?? this.biometricOnly,
-        biometricAccess: biometricAccess ?? this.biometricAccess,
-        signature: signature ?? this.signature);
+      encoded: encoded ?? this.encoded,
+      encoding: encoding ?? this.encoding,
+      address: address ?? this.address,
+      meta: meta ?? this.meta,
+      name: name ?? this.name,
+      biometricOnly: biometricOnly ?? this.biometricOnly,
+      biometricAccess: biometricAccess ?? this.biometricAccess,
+      signature: signature ?? this.signature,
+      timerInterval: timerInterval ?? this.timerInterval,
+    );
   }
 }

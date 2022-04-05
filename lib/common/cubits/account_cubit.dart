@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
@@ -79,6 +80,14 @@ class AccountCubit extends Cubit<AccountState> {
     return currentState is AccountLoaded
         ? currentState.account.biometricOnly
         : true;
+  }
+
+  EnumTimerIntervalTypes get timerInterval {
+    final currentState = state;
+
+    return currentState is AccountLoaded
+        ? currentState.account.timerInterval
+        : EnumTimerIntervalTypes.oneMinute;
   }
 
   Future<void> loadAccountData() async {
@@ -194,5 +203,25 @@ class AccountCubit extends Cubit<AccountState> {
     }
 
     return;
+  }
+
+  Future<void> changeLockTimer(EnumTimerIntervalTypes newInterval) async {
+    final currentState = state;
+
+    if (currentState is AccountLoaded) {
+      emit(AccountUpdatingTimer(
+        account: currentState.account,
+        password: currentState.password,
+      ));
+
+      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+          .copyWith(timerInterval: newInterval);
+
+      await _saveAccountUseCase(keypairJson: json.encode(acc));
+      emit(AccountLoaded(
+        account: acc,
+        password: currentState.password,
+      ));
+    }
   }
 }

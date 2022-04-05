@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
 import 'meta_entity.dart';
 
@@ -12,6 +13,7 @@ class ImportedAccountEntity extends Equatable {
     required this.biometricOnly,
     required this.biometricAccess,
     required this.signature,
+    required this.timerInterval,
   });
 
   final String encoded;
@@ -22,6 +24,7 @@ class ImportedAccountEntity extends Equatable {
   final bool biometricOnly;
   final bool biometricAccess;
   final String signature;
+  final EnumTimerIntervalTypes timerInterval;
 
   @override
   List<Object?> get props => [
@@ -32,5 +35,6 @@ class ImportedAccountEntity extends Equatable {
         name,
         biometricAccess,
         signature,
+        timerInterval,
       ];
 }
