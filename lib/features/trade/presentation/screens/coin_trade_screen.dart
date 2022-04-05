@@ -5,7 +5,7 @@ import 'package:k_chart/chart_style.dart';
 import 'package:k_chart/k_chart_widget.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
-import 'package:polkadex/common/graph/utils/timestamp_utils.dart';
+import 'package:polkadex/common/utils/time_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
@@ -573,8 +573,7 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                               : null,
                                         ),
                                         child: Text(
-                                          TimestampUtils.timestampTypeToString(
-                                              item),
+                                          TimeUtils.timestampTypeToString(item),
                                           style: tsS13W600CFF,
                                         ),
                                       ),

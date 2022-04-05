@@ -125,3 +125,12 @@ enum EnumMarketDropdownTypes {
   orderbook,
   depthmarket,
 }
+
+enum EnumTimerIntervalTypes {
+  oneMinute,
+  twoMinutes,
+  threeMinutes,
+  fiveMinutes,
+  tenMinutes,
+  thirtyMinutes,
+}

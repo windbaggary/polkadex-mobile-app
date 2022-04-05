@@ -1,5 +1,6 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/data/models/encoding_model.dart';
@@ -50,14 +51,16 @@ void main() {
       type: ["none"],
     );
     tImportedAccount = ImportedAccountModel(
-        encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-        encoding: tEncoding,
-        address: "k9o1dxJxQE8Zwm5Fy",
-        meta: tMeta,
-        name: "",
-        biometricOnly: false,
-        biometricAccess: false,
-        signature: '');
+      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+      encoding: tEncoding,
+      address: "k9o1dxJxQE8Zwm5Fy",
+      meta: tMeta,
+      name: "",
+      biometricOnly: false,
+      biometricAccess: false,
+      signature: '',
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
   });
 
   group('Mnemonic repository tests ', () {
