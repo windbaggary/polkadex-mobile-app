@@ -28,15 +28,13 @@ class OrderBookWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 35, bottom: 96),
-      child: BlocBuilder<OrderbookCubit, OrderbookState>(
-          builder: (context, state) {
+    return BlocBuilder<OrderbookCubit, OrderbookState>(
+      builder: (context, state) {
         if (state is OrderbookLoaded) {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.only(left: 8),
                 child: OrderBookHeadingWidget(
                   marketDropDownNotifier: marketDropDownNotifier,
                   priceLengthNotifier: priceLengthNotifier,
@@ -72,7 +70,7 @@ class OrderBookWidget extends StatelessWidget {
         }
 
         return OrderBookShimmerWidget();
-      }),
+      },
     );
   }
 }
@@ -86,7 +84,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     required this.sellItems,
     required this.marketDropDownNotifier,
     required this.priceLengthNotifier,
-    this.horizontalPadding = 8,
   });
 
   final String amountTokenId;
@@ -95,7 +92,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   final List<OrderbookItemEntity> sellItems;
   final ValueNotifier<EnumMarketDropdownTypes> marketDropDownNotifier;
   final ValueNotifier<int> priceLengthNotifier;
-  final double horizontalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +141,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 
   Widget _buildSellWidget(List<OrderbookItemEntity> sellItems) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      padding: EdgeInsets.only(left: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: List.generate(
@@ -163,7 +159,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 
   Widget _buildBuyWidget(List<OrderbookItemEntity> buyItems) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      padding: EdgeInsets.only(left: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: List.generate(
@@ -187,9 +183,8 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-        left: horizontalPadding,
+        left: 8,
         top: 16,
-        right: horizontalPadding,
         bottom: 10,
       ),
       child: Row(
@@ -228,13 +223,12 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         top: 8.0,
-        right: horizontalPadding,
         bottom: 8.0,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical: 18,
-          horizontal: horizontalPadding,
+          horizontal: 8,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
