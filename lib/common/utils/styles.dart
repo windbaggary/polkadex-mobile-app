@@ -30,6 +30,12 @@ TextStyle get tsS14W400CABB2BC => TextStyle(
       color: AppColors.colorABB2BC,
     );
 
+TextStyle get tsS16W400CABB2BC => TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+      color: AppColors.colorABB2BC,
+    );
+
 TextStyle get tsS16W500CABB2BC => TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w500,
