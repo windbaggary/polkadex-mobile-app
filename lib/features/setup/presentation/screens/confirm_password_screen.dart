@@ -145,7 +145,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                 children: [
                   AppButton(
                     label: 'Confirm',
-                    padding: EdgeInsets.symmetric(
+                    innerPadding: EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 16,
                     ),

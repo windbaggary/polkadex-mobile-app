@@ -351,7 +351,7 @@ class BuyDotWidgetState extends State<BuyDotWidget>
                         return ValueListenableBuilder<EnumOrderTypes>(
                           valueListenable: widget.orderTypeNotifier,
                           builder: (_, __, ___) => AppButton(
-                            padding: EdgeInsets.symmetric(
+                            innerPadding: EdgeInsets.symmetric(
                                 vertical: 14, horizontal: 64),
                             label:
                                 '${state.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(widget.leftAsset)}',

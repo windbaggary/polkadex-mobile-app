@@ -66,7 +66,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                               Expanded(
                                 child: AppButton(
                                   label: 'Logout',
-                                  padding: EdgeInsets.symmetric(
+                                  innerPadding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 16,
                                   ),
@@ -84,7 +84,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                               Expanded(
                                 child: AppButton(
                                   label: 'Authenticate',
-                                  padding: EdgeInsets.symmetric(
+                                  innerPadding: EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 16,
                                   ),

@@ -8,6 +8,7 @@ import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
+import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -49,6 +50,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             ),
             SizedBox(height: 8),
             _orderTypeWidget(coinProvider),
+            SizedBox(height: 8),
+            _priceInputWidget(),
+            SizedBox(height: 8),
+            _amountInputWidget(orderSide: placeOrderState.orderSide),
             SizedBox(height: 6),
             BlocConsumer<BalanceCubit, BalanceState>(
                 listener: (context, balanceState) {
@@ -65,12 +70,15 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
               return _balanceShimmerWidget();
             }),
+            SizedBox(height: 16),
+            _totalWidget(),
             AppButton(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 64),
               label:
                   '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
               enabled: true,
               onTap: () {},
+              innerPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 64),
+              outerPadding: EdgeInsets.symmetric(vertical: 8),
               backgroundColor: placeOrderState.orderSide == EnumBuySell.buy
                   ? AppColors.color0CA564
                   : AppColors.colorE6007A,
@@ -210,6 +218,115 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
+  Widget _priceInputWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      decoration: BoxDecoration(
+        color: AppColors.color3B4150,
+        border: Border.all(color: AppColors.color558BA1BE),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Icon(
+            Icons.remove,
+            color: AppColors.colorABB2BC,
+            size: 18,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                'Price (DOT)',
+                style: tsS15W600CABB2BC,
+              ),
+            ),
+          ),
+          Icon(
+            Icons.add,
+            color: AppColors.colorABB2BC,
+            size: 18,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _amountInputWidget({EnumBuySell orderSide = EnumBuySell.buy}) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      decoration: BoxDecoration(
+        color: AppColors.color3B4150,
+        border: Border.all(color: AppColors.color558BA1BE),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.remove,
+                color: AppColors.colorABB2BC,
+                size: 18,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    'Amount (PDEX)',
+                    style: tsS15W600CABB2BC,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.add,
+                color: AppColors.colorABB2BC,
+                size: 18,
+              ),
+            ],
+          ),
+          SizedBox(height: 24),
+          AppHorizontalSlider(
+            bgColor: Colors.white,
+            activeColor: orderSide == EnumBuySell.buy
+                ? AppColors.color0CA564
+                : AppColors.colorE6007A,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _totalWidget() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      decoration: BoxDecoration(
+        color: AppColors.color3B4150,
+        border: Border.all(color: AppColors.color558BA1BE),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            'Total (DOT)',
+            style: tsS15W600CABB2BC,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _orderTypeWidget(TradeTabCoinProvider coinProvider) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
@@ -217,7 +334,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         color: AppColors.color3B4150,
         border: Border.all(color: AppColors.color558BA1BE),
         borderRadius: BorderRadius.all(
-          Radius.circular(20.0),
+          Radius.circular(10.0),
         ),
       ),
       child: GestureDetector(
