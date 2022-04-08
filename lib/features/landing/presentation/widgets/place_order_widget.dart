@@ -9,6 +9,7 @@ import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticke
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
+import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -25,6 +26,8 @@ class PlaceOrderWidget extends StatefulWidget {
 class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   final ValueNotifier<EnumOrderTypes> _orderTypeNotifier =
       ValueNotifier(EnumOrderTypes.market);
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -235,29 +238,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           Radius.circular(10.0),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(
-            Icons.remove,
-            color: AppColors.colorABB2BC,
-            size: 18,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Price (${TokenUtils.tokenIdToAcronym(tokenId)})',
-                style: tsS15W600CABB2BC,
-              ),
-            ),
-          ),
-          Icon(
-            Icons.add,
-            color: AppColors.colorABB2BC,
-            size: 18,
-          ),
-        ],
+      child: QuantityInputWidget(
+        hintText: 'Price (${TokenUtils.tokenIdToAcronym(tokenId)})',
+        controller: _priceController,
+        onChanged: (_) {},
       ),
     );
   }
@@ -278,29 +262,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.remove,
-                color: AppColors.colorABB2BC,
-                size: 18,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    'Amount (${TokenUtils.tokenIdToAcronym(tokenId)})',
-                    style: tsS15W600CABB2BC,
-                  ),
-                ),
-              ),
-              Icon(
-                Icons.add,
-                color: AppColors.colorABB2BC,
-                size: 18,
-              ),
-            ],
+          QuantityInputWidget(
+            hintText: 'Amount (${TokenUtils.tokenIdToAcronym(tokenId)})',
+            controller: _amountController,
+            onChanged: (_) {},
           ),
           SizedBox(height: 24),
           AppHorizontalSlider(

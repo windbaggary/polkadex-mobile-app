@@ -36,7 +36,6 @@ class TradeTabView extends StatefulWidget {
 
 class _TradeTabViewState extends State<TradeTabView>
     with TickerProviderStateMixin {
-  final _keyBuySellWidget = GlobalKey<__ThisBuySellWidgetState>();
   late TabController _buySellDotController;
   late ScrollController _scrollController;
 
@@ -126,9 +125,6 @@ class _TradeTabViewState extends State<TradeTabView>
                           child: Column(
                             children: [
                               PlaceOrderWidget(),
-                              _ThisBuySellWidget(
-                                key: _keyBuySellWidget,
-                              )
                             ],
                           ),
                         ),
