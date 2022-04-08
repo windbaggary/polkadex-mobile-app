@@ -5,6 +5,8 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
+import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
@@ -20,6 +22,8 @@ class PlaceOrderWidget extends StatefulWidget {
 }
 
 class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
+  final ValueNotifier<EnumOrderTypes> _orderTypeNotifier =
+      ValueNotifier(EnumOrderTypes.market);
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                   baseTokenId: coinProvider.tokenCoin.baseTokenId,
                   pairTokenId: coinProvider.tokenCoin.pairTokenId),
             ),
+            SizedBox(height: 8),
+            _orderTypeWidget(coinProvider),
             SizedBox(height: 6),
             BlocConsumer<BalanceCubit, BalanceState>(
                 listener: (context, balanceState) {
@@ -73,6 +79,37 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         ),
       );
     });
+  }
+
+  String _getOrderTypeName(EnumOrderTypes type) {
+    switch (type) {
+      case EnumOrderTypes.market:
+        return "Market Order";
+      case EnumOrderTypes.limit:
+        return "Limit Order";
+      case EnumOrderTypes.stop:
+        return "Stop Order";
+    }
+  }
+
+  void _onTapOrderType(
+    BuildContext context,
+    TradeTabCoinProvider coinProvider,
+  ) {
+    showOrderTypeDialog(
+      context: context,
+      selectedIndex: _orderTypeNotifier.value,
+      onItemSelected: (index) {
+        _orderTypeNotifier.value = index;
+
+        if (index == EnumOrderTypes.market) {
+          context.read<TickerCubit>().getLastTicker(
+                leftTokenId: coinProvider.tokenCoin.baseTokenId,
+                rightTokenId: coinProvider.tokenCoin.pairTokenId,
+              );
+        }
+      },
+    );
   }
 
   void _onUpdateAvailableBalance({
@@ -170,6 +207,39 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           ),
         )
       ],
+    );
+  }
+
+  Widget _orderTypeWidget(TradeTabCoinProvider coinProvider) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      decoration: BoxDecoration(
+        color: AppColors.color3B4150,
+        border: Border.all(color: AppColors.color558BA1BE),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      child: GestureDetector(
+        onTapUp: (_) => _onTapOrderType(context, coinProvider),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ValueListenableBuilder<EnumOrderTypes>(
+              valueListenable: _orderTypeNotifier,
+              builder: (context, type, _) => Text(
+                _getOrderTypeName(type),
+                style: tsS15W600CFF,
+              ),
+            ),
+            Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white,
+              size: 18,
+            )
+          ],
+        ),
+      ),
     );
   }
 
