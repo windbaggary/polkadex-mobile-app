@@ -51,9 +51,14 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             SizedBox(height: 8),
             _orderTypeWidget(coinProvider),
             SizedBox(height: 8),
-            _priceInputWidget(),
+            _priceInputWidget(
+              tokenId: coinProvider.tokenCoin.pairTokenId,
+            ),
             SizedBox(height: 8),
-            _amountInputWidget(orderSide: placeOrderState.orderSide),
+            _amountInputWidget(
+              tokenId: coinProvider.tokenCoin.baseTokenId,
+              orderSide: placeOrderState.orderSide,
+            ),
             SizedBox(height: 6),
             BlocConsumer<BalanceCubit, BalanceState>(
                 listener: (context, balanceState) {
@@ -71,7 +76,9 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
               return _balanceShimmerWidget();
             }),
             SizedBox(height: 16),
-            _totalWidget(),
+            _totalWidget(
+              tokenId: coinProvider.tokenCoin.pairTokenId,
+            ),
             AppButton(
               label:
                   '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
@@ -218,7 +225,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
-  Widget _priceInputWidget() {
+  Widget _priceInputWidget({required String tokenId}) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       decoration: BoxDecoration(
@@ -240,7 +247,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                'Price (DOT)',
+                'Price (${TokenUtils.tokenIdToAcronym(tokenId)})',
                 style: tsS15W600CABB2BC,
               ),
             ),
@@ -255,7 +262,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
-  Widget _amountInputWidget({EnumBuySell orderSide = EnumBuySell.buy}) {
+  Widget _amountInputWidget({
+    required String tokenId,
+    EnumBuySell orderSide = EnumBuySell.buy,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       decoration: BoxDecoration(
@@ -280,7 +290,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    'Amount (PDEX)',
+                    'Amount (${TokenUtils.tokenIdToAcronym(tokenId)})',
                     style: tsS15W600CABB2BC,
                   ),
                 ),
@@ -304,7 +314,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
-  Widget _totalWidget() {
+  Widget _totalWidget({required String tokenId}) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       decoration: BoxDecoration(
@@ -319,7 +329,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
-            'Total (DOT)',
+            'Total (${TokenUtils.tokenIdToAcronym(tokenId)})',
             style: tsS15W600CABB2BC,
           ),
         ),
