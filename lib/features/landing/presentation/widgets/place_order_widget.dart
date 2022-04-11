@@ -11,6 +11,7 @@ import 'package:polkadex/features/landing/presentation/providers/trade_tab_provi
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
+import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -26,6 +27,7 @@ class PlaceOrderWidget extends StatefulWidget {
 class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   final ValueNotifier<EnumOrderTypes> _orderTypeNotifier =
       ValueNotifier(EnumOrderTypes.market);
+  final ValueNotifier<double> _progressNotifier = ValueNotifier(0.0);
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
@@ -42,14 +44,34 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           children: [
             _buySellWidget(
               buySellEnumValue: placeOrderState.orderSide,
-              onBuyTap: () => _onUpdateAvailableBalance(
-                  orderSide: EnumBuySell.buy,
-                  baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                  pairTokenId: coinProvider.tokenCoin.pairTokenId),
-              onSellTap: () => _onUpdateAvailableBalance(
-                  orderSide: EnumBuySell.sell,
-                  baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                  pairTokenId: coinProvider.tokenCoin.pairTokenId),
+              onBuyTap: () {
+                _onUpdateAvailableBalance(
+                    orderSide: EnumBuySell.buy,
+                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
+                    pairTokenId: coinProvider.tokenCoin.pairTokenId);
+                _onProgressOrOrderSideUpdate(
+                  EnumBuySell.buy,
+                  placeOrderState.balance,
+                  _progressNotifier.value,
+                  _amountController,
+                  _priceController,
+                  context,
+                );
+              },
+              onSellTap: () {
+                _onUpdateAvailableBalance(
+                    orderSide: EnumBuySell.sell,
+                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
+                    pairTokenId: coinProvider.tokenCoin.pairTokenId);
+                _onProgressOrOrderSideUpdate(
+                  EnumBuySell.sell,
+                  placeOrderState.balance,
+                  _progressNotifier.value,
+                  _amountController,
+                  _priceController,
+                  context,
+                );
+              },
             ),
             SizedBox(height: 8),
             _orderTypeWidget(coinProvider),
@@ -85,7 +107,12 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             AppButton(
               label:
                   '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
-              enabled: true,
+              enabled: _orderTypeNotifier.value == EnumOrderTypes.market
+                  ? context.read<TickerCubit>().state is TickerLoaded &&
+                      context.read<PlaceOrderCubit>().state
+                          is! PlaceOrderNotValid
+                  : context.read<PlaceOrderCubit>().state
+                      is! PlaceOrderNotValid,
               onTap: () {},
               innerPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 64),
               outerPadding: EdgeInsets.symmetric(vertical: 8),
@@ -149,6 +176,97 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     }
 
     context.read<PlaceOrderCubit>().updateOrderParams(balance: 0.0);
+  }
+
+  void _onProgressOrOrderSideUpdate(
+    EnumBuySell buyOrSell,
+    double walletBalance,
+    double progressNotifier,
+    TextEditingController amountController,
+    TextEditingController priceController,
+    BuildContext context,
+  ) {
+    double progressFloor = MathUtils.floorDecimalPrecision(progressNotifier, 2);
+    double newAmount = walletBalance * progressFloor;
+
+    final price = double.tryParse(priceController.text);
+
+    if (price == null) {
+      context.read<PlaceOrderCubit>().updateOrderParams(orderside: buyOrSell);
+      return;
+    }
+
+    if (buyOrSell == EnumBuySell.buy) {
+      newAmount /= price;
+    }
+
+    newAmount = MathUtils.floorDecimalPrecision(newAmount, 4);
+    amountController.text = newAmount.toString();
+
+    context.read<PlaceOrderCubit>().updateOrderParams(
+          orderside: buyOrSell,
+          balance: walletBalance,
+          amount: newAmount,
+          price: price,
+        );
+  }
+
+  void _onPriceAmountChanged(
+    BuildContext context,
+    double walletBalance,
+    String val,
+    bool isAmount,
+  ) {
+    double amount;
+    double price;
+
+    try {
+      if (isAmount) {
+        amount = double.tryParse(val) ?? 0.0;
+        price = double.tryParse(_priceController.text) ?? 0.0;
+      } else {
+        amount = double.tryParse(_amountController.text) ?? 0.0;
+        price = double.tryParse(val) ?? 0.0;
+      }
+
+      if (walletBalance > 0.0) {
+        _progressNotifier.value = ((amount * price) / walletBalance);
+      } else {
+        _progressNotifier.value = 0.0;
+      }
+
+      context.read<PlaceOrderCubit>().updateOrderParams(
+            balance: walletBalance,
+            amount: amount,
+            price: price,
+          );
+    } catch (ex) {
+      print(ex);
+    }
+  }
+
+  Widget _evalTotalWidget(String tokenAcronym) {
+    String? totalAmount;
+    String totalPlaceholder = 'Total ($tokenAcronym)';
+
+    try {
+      final double? amount = double.tryParse(_amountController.text);
+      final double? price = double.tryParse(_priceController.text);
+
+      totalAmount =
+          amount != null && price != null ? (amount * price).toString() : null;
+    } on Exception catch (ex) {
+      print(ex);
+    }
+
+    if ((totalAmount?.isEmpty ?? true) || (_progressNotifier.value == 0.0)) {
+      totalAmount = totalPlaceholder;
+    }
+
+    return Text(
+      totalAmount ?? totalPlaceholder,
+      style: tsS16W500CFF,
+    );
   }
 
   Widget _balanceWidget({
@@ -241,7 +359,12 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       child: QuantityInputWidget(
         hintText: 'Price (${TokenUtils.tokenIdToAcronym(tokenId)})',
         controller: _priceController,
-        onChanged: (_) {},
+        onChanged: (price) => _onPriceAmountChanged(
+          context,
+          context.read<PlaceOrderCubit>().state.balance,
+          price,
+          false,
+        ),
       ),
     );
   }
@@ -265,14 +388,36 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           QuantityInputWidget(
             hintText: 'Amount (${TokenUtils.tokenIdToAcronym(tokenId)})',
             controller: _amountController,
-            onChanged: (_) {},
+            onChanged: (amount) => _onPriceAmountChanged(
+              context,
+              context.read<PlaceOrderCubit>().state.balance,
+              amount,
+              true,
+            ),
           ),
           SizedBox(height: 24),
-          AppHorizontalSlider(
-            bgColor: Colors.white,
-            activeColor: orderSide == EnumBuySell.buy
-                ? AppColors.color0CA564
-                : AppColors.colorE6007A,
+          ValueListenableBuilder<double>(
+            valueListenable: _progressNotifier,
+            builder: (context, progress, child) {
+              return AppHorizontalSlider(
+                bgColor: Colors.white,
+                activeColor: orderSide == EnumBuySell.buy
+                    ? AppColors.color0CA564
+                    : AppColors.colorE6007A,
+                initialProgress: progress.clamp(0.0, 1.0),
+                onProgressUpdate: (progress) {
+                  _progressNotifier.value = progress;
+                  _onProgressOrOrderSideUpdate(
+                    context.read<PlaceOrderCubit>().state.orderSide,
+                    context.read<PlaceOrderCubit>().state.balance,
+                    progress,
+                    _amountController,
+                    _priceController,
+                    context,
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
@@ -293,10 +438,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       child: Expanded(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            'Total (${TokenUtils.tokenIdToAcronym(tokenId)})',
-            style: tsS15W600CABB2BC,
-          ),
+          child: _evalTotalWidget(TokenUtils.tokenIdToAcronym(tokenId)),
         ),
       ),
     );
