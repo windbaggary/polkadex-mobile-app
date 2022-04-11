@@ -48,34 +48,16 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           children: [
             _buySellWidget(
               buySellEnumValue: placeOrderState.orderSide,
-              onBuyTap: () {
-                _onUpdateAvailableBalance(
-                    orderSide: EnumBuySell.buy,
-                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                    pairTokenId: coinProvider.tokenCoin.pairTokenId);
-                _onProgressOrOrderSideUpdate(
-                  EnumBuySell.buy,
-                  placeOrderState.balance,
-                  _progressNotifier.value,
-                  _amountController,
-                  _priceController,
-                  context,
-                );
-              },
-              onSellTap: () {
-                _onUpdateAvailableBalance(
-                    orderSide: EnumBuySell.sell,
-                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                    pairTokenId: coinProvider.tokenCoin.pairTokenId);
-                _onProgressOrOrderSideUpdate(
-                  EnumBuySell.sell,
-                  placeOrderState.balance,
-                  _progressNotifier.value,
-                  _amountController,
-                  _priceController,
-                  context,
-                );
-              },
+              onBuyTap: () => _onTapOrderSide(
+                EnumBuySell.buy,
+                context.read<BalanceCubit>(),
+                coinProvider,
+              ),
+              onSellTap: () => _onTapOrderSide(
+                EnumBuySell.sell,
+                context.read<BalanceCubit>(),
+                coinProvider,
+              ),
             ),
             SizedBox(height: 8),
             _orderTypeWidget(coinProvider),
@@ -158,6 +140,32 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     }
   }
 
+  _onTapOrderSide(
+    EnumBuySell enumBuySell,
+    BalanceCubit balanceCubit,
+    TradeTabCoinProvider coinProvider,
+  ) {
+    final balanceState = balanceCubit.state;
+    double balance;
+
+    if (balanceState is BalanceLoaded) {
+      balance = double.parse(balanceState.free[enumBuySell == EnumBuySell.buy
+          ? coinProvider.tokenCoin.pairTokenId
+          : coinProvider.tokenCoin.baseTokenId]);
+    } else {
+      balance = 0.0;
+    }
+
+    _onProgressOrOrderSideUpdate(
+      enumBuySell,
+      balance,
+      _progressNotifier.value,
+      _amountController,
+      _priceController,
+      context,
+    );
+  }
+
   void _onTapOrderType(
     BuildContext context,
     TradeTabCoinProvider coinProvider,
@@ -185,14 +193,14 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }) {
     final balanceCubit = context.read<BalanceCubit>();
     final balanceState = balanceCubit.state;
+    final newOrderSide =
+        orderSide ?? context.read<PlaceOrderCubit>().state.orderSide;
 
     if (balanceState is BalanceLoaded) {
       context.read<PlaceOrderCubit>().updateOrderParams(
-          orderside: orderSide,
+          orderside: newOrderSide,
           balance: double.parse(balanceState.free[
-              context.read<PlaceOrderCubit>().state.orderSide == EnumBuySell.buy
-                  ? pairTokenId
-                  : baseTokenId]));
+              newOrderSide == EnumBuySell.buy ? pairTokenId : baseTokenId]));
       return;
     }
 
@@ -213,7 +221,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     final price = double.tryParse(priceController.text);
 
     if (price == null) {
-      context.read<PlaceOrderCubit>().updateOrderParams(orderside: buyOrSell);
+      context.read<PlaceOrderCubit>().updateOrderParams(
+            orderside: buyOrSell,
+            balance: walletBalance,
+          );
       return;
     }
 
