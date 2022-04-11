@@ -37,96 +37,102 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TradeTabCoinProvider>(builder: (context, coinProvider, _) {
-      _onUpdateAvailableBalance(
-          baseTokenId: coinProvider.tokenCoin.baseTokenId,
-          pairTokenId: coinProvider.tokenCoin.pairTokenId);
+    return Consumer<TradeTabCoinProvider>(
+      builder: (context, coinProvider, _) {
+        _onUpdateAvailableBalance(
+            baseTokenId: coinProvider.tokenCoin.baseTokenId,
+            pairTokenId: coinProvider.tokenCoin.pairTokenId);
 
-      return BlocBuilder<PlaceOrderCubit, PlaceOrderState>(
-        builder: (context, placeOrderState) => Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buySellWidget(
-              buySellEnumValue: placeOrderState.orderSide,
-              onBuyTap: () => _onTapOrderSide(
-                EnumBuySell.buy,
-                context.read<BalanceCubit>(),
-                coinProvider,
+        return BlocBuilder<PlaceOrderCubit, PlaceOrderState>(
+          builder: (context, placeOrderState) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buySellWidget(
+                buySellEnumValue: placeOrderState.orderSide,
+                onBuyTap: () => _onTapOrderSide(
+                  EnumBuySell.buy,
+                  context.read<BalanceCubit>(),
+                  coinProvider,
+                ),
+                onSellTap: () => _onTapOrderSide(
+                  EnumBuySell.sell,
+                  context.read<BalanceCubit>(),
+                  coinProvider,
+                ),
               ),
-              onSellTap: () => _onTapOrderSide(
-                EnumBuySell.sell,
-                context.read<BalanceCubit>(),
-                coinProvider,
+              SizedBox(height: 8),
+              _orderTypeWidget(coinProvider),
+              SizedBox(height: 8),
+              _priceInputWidget(
+                coinProvider: coinProvider,
               ),
-            ),
-            SizedBox(height: 8),
-            _orderTypeWidget(coinProvider),
-            SizedBox(height: 8),
-            _priceInputWidget(
-              tokenId: coinProvider.tokenCoin.pairTokenId,
-            ),
-            SizedBox(height: 8),
-            _amountInputWidget(
-              tokenId: coinProvider.tokenCoin.baseTokenId,
-              orderSide: placeOrderState.orderSide,
-            ),
-            SizedBox(height: 6),
-            BlocConsumer<BalanceCubit, BalanceState>(
-                listener: (context, balanceState) {
-              _onUpdateAvailableBalance(
-                  baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                  pairTokenId: coinProvider.tokenCoin.pairTokenId);
-            }, builder: (context, balanceState) {
-              if (balanceState is BalanceLoaded) {
-                return _balanceWidget(
-                  baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                  pairTokenId: coinProvider.tokenCoin.pairTokenId,
-                );
-              }
+              SizedBox(height: 8),
+              _amountInputWidget(
+                tokenId: coinProvider.tokenCoin.baseTokenId,
+                orderSide: placeOrderState.orderSide,
+              ),
+              SizedBox(height: 6),
+              BlocConsumer<BalanceCubit, BalanceState>(
+                  listener: (context, balanceState) {
+                _onUpdateAvailableBalance(
+                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
+                    pairTokenId: coinProvider.tokenCoin.pairTokenId);
+              }, builder: (context, balanceState) {
+                if (balanceState is BalanceLoaded) {
+                  return _balanceWidget(
+                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
+                    pairTokenId: coinProvider.tokenCoin.pairTokenId,
+                  );
+                }
 
-              return _balanceShimmerWidget();
-            }),
-            SizedBox(height: 16),
-            _totalWidget(
-              tokenId: coinProvider.tokenCoin.pairTokenId,
-            ),
-            placeOrderState is PlaceOrderLoading
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 28),
-                    child: Center(
-                      child: LoadingDotsWidget(
-                        dotSize: 10,
+                return _balanceShimmerWidget();
+              }),
+              SizedBox(height: 16),
+              _totalWidget(
+                tokenId: coinProvider.tokenCoin.pairTokenId,
+              ),
+              placeOrderState is PlaceOrderLoading
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 28),
+                      child: Center(
+                        child: LoadingDotsWidget(
+                          dotSize: 10,
+                        ),
+                      ),
+                    )
+                  : ValueListenableBuilder<EnumOrderTypes>(
+                      valueListenable: _orderTypeNotifier,
+                      builder: (_, __, ___) => AppButton(
+                        label:
+                            '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
+                        enabled:
+                            _orderTypeNotifier.value == EnumOrderTypes.market
+                                ? placeOrderState is TickerLoaded &&
+                                    placeOrderState is! PlaceOrderNotValid
+                                : placeOrderState is! PlaceOrderNotValid,
+                        onTap: () => _onBuyOrSell(
+                          placeOrderState.orderSide,
+                          _orderTypeNotifier.value,
+                          coinProvider.tokenCoin.baseTokenId,
+                          coinProvider.tokenCoin.pairTokenId,
+                          _priceController.text,
+                          _amountController.text,
+                          context,
+                        ),
+                        innerPadding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 64),
+                        outerPadding: EdgeInsets.symmetric(vertical: 8),
+                        backgroundColor:
+                            placeOrderState.orderSide == EnumBuySell.buy
+                                ? AppColors.color0CA564
+                                : AppColors.colorE6007A,
                       ),
                     ),
-                  )
-                : AppButton(
-                    label:
-                        '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
-                    enabled: _orderTypeNotifier.value == EnumOrderTypes.market
-                        ? placeOrderState is TickerLoaded &&
-                            placeOrderState is! PlaceOrderNotValid
-                        : placeOrderState is! PlaceOrderNotValid,
-                    onTap: () => _onBuyOrSell(
-                      placeOrderState.orderSide,
-                      _orderTypeNotifier.value,
-                      coinProvider.tokenCoin.baseTokenId,
-                      coinProvider.tokenCoin.pairTokenId,
-                      _priceController.text,
-                      _amountController.text,
-                      context,
-                    ),
-                    innerPadding:
-                        EdgeInsets.symmetric(vertical: 20, horizontal: 64),
-                    outerPadding: EdgeInsets.symmetric(vertical: 8),
-                    backgroundColor:
-                        placeOrderState.orderSide == EnumBuySell.buy
-                            ? AppColors.color0CA564
-                            : AppColors.colorE6007A,
-                  ),
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      },
+    );
   }
 
   String _getOrderTypeName(EnumOrderTypes type) {
@@ -177,6 +183,15 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         _orderTypeNotifier.value = index;
 
         if (index == EnumOrderTypes.market) {
+          _priceController.text = '';
+          WidgetsBinding.instance
+              ?.addPostFrameCallback((_) => _onPriceAmountChanged(
+                    context,
+                    context.read<PlaceOrderCubit>().state.balance,
+                    '',
+                    false,
+                  ));
+
           context.read<TickerCubit>().getLastTicker(
                 leftTokenId: coinProvider.tokenCoin.baseTokenId,
                 rightTokenId: coinProvider.tokenCoin.pairTokenId,
@@ -430,25 +445,62 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
-  Widget _priceInputWidget({required String tokenId}) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-      decoration: BoxDecoration(
-        color: AppColors.color3B4150,
-        border: Border.all(color: AppColors.color558BA1BE),
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
-        ),
-      ),
-      child: QuantityInputWidget(
-        hintText: 'Price (${TokenUtils.tokenIdToAcronym(tokenId)})',
-        controller: _priceController,
-        onChanged: (price) => _onPriceAmountChanged(
-          context,
-          context.read<PlaceOrderCubit>().state.balance,
-          price,
-          false,
-        ),
+  Widget _priceInputWidget({required TradeTabCoinProvider coinProvider}) {
+    return ValueListenableBuilder<EnumOrderTypes>(
+      valueListenable: _orderTypeNotifier,
+      builder: (context, orderType, child) =>
+          BlocBuilder<TickerCubit, TickerState>(
+        builder: (context, state) {
+          if (state is TickerLoaded) {
+            final newPrice = state.ticker.last.isNotEmpty
+                ? state.ticker.last
+                : state.ticker.previousClose;
+
+            _priceController.text = newPrice;
+            WidgetsBinding.instance
+                ?.addPostFrameCallback((_) => _onPriceAmountChanged(
+                      context,
+                      context.read<PlaceOrderCubit>().state.balance,
+                      newPrice,
+                      false,
+                    ));
+          }
+
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            decoration: BoxDecoration(
+              color: AppColors.color3B4150,
+              border: Border.all(color: AppColors.color558BA1BE),
+              borderRadius: BorderRadius.all(
+                Radius.circular(10.0),
+              ),
+            ),
+            child: IgnorePointer(
+              ignoring: _orderTypeNotifier.value == EnumOrderTypes.market &&
+                  state is TickerLoaded,
+              child: QuantityInputWidget(
+                hintText:
+                    'Price (${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.pairTokenId)})',
+                controller: _priceController,
+                onChanged: (price) => _onPriceAmountChanged(
+                  context,
+                  context.read<PlaceOrderCubit>().state.balance,
+                  price,
+                  false,
+                ),
+                isLoading: _orderTypeNotifier.value == EnumOrderTypes.market &&
+                    state is TickerLoading,
+                onError: _orderTypeNotifier.value == EnumOrderTypes.market &&
+                        state is TickerError
+                    ? () => context.read<TickerCubit>().getLastTicker(
+                          leftTokenId: coinProvider.tokenCoin.baseTokenId,
+                          rightTokenId: coinProvider.tokenCoin.pairTokenId,
+                        )
+                    : null,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
