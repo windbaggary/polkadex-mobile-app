@@ -552,7 +552,9 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       padding: EdgeInsets.symmetric(vertical: 20),
-      width: (AppConfigs.size.width / 4) - 6,
+      constraints: BoxConstraints(
+        maxWidth: (AppConfigs.size.width / 4) - 10,
+      ),
       child: Align(
         alignment: Alignment.center,
         child: isBuy

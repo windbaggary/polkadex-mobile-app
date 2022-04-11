@@ -122,10 +122,9 @@ class _TradeTabViewState extends State<TradeTabView>
                         ),
                         SizedBox(width: 8),
                         Expanded(
-                          child: Column(
-                            children: [
-                              PlaceOrderWidget(),
-                            ],
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 8),
+                            child: PlaceOrderWidget(),
                           ),
                         ),
                       ],
