@@ -343,8 +343,18 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           'Available',
           style: tsS16W400CABB2BC,
         ),
+        Flexible(
+          child: Text(
+            '${context.read<PlaceOrderCubit>().state.balance}',
+            style: tsS16W600CFF,
+            overflow: TextOverflow.clip,
+            maxLines: 1,
+          ),
+        ),
         Text(
-          '${context.read<PlaceOrderCubit>().state.balance} ${context.read<PlaceOrderCubit>().state.orderSide == EnumBuySell.buy ? TokenUtils.tokenIdToAcronym(pairTokenId) : TokenUtils.tokenIdToAcronym(baseTokenId)}',
+          context.read<PlaceOrderCubit>().state.orderSide == EnumBuySell.buy
+              ? TokenUtils.tokenIdToAcronym(pairTokenId)
+              : TokenUtils.tokenIdToAcronym(baseTokenId),
           style: tsS16W600CFF,
         ),
       ],
