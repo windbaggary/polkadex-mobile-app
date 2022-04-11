@@ -69,9 +69,13 @@ class QuantityInputWidget extends StatelessWidget {
   void _onIncrementButtonPressed(double valueToIncrement) {
     final double currentValue = double.tryParse(controller?.text ?? '') ?? 0.0;
 
-    if (onChanged != null && currentValue + valueToIncrement >= 0) {
-      controller?.text = (currentValue + valueToIncrement).toString();
-      onChanged!((currentValue + valueToIncrement).toString());
+    if (onChanged != null) {
+      final newValue = currentValue + valueToIncrement >= 0
+          ? currentValue + valueToIncrement
+          : 0.0;
+
+      controller?.text = newValue.toString();
+      onChanged!(newValue.toString());
     }
   }
 }
