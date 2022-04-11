@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
+import 'package:polkadex/common/widgets/loading_dots_widget.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/utils/math_utils.dart';
@@ -104,22 +108,39 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             _totalWidget(
               tokenId: coinProvider.tokenCoin.pairTokenId,
             ),
-            AppButton(
-              label:
-                  '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
-              enabled: _orderTypeNotifier.value == EnumOrderTypes.market
-                  ? context.read<TickerCubit>().state is TickerLoaded &&
-                      context.read<PlaceOrderCubit>().state
-                          is! PlaceOrderNotValid
-                  : context.read<PlaceOrderCubit>().state
-                      is! PlaceOrderNotValid,
-              onTap: () {},
-              innerPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 64),
-              outerPadding: EdgeInsets.symmetric(vertical: 8),
-              backgroundColor: placeOrderState.orderSide == EnumBuySell.buy
-                  ? AppColors.color0CA564
-                  : AppColors.colorE6007A,
-            ),
+            placeOrderState is PlaceOrderLoading
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 28),
+                    child: Center(
+                      child: LoadingDotsWidget(
+                        dotSize: 10,
+                      ),
+                    ),
+                  )
+                : AppButton(
+                    label:
+                        '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
+                    enabled: _orderTypeNotifier.value == EnumOrderTypes.market
+                        ? placeOrderState is TickerLoaded &&
+                            placeOrderState is! PlaceOrderNotValid
+                        : placeOrderState is! PlaceOrderNotValid,
+                    onTap: () => _onBuyOrSell(
+                      placeOrderState.orderSide,
+                      _orderTypeNotifier.value,
+                      coinProvider.tokenCoin.baseTokenId,
+                      coinProvider.tokenCoin.pairTokenId,
+                      _priceController.text,
+                      _amountController.text,
+                      context,
+                    ),
+                    innerPadding:
+                        EdgeInsets.symmetric(vertical: 20, horizontal: 64),
+                    outerPadding: EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor:
+                        placeOrderState.orderSide == EnumBuySell.buy
+                            ? AppColors.color0CA564
+                            : AppColors.colorE6007A,
+                  ),
           ],
         ),
       );
@@ -243,6 +264,48 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     } catch (ex) {
       print(ex);
     }
+  }
+
+  void _onBuyOrSell(
+    EnumBuySell type,
+    EnumOrderTypes side,
+    String leftAsset,
+    String rightAsset,
+    String price,
+    String amount,
+    BuildContext context,
+  ) async {
+    final placeOrderCubit = context.read<PlaceOrderCubit>();
+    final listOrdersCubit = context.read<ListOrdersCubit>();
+
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    final resultPlaceOrder = await placeOrderCubit.placeOrder(
+      nonce: 0,
+      baseAsset: leftAsset,
+      quoteAsset: rightAsset,
+      orderType: side,
+      orderSide: type,
+      amount: amount,
+      price: price,
+      address: context.read<AccountCubit>().accountAddress,
+      signature: context.read<AccountCubit>().accountSignature,
+    );
+
+    if (price.isEmpty) {
+      price = amount;
+    }
+
+    if (resultPlaceOrder != null &&
+        resultPlaceOrder.orderType != EnumOrderTypes.market) {
+      listOrdersCubit.addToOpenOrders(resultPlaceOrder);
+    }
+
+    final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
+    final message = context.read<PlaceOrderCubit>().state is PlaceOrderAccepted
+        ? '$orderType order placed successfully.'
+        : '$orderType order place failed. Please try again.';
+    buildAppToast(msg: message, context: context);
   }
 
   Widget _evalTotalWidget(String tokenAcronym) {
