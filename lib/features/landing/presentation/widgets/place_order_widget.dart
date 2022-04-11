@@ -571,11 +571,9 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         ),
       ),
       alignment: Alignment.center,
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: _evalTotalWidget(TokenUtils.tokenIdToAcronym(tokenId)),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: _evalTotalWidget(TokenUtils.tokenIdToAcronym(tokenId)),
       ),
     );
   }
