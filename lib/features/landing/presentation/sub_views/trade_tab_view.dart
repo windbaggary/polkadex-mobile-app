@@ -105,13 +105,28 @@ class _TradeTabViewState extends State<TradeTabView>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _ThisTopRowSelectWidget(),
-                  _ThisBuySellWidget(
-                    key: _keyBuySellWidget,
-                  ),
-                  Consumer<TradeTabCoinProvider>(
-                    builder: (context, provider, _) => OrderBookWidget(
-                      amountTokenId: provider.tokenCoin.baseTokenId,
-                      priceTokenId: provider.tokenCoin.pairTokenId,
+                  Container(
+                    color: AppColors.color2E303C,
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    margin: EdgeInsets.only(top: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Consumer<TradeTabCoinProvider>(
+                            builder: (context, provider, _) => OrderBookWidget(
+                              amountTokenId: provider.tokenCoin.baseTokenId,
+                              priceTokenId: provider.tokenCoin.pairTokenId,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: _ThisBuySellWidget(
+                            key: _keyBuySellWidget,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -192,7 +207,6 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
           }
 
           return Container(
-            margin: const EdgeInsets.only(top: 8),
             decoration: BoxDecoration(
               color: AppColors.color24252C,
               borderRadius: BorderRadius.circular(20),
