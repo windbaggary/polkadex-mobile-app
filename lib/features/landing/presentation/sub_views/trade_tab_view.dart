@@ -15,6 +15,7 @@ import 'package:polkadex/features/landing/presentation/providers/trade_tab_provi
 import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/widgets/trade_bottom_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -108,12 +109,7 @@ class _TradeTabViewState extends State<TradeTabView>
                   _ThisBuySellWidget(
                     key: _keyBuySellWidget,
                   ),
-                  Consumer<TradeTabCoinProvider>(
-                    builder: (context, provider, _) => OrderBookWidget(
-                      amountTokenId: provider.tokenCoin.baseTokenId,
-                      priceTokenId: provider.tokenCoin.pairTokenId,
-                    ),
-                  ),
+                  TradeBottomWidget(),
                 ],
               ),
             ),

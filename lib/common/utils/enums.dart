@@ -134,3 +134,9 @@ enum EnumTimerIntervalTypes {
   tenMinutes,
   thirtyMinutes,
 }
+
+enum EnumTradeBottomDisplayTypes {
+  orderHistory,
+  tradeHistory,
+  funds,
+}
