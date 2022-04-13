@@ -79,7 +79,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                       if (state is! BalanceLoading)
                         AppButton(
                           label: 'Get some money!',
-                          padding: EdgeInsets.symmetric(
+                          innerPadding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 16,
                           ),
