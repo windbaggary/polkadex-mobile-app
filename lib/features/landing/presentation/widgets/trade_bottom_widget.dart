@@ -28,33 +28,36 @@ class TradeBottomWidget extends StatelessWidget {
           padding: EdgeInsets.all(8),
           child: ValueListenableBuilder<EnumTradeBottomDisplayTypes>(
             valueListenable: tradeBottomDisplayNotifier,
-            builder: (context, optionDisplayValue, _) => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                BlocBuilder<ListOrdersCubit, ListOrdersState>(
-                  builder: (context, listOrdersState) {
-                    return _displayOptionWidget(
-                      text:
-                          'Order History ${listOrdersState is ListOrdersLoaded ? '(${listOrdersState.openOrders.length})' : ''}',
-                      enumValue: EnumTradeBottomDisplayTypes.orderHistory,
-                    );
-                  },
-                ),
-                _displayOptionWidget(
-                  text: 'Trade History',
-                  enumValue: EnumTradeBottomDisplayTypes.tradeHistory,
-                  enabled: false,
-                ),
-                _displayOptionWidget(
-                  text: 'Funds',
-                  enumValue: EnumTradeBottomDisplayTypes.funds,
-                  enabled: false,
-                ),
-                SvgPicture.asset(
-                  'expand'.asAssetSvg(),
-                  width: 14,
-                ),
-              ],
+            builder: (context, optionDisplayValue, _) => SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  BlocBuilder<ListOrdersCubit, ListOrdersState>(
+                    builder: (context, listOrdersState) {
+                      return _displayOptionWidget(
+                        text:
+                            'Order History ${listOrdersState is ListOrdersLoaded ? '(${listOrdersState.openOrders.length})' : ''}',
+                        enumValue: EnumTradeBottomDisplayTypes.orderHistory,
+                      );
+                    },
+                  ),
+                  _displayOptionWidget(
+                    text: 'Trade History',
+                    enumValue: EnumTradeBottomDisplayTypes.tradeHistory,
+                    enabled: false,
+                  ),
+                  _displayOptionWidget(
+                    text: 'Funds',
+                    enumValue: EnumTradeBottomDisplayTypes.funds,
+                    enabled: false,
+                  ),
+                  SvgPicture.asset(
+                    'expand'.asAssetSvg(),
+                    width: 14,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
