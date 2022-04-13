@@ -31,9 +31,14 @@ class TradeBottomWidget extends StatelessWidget {
             builder: (context, optionDisplayValue, _) => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _displayOptionWidget(
-                  text: 'Order History',
-                  enumValue: EnumTradeBottomDisplayTypes.orderHistory,
+                BlocBuilder<ListOrdersCubit, ListOrdersState>(
+                  builder: (context, listOrdersState) {
+                    return _displayOptionWidget(
+                      text:
+                          'Order History ${listOrdersState is ListOrdersLoaded ? '(${listOrdersState.openOrders.length})' : ''}',
+                      enumValue: EnumTradeBottomDisplayTypes.orderHistory,
+                    );
+                  },
                 ),
                 _displayOptionWidget(
                     text: 'Trade History',
