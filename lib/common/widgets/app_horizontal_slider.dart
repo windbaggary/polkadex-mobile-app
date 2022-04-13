@@ -17,12 +17,14 @@ class AppHorizontalSlider extends StatefulWidget {
   final double initialProgress;
   final OnProgressUpdate? onProgressUpdate;
   final Color activeColor, bgColor;
+  final int dividerCount;
 
   const AppHorizontalSlider({
     this.initialProgress = 0.0,
     this.bgColor = AppColors.color141415,
     this.activeColor = AppColors.colorE6007A,
     this.onProgressUpdate,
+    this.dividerCount = 0,
   }) : assert(initialProgress >= 0.0 && initialProgress <= 1.0, '''
     The [initialProgress] must be between 0.0 and 1.0
     ''');
@@ -95,6 +97,7 @@ class _AppHorizontalSliderState extends State<AppHorizontalSlider>
       valueListenable: _progressNotifier,
       builder: (context, value, child) =>
           _AppHorizontalSliderRenderObjectWidget(
+        dividerCount: widget.dividerCount,
         progress: value,
         onProgressUpdate: widget.onProgressUpdate,
         bgColor: widget.bgColor,
@@ -122,16 +125,19 @@ class _AppHorizontalSliderRenderObjectWidget extends LeafRenderObjectWidget {
   final double progress;
   final OnProgressUpdate? onProgressUpdate;
   final Color bgColor, activeColor;
+  final int dividerCount;
 
   _AppHorizontalSliderRenderObjectWidget({
     required this.bgColor,
     required this.activeColor,
+    required this.dividerCount,
     this.progress = 0.0,
     this.onProgressUpdate,
   });
   @override
   _AppHorizontalSliderRenderBox createRenderObject(BuildContext context) {
     return _AppHorizontalSliderRenderBox(
+      dividerCount: dividerCount,
       progress: progress,
       onProgressUpdate: onProgressUpdate,
     )
@@ -156,12 +162,13 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
   final double dividerWidth = 4.0;
   final double progressThumbHeight = 27.0;
   final double progressThumbWidth = 34.0;
-  final int dividerCount = 4;
+  final int dividerCount;
   late Color _bgColor, _activeColor;
 
   OnProgressUpdate? onProgressUpdate;
   double _progress;
   _AppHorizontalSliderRenderBox({
+    required this.dividerCount,
     double progress = 0.0,
     this.onProgressUpdate,
   })  : _progress = progress,
@@ -272,23 +279,25 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
     // Calculate the divider top y
     final double dividerTopY = heightHalf - dividerHeight / 2;
 
-    // Calculate the divider spacing
-    final double dividerSpacingWidth = size.width / dividerCount;
+    if (dividerCount > 0) {
+      // Calculate the divider spacing
+      final double dividerSpacingWidth = size.width / dividerCount;
 
-    // Drawing the divider
-    for (int i = 0; i < dividerCount; i++) {
-      // Calculate the position of each rect
-      final left =
-          (dividerSpacingWidth * (i + 1)) + widthDx - (dividerWidth / 2);
-      final rect =
-          Rect.fromLTWH(left, dividerTopY, dividerWidth, dividerHeight);
-      final radius = Radius.circular(math.min(dividerHeight, dividerWidth));
-      final rRect = RRect.fromRectAndRadius(rect, radius);
+      // Drawing the divider
+      for (int i = 0; i < dividerCount; i++) {
+        // Calculate the position of each rect
+        final left =
+            (dividerSpacingWidth * (i + 1)) + widthDx - (dividerWidth / 2);
+        final rect =
+            Rect.fromLTWH(left, dividerTopY, dividerWidth, dividerHeight);
+        final radius = Radius.circular(math.min(dividerHeight, dividerWidth));
+        final rRect = RRect.fromRectAndRadius(rect, radius);
 
-      final paint =
-          ((dividerCount * _progress) > i + 1) ? pbFgPaint : pbBgPaint;
-      // Draw the rect in canvas
-      canvas.drawRRect(rRect, paint);
+        final paint =
+            ((dividerCount * _progress) > i + 1) ? pbFgPaint : pbBgPaint;
+        // Draw the rect in canvas
+        canvas.drawRRect(rRect, paint);
+      }
     }
 
     final progressWidth =
@@ -305,7 +314,7 @@ class _AppHorizontalSliderRenderBox extends RenderBox {
     final rrect = RRect.fromRectAndRadius(rect, radius);
 
     if (_progress == 0.0) {
-      pbFgPaint.color = _bgColor;
+      pbFgPaint.color = Colors.black;
     }
     canvas.drawRRect(rrect, pbFgPaint);
 

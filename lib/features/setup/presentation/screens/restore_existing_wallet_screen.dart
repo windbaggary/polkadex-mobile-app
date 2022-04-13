@@ -247,7 +247,7 @@ class _RestoreExistingWalletScreenState
                                 if (value > 0)
                                   AppButton(
                                     label: 'Previous',
-                                    padding: EdgeInsets.symmetric(
+                                    innerPadding: EdgeInsets.symmetric(
                                       horizontal: 12,
                                       vertical: 16,
                                     ),

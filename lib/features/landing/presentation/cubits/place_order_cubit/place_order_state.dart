@@ -52,7 +52,15 @@ class PlaceOrderNotValid extends PlaceOrderState {
         );
 }
 
-class PlaceOrderLoading extends PlaceOrderState {}
+class PlaceOrderLoading extends PlaceOrderState {
+  const PlaceOrderLoading({
+    required double balance,
+    required EnumBuySell orderSide,
+  }) : super(
+          balance: balance,
+          orderSide: orderSide,
+        );
+}
 
 class PlaceOrderAccepted extends PlaceOrderNotValid {
   const PlaceOrderAccepted({

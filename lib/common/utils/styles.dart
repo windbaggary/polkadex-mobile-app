@@ -24,8 +24,20 @@ TextStyle get tsS16W500C24252C => TextStyle(
       color: AppColors.color24252C,
     );
 
+TextStyle get tsS14W400C93949A => TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+      color: AppColors.color93949A,
+    );
+
 TextStyle get tsS14W400CABB2BC => TextStyle(
       fontSize: 14,
+      fontWeight: FontWeight.w400,
+      color: AppColors.colorABB2BC,
+    );
+
+TextStyle get tsS16W400CABB2BC => TextStyle(
+      fontSize: 16,
       fontWeight: FontWeight.w400,
       color: AppColors.colorABB2BC,
     );
@@ -52,6 +64,18 @@ TextStyle get tsS18W400C93949A => TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w400,
       color: AppColors.color93949A,
+    );
+
+TextStyle get tsS18W600CE6007A => TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: AppColors.colorE6007A,
+    );
+
+TextStyle get tsS18W600C0CA564 => TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: AppColors.color0CA564,
     );
 
 TextStyle get tsS23W500CFF => TextStyle(
@@ -132,21 +156,25 @@ TextStyle get tsS20W600CFF => TextStyle(
       fontWeight: FontWeight.w600,
       color: AppColors.colorFFFFFF,
     );
+
 TextStyle get tsS20W500CFF => TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w500,
       color: AppColors.colorFFFFFF,
     );
+
 TextStyle get tsS14W400CFF => TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
       color: AppColors.colorFFFFFF,
     );
+
 TextStyle get tsS19W600CFF => TextStyle(
       fontSize: 19,
       fontWeight: FontWeight.w600,
       color: AppColors.colorFFFFFF,
     );
+
 TextStyle get tsS17W600C0CA564 => TextStyle(
       fontSize: 17,
       fontWeight: FontWeight.w600,

@@ -60,7 +60,10 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     final previousState = state;
     OrderEntity? newOrder;
 
-    emit(PlaceOrderLoading());
+    emit(PlaceOrderLoading(
+      balance: previousState.balance,
+      orderSide: previousState.orderSide,
+    ));
 
     final result = await _placeOrderUseCase(
         nonce: nonce,

@@ -50,7 +50,9 @@ class AppButton extends StatelessWidget {
     required this.label,
     this.enabled = true,
     this.onTap,
-    this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    this.innerPadding =
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    this.outerPadding = const EdgeInsets.symmetric(vertical: 14),
     this.backgroundColor = const Color(0xFFE6007A),
     this.textColor = const Color(0xFFFFFFFF),
   });
@@ -60,14 +62,15 @@ class AppButton extends StatelessWidget {
   final String label;
   final bool enabled;
   final VoidCallback? onTap;
-  final EdgeInsets padding;
+  final EdgeInsets innerPadding;
+  final EdgeInsets outerPadding;
   final Color backgroundColor;
   final Color textColor;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14),
+      padding: outerPadding,
       child: InkWell(
         onTapDown: (_) {
           _notifier.value = true;
@@ -101,7 +104,7 @@ class AppButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding: padding,
+                padding: innerPadding,
                 child: Text(
                   label,
                   textAlign: TextAlign.center,

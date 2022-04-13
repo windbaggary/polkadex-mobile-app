@@ -20,74 +20,18 @@ class OrderBookShimmerWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: Colors.black,
         ),
+        height: 480,
         child: Column(
           children: [
-            OrderBookHeadingWidget(
-              marketDropDownNotifier: ValueNotifier<EnumMarketDropdownTypes>(
-                  EnumMarketDropdownTypes.orderbook),
-              priceLengthNotifier: ValueNotifier<int>(0),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: OrderBookHeadingWidget(
+                marketDropDownNotifier: ValueNotifier<EnumMarketDropdownTypes>(
+                    EnumMarketDropdownTypes.orderbook),
+                priceLengthNotifier: ValueNotifier<int>(0),
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  padding: const EdgeInsets.only(top: 15, bottom: 13),
-                  decoration: BoxDecoration(
-                    color: AppColors.color24252C,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      topLeft: Radius.circular(20),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.17),
-                        blurRadius: 99,
-                        offset: Offset(0.0, 100.0),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Latest transaction',
-                        style: tsS15W400CFF,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8, right: 4),
-                        child: Text(
-                          '0.0006673',
-                          style: tsS20W600CFF.copyWith(
-                              color: AppColors.color0CA564),
-                        ),
-                      ),
-                      Text(
-                        '~\$32.88',
-                        style: tsS15W600CABB2BC,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.color2E303C,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(
-                    left: 23,
-                    right: 23,
-                    bottom: 20,
-                  ),
-                  child: _ThisOrderBookChartWidget(),
-                ),
-              ],
-            )
+            _ThisOrderBookChartWidget(),
           ],
         ),
       ),

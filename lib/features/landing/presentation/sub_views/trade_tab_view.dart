@@ -12,10 +12,10 @@ import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticke
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
-import 'package:polkadex/features/landing/presentation/widgets/buy_dot_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/trade_bottom_widget.dart';
+import 'package:polkadex/features/landing/presentation/widgets/place_order_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -36,7 +36,6 @@ class TradeTabView extends StatefulWidget {
 
 class _TradeTabViewState extends State<TradeTabView>
     with TickerProviderStateMixin {
-  final _keyBuySellWidget = GlobalKey<__ThisBuySellWidgetState>();
   late TabController _buySellDotController;
   late ScrollController _scrollController;
 
@@ -106,8 +105,30 @@ class _TradeTabViewState extends State<TradeTabView>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _ThisTopRowSelectWidget(),
-                  _ThisBuySellWidget(
-                    key: _keyBuySellWidget,
+                  Container(
+                    color: AppColors.color2E303C,
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    margin: EdgeInsets.only(top: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Consumer<TradeTabCoinProvider>(
+                            builder: (context, provider, _) => OrderBookWidget(
+                              amountTokenId: provider.tokenCoin.baseTokenId,
+                              priceTokenId: provider.tokenCoin.pairTokenId,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 8),
+                            child: PlaceOrderWidget(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   TradeBottomWidget(),
                 ],
@@ -137,8 +158,6 @@ class _ThisBuySellWidget extends StatefulWidget {
 
 class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     with TickerProviderStateMixin {
-  final _keyBuySellWidget = GlobalKey<BuyDotWidgetState>();
-
   late ValueNotifier<bool> _isOrdersExpanded;
   late ValueNotifier<EnumBuySell> _buySellNotifier;
   late ValueNotifier<EnumOrderTypes> _orderTypeSelNotifier;
@@ -174,21 +193,7 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
       builder: (context, coinProvider, child) =>
           BlocBuilder<BalanceCubit, BalanceState>(
         builder: (context, state) {
-          final currentState = context.read<BalanceCubit>().state;
-          double leftBalance = 0.0;
-          double rightBalance = 0.0;
-
-          if (currentState is BalanceLoaded && currentState.free.isNotEmpty) {
-            leftBalance = double.tryParse(
-                    currentState.free[coinProvider.tokenCoin.baseTokenId]) ??
-                0.0;
-            rightBalance = double.tryParse(
-                    currentState.free[coinProvider.tokenCoin.pairTokenId]) ??
-                0.0;
-          }
-
           return Container(
-            margin: const EdgeInsets.only(top: 8),
             decoration: BoxDecoration(
               color: AppColors.color24252C,
               borderRadius: BorderRadius.circular(20),
@@ -267,37 +272,6 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
                       )
                     ],
                   ),
-                ),
-                BuyDotWidget(
-                  key: _keyBuySellWidget,
-                  leftBalance: leftBalance,
-                  leftAsset: coinProvider.tokenCoin.baseTokenId,
-                  rightBalance: rightBalance,
-                  rightAsset: coinProvider.tokenCoin.pairTokenId,
-                  orderTypeNotifier: _orderTypeSelNotifier,
-                  buySellNotifier: _buySellNotifier,
-                  onSwapTab: () => _onClickArrowsBuySell(
-                      _ThisInheritedWidget.of(context)?.buySellTabController),
-                  onBuy: (price, amount) => _onBuyOrSell(
-                    EnumBuySell.buy,
-                    _orderTypeSelNotifier.value,
-                    coinProvider.tokenCoin.baseTokenId,
-                    coinProvider.tokenCoin.pairTokenId,
-                    price,
-                    amount,
-                    context,
-                  ),
-                  onSell: (price, amount) => _onBuyOrSell(
-                    EnumBuySell.sell,
-                    _orderTypeSelNotifier.value,
-                    coinProvider.tokenCoin.baseTokenId,
-                    coinProvider.tokenCoin.pairTokenId,
-                    price,
-                    amount,
-                    context,
-                  ),
-                  isBalanceLoading:
-                      context.read<BalanceCubit>().state is! BalanceLoaded,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -431,50 +405,6 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
     );
   }
 
-  /// The callback listener when the user buy or sell from the buyorsellwidget
-  void _onBuyOrSell(
-    EnumBuySell type,
-    EnumOrderTypes side,
-    String leftAsset,
-    String rightAsset,
-    String price,
-    String amount,
-    BuildContext context,
-  ) async {
-    final placeOrderCubit = context.read<PlaceOrderCubit>();
-    final listOrdersCubit = context.read<ListOrdersCubit>();
-
-    FocusManager.instance.primaryFocus?.unfocus();
-
-    final resultPlaceOrder = await placeOrderCubit.placeOrder(
-      nonce: 0,
-      baseAsset: leftAsset,
-      quoteAsset: rightAsset,
-      orderType: side,
-      orderSide: type,
-      amount: amount,
-      price: price,
-      address: context.read<AccountCubit>().accountAddress,
-      signature: context.read<AccountCubit>().accountSignature,
-    );
-
-    if (price.isEmpty) {
-      price = amount;
-    }
-
-    if (resultPlaceOrder != null &&
-        resultPlaceOrder.orderType != EnumOrderTypes.market) {
-      listOrdersCubit.addToOpenOrders(resultPlaceOrder);
-    }
-
-    final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';
-    final message = context.read<PlaceOrderCubit>().state is PlaceOrderAccepted
-        ? '$orderType order placed successfully.'
-        : '$orderType order place failed. Please try again.';
-    buildAppToast(msg: message, context: context);
-    _keyBuySellWidget.currentState?.reset();
-  }
-
   /// Returns the order type string from the [type]
   String _getOrderTypeName(EnumOrderTypes type) {
     switch (type) {
@@ -492,15 +422,6 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
         _ThisInheritedWidget.of(context)?.buySellTabController;
 
     _buySellNotifier.value = EnumBuySell.values[tabController!.index];
-  }
-
-  void _onClickArrowsBuySell(TabController? buySellTabController) {
-    int newIndex = 0;
-    if (buySellTabController?.index == 0) {
-      newIndex = 1;
-    }
-
-    buySellTabController?.animateTo(newIndex);
   }
 }
 
