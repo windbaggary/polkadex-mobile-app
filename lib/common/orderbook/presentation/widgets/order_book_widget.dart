@@ -28,95 +28,36 @@ class OrderBookWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 35, bottom: 96),
-      child: BlocBuilder<OrderbookCubit, OrderbookState>(
-          builder: (context, state) {
+    return BlocBuilder<OrderbookCubit, OrderbookState>(
+      builder: (context, state) {
         if (state is OrderbookLoaded) {
           return Column(
             children: [
-              OrderBookHeadingWidget(
-                marketDropDownNotifier: marketDropDownNotifier,
-                priceLengthNotifier: priceLengthNotifier,
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: OrderBookHeadingWidget(
+                  marketDropDownNotifier: marketDropDownNotifier,
+                  priceLengthNotifier: priceLengthNotifier,
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    padding: const EdgeInsets.only(top: 15, bottom: 13),
-                    decoration: BoxDecoration(
-                      color: AppColors.color24252C,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        topLeft: Radius.circular(20),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.17),
-                          blurRadius: 99,
-                          offset: Offset(0.0, 100.0),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Latest transaction',
-                          style: tsS15W400CFF,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 4),
-                          child: Text(
-                            '0.0006673',
-                            style: tsS20W600CFF.copyWith(
-                                color: AppColors.color0CA564),
-                          ),
-                        ),
-                        Text(
-                          '~\$32.88',
-                          style: tsS15W600CABB2BC,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.color2E303C,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(
-                      left: 23,
-                      right: 23,
-                      bottom: 20,
-                    ),
-                    child: ValueListenableBuilder<EnumMarketDropdownTypes>(
-                      valueListenable: marketDropDownNotifier,
-                      builder: (context, dropdownMarketIndex, child) {
-                        return ValueListenableBuilder<int>(
-                          valueListenable: priceLengthNotifier,
-                          builder: (context, selectedPriceLenIndex, child) {
-                            return _ThisOrderBookChartWidget(
-                              amountTokenId: amountTokenId,
-                              priceTokenId: priceTokenId,
-                              buyItems: state.orderbook.bid,
-                              sellItems: state.orderbook.ask,
-                              marketDropDownNotifier: marketDropDownNotifier,
-                              priceLengthNotifier: priceLengthNotifier,
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              )
+              ValueListenableBuilder<EnumMarketDropdownTypes>(
+                valueListenable: marketDropDownNotifier,
+                builder: (context, dropdownMarketIndex, child) {
+                  return ValueListenableBuilder<int>(
+                    valueListenable: priceLengthNotifier,
+                    builder: (context, selectedPriceLenIndex, child) {
+                      return _ThisOrderBookChartWidget(
+                        amountTokenId: amountTokenId,
+                        priceTokenId: priceTokenId,
+                        buyItems: state.orderbook.bid,
+                        sellItems: state.orderbook.ask,
+                        marketDropDownNotifier: marketDropDownNotifier,
+                        priceLengthNotifier: priceLengthNotifier,
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           );
         }
@@ -129,7 +70,7 @@ class OrderBookWidget extends StatelessWidget {
         }
 
         return OrderBookShimmerWidget();
-      }),
+      },
     );
   }
 }
@@ -164,6 +105,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           children: [
             _buildHeadingWidget(),
             _buildBuyWidget(buyItems),
+            _buildLatestTransactionWidget(),
           ],
         );
         break;
@@ -172,8 +114,9 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("sell"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildHeadingWidget(isBuyHeader: false),
+            _buildHeadingWidget(),
             _buildSellWidget(sellItems),
+            _buildLatestTransactionWidget(),
           ],
         );
         break;
@@ -182,29 +125,10 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           key: ValueKey("all"),
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: _buildHeadingWidget(),
-                ),
-                SizedBox(width: 7),
-                Expanded(
-                  child: _buildHeadingWidget(isBuyHeader: false),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildBuyWidget(buyItems),
-                ),
-                SizedBox(width: 7),
-                Expanded(
-                  child: _buildSellWidget(sellItems),
-                ),
-              ],
-            ),
+            _buildHeadingWidget(),
+            _buildSellWidget(sellItems),
+            _buildLatestTransactionWidget(),
+            _buildBuyWidget(buyItems),
           ],
         );
         break;
@@ -216,71 +140,113 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   }
 
   Widget _buildSellWidget(List<OrderbookItemEntity> sellItems) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(
-          sellItems.length,
-          (index) => OrderSellItemWidget(
-                orderbookItem: sellItems[index],
-                percentageFilled: sellItems[index].cumulativeAmount /
-                    sellItems.last.cumulativeAmount,
-                marketDropDownNotifier: marketDropDownNotifier,
-                priceLengthNotifier: priceLengthNotifier,
-              )),
+    return Padding(
+      padding: EdgeInsets.only(left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: List.generate(
+            sellItems.length,
+            (index) => OrderSellItemWidget(
+                  orderbookItem: sellItems[index],
+                  percentageFilled: sellItems[index].cumulativeAmount /
+                      sellItems.last.cumulativeAmount,
+                  marketDropDownNotifier: marketDropDownNotifier,
+                  priceLengthNotifier: priceLengthNotifier,
+                )),
+      ),
     );
   }
 
   Widget _buildBuyWidget(List<OrderbookItemEntity> buyItems) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(
-          buyItems.length,
-          (index) => OrderBuyItemWidget(
-                orderbookItem: buyItems[index],
-                percentageFilled: buyItems[index].cumulativeAmount /
-                    buyItems.last.cumulativeAmount,
-                marketDropDownNotifier: marketDropDownNotifier,
-                priceLengthNotifier: priceLengthNotifier,
-              )),
+    return Padding(
+      padding: EdgeInsets.only(left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: List.generate(
+            buyItems.length,
+            (index) => OrderBuyItemWidget(
+                  orderbookItem: buyItems[index],
+                  percentageFilled: buyItems[index].cumulativeAmount /
+                      buyItems.last.cumulativeAmount,
+                  marketDropDownNotifier: marketDropDownNotifier,
+                  priceLengthNotifier: priceLengthNotifier,
+                )),
+      ),
     );
   }
 
-  Widget _buildHeadingWidget({bool isBuyHeader = true}) {
+  Widget _buildHeadingWidget() {
     final String amountColumnTitle =
         marketDropDownNotifier.value == EnumMarketDropdownTypes.depthmarket
             ? 'Cum'
             : 'Amount';
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16, bottom: 10),
+      padding: EdgeInsets.only(
+        left: 8,
+        top: 16,
+        bottom: 10,
+      ),
       child: Row(
-        children: isBuyHeader
-            ? [
-                Expanded(
-                  child: Text(
-                    '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
-                    style: tsS13W500CFFOP40,
-                  ),
+        children: [
+          Expanded(
+            child: Text(
+              'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
+              style: tsS13W500CFFOP40,
+            ),
+          ),
+          Text(
+            '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
+            style: tsS13W500CFFOP40,
+            textAlign: TextAlign.end,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLatestTransactionWidget({bool isDownTendency = true}) {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 8.0,
+        bottom: 8.0,
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 8,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(15),
+            bottomRight: Radius.circular(15),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  isDownTendency ? Icons.arrow_downward : Icons.arrow_upward,
+                  color: isDownTendency
+                      ? AppColors.colorE6007A
+                      : AppColors.color0CA564,
+                  size: 18,
                 ),
                 Text(
-                  'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
-                  style: tsS13W500CFFOP40,
-                  textAlign: TextAlign.end,
-                )
-              ]
-            : [
-                Expanded(
-                  child: Text(
-                    'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
-                    style: tsS13W500CFFOP40,
-                  ),
+                  '0.218580',
+                  style: isDownTendency ? tsS18W600CE6007A : tsS18W600C0CA564,
                 ),
-                Text(
-                  '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
-                  style: tsS13W500CFFOP40,
-                  textAlign: TextAlign.end,
-                )
               ],
+            ),
+            Text(
+              '\$24.00',
+              style: tsS14W400C93949A,
+            )
+          ],
+        ),
       ),
     );
   }

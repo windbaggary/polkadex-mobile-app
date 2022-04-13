@@ -192,7 +192,6 @@ class __ThisBuySellWidgetState extends State<_ThisBuySellWidget>
           BlocBuilder<BalanceCubit, BalanceState>(
         builder: (context, state) {
           return Container(
-            margin: const EdgeInsets.only(top: 8),
             decoration: BoxDecoration(
               color: AppColors.color24252C,
               borderRadius: BorderRadius.circular(20),

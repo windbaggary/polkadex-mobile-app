@@ -65,6 +65,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
               SizedBox(height: 8),
               _priceInputWidget(
                 coinProvider: coinProvider,
+                placeOrderState: placeOrderState,
               ),
               SizedBox(height: 8),
               _amountInputWidget(
@@ -107,7 +108,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                             '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
                         enabled:
                             _orderTypeNotifier.value == EnumOrderTypes.market
-                                ? placeOrderState is TickerLoaded &&
+                                ? context.read<TickerCubit>().state
+                                        is TickerLoaded &&
                                     placeOrderState is! PlaceOrderNotValid
                                 : placeOrderState is! PlaceOrderNotValid,
                         onTap: () => _onBuyOrSell(
@@ -445,13 +447,18 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
-  Widget _priceInputWidget({required TradeTabCoinProvider coinProvider}) {
+  Widget _priceInputWidget({
+    required TradeTabCoinProvider coinProvider,
+    required PlaceOrderState placeOrderState,
+  }) {
     return ValueListenableBuilder<EnumOrderTypes>(
       valueListenable: _orderTypeNotifier,
       builder: (context, orderType, child) =>
           BlocBuilder<TickerCubit, TickerState>(
         builder: (context, state) {
-          if (state is TickerLoaded) {
+          if (state is TickerLoaded &&
+              placeOrderState is! PlaceOrderLoading &&
+              orderType == EnumOrderTypes.market) {
             final newPrice = state.ticker.last.isNotEmpty
                 ? state.ticker.last
                 : state.ticker.previousClose;
