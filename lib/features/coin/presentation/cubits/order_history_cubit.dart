@@ -19,6 +19,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     String asset,
     String address,
     String signature,
+      bool isOpenOrdersPriority,
   ) async {
     emit(OrderHistoryLoading());
 
@@ -35,6 +36,19 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
                 order.baseAsset == asset || order.quoteAsset == asset)
             .toList();
         _allOrders.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+        if (isOpenOrdersPriority) {
+          _allOrders = orders
+              .where((order) =>
+          order.baseAsset == asset || order.quoteAsset == asset)
+              .toList();
+          _allOrders.sort((a, b) {
+            if(b.status == 'Open') {
+              return 1;
+            }
+            return -1;
+          });
+        }
 
         emit(OrderHistoryLoaded(
           orders: _allOrders,

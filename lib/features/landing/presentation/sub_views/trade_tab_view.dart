@@ -83,6 +83,7 @@ class _TradeTabViewState extends State<TradeTabView>
                     context.read<TradeTabCoinProvider>().tokenCoin.baseTokenId,
                     context.read<AccountCubit>().accountAddress,
                     context.read<AccountCubit>().accountSignature,
+                    true,
                   ),
               ),
               BlocProvider<TickerCubit>(

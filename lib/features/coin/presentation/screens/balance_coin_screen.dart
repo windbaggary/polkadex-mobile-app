@@ -64,6 +64,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
           widget.tokenId,
           context.read<AccountCubit>().accountAddress,
           context.read<AccountCubit>().accountSignature,
+          false,
         ),
       child: MultiProvider(
         providers: [
@@ -425,7 +426,8 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                               .accountAddress,
                                           context
                                               .read<AccountCubit>()
-                                              .accountSignature),
+                                              .accountSignature,
+                                    false,),
                                 ),
                               );
                             }

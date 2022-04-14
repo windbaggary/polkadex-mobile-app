@@ -98,6 +98,7 @@ void main() {
             '0',
             address,
             signature,
+            false,
           );
         },
         expect: () => [
@@ -124,6 +125,7 @@ void main() {
             '0',
             address,
             signature,
+            false,
           );
         },
         expect: () => [
