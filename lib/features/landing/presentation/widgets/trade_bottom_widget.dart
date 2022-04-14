@@ -119,7 +119,7 @@ class TradeBottomWidget extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: tradeBottomDisplayNotifier.value == enumValue
-                ? Colors.black
+                ? AppColors.color24252C
                 : Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
