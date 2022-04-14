@@ -213,7 +213,6 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => ListOrdersCubit(
-      cancelOrderUseCase: dependency(),
       getOpenOrdersUseCase: dependency(),
     ),
   );
@@ -338,6 +337,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => OrderHistoryCubit(
       getOrdersUseCase: dependency(),
+      cancelOrderUseCase: dependency(),
     ),
   );
 

@@ -7,6 +7,8 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
+import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TradeBottomWidget extends StatelessWidget {
@@ -82,19 +84,21 @@ class TradeBottomWidget extends StatelessWidget {
                             order: order,
                             isProcessing: false,
                             onTapClose: () async {
-                              //  final cancelSuccess = await context
-                              //      .read<ListOrdersCubit>()
-                              //      .cancelOrder(
-                              //        order,
-                              //        context.read<AccountCubit>().accountAddress,
-                              //        context.read<AccountCubit>().accountSignature,
-                              //      );
+                              final cancelSuccess = await context
+                                  .read<OrderHistoryCubit>()
+                                  .cancelOrder(
+                                    order,
+                                    context.read<AccountCubit>().accountAddress,
+                                    context
+                                        .read<AccountCubit>()
+                                        .accountSignature,
+                                  );
 //
-                              //  buildAppToast(
-                              //      msg: cancelSuccess
-                              //          ? 'Order cancelled successfully'
-                              //          : 'Order cancel failed. Please try again',
-                              //      context: context);
+                              buildAppToast(
+                                  msg: cancelSuccess
+                                      ? 'Order cancelled successfully'
+                                      : 'Order cancel failed. Please try again',
+                                  context: context);
                             },
                           ),
                           Padding(
