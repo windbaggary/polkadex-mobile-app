@@ -5,10 +5,8 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
+import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
 
 class TradeBottomWidget extends StatelessWidget {
   final ValueNotifier<EnumTradeBottomDisplayTypes> tradeBottomDisplayNotifier =
@@ -33,11 +31,11 @@ class TradeBottomWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  BlocBuilder<ListOrdersCubit, ListOrdersState>(
-                    builder: (context, listOrdersState) {
+                  BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+                    builder: (context, orderHistoryState) {
                       return _displayOptionWidget(
                         text:
-                            'Order History ${listOrdersState is ListOrdersLoaded ? '(${listOrdersState.openOrders.length})' : ''}',
+                            'Order History ${orderHistoryState is OrderHistoryLoaded ? '(${orderHistoryState.orders.length})' : ''}',
                         enumValue: EnumTradeBottomDisplayTypes.orderHistory,
                       );
                     },
@@ -70,30 +68,29 @@ class TradeBottomWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        BlocBuilder<ListOrdersCubit, ListOrdersState>(
-          builder: (context, state) {
-            if (state is ListOrdersLoaded) {
+        BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+          builder: (context, orderHistoryState) {
+            if (orderHistoryState is OrderHistoryLoaded) {
               return Column(
-                children: state.openOrders
+                children: orderHistoryState.orders
                     .map<Widget>(
                       (order) => OrderItemWidget(
                         order: order,
-                        isProcessing:
-                            state.orderIdsLoading.contains(order.orderId),
+                        isProcessing: false,
                         onTapClose: () async {
-                          final cancelSuccess = await context
-                              .read<ListOrdersCubit>()
-                              .cancelOrder(
-                                order,
-                                context.read<AccountCubit>().accountAddress,
-                                context.read<AccountCubit>().accountSignature,
-                              );
-
-                          buildAppToast(
-                              msg: cancelSuccess
-                                  ? 'Order cancelled successfully'
-                                  : 'Order cancel failed. Please try again',
-                              context: context);
+                          //  final cancelSuccess = await context
+                          //      .read<ListOrdersCubit>()
+                          //      .cancelOrder(
+                          //        order,
+                          //        context.read<AccountCubit>().accountAddress,
+                          //        context.read<AccountCubit>().accountSignature,
+                          //      );
+//
+                          //  buildAppToast(
+                          //      msg: cancelSuccess
+                          //          ? 'Order cancelled successfully'
+                          //          : 'Order cancel failed. Please try again',
+                          //      context: context);
                         },
                       ),
                     )

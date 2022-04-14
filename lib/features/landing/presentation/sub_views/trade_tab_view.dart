@@ -6,6 +6,7 @@ import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
+import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
@@ -76,9 +77,10 @@ class _TradeTabViewState extends State<TradeTabView>
               BlocProvider<PlaceOrderCubit>(
                 create: (_) => dependency<PlaceOrderCubit>(),
               ),
-              BlocProvider<ListOrdersCubit>(
-                create: (_) => dependency<ListOrdersCubit>()
-                  ..getOpenOrders(
+              BlocProvider<OrderHistoryCubit>(
+                create: (_) => dependency<OrderHistoryCubit>()
+                  ..getOrders(
+                    context.read<TradeTabCoinProvider>().tokenCoin.baseTokenId,
                     context.read<AccountCubit>().accountAddress,
                     context.read<AccountCubit>().accountSignature,
                   ),
