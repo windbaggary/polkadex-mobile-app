@@ -36,13 +36,13 @@ abstract class OrderEntity extends Equatable {
   final FeeEntity fee;
   final List<TradeEntity> trades;
 
-  String get iAmount => "$amount ${TokenUtils.tokenIdToAcronym(baseAsset)}";
+  String get baseToken => TokenUtils.tokenIdToAcronym(baseAsset);
 
   String get iFormattedDate {
     return DateFormat("MMM dd, yyyy HH:mm:ss").format(timestamp);
   }
 
-  String get iPrice => "$price ${TokenUtils.tokenIdToAcronym(quoteAsset)}";
+  String get quoteToken => TokenUtils.tokenIdToAcronym(quoteAsset);
 
   String get iType {
     switch (orderSide) {
