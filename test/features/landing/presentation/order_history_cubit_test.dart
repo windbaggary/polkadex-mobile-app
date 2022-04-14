@@ -8,7 +8,7 @@ import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
 import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:test/test.dart';
 
 class _MockGetOrdersUsecase extends Mock implements GetOrdersUseCase {}
