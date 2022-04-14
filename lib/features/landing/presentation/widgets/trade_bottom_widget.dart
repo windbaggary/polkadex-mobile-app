@@ -55,6 +55,9 @@ class TradeBottomWidget extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(
+          height: 8,
+        ),
         _listOpenOrders(),
       ],
     );
@@ -70,24 +73,36 @@ class TradeBottomWidget extends StatelessWidget {
               return Column(
                 children: orderHistoryState.orders
                     .map<Widget>(
-                      (order) => OrderItemWidget(
-                        order: order,
-                        isProcessing: false,
-                        onTapClose: () async {
-                          //  final cancelSuccess = await context
-                          //      .read<ListOrdersCubit>()
-                          //      .cancelOrder(
-                          //        order,
-                          //        context.read<AccountCubit>().accountAddress,
-                          //        context.read<AccountCubit>().accountSignature,
-                          //      );
+                      (order) => Column(
+                        children: [
+                          OrderItemWidget(
+                            order: order,
+                            isProcessing: false,
+                            onTapClose: () async {
+                              //  final cancelSuccess = await context
+                              //      .read<ListOrdersCubit>()
+                              //      .cancelOrder(
+                              //        order,
+                              //        context.read<AccountCubit>().accountAddress,
+                              //        context.read<AccountCubit>().accountSignature,
+                              //      );
 //
-                          //  buildAppToast(
-                          //      msg: cancelSuccess
-                          //          ? 'Order cancelled successfully'
-                          //          : 'Order cancel failed. Please try again',
-                          //      context: context);
-                        },
+                              //  buildAppToast(
+                              //      msg: cancelSuccess
+                              //          ? 'Order cancelled successfully'
+                              //          : 'Order cancel failed. Please try again',
+                              //      context: context);
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            child: Divider(
+                              color: AppColors.color558BA1BE,
+                              thickness: 1,
+                            ),
+                          ),
+                        ],
                       ),
                     )
                     .toList(),

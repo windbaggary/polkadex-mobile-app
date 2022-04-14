@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 
@@ -10,16 +12,6 @@ class OrderItemWidget extends StatelessWidget {
     this.isProcessing = false,
     this.onTapClose,
   });
-
-  //InkWell(
-  //onTap: onTapClose,
-  //child: SvgPicture.asset(
-  //'close'.asAssetSvg(),
-  //width: 10,
-  //height: 10,
-  //fit: BoxFit.contain,
-  //),
-  //),
 
   final OrderEntity order;
   final bool isProcessing;
@@ -35,16 +27,20 @@ class OrderItemWidget extends StatelessWidget {
       ignoring: isProcessing,
       child: Opacity(
         opacity: isProcessing ? 0.3 : 1.0,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(32, 8, 16, 8),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 32,
+            right: 16,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -59,9 +55,7 @@ class OrderItemWidget extends StatelessWidget {
                             )
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -76,9 +70,7 @@ class OrderItemWidget extends StatelessWidget {
                             )
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -101,53 +93,61 @@ class OrderItemWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: colorBuySell.withOpacity(0.20),
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 2),
-                        child: Text(
-                          order.iType,
-                          style: tsS16W500CFF.copyWith(
-                            color: colorBuySell,
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: colorBuySell.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 2),
+                          child: Text(
+                            order.iType,
+                            style: tsS16W500CFF.copyWith(
+                              color: colorBuySell,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          order.iTokenPairName,
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            order.iTokenPairName,
+                            style: tsS14W400CFF.copyWith(
+                                color: AppColors.colorABB2BC),
+                          ),
+                        ),
+                        Text(
+                          order.iFormattedDate,
                           style: tsS14W400CFF.copyWith(
                               color: AppColors.colorABB2BC),
                         ),
-                      ),
-                      Text(
-                        order.iFormattedDate,
-                        style:
-                            tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: InkWell(
+                  onTap: order.status == 'Open' ? onTapClose : () {},
+                  child: SvgPicture.asset(
+                    'close'.asAssetSvg(),
+                    color: order.status == 'Open'
+                        ? Colors.white
+                        : Colors.transparent,
+                    width: 10,
+                    height: 10,
+                    fit: BoxFit.contain,
                   ),
-                ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(
-                color: AppColors.color558BA1BE,
-                thickness: 1,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
