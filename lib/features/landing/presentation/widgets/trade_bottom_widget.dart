@@ -7,6 +7,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 class TradeBottomWidget extends StatelessWidget {
   final ValueNotifier<EnumTradeBottomDisplayTypes> tradeBottomDisplayNotifier =
@@ -16,8 +17,10 @@ class TradeBottomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -35,7 +38,7 @@ class TradeBottomWidget extends StatelessWidget {
                     builder: (context, orderHistoryState) {
                       return _displayOptionWidget(
                         text:
-                            'Order History ${orderHistoryState is OrderHistoryLoaded ? '(${orderHistoryState.orders.length})' : ''}',
+                            'Order History  ${orderHistoryState is OrderHistoryLoaded ? '(${orderHistoryState.orders.length})' : ''}',
                         enumValue: EnumTradeBottomDisplayTypes.orderHistory,
                       );
                     },
@@ -109,7 +112,31 @@ class TradeBottomWidget extends StatelessWidget {
               );
             }
 
-            return Container();
+            return _shimmerWidget();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _shimmerWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+          builder: (context, orderHistoryState) {
+            return Shimmer.fromColors(
+              highlightColor: AppColors.color8BA1BE,
+              baseColor: AppColors.color2E303C,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black,
+                ),
+                height: 240,
+                child: Container(),
+              ),
+            );
           },
         ),
       ],

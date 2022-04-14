@@ -420,14 +420,15 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                   onRefresh: () => context
                                       .read<OrderHistoryCubit>()
                                       .getOrders(
-                                          widget.tokenId,
-                                          context
-                                              .read<AccountCubit>()
-                                              .accountAddress,
-                                          context
-                                              .read<AccountCubit>()
-                                              .accountSignature,
-                                    false,),
+                                        widget.tokenId,
+                                        context
+                                            .read<AccountCubit>()
+                                            .accountAddress,
+                                        context
+                                            .read<AccountCubit>()
+                                            .accountSignature,
+                                        false,
+                                      ),
                                 ),
                               );
                             }
