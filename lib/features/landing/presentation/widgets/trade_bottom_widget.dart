@@ -50,10 +50,6 @@ class TradeBottomWidget extends StatelessWidget {
                     enumValue: EnumTradeBottomDisplayTypes.funds,
                     enabled: false,
                   ),
-                  SvgPicture.asset(
-                    'expand'.asAssetSvg(),
-                    width: 14,
-                  ),
                 ],
               ),
             ),
