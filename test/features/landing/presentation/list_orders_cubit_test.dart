@@ -5,7 +5,6 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/orders/data/models/fee_model.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
 import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
-import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/get_open_orders.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
@@ -13,11 +12,8 @@ import 'package:test/test.dart';
 
 class _MockGetOpenOrdersUsecase extends Mock implements GetOpenOrdersUseCase {}
 
-class _MockCancelOrderUsecase extends Mock implements CancelOrderUseCase {}
-
 void main() {
   late _MockGetOpenOrdersUsecase _mockGetOpenOrdersUsecase;
-  late _MockCancelOrderUsecase _mockCancelOrderUsecase;
   late ListOrdersCubit cubit;
   late String orderId;
   late String mainAcc;
@@ -39,10 +35,8 @@ void main() {
 
   setUp(() {
     _mockGetOpenOrdersUsecase = _MockGetOpenOrdersUsecase();
-    _mockCancelOrderUsecase = _MockCancelOrderUsecase();
 
     cubit = ListOrdersCubit(
-      cancelOrderUseCase: _mockCancelOrderUsecase,
       getOpenOrdersUseCase: _mockGetOpenOrdersUsecase,
     );
 

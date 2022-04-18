@@ -9,7 +9,7 @@ import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dar
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
 import 'package:polkadex/features/coin/domain/repositories/icoin_repository.dart';
-import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
 import 'package:polkadex/common/orders/data/datasources/order_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/datasources/ticker_remote_datasource.dart';
@@ -213,7 +213,6 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => ListOrdersCubit(
-      cancelOrderUseCase: dependency(),
       getOpenOrdersUseCase: dependency(),
     ),
   );
@@ -338,6 +337,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => OrderHistoryCubit(
       getOrdersUseCase: dependency(),
+      cancelOrderUseCase: dependency(),
     ),
   );
 

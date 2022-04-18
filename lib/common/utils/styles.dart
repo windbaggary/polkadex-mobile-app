@@ -193,6 +193,12 @@ TextStyle get tsS16W600CFF => TextStyle(
       color: AppColors.colorFFFFFF,
     );
 
+TextStyle get tsS16W600C141415 => TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: AppColors.color141415,
+    );
+
 TextStyle get tsS15W600CABB2BC => TextStyle(
       fontSize: 15,
       fontWeight: FontWeight.w600,

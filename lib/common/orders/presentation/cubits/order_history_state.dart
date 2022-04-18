@@ -16,12 +16,15 @@ class OrderHistoryError extends OrderHistoryState {}
 class OrderHistoryLoaded extends OrderHistoryState {
   const OrderHistoryLoaded({
     required this.orders,
+    required this.orderIdsLoading,
   });
 
   final List<OrderEntity> orders;
+  final List<String> orderIdsLoading;
 
   @override
   List<Object> get props => [
         orders,
+        orderIdsLoading,
       ];
 }

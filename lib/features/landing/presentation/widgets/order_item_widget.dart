@@ -5,7 +5,6 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
-import 'package:polkadex/features/landing/utils/token_utils.dart';
 
 class OrderItemWidget extends StatelessWidget {
   const OrderItemWidget({
@@ -28,79 +27,50 @@ class OrderItemWidget extends StatelessWidget {
       ignoring: isProcessing,
       child: Opacity(
         opacity: isProcessing ? 0.3 : 1.0,
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.colorFFFFFF.withOpacity(0.05),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.17),
-                    blurRadius: 99,
-                    offset: Offset(0.0, 100.0),
-                  ),
-                ],
-              ),
-              margin: const EdgeInsets.symmetric(horizontal: 24),
-              padding: const EdgeInsets.fromLTRB(27, 13, 19, 7),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.color8BA1BE.withOpacity(0.20),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                    margin: const EdgeInsets.only(right: 9),
-                    child: Text(
-                      order.iOrderTypeName,
-                      style: tsS16W500CFF,
-                    ),
-                  ),
-                  Text(
-                    '${TokenUtils.tokenIdToAcronym(order.baseAsset)}/${TokenUtils.tokenIdToAcronym(order.quoteAsset)}',
-                    style: tsS15W600CFF,
-                  ),
-                  Spacer(),
-                  InkWell(
-                    onTap: onTapClose,
-                    child: SvgPicture.asset(
-                      'close'.asAssetSvg(),
-                      width: 10,
-                      height: 10,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.color2E303C,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.17),
-                    blurRadius: 99,
-                    offset: Offset(0.0, 100.0),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.fromLTRB(15, 15, 13, 19),
-              margin: const EdgeInsets.only(left: 13, right: 13, bottom: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 75,
-                        child: Column(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 32,
+            right: 16,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Amount (${order.baseToken})',
+                              style: tsS14W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              order.amount,
+                              style: tsS16W500CFF,
+                            )
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Price (${order.quoteToken})',
+                              style: tsS14W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              order.price,
+                              style: tsS16W500CFF,
+                            )
+                          ],
+                        ),
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -108,69 +78,76 @@ class OrderItemWidget extends StatelessWidget {
                               style: tsS14W400CFF.copyWith(
                                   color: AppColors.colorABB2BC),
                             ),
+                            SizedBox(height: 4),
                             Container(
                               decoration: BoxDecoration(
-                                color: colorBuySell.withOpacity(0.20),
+                                color: AppColors.color8BA1BE.withOpacity(0.20),
                                 borderRadius: BorderRadius.circular(7),
                               ),
-                              margin: const EdgeInsets.only(top: 4),
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 4, vertical: 2),
                               child: Text(
-                                order.iType,
-                                style: tsS16W500CFF.copyWith(
-                                  color: colorBuySell,
-                                ),
+                                order.iOrderTypeName,
+                                style: tsS16W500CFF,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Amount',
-                              style: tsS14W400CFF.copyWith(
-                                  color: AppColors.colorABB2BC),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: colorBuySell.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 2),
+                          child: Text(
+                            order.iType,
+                            style: tsS16W500CFF.copyWith(
+                              color: colorBuySell,
                             ),
-                            SizedBox(height: 4),
-                            Text(
-                              order.iAmount,
-                              style: tsS16W500CFF,
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Price',
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            order.iTokenPairName,
                             style: tsS14W400CFF.copyWith(
                                 color: AppColors.colorABB2BC),
                           ),
-                          Text(
-                            order.iPrice,
-                            style: tsS16W500CFF,
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      order.iFormattedDate,
-                      style:
-                          tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
+                        ),
+                        Text(
+                          order.iFormattedDate,
+                          style: tsS14W400CFF.copyWith(
+                              color: AppColors.colorABB2BC),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: InkWell(
+                  onTap: order.status == 'Open' ? onTapClose : () {},
+                  child: SvgPicture.asset(
+                    'close'.asAssetSvg(),
+                    color: order.status == 'Open'
+                        ? Colors.white
+                        : Colors.transparent,
+                    width: 10,
+                    height: 10,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

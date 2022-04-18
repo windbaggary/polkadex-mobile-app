@@ -5,15 +5,19 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/orders/data/models/fee_model.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
 import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
+import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/coin/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:test/test.dart';
 
 class _MockGetOrdersUsecase extends Mock implements GetOrdersUseCase {}
 
+class _MockCancelOrderUsecase extends Mock implements CancelOrderUseCase {}
+
 void main() {
-  late _MockGetOrdersUsecase _mockOrdersUsecase;
+  late _MockGetOrdersUsecase _mockGetOrdersUsecase;
+  late _MockCancelOrderUsecase _mockCancelOrderUsecase;
   late OrderHistoryCubit cubit;
   late String orderId;
   late String mainAcc;
@@ -34,10 +38,12 @@ void main() {
   late OrderModel order;
 
   setUp(() {
-    _mockOrdersUsecase = _MockGetOrdersUsecase();
+    _mockGetOrdersUsecase = _MockGetOrdersUsecase();
+    _mockCancelOrderUsecase = _MockCancelOrderUsecase();
 
     cubit = OrderHistoryCubit(
-      getOrdersUseCase: _mockOrdersUsecase,
+      getOrdersUseCase: _mockGetOrdersUsecase,
+      cancelOrderUseCase: _mockCancelOrderUsecase,
     );
 
     orderId = '786653432';
@@ -84,7 +90,7 @@ void main() {
         'Orders fetched successfully',
         build: () {
           when(
-            () => _mockOrdersUsecase(
+            () => _mockGetOrdersUsecase(
               address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
@@ -98,11 +104,15 @@ void main() {
             '0',
             address,
             signature,
+            false,
           );
         },
         expect: () => [
           OrderHistoryLoading(),
-          OrderHistoryLoaded(orders: [order]),
+          OrderHistoryLoaded(
+            orders: [order],
+            orderIdsLoading: [],
+          ),
         ],
       );
 
@@ -110,7 +120,7 @@ void main() {
         'Orders fetch fail',
         build: () {
           when(
-            () => _mockOrdersUsecase(
+            () => _mockGetOrdersUsecase(
               address: any(named: 'address'),
               signature: any(named: 'signature'),
             ),
@@ -124,6 +134,7 @@ void main() {
             '0',
             address,
             signature,
+            false,
           );
         },
         expect: () => [
