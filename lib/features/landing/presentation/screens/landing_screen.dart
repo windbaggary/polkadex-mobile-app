@@ -439,7 +439,7 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _ThisAppBar(),
+            _ThisAppBar(_bottomNavbarNotifier.value),
             Expanded(
               child: Stack(
                 children: [
@@ -694,53 +694,62 @@ class _ThisInheritedWidget extends InheritedWidget {
 
 /// The app bar widget for the screen.
 class _ThisAppBar extends StatelessWidget {
+  const _ThisAppBar(this.bottomNavbarValue);
+
+  final EnumBottonBarItem bottomNavbarValue;
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<HomeScrollNotifProvider>();
-    return Container(
-      height: kToolbarHeight - provider.appbarValue,
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Container(
-          transform: Matrix4.identity()..translate(0.0, -provider.appbarValue),
-          height: kToolbarHeight,
-          child: ValueListenableBuilder<String>(
-            valueListenable:
-                _ThisInheritedWidget.of(context)!.appbarTitleNotifier,
-            builder: (context, title, child) => _ThisBaseAppbar(
-              // animation: this._appbarAnimation,
-              assetImg: 'user_icon.png'.asAssetImg(),
-              title: title,
-              actions: [
-                InkWell(
-                  onTap: () => Coordinator.goToMarketTokenSelectionScreen(),
-                  child: SizedBox(
-                    width: 25,
-                    height: 25,
-                    child: SvgPicture.asset(
-                      'search'.asAssetSvg(),
-                    ),
+    return bottomNavbarValue == EnumBottonBarItem.home ||
+            bottomNavbarValue == EnumBottonBarItem.balance
+        ? Container(
+            height: kToolbarHeight - provider.appbarValue,
+            child: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: Container(
+                transform: Matrix4.identity()
+                  ..translate(0.0, -provider.appbarValue),
+                height: kToolbarHeight,
+                child: ValueListenableBuilder<String>(
+                  valueListenable:
+                      _ThisInheritedWidget.of(context)!.appbarTitleNotifier,
+                  builder: (context, title, child) => _ThisBaseAppbar(
+                    // animation: this._appbarAnimation,
+                    assetImg: 'user_icon.png'.asAssetImg(),
+                    title: title,
+                    actions: [
+                      InkWell(
+                        onTap: () =>
+                            Coordinator.goToMarketTokenSelectionScreen(),
+                        child: SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: SvgPicture.asset(
+                            'search'.asAssetSvg(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      InkWell(
+                        onTap: () => _ThisInheritedWidget.of(context)!
+                            .onNotificationTap(),
+                        child: SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: _ThisNotificationIcon(
+                            count: "2",
+                          ),
+                        ),
+                      ),
+                    ],
+                    onAvatarTapped: () =>
+                        _ThisInheritedWidget.of(context)!.onOpenDrawer(),
                   ),
                 ),
-                SizedBox(width: 16),
-                InkWell(
-                  onTap: () =>
-                      _ThisInheritedWidget.of(context)!.onNotificationTap(),
-                  child: SizedBox(
-                    width: 25,
-                    height: 25,
-                    child: _ThisNotificationIcon(
-                      count: "2",
-                    ),
-                  ),
-                ),
-              ],
-              onAvatarTapped: () =>
-                  _ThisInheritedWidget.of(context)!.onOpenDrawer(),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : Container();
   }
 }
