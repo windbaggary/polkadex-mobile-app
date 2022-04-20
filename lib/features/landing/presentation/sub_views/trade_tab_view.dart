@@ -1,11 +1,9 @@
+import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
-import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
@@ -15,9 +13,7 @@ import 'package:polkadex/features/landing/presentation/widgets/place_order_widge
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
@@ -153,8 +149,10 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
       child: Consumer<TradeTabCoinProvider>(
         builder: (context, coinProvider, child) => Row(
           children: [
-            _ThisTopSelectableWidget(onTap: () => _onMarketSelection(context)),
-            Spacer(),
+            Expanded(
+                child: _ThisTopSelectableWidget(
+                    graphColor: coinProvider.tokenCoin.color,
+                    onTap: () => _onMarketSelection(context))),
             Container(
               decoration: BoxDecoration(
                 color: coinProvider.tokenCoin.color,
@@ -168,25 +166,6 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
                 style: tsS13W600CFF,
               ),
             ),
-            buildInkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: () => Coordinator.goToCoinTradeScreen(
-                leftTokenId: coinProvider.tokenCoin.baseTokenId,
-                rightTokenId: coinProvider.tokenCoin.pairTokenId,
-                balanceCubit: context.read<BalanceCubit>(),
-                orderbookCubit: context.read<OrderbookCubit>(),
-              ),
-              child: Container(
-                width: 33,
-                height: 33,
-                padding: const EdgeInsets.symmetric(vertical: 7),
-                decoration: BoxDecoration(
-                  color: AppColors.color8BA1BE.withOpacity(0.20),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: SvgPicture.asset('trading'.asAssetSvg()),
-              ),
-            )
           ],
         ),
       ),
@@ -212,10 +191,13 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
 /// The widget to handle the ontap for picker
 ///
 class _ThisTopSelectableWidget extends StatelessWidget {
-  final VoidCallback? onTap;
   const _ThisTopSelectableWidget({
+    required this.graphColor,
     this.onTap,
   });
+
+  final VoidCallback? onTap;
+  final Color graphColor;
 
   @override
   Widget build(BuildContext context) {
@@ -224,11 +206,19 @@ class _ThisTopSelectableWidget extends StatelessWidget {
       child: Row(
         children: [
           Consumer<TradeTabCoinProvider>(
-            builder: (context, coinProvider, child) => Image.asset(
-              TokenUtils.tokenIdToAssetImg(coinProvider.tokenCoin.baseTokenId),
-              width: 48,
-              height: 48,
-              fit: BoxFit.contain,
+            builder: (context, coinProvider, child) => Container(
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset(
+                  TokenUtils.tokenIdToAssetImg(
+                      coinProvider.tokenCoin.baseTokenId),
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
           Padding(
@@ -238,30 +228,16 @@ class _ThisTopSelectableWidget extends StatelessWidget {
             ),
             child: Consumer<TradeTabCoinProvider>(
               builder: (context, coinProvider, child) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      style: tsS14W500CFF,
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: TokenUtils.tokenIdToAcronym(
-                              coinProvider.tokenCoin.baseTokenId),
-                          style: TextStyle(fontSize: 19),
-                        ),
-                        TextSpan(
-                          text:
-                              '/${TokenUtils.tokenIdToAcronym(coinProvider.pairCoin?.baseTokenId ?? '')}',
-                          style: TextStyle(
-                            fontFamily: 'WorkSans',
-                          ),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    '${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}/${TokenUtils.tokenIdToAcronym(coinProvider.pairCoin?.baseTokenId ?? '')}',
+                    style: tsS20W600CFF,
                   ),
                   Text(
                     TokenUtils.tokenIdToFullName(
                         coinProvider.tokenCoin.baseTokenId),
-                    style: tsS15W500CFF.copyWith(color: AppColors.colorABB2BC),
+                    style: tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
                   )
                 ],
               ),
@@ -270,6 +246,15 @@ class _ThisTopSelectableWidget extends StatelessWidget {
           Icon(
             Icons.keyboard_arrow_down,
             color: AppColors.colorFFFFFF,
+          ),
+          Flexible(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
+              child: Sparkline(
+                data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
+                lineColor: graphColor,
+              ),
+            ),
           ),
         ],
       ),
