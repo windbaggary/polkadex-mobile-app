@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -545,52 +544,6 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
   }
 }
 
-/// The notification icon on the app bar
-/// [count] will be displayed on colored circle. Pass it null/empty
-/// string to hide
-///
-class _ThisNotificationIcon extends StatelessWidget {
-  final String count;
-  const _ThisNotificationIcon({
-    required this.count,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topRight,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 2),
-          child: SvgPicture.asset(
-            'notification'.asAssetSvg(),
-          ),
-        ),
-        if (count.isNotEmpty)
-          Positioned(
-            top: count.length > 1 ? 0 : -1,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.colorE6007A,
-              ),
-              padding: const EdgeInsets.all(4),
-              child: Text(
-                count,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: AppColors.colorFFFFFF,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
 /// The app bar for the landing screen. This wideget is shown as appbar for
 /// all the tabviews
 class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
@@ -617,9 +570,20 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            if (assetImg.isNotEmpty) _buildImage(),
-            Spacer(),
-            if (actions.isNotEmpty) _buildActions(),
+            if (assetImg.isNotEmpty) _buildAvatar(),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: SvgPicture.asset(
+                    'title'.asAssetSvg(),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            if (actions.isNotEmpty) _buildNotification(),
           ],
         ),
       ),
@@ -629,31 +593,27 @@ class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => Size(double.infinity, kToolbarHeight);
 
-  Widget _buildActions() {
-    return
-        //  SlideTransition(
-        //   position: this.animation.drive<Offset>(Tween<Offset>(
-        //         begin: Offset(1.0, 0.0),
-        //         end: Offset(0.0, 0.0),
-        //       )),
-        //   child:
-        Row(
-      children: actions,
+  Widget _buildAvatar() {
+    return InkWell(
+      onTap: onAvatarTapped,
+      child: Container(
+        width: 40,
+        height: 40,
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            color: AppColors.color558BA1BE, shape: BoxShape.circle),
+        child: SvgPicture.asset(
+          'profile'.asAssetSvg(),
+          color: Colors.white,
+          fit: BoxFit.contain,
+        ),
+      ),
       // ),
     );
   }
 
-  Widget _buildImage() {
-    return InkWell(
-      onTap: onAvatarTapped,
-      child: SvgPicture.asset(
-        'drawer_avatar'.asAssetSvg(),
-        width: 35,
-        height: 35,
-        fit: BoxFit.contain,
-      ),
-      // ),
-    );
+  Widget _buildNotification() {
+    return Row(children: actions);
   }
 }
 
@@ -720,28 +680,23 @@ class _ThisAppBar extends StatelessWidget {
                     title: title,
                     actions: [
                       InkWell(
-                        onTap: () =>
-                            Coordinator.goToMarketTokenSelectionScreen(),
-                        child: SizedBox(
-                          width: 25,
-                          height: 25,
-                          child: SvgPicture.asset(
-                            'search'.asAssetSvg(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      InkWell(
                         onTap: () => _ThisInheritedWidget.of(context)!
                             .onNotificationTap(),
-                        child: SizedBox(
-                          width: 25,
-                          height: 25,
-                          child: _ThisNotificationIcon(
-                            count: "2",
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: AppColors.color558BA1BE,
+                              shape: BoxShape.circle),
+                          child: SvgPicture.asset(
+                            'notifications'.asAssetSvg(),
+                            color: Colors.white,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                      ),
+                        // ),
+                      )
                     ],
                     onAvatarTapped: () =>
                         _ThisInheritedWidget.of(context)!.onOpenDrawer(),
