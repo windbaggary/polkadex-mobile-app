@@ -35,17 +35,4 @@ class ListOrdersCubit extends Cubit<ListOrdersState> {
       },
     );
   }
-
-  Future<void> addToOpenOrders(OrderEntity newOrder) async {
-    final previousState = state;
-
-    if (previousState is ListOrdersLoaded) {
-      emit(
-        ListOrdersLoaded(
-          openOrders: [newOrder, ...previousState.openOrders],
-          orderIdsLoading: [...previousState.orderIdsLoading],
-        ),
-      );
-    }
-  }
 }

@@ -4,9 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
-import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
@@ -304,7 +304,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     BuildContext context,
   ) async {
     final placeOrderCubit = context.read<PlaceOrderCubit>();
-    final listOrdersCubit = context.read<ListOrdersCubit>();
+    final orderHistoryCubit = context.read<OrderHistoryCubit>();
 
     FocusManager.instance.primaryFocus?.unfocus();
 
@@ -326,7 +326,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
     if (resultPlaceOrder != null &&
         resultPlaceOrder.orderType != EnumOrderTypes.market) {
-      listOrdersCubit.addToOpenOrders(resultPlaceOrder);
+      orderHistoryCubit.addToOpenOrders(resultPlaceOrder);
     }
 
     final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';

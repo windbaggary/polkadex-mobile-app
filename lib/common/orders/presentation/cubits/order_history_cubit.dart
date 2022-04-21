@@ -135,4 +135,17 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       return false;
     }
   }
+
+  Future<void> addToOpenOrders(OrderEntity newOrder) async {
+    final previousState = state;
+
+    if (previousState is OrderHistoryLoaded) {
+      emit(
+        OrderHistoryLoaded(
+          orders: [newOrder, ...previousState.orders],
+          orderIdsLoading: [...previousState.orderIdsLoading],
+        ),
+      );
+    }
+  }
 }
