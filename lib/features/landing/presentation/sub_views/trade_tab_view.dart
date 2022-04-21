@@ -1,9 +1,11 @@
 import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
@@ -221,31 +223,45 @@ class _ThisTopSelectableWidget extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 7,
-              right: 18,
-            ),
-            child: Consumer<TradeTabCoinProvider>(
-              builder: (context, coinProvider, child) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}/${TokenUtils.tokenIdToAcronym(coinProvider.pairCoin?.baseTokenId ?? '')}',
-                    style: tsS20W600CFF,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Consumer<TradeTabCoinProvider>(
+                  builder: (context, coinProvider, child) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}/${TokenUtils.tokenIdToAcronym(coinProvider.pairCoin?.baseTokenId ?? '')}',
+                        style: tsS20W600CFF,
+                      ),
+                      Text(
+                        TokenUtils.tokenIdToFullName(
+                            coinProvider.tokenCoin.baseTokenId),
+                        style:
+                            tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
+                      ),
+                    ],
                   ),
-                  Text(
-                    TokenUtils.tokenIdToFullName(
-                        coinProvider.tokenCoin.baseTokenId),
-                    style: tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
-                  )
-                ],
+                ),
               ),
-            ),
-          ),
-          Icon(
-            Icons.keyboard_arrow_down,
-            color: AppColors.colorFFFFFF,
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.color3B4150),
+                  color: AppColors.color2E303C,
+                ),
+                padding: EdgeInsets.all(4),
+                margin: EdgeInsets.only(left: 4, right: 8),
+                child: SvgPicture.asset(
+                  'switch'.asAssetSvg(),
+                  width: 12,
+                  height: 12,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
           Flexible(
             child: ConstrainedBox(
