@@ -147,7 +147,7 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 18, top: 8, right: 19),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Consumer<TradeTabCoinProvider>(
         builder: (context, coinProvider, child) => Row(
           children: [
@@ -157,15 +157,28 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
                     onTap: () => _onMarketSelection(context))),
             Container(
               decoration: BoxDecoration(
-                color: coinProvider.tokenCoin.color,
+                color: coinProvider.tokenCoin.color.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(5),
               ),
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(3),
-              margin: const EdgeInsets.only(right: 13.5),
-              child: Text(
-                "${coinProvider.tokenCoin.percentage}%",
-                style: tsS13W600CFF,
+              padding: const EdgeInsets.only(
+                top: 2,
+                right: 4,
+                bottom: 2,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.arrow_drop_down,
+                    color: coinProvider.tokenCoin.color,
+                    size: 18,
+                  ),
+                  Text(
+                    "${coinProvider.tokenCoin.percentage}%",
+                    style: tsS14W600CFF.copyWith(
+                        color: coinProvider.tokenCoin.color),
+                  )
+                ],
               ),
             ),
           ],
