@@ -147,7 +147,11 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.only(
+        left: 8,
+        top: 8,
+        right: 8,
+      ),
       child: Consumer<TradeTabCoinProvider>(
         builder: (context, coinProvider, child) => Row(
           children: [
