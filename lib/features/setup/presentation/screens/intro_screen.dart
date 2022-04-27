@@ -124,7 +124,7 @@ class _IntroScreenState extends State<IntroScreen>
                   child: SizedBox(
                     height: 54,
                     child: LoginButtonWidget(
-                      text: 'Generate Wallet',
+                      text: 'Access with QR Code',
                       backgroundColor: AppColors.colorFFFFFF,
                       textStyle: tsS16W500C24252C,
                       onTap: () => Coordinator.goToMnemonicGeneratedScreen(),
