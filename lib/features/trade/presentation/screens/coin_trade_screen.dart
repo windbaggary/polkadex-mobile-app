@@ -260,32 +260,36 @@ class _ThisDetailCard extends StatelessWidget {
                     _buildLinkItem(
                       title: "Website",
                       svgIcon: "browser".asAssetSvg(),
-                      onTap: () =>
-                          _navigateToLink("https://www.polkadex.trade"),
+                      onTap: () => _navigateToLink(
+                          Uri.parse('https://www.polkadex.trade')),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
                       title: "Twitter",
                       svgIcon: "twitter".asAssetSvg(),
-                      onTap: () => _navigateToLink('http://twitter.com'),
+                      onTap: () =>
+                          _navigateToLink(Uri.parse('http://twitter.com')),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
                       title: "Telegram",
                       svgIcon: "telegram".asAssetSvg(),
-                      onTap: () => _navigateToLink('https://telegram.org'),
+                      onTap: () =>
+                          _navigateToLink(Uri.parse('https://telegram.org')),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
                       title: "Discord",
                       svgIcon: "discord".asAssetSvg(),
-                      onTap: () => _navigateToLink('http://discord.com/'),
+                      onTap: () =>
+                          _navigateToLink(Uri.parse('http://discord.com/')),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
                       title: "Reddit",
                       svgIcon: "reddit".asAssetSvg(),
-                      onTap: () => _navigateToLink('http://reddit.com/'),
+                      onTap: () =>
+                          _navigateToLink(Uri.parse('http://reddit.com/')),
                     ),
                     SizedBox(width: 12),
                   ],
@@ -370,10 +374,10 @@ class _ThisDetailCard extends StatelessWidget {
       );
 
   /// navigate to link on app browser
-  void _navigateToLink(String link) async {
+  void _navigateToLink(Uri link) async {
     try {
-      if (await url_launcher.canLaunch(link)) {
-        url_launcher.launch(link);
+      if (await url_launcher.canLaunchUrl(link)) {
+        url_launcher.launchUrl(link);
       }
     } catch (ex) {
       print(ex);
