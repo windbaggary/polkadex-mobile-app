@@ -9,8 +9,10 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
+import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
+import 'package:polkadex/injection_container.dart';
 
 /// The dummy data for the screen
 ///
@@ -127,7 +129,8 @@ class _IntroScreenState extends State<IntroScreen>
                       text: 'Access with QR Code',
                       backgroundColor: AppColors.colorFFFFFF,
                       textStyle: tsS16W500C24252C,
-                      onTap: () => Coordinator.goToMnemonicGeneratedScreen(),
+                      onTap: () => Coordinator.goToQrCodeScanScreen(
+                          onQrCodeScan: _qRCodeMnemonicEval),
                     ),
                   ),
                 ),
@@ -240,6 +243,22 @@ class _IntroScreenState extends State<IntroScreen>
         ],
       ),
     );
+  }
+
+  void _qRCodeMnemonicEval(String qrCode) async {
+    final provider = dependency<MnemonicProvider>();
+
+    provider.mnemonicWords = qrCode.split(' ');
+    final isMnemonicValid = await provider.checkMnemonicValid();
+
+    if (isMnemonicValid) {
+      Coordinator.goToWalletSettingsScreen(
+        provider,
+        removePrevivousScreens: true,
+      );
+    } else {
+      Navigator.pop(context);
+    }
   }
 }
 

@@ -249,7 +249,11 @@ abstract class Routes {
       case qrCodeScanScreen:
         return MaterialPageRoute<String>(
           builder: (_) {
-            return QRCodeScanScreen();
+            final qRCodeScanArguments = settings.arguments as Map;
+
+            return QRCodeScanScreen(
+              qRCodeScanArguments['onQrCodeScan'] as Function(String)?,
+            );
           },
           settings: settings,
         );
@@ -310,6 +314,7 @@ abstract class Routes {
               child: IntroScreen(),
             );
           },
+          settings: settings,
         );
       case confirmPasswordScreen:
         return PageRouteBuilder(
