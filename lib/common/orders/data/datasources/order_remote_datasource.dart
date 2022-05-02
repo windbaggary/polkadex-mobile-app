@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
+import 'package:polkadex/injection_container.dart';
 
 class OrderRemoteDatasource {
   final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
@@ -11,13 +13,20 @@ class OrderRemoteDatasource {
     int nonce,
     int baseAsset,
     int quoteAsset,
-    EnumOrderTypes orderType,
-    EnumBuySell orderSide,
+    String orderType,
+    String orderSide,
     String price,
     String amount,
     String address,
     String signature,
   ) async {
+    final String _callPlaceOrderJSON =
+        "polkadexWorker.placeOrderJSON(keyring.addFromUri('//Bob'), keyring.addFromUri('//Alice').address, 0, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+    final List<dynamic> payloadResult = await dependency<WebViewRunner>()
+        .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
+
+    BlockchainRpcHelper.sendRpcRequest('enclave_placeOrder', payloadResult);
+
     return await post(
       Uri.parse('$_baseUrl/place_order'),
       headers: <String, String>{

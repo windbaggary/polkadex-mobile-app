@@ -7,6 +7,7 @@ import 'package:polkadex/common/orders/data/models/fee_model.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 class OrderRepository implements IOrderRepository {
   OrderRepository({required OrderRemoteDatasource orderRemoteDatasource})
@@ -31,8 +32,8 @@ class OrderRepository implements IOrderRepository {
         nonce,
         int.parse(baseAsset),
         int.parse(quoteAsset),
-        orderType,
-        orderSide,
+        orderType.toString().split('.')[1].capitalize(),
+        orderSide == EnumBuySell.buy ? 'Bid' : 'Ask',
         price,
         amount,
         address,
