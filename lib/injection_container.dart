@@ -1,6 +1,7 @@
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
+import 'package:polkadex/common/network/mysql_client.dart';
 import 'package:polkadex/common/network/rabbit_mq_client.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
@@ -71,6 +72,9 @@ Future<void> init() async {
   final RabbitMqClient rabbitMqClient = RabbitMqClient();
   await rabbitMqClient.init();
 
+  final MysqlClient mysqlClient = MysqlClient();
+  await mysqlClient.connectToDb();
+
   dependency.registerLazySingleton(
     () => isBiometricAvailable,
     instanceName: 'isBiometricAvailable',
@@ -81,6 +85,8 @@ Future<void> init() async {
   );
 
   dependency.registerSingleton<RabbitMqClient>(rabbitMqClient);
+
+  dependency.registerSingleton<MysqlClient>(mysqlClient);
 
   dependency.registerFactory(
     () => MnemonicRemoteDatasource(),

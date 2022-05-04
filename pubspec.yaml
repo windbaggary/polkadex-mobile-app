@@ -56,6 +56,7 @@ dependencies:
   dart_amqp: ^0.2.1
   k_chart: ^0.6.0
   chart_sparkline: ^1.0.10
+  mysql1: ^0.19.2
 
 dev_dependencies:
   flutter_test:
