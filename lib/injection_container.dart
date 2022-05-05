@@ -73,7 +73,7 @@ Future<void> init() async {
   await rabbitMqClient.init();
 
   final MysqlClient mysqlClient = MysqlClient();
-  await mysqlClient.connectToDb();
+  await mysqlClient.init();
 
   dependency.registerLazySingleton(
     () => isBiometricAvailable,
