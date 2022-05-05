@@ -1,19 +1,21 @@
 import "dart:async";
-import 'package:mysql1/mysql1.dart';
+import 'package:mysql_client/mysql_client.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MysqlClient {
-  final settings = ConnectionSettings(
-      host: dotenv.get('DB_HOST'),
-      port: int.parse(dotenv.get('DB_PORT')),
-      user: dotenv.get('DB_USER'),
-      password: dotenv.get('DB_PASSWORD'),
-      db: dotenv.get('DB_NAME'),
-  );
+  late MySQLConnection conn;
 
   Future<dynamic> connectToDb() async {
     try {
-      final conn = await MySqlConnection.connect(settings);
+      final conn = await MySQLConnection.createConnection(
+        host: dotenv.get('DB_HOST'),
+        port: int.parse(dotenv.get('DB_PORT')),
+        userName: dotenv.get('DB_USER'),
+        password: dotenv.get('DB_PASSWORD'),
+        databaseName: dotenv.get('DB_NAME'),
+      );
+
+      await conn.connect();
     } catch (e) {
       print(e);
     }
