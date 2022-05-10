@@ -13,15 +13,6 @@ class MysqlClient {
       password: dotenv.get('DB_PASSWORD'),
       databaseName: dotenv.get('DB_NAME'),
     );
-  }
-
-  Future<dynamic> connect() async {
-    try {
-      if (!conn.connected) {
-        conn.connect();
-      }
-    } catch (e) {
-      print(e);
-    }
+    await conn.connect();
   }
 }
