@@ -80,14 +80,7 @@ void main() {
       when(() => dataSource.placeOrder(
               any(), any(), any(), any(), any(), any(), any(), any(), any()))
           .thenAnswer(
-        (_) async => Response(
-            jsonEncode({
-              "FineWithMessage": {
-                "data": "123456789",
-                "message": "Order placed successfully! :)"
-              }
-            }),
-            200),
+        (_) async => 123456789,
       );
 
       final result = await repository.placeOrder(
@@ -120,7 +113,7 @@ void main() {
       when(() => dataSource.placeOrder(
               any(), any(), any(), any(), any(), any(), any(), any(), any()))
           .thenAnswer(
-        (_) async => Response('', 400),
+        (_) async => null,
       );
 
       final result = await repository.placeOrder(

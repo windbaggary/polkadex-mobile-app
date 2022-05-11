@@ -39,11 +39,10 @@ class OrderRepository implements IOrderRepository {
         address,
         signature,
       );
-      final Map<String, dynamic> body = jsonDecode(result.body);
 
-      if (result.statusCode == 200 && body.containsKey('FineWithMessage')) {
+      if (result != null) {
         final newOrder = OrderModel(
-          orderId: body['FineWithMessage']['data'],
+          orderId: result.toString(),
           mainAcc: address,
           amount: amount,
           price: price,
@@ -60,7 +59,8 @@ class OrderRepository implements IOrderRepository {
 
         return Right(newOrder);
       } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+        return Left(
+            ApiError(message: 'Error on JSON RPC request. Please try again.'));
       }
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));

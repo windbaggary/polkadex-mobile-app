@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
-import 'package:polkadex/common/utils/extensions.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
@@ -10,7 +9,7 @@ import 'package:polkadex/common/network/mysql_client.dart';
 class OrderRemoteDatasource {
   final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
 
-  Future<Response> placeOrder(
+  Future<double?> placeOrder(
     int nonce,
     int baseAsset,
     int quoteAsset,
@@ -44,25 +43,8 @@ class OrderRemoteDatasource {
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
-    BlockchainRpcHelper.sendRpcRequest('enclave_placeOrder', payloadResult);
-
-    return await post(
-      Uri.parse('$_baseUrl/place_order'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'signature': {'Sr25519': signature},
-        'payload': {
-          'account': address,
-          'symbol': [baseAsset, quoteAsset],
-          'order_type': orderType.toString().split('.')[1].capitalize(),
-          'order_side': orderSide.toString().split('.')[1].capitalize(),
-          'price': price,
-          'amount': amount,
-        },
-      }),
-    );
+    return (BlockchainRpcHelper.sendRpcRequest(
+        'enclave_placeOrder', payloadResult) as double?);
   }
 
   Future<Response> cancelOrder(
