@@ -38,6 +38,13 @@ jobs:
           echo RMQ_KEY=\${{ secrets.RMQ_KEY }} >> ${{env.ENV_FILE_PATH}}
           echo POLKADEX_HOST_URL=\${{ secrets.POLKADEX_HOST_URL }} >> ${{env.ENV_FILE_PATH}}
           echo INFLUX_DB_URL=\${{ secrets.INFLUX_DB_URL }} >> ${{env.ENV_FILE_PATH}}
+          echo RMQ_URL=\${{ secrets.RMQ_URL }} > ${{env.ENV_FILE_PATH}}
+          echo DB_HOST=\${{ secrets.DB_HOST }} >> ${{env.ENV_FILE_PATH}}
+          echo DB_PORT=\${{ secrets.DB_PORT }} >> ${{env.ENV_FILE_PATH}}
+          echo DB_USER=\${{ secrets.DB_USER }} >> ${{env.ENV_FILE_PATH}}
+          echo DB_PASSWORD=\${{ secrets.DB_PASSWORD }} >> ${{env.ENV_FILE_PATH}}
+          echo DB_NAME=\${{ secrets.DB_NAME }} >> ${{env.ENV_FILE_PATH}}
+          echo BLOCKCHAIN_URL=\${{ secrets.BLOCKCHAIN_URL }} >> ${{env.ENV_FILE_PATH}}
       - name: Check for errors in the code
         run: flutter analyze .
       - name: Run tests
