@@ -407,7 +407,7 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
             context.read<HomeScrollNotifProvider>().scrollOffset = 0.0;
           });
 
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _subscribeBottomBarStream();
 
     super.initState();
@@ -418,7 +418,7 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
     _tabController.dispose();
     _bottomNavbarNotifier.dispose();
     _unsubscribeBottomBar();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
   }
