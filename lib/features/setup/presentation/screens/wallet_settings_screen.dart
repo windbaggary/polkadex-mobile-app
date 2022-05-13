@@ -46,7 +46,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       _passwordRepeatController.text = _generatedPassword;
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => context
+    WidgetsBinding.instance?.addPostFrameCallback((_) => context
         .read<WalletSettingsProvider>()
         .evalNextEnabled(_nameController.text, _passwordController.text,
             _passwordRepeatController.text));

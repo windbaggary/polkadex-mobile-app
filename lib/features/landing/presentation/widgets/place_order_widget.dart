@@ -187,7 +187,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         if (index == EnumOrderTypes.market) {
           _priceController.text = '';
           WidgetsBinding.instance
-              .addPostFrameCallback((_) => _onPriceAmountChanged(
+              ?.addPostFrameCallback((_) => _onPriceAmountChanged(
                     context,
                     context.read<PlaceOrderCubit>().state.balance,
                     '',
@@ -465,7 +465,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
             _priceController.text = newPrice;
             WidgetsBinding.instance
-                .addPostFrameCallback((_) => _onPriceAmountChanged(
+                ?.addPostFrameCallback((_) => _onPriceAmountChanged(
                       context,
                       context.read<PlaceOrderCubit>().state.balance,
                       newPrice,
