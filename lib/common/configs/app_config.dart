@@ -13,5 +13,5 @@ class AppConfigs {
 
   /// The app screen size
   static Size size =
-      MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
+      MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size;
 }
