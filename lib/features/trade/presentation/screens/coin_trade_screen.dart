@@ -268,7 +268,7 @@ class _ThisDetailCard extends StatelessWidget {
                       title: "Twitter",
                       svgIcon: "twitter".asAssetSvg(),
                       onTap: () =>
-                          _navigateToLink(Uri.parse('http://twitter.com')),
+                          _navigateToLink(Uri.parse('https://twitter.com')),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
@@ -282,14 +282,14 @@ class _ThisDetailCard extends StatelessWidget {
                       title: "Discord",
                       svgIcon: "discord".asAssetSvg(),
                       onTap: () =>
-                          _navigateToLink(Uri.parse('http://discord.com/')),
+                          _navigateToLink(Uri.parse('https://discord.com/')),
                     ),
                     SizedBox(width: 12),
                     _buildLinkItem(
                       title: "Reddit",
                       svgIcon: "reddit".asAssetSvg(),
                       onTap: () =>
-                          _navigateToLink(Uri.parse('http://reddit.com/')),
+                          _navigateToLink(Uri.parse('https://reddit.com/')),
                     ),
                     SizedBox(width: 12),
                   ],
