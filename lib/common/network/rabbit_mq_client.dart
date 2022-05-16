@@ -12,7 +12,7 @@ class RabbitMqClient {
   RabbitMqClient()
       : _client = Client(
           settings: ConnectionSettings(
-            host: 'roedeer.rmq.cloudamqp.com',
+            host: dotenv.get('RMQ_URL'),
             virtualHost: dotenv.get('RMQ_VHOST'),
             authProvider: AmqPlainAuthenticator(
               dotenv.get('RMQ_USERNAME'),
