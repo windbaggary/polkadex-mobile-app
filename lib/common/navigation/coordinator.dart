@@ -35,11 +35,21 @@ abstract class Coordinator {
     );
   }
 
-  static void goToWalletSettingsScreen(ChangeNotifier provider) {
-    _navigationKey.currentState?.pushNamed(
-      Routes.walletSettingsScreen,
-      arguments: provider,
-    );
+  static void goToWalletSettingsScreen(ChangeNotifier provider,
+      {bool removePrevivousScreens = false}) {
+    removePrevivousScreens
+        ? _navigationKey.currentState?.pushNamedAndRemoveUntil(
+            Routes.walletSettingsScreen,
+            (route) {
+              print(route.settings.name);
+              return route.settings.name == Routes.introScreen;
+            },
+            arguments: provider,
+          )
+        : _navigationKey.currentState?.pushNamed(
+            Routes.walletSettingsScreen,
+            arguments: provider,
+          );
   }
 
   static void goToIntroScreen() {
@@ -135,9 +145,14 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.balanceSummaryScreen);
   }
 
-  static Future<String?> goToQrCodeScanScreen() async {
-    return await _navigationKey.currentState
-        ?.pushNamed(Routes.qrCodeScanScreen);
+  static Future<String?> goToQrCodeScanScreen(
+      {Function(String)? onQrCodeScan}) async {
+    return await _navigationKey.currentState?.pushNamed(
+      Routes.qrCodeScanScreen,
+      arguments: {
+        'onQrCodeScan': onQrCodeScan,
+      },
+    );
   }
 
   static void goToTermsConditionsScreen() {

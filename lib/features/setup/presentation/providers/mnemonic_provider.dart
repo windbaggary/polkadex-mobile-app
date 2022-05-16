@@ -10,7 +10,7 @@ class MnemonicProvider extends ChangeNotifier {
     int phraseLenght = 12,
   })  : _generateMnemonicUseCase = generateMnemonicUseCase,
         _importAccountUseCase = importAccountUseCase,
-        _mnemonicWords = List.generate(phraseLenght, (_) => '');
+        mnemonicWords = List.generate(phraseLenght, (_) => '');
 
   final GenerateMnemonicUseCase _generateMnemonicUseCase;
   final ImportAccountUseCase _importAccountUseCase;
@@ -19,14 +19,13 @@ class MnemonicProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _hasShuffledMnemonicChanged = false;
   int? indexWordEdited;
-  List<String> _mnemonicWords;
+  List<String> mnemonicWords;
   late List<String> _shuffledMnemonicWords;
   final List<String> _suggestionsMnemonicWords = [];
 
   bool get isLoading => _isLoading;
   bool get hasShuffledMnemonicChanged => _hasShuffledMnemonicChanged;
-  bool get isMnemonicComplete => !_mnemonicWords.contains('');
-  List<String> get mnemonicWords => _mnemonicWords;
+  bool get isMnemonicComplete => !mnemonicWords.contains('');
   List<String> get shuffledMnemonicWords => _shuffledMnemonicWords;
   List<String> get suggestionsMnemonicWords => _suggestionsMnemonicWords;
 
@@ -55,7 +54,7 @@ class MnemonicProvider extends ChangeNotifier {
 
   void changeMnemonicWord(int index, String newWord) {
     bool isCompleteBefore = isMnemonicComplete;
-    _mnemonicWords[index] = newWord.trim();
+    mnemonicWords[index] = newWord.trim();
 
     if (isCompleteBefore != isMnemonicComplete) {
       notifyListeners();
@@ -75,8 +74,8 @@ class MnemonicProvider extends ChangeNotifier {
   }
 
   bool verifyMnemonicOrder() {
-    for (int i = 0; i < _mnemonicWords.length; i++) {
-      if (_shuffledMnemonicWords[i] != _mnemonicWords[i]) {
+    for (int i = 0; i < mnemonicWords.length; i++) {
+      if (_shuffledMnemonicWords[i] != mnemonicWords[i]) {
         _hasShuffledMnemonicChanged = false;
         notifyListeners();
 
@@ -94,19 +93,19 @@ class MnemonicProvider extends ChangeNotifier {
 
     result.fold(
       (l) => null,
-      (mnemonic) => _mnemonicWords = List.unmodifiable(
+      (mnemonic) => mnemonicWords = List.unmodifiable(
         [...mnemonic],
       ),
     );
 
-    _shuffledMnemonicWords = [..._mnemonicWords];
+    _shuffledMnemonicWords = [...mnemonicWords];
 
     _loading = false;
   }
 
   Future<bool> checkMnemonicValid() async {
     final result = await _importAccountUseCase(
-      mnemonic: _mnemonicWords.join(' '),
+      mnemonic: mnemonicWords.join(' '),
       password: '',
     );
 
