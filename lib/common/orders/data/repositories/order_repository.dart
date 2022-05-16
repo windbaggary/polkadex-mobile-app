@@ -7,6 +7,7 @@ import 'package:polkadex/common/orders/data/models/fee_model.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 
 class OrderRepository implements IOrderRepository {
   OrderRepository({required OrderRemoteDatasource orderRemoteDatasource})
@@ -31,18 +32,17 @@ class OrderRepository implements IOrderRepository {
         nonce,
         int.parse(baseAsset),
         int.parse(quoteAsset),
-        orderType,
-        orderSide,
+        orderType.toString().split('.')[1].capitalize(),
+        orderSide == EnumBuySell.buy ? 'Bid' : 'Ask',
         price,
         amount,
         address,
         signature,
       );
-      final Map<String, dynamic> body = jsonDecode(result.body);
 
-      if (result.statusCode == 200 && body.containsKey('FineWithMessage')) {
+      if (result != null) {
         final newOrder = OrderModel(
-          orderId: body['FineWithMessage']['data'],
+          orderId: result.toString(),
           mainAcc: address,
           amount: amount,
           price: price,
@@ -59,7 +59,8 @@ class OrderRepository implements IOrderRepository {
 
         return Right(newOrder);
       } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+        return Left(
+            ApiError(message: 'Error on JSON RPC request. Please try again.'));
       }
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));

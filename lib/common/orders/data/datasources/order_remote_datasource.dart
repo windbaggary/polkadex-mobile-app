@@ -1,40 +1,50 @@
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
+import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/common/network/mysql_client.dart';
 
 class OrderRemoteDatasource {
   final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
 
-  Future<Response> placeOrder(
+  Future<double?> placeOrder(
     int nonce,
     int baseAsset,
     int quoteAsset,
-    EnumOrderTypes orderType,
-    EnumBuySell orderSide,
+    String orderType,
+    String orderSide,
     String price,
     String amount,
     String address,
     String signature,
   ) async {
-    return await post(
-      Uri.parse('$_baseUrl/place_order'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'signature': {'Sr25519': signature},
-        'payload': {
-          'account': address,
-          'symbol': [baseAsset, quoteAsset],
-          'order_type': orderType.toString().split('.')[1].capitalize(),
-          'order_side': orderSide.toString().split('.')[1].capitalize(),
-          'price': price,
-          'amount': amount,
-        },
-      }),
-    );
+    final dbClient = dependency<MysqlClient>();
+    await dbClient.init();
+
+    final dbProxyResult = await dbClient.conn
+        .execute("select * from proxies where proxy = :proxyAddress", {
+      "proxyAddress": address,
+    });
+    final dbAccId = dbProxyResult.rows.first.colByName('id');
+
+    final dbMainResult = await dbClient.conn
+        .execute("select * from accounts where id = :acc_id", {
+      "acc_id": dbAccId,
+    });
+    final dbMainAddress = dbMainResult.rows.first.colByName('main_acc');
+
+    final nonce = await BlockchainRpcHelper.sendRpcRequest(
+        'enclave_getNonce', [dbMainAddress]);
+
+    final String _callPlaceOrderJSON =
+        "polkadexWorker.placeOrderJSON(keyring.getPair('$address'), $nonce, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+    final List<dynamic> payloadResult = await dependency<WebViewRunner>()
+        .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
+
+    return (BlockchainRpcHelper.sendRpcRequest(
+        'enclave_placeOrder', payloadResult) as double?);
   }
 
   Future<Response> cancelOrder(
