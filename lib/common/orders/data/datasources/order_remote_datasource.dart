@@ -40,14 +40,13 @@ class OrderRemoteDatasource {
           'enclave_getNonce', [dbMainAddress]);
 
       final String _callPlaceOrderJSON =
-          "polkadexWorker.placeOrderJSON(keyring.getPair('$address'), $nonce, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+          "polkadexWorker.placeOrderJSON(keyring.getPair('$address'), ${nonce + 1}, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
       final List<dynamic> payloadResult = await dependency<WebViewRunner>()
           .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
       return (BlockchainRpcHelper.sendRpcRequest(
           'enclave_placeOrder', payloadResult) as double?);
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       return null;
     }
