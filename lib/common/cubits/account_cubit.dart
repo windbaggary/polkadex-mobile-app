@@ -35,7 +35,6 @@ class AccountCubit extends Cubit<AccountState> {
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
         _confirmPasswordUseCase = confirmPasswordUseCase,
-        _registerUserUseCase = registerUserUseCase,
         super(AccountInitial());
 
   final GetAccountUseCase _getAccountStorageUseCase;
@@ -46,7 +45,6 @@ class AccountCubit extends Cubit<AccountState> {
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
   final ConfirmPasswordUseCase _confirmPasswordUseCase;
-  final RegisterUserUseCase _registerUserUseCase;
 
   String get accountAddress {
     final currentState = state;
@@ -140,13 +138,8 @@ class AccountCubit extends Cubit<AccountState> {
           biometricAccess: useBiometric,
         );
 
-        final signature = await _registerUserUseCase(address: acc.address);
-
-        if (signature != null) {
-          acc = (acc as ImportedAccountModel).copyWith(signature: signature);
-          emit(AccountLoaded(account: acc, password: password));
-          await _saveAccountUseCase(keypairJson: json.encode(acc));
-        }
+        emit(AccountLoaded(account: acc, password: password));
+        await _saveAccountUseCase(keypairJson: json.encode(acc));
       },
     );
   }

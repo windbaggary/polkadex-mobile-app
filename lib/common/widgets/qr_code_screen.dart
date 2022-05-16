@@ -12,6 +12,9 @@ import 'package:polkadex/common/utils/extensions.dart';
 /// the QR code and once its read it will pop the result
 ///
 class QRCodeScanScreen extends StatefulWidget {
+  QRCodeScanScreen(this.onQrCodeScan);
+
+  final Function(String)? onQrCodeScan;
   @override
   _QRCodeScanScreenState createState() => _QRCodeScanScreenState();
 }
@@ -164,7 +167,7 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
   }
 
   bool hasData = false;
-  void _subscribe() {
+  void _subscribe() async {
     _closeSubscription();
     _streamSubscription =
         controller!.scannedDataStream.listen((scanData) async {
@@ -174,7 +177,12 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
       if (hasData) return;
       hasData = true;
       await controller?.pauseCamera();
-      Navigator.pop(context, scanData.code);
+
+      if (widget.onQrCodeScan != null) {
+        await widget.onQrCodeScan!(scanData.code);
+      } else {
+        Navigator.pop(context, scanData.code);
+      }
     });
   }
 

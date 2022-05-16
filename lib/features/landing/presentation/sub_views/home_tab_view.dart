@@ -161,9 +161,9 @@ class _HomeTabViewState extends State<HomeTabView>
                   (index) => InkWell(
                       onTap: () async {
                         try {
-                          final link = "https://www.polkadex.trade";
-                          if (await url_launcher.canLaunch(link)) {
-                            url_launcher.launch(link);
+                          final link = Uri.parse('https://www.polkadex.trade');
+                          if (await url_launcher.canLaunchUrl(link)) {
+                            url_launcher.launchUrl(link);
                           }
                         } catch (ex) {
                           print(ex);
