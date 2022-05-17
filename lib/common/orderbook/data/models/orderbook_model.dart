@@ -4,15 +4,9 @@ import 'package:polkadex/common/orderbook/data/models/orderbook_item_model.dart'
 
 class OrderbookModel extends OrderbookEntity {
   const OrderbookModel({
-    required String baseAsset,
-    required String quoteAsset,
-    required DateTime timestamp,
     required List<OrderbookItemEntity> ask,
     required List<OrderbookItemEntity> bid,
   }) : super(
-          baseAsset: baseAsset,
-          quoteAsset: quoteAsset,
-          timestamp: timestamp,
           ask: ask,
           bid: bid,
         );
@@ -53,9 +47,6 @@ class OrderbookModel extends OrderbookEntity {
     ).toList();
 
     return OrderbookModel(
-      baseAsset: map['base_asset'].toString(),
-      quoteAsset: map['quote_asset'].toString(),
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
       ask: dataAsk,
       bid: dataBid,
     );
