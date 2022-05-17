@@ -12,15 +12,13 @@ class OrderbookModel extends OrderbookEntity {
         );
 
   factory OrderbookModel.fromJson(Map<String, dynamic> map) {
-    final listAskData = (map['ask'] as List);
-    final listBidData = (map['bid'] as List);
+    final listAskData = (map['asks'] as List);
+    final listBidData = (map['bids'] as List);
     double? askCumulativeAmount;
     double? bidCumulativeAmount;
 
-    listAskData.sort(
-        (a, b) => double.parse(a['price']).compareTo(double.parse(b['price'])));
-    listBidData.sort(
-        (a, b) => double.parse(b['price']).compareTo(double.parse(a['price'])));
+    listAskData.sort((a, b) => a[0].compareTo(b[0]));
+    listBidData.sort((a, b) => b[0].compareTo(a[0]));
 
     final List<OrderbookItemEntity> dataAsk =
         List<OrderbookItemEntity>.generate(
