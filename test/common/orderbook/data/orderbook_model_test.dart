@@ -7,9 +7,6 @@ void main() {
 
   setUp(() {
     tOrderbook = OrderbookModel(
-      baseAsset: '0',
-      quoteAsset: '1',
-      timestamp: DateTime.now(),
       ask: [],
       bid: [],
     );

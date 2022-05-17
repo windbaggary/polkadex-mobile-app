@@ -32,13 +32,7 @@ void main() {
       when(() => dataSource.getOrderbookData(any(), any())).thenAnswer(
         (_) async => Response(
             jsonEncode({
-              "Fine": {
-                "base_asset": 0,
-                "quote_asset": 1,
-                "timestamp": 1644406000961,
-                "ask": [],
-                "bid": []
-              }
+              "Fine": {"asks": [], "bids": []}
             }),
             200),
       );
