@@ -42,7 +42,7 @@ class OrderRepository implements IOrderRepository {
 
       if (result != null) {
         final newOrder = OrderModel(
-          orderId: result.toString(),
+          orderId: result,
           mainAcc: address,
           amount: amount,
           price: price,

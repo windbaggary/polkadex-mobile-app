@@ -80,7 +80,7 @@ void main() {
       when(() => dataSource.placeOrder(
               any(), any(), any(), any(), any(), any(), any(), any(), any()))
           .thenAnswer(
-        (_) async => 123456789,
+        (_) async => '123456789',
       );
 
       final result = await repository.placeOrder(

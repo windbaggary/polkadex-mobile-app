@@ -9,7 +9,7 @@ import 'package:polkadex/common/network/mysql_client.dart';
 class OrderRemoteDatasource {
   final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
 
-  Future<double?> placeOrder(
+  Future<String?> placeOrder(
     int nonce,
     int baseAsset,
     int quoteAsset,
@@ -44,8 +44,8 @@ class OrderRemoteDatasource {
       final List<dynamic> payloadResult = await dependency<WebViewRunner>()
           .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
-      return (BlockchainRpcHelper.sendRpcRequest(
-          'enclave_placeOrder', payloadResult) as double?);
+      return (await BlockchainRpcHelper.sendRpcRequest(
+          'enclave_placeOrder', payloadResult)) as String?;
     } catch (e) {
       print(e);
       return null;
