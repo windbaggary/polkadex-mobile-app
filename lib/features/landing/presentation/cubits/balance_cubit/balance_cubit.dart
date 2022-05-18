@@ -25,13 +25,10 @@ class BalanceCubit extends Cubit<BalanceState> {
 
   Timer? get balanceTimer => _balanceTimer;
 
-  Future<void> getBalance(String address, String signature) async {
+  Future<void> getBalance(String address) async {
     emit(BalanceLoading());
 
-    final result = await _getBalanceUseCase(
-      address: address,
-      signature: signature,
-    );
+    final result = await _getBalanceUseCase(address: address);
 
     result.fold(
       (error) => emit(
@@ -49,10 +46,7 @@ class BalanceCubit extends Cubit<BalanceState> {
         _balanceTimer = Timer.periodic(
           Duration(seconds: 5),
           (timer) async {
-            final resultPeriodic = await _getBalanceUseCase(
-              address: address,
-              signature: signature,
-            );
+            final resultPeriodic = await _getBalanceUseCase(address: address);
 
             resultPeriodic.fold(
               (_) => timer.cancel(),
@@ -90,7 +84,7 @@ class BalanceCubit extends Cubit<BalanceState> {
     );
 
     result0.isRight() || result1.isRight()
-        ? getBalance(address, signature)
+        ? getBalance(address)
         : emit(previousState);
   }
 }

@@ -67,20 +67,14 @@ void main() {
         'Balance fetched successfully',
         build: () {
           when(
-            () => _mockGetBalanceUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetBalanceUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Right(balance),
           );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getBalance(
-            address,
-            signature,
-          );
+          await cubit.getBalance(address);
         },
         expect: () => [
           isA<BalanceLoading>(),
@@ -92,20 +86,14 @@ void main() {
         'Balance fetch failed',
         build: () {
           when(
-            () => _mockGetBalanceUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetBalanceUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Left(ApiError(message: 'error')),
           );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getBalance(
-            address,
-            signature,
-          );
+          await cubit.getBalance(address);
         },
         expect: () => [
           isA<BalanceLoading>(),
@@ -124,10 +112,7 @@ void main() {
             (_) async => 'test',
           );
           when(
-            () => _mockGetBalanceUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetBalanceUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Right(_increaseBalance()),
           );
@@ -143,10 +128,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getBalance(
-            address,
-            signature,
-          );
+          await cubit.getBalance(address);
           await cubit.testDeposit(
             address,
             signature,
@@ -179,10 +161,7 @@ void main() {
             (_) async => 'test',
           );
           when(
-            () => _mockGetBalanceUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetBalanceUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Right(balance),
           );
@@ -198,10 +177,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getBalance(
-            address,
-            signature,
-          );
+          await cubit.getBalance(address);
           await cubit.testDeposit(
             address,
             signature,

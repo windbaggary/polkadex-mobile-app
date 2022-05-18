@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
-import 'package:polkadex/features/landing/data/models/balance_model.dart';
 import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
 import 'package:polkadex/features/landing/domain/repositories/ibalance_repository.dart';
 
@@ -13,12 +12,9 @@ class BalanceRepository implements IBalanceRepository {
   final BalanceRemoteDatasource _balanceRemoteDatasource;
 
   @override
-  Future<Either<ApiError, BalanceEntity>> fetchBalance(
-    String address,
-    String signature,
-  ) async {
+  Future<Either<ApiError, BalanceEntity>> fetchBalance(String address) async {
     try {
-      final result = await _balanceRemoteDatasource.fetchBalance(address);
+      //final result = await _balanceRemoteDatasource.fetchBalance(address);
 
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     } catch (_) {

@@ -24,40 +24,28 @@ void main() {
 
   group('Balance repository tests ', () {
     test('Must return a fetch balance response', () async {
-      when(() => dataSource.fetchBalance(any(), any())).thenAnswer(
-        (_) async => Response(
-            jsonEncode({
-              "Fine": {
-                "free": {"BTC": 0.1},
-                "used": {"BTC": 0.1},
-                "total": {"BTC": 0.2}
-              }
-            }),
-            200),
+      when(() => dataSource.fetchBalance(any())).thenAnswer(
+        (_) async => [
+          {'PDG': 0.0}
+        ],
       );
 
-      final result = await repository.fetchBalance(
-        address,
-        signature,
-      );
+      final result = await repository.fetchBalance(address);
 
       expect(result.isRight(), true);
-      verify(() => dataSource.fetchBalance(address, signature)).called(1);
+      verify(() => dataSource.fetchBalance(address)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
     test('Must return a failed fetch balance response', () async {
-      when(() => dataSource.fetchBalance(any(), any())).thenAnswer(
-        (_) async => Response('', 400),
+      when(() => dataSource.fetchBalance(any())).thenAnswer(
+        (_) async => null,
       );
 
-      final result = await repository.fetchBalance(
-        address,
-        signature,
-      );
+      final result = await repository.fetchBalance(address);
 
       expect(result.isLeft(), true);
-      verify(() => dataSource.fetchBalance(address, signature)).called(1);
+      verify(() => dataSource.fetchBalance(address)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
