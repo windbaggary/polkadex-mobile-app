@@ -22,7 +22,8 @@ class MysqlClient {
   Future<String?> getAccountId(String proxyAddress) async {
     await init();
 
-    final dbProxyResult = await conn.execute("select * from proxies", {
+    final dbProxyResult =
+        await conn.execute("select * from proxies where :proxyAddress", {
       "proxyAddress": proxyAddress,
     });
     return dbProxyResult.rows.first.colByName('id');
@@ -36,5 +37,15 @@ class MysqlClient {
       "acc_id": dbAccId,
     });
     return dbMainResult.rows.first.colByName('main_acc');
+  }
+
+  Future<IResultSet> getBalanceAssets(String proxyAddress) async {
+    final dbAccId = await getAccountId(proxyAddress);
+
+    return await conn.execute(
+        "select free_balance,reserved_balance,asset_type from assets where main_acc = :main_account_id",
+        {
+          "main_account_id": dbAccId,
+        });
   }
 }
