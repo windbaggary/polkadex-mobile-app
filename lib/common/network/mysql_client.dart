@@ -13,6 +13,24 @@ class MysqlClient {
       password: dotenv.get('DB_PASSWORD'),
       databaseName: dotenv.get('DB_NAME'),
     );
-    await conn.connect();
+
+    if (!conn.connected) {
+      await conn.connect();
+    }
+  }
+
+  Future<String?> getMainAddress(String proxyAdress) async {
+    await init();
+
+    final dbProxyResult = await conn.execute("select * from proxies", {
+      "proxyAddress": proxyAdress,
+    });
+    final dbAccId = dbProxyResult.rows.first.colByName('id');
+
+    final dbMainResult =
+        await conn.execute("select * from accounts where id = :acc_id", {
+      "acc_id": dbAccId,
+    });
+    return dbMainResult.rows.first.colByName('main_acc');
   }
 }

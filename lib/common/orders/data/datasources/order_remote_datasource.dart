@@ -22,22 +22,10 @@ class OrderRemoteDatasource {
   ) async {
     try {
       final dbClient = dependency<MysqlClient>();
-      await dbClient.init();
-
-      final dbProxyResult = await dbClient.conn
-          .execute("select * from proxies where proxy = :proxyAddress", {
-        "proxyAddress": address,
-      });
-      final dbAccId = dbProxyResult.rows.first.colByName('id');
-
-      final dbMainResult = await dbClient.conn
-          .execute("select * from accounts where id = :acc_id", {
-        "acc_id": dbAccId,
-      });
-      final dbMainAddress = dbMainResult.rows.first.colByName('main_acc');
+      final mainAddress = await dbClient.getMainAddress(address);
 
       final nonce = await BlockchainRpcHelper.sendRpcRequest(
-          'enclave_getNonce', [dbMainAddress]);
+          'enclave_getNonce', [mainAddress]);
 
       final String _callPlaceOrderJSON =
           "polkadexWorker.placeOrderJSON(keyring.getPair('$address'), ${nonce + 1}, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
