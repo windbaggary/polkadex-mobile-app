@@ -18,21 +18,9 @@ class BalanceRepository implements IBalanceRepository {
     String signature,
   ) async {
     try {
-      final result = await _balanceRemoteDatasource.fetchBalance(
-        address,
-        signature,
-      );
-      final Map<String, dynamic> body = jsonDecode(result.body);
+      final result = await _balanceRemoteDatasource.fetchBalance(address);
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        return Right(BalanceModel(
-          free: body['Fine']['free'],
-          used: body['Fine']['used'],
-          total: body['Fine']['total'],
-        ));
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
-      }
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
