@@ -19,13 +19,17 @@ class MysqlClient {
     }
   }
 
-  Future<String?> getMainAddress(String proxyAdress) async {
+  Future<String?> getAccountId(String proxyAddress) async {
     await init();
 
     final dbProxyResult = await conn.execute("select * from proxies", {
-      "proxyAddress": proxyAdress,
+      "proxyAddress": proxyAddress,
     });
-    final dbAccId = dbProxyResult.rows.first.colByName('id');
+    return dbProxyResult.rows.first.colByName('id');
+  }
+
+  Future<String?> getMainAddress(String proxyAddress) async {
+    final dbAccId = getAccountId(proxyAddress);
 
     final dbMainResult =
         await conn.execute("select * from accounts where id = :acc_id", {
