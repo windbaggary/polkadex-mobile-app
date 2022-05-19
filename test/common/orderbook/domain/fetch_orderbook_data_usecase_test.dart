@@ -18,9 +18,6 @@ void main() {
     _repository = _OrderbookRepositoryMock();
     _usecase = FetchOrderbookDataUseCase(orderbookRepository: _repository);
     tOrderbook = OrderbookModel(
-      baseAsset: '0',
-      quoteAsset: '1',
-      timestamp: DateTime.now(),
       ask: [],
       bid: [],
     );

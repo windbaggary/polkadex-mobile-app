@@ -4,29 +4,21 @@ import 'package:polkadex/common/orderbook/data/models/orderbook_item_model.dart'
 
 class OrderbookModel extends OrderbookEntity {
   const OrderbookModel({
-    required String baseAsset,
-    required String quoteAsset,
-    required DateTime timestamp,
     required List<OrderbookItemEntity> ask,
     required List<OrderbookItemEntity> bid,
   }) : super(
-          baseAsset: baseAsset,
-          quoteAsset: quoteAsset,
-          timestamp: timestamp,
           ask: ask,
           bid: bid,
         );
 
   factory OrderbookModel.fromJson(Map<String, dynamic> map) {
-    final listAskData = (map['ask'] as List);
-    final listBidData = (map['bid'] as List);
+    final listAskData = (map['asks'] as List);
+    final listBidData = (map['bids'] as List);
     double? askCumulativeAmount;
     double? bidCumulativeAmount;
 
-    listAskData.sort(
-        (a, b) => double.parse(a['price']).compareTo(double.parse(b['price'])));
-    listBidData.sort(
-        (a, b) => double.parse(b['price']).compareTo(double.parse(a['price'])));
+    listAskData.sort((a, b) => a[0].compareTo(b[0]));
+    listBidData.sort((a, b) => b[0].compareTo(a[0]));
 
     final List<OrderbookItemEntity> dataAsk =
         List<OrderbookItemEntity>.generate(
@@ -53,9 +45,6 @@ class OrderbookModel extends OrderbookEntity {
     ).toList();
 
     return OrderbookModel(
-      baseAsset: map['base_asset'].toString(),
-      quoteAsset: map['quote_asset'].toString(),
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
       ask: dataAsk,
       bid: dataBid,
     );

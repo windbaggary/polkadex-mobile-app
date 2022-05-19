@@ -27,7 +27,7 @@ class OrderbookRemoteDatasource {
     final Consumer? consumer = await dependency<RabbitMqClient>()
         .tryBindQueueToConsumer(
             '${StringUtils.generateCryptoRandomString()}-orderbook-snapshot',
-            '$leftTokenId.$rightTokenId.orderbook-snapshot');
+            '*.*.orderbook-snapshot');
 
     return consumer;
   }
