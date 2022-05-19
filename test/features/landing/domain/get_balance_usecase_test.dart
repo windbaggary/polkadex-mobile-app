@@ -21,8 +21,7 @@ void main() {
     address = 'addressTest';
     balance = BalanceModel(
       free: {"BTC": 0.1},
-      used: {"BTC": 0.1},
-      total: {"BTC": 0.2},
+      reserved: {"BTC": 0.1},
     );
   });
 

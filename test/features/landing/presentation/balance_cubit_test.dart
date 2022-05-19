@@ -40,16 +40,14 @@ void main() {
     signature = 'signatureTest';
     balance = BalanceModel(
       free: {"BTC": 0.0},
-      used: {"BTC": 0.0},
-      total: {"BTC": 0.0},
+      reserved: {"BTC": 0.0},
     );
   });
 
   BalanceEntity _increaseBalance() {
     final newBalance = BalanceModel(
       free: {"BTC": balance.free["BTC"] + 1000.0},
-      used: {"BTC": balance.used["BTC"] + 1000.0},
-      total: {"BTC": balance.total["BTC"] + 1000.0},
+      reserved: {"BTC": balance.reserved["BTC"] + 1000.0},
     );
     balance = newBalance;
 
@@ -138,14 +136,12 @@ void main() {
           BalanceLoading(),
           BalanceLoaded(
             free: {"BTC": balance.free["BTC"] - 1000.0},
-            total: {"BTC": balance.total["BTC"] - 1000.0},
-            used: {"BTC": balance.used["BTC"] - 1000.0},
+            reserved: {"BTC": balance.reserved["BTC"] - 1000.0},
           ),
           BalanceLoading(),
           BalanceLoaded(
             free: balance.free,
-            total: balance.total,
-            used: balance.used,
+            reserved: balance.reserved,
           ),
         ],
       );
@@ -187,14 +183,12 @@ void main() {
           BalanceLoading(),
           BalanceLoaded(
             free: balance.free,
-            total: balance.total,
-            used: balance.used,
+            reserved: balance.reserved,
           ),
           BalanceLoading(),
           BalanceLoaded(
             free: balance.free,
-            total: balance.total,
-            used: balance.used,
+            reserved: balance.reserved,
           ),
         ],
       );

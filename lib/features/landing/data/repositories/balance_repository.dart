@@ -19,17 +19,16 @@ class BalanceRepository implements IBalanceRepository {
       final listBalance = result.rows.map((row) => row.assoc()).toList();
 
       final mapFree = {};
-      final mapUsed = {};
-      final mapTotal = {};
+      final mapReserved = {};
 
       for (var assetMap in listBalance) {
         mapFree[assetMap['asset_type']] = assetMap['free_balance'];
+        mapReserved[assetMap['asset_type']] = assetMap['reserved_balance'];
       }
 
       return Right(BalanceModel(
         free: mapFree,
-        used: mapUsed,
-        total: mapTotal,
+        reserved: mapReserved,
       ));
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));

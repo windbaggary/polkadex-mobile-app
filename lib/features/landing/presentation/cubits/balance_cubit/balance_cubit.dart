@@ -38,8 +38,7 @@ class BalanceCubit extends Cubit<BalanceState> {
         emit(
           BalanceLoaded(
             free: balance.free,
-            used: balance.used,
-            total: balance.total,
+            reserved: balance.reserved,
           ),
         );
 
@@ -53,8 +52,7 @@ class BalanceCubit extends Cubit<BalanceState> {
               (balancePeriodic) => emit(
                 BalanceLoaded(
                   free: balancePeriodic.free,
-                  used: balancePeriodic.used,
-                  total: balancePeriodic.total,
+                  reserved: balancePeriodic.reserved,
                 ),
               ),
             );
