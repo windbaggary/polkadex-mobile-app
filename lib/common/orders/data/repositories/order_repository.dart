@@ -90,36 +90,6 @@ class OrderRepository implements IOrderRepository {
   }
 
   @override
-  Future<Either<ApiError, List<OrderEntity>>> fetchOpenOrders(
-    String address,
-    String signature,
-  ) async {
-    try {
-      final result = await _orderRemoteDatasource.fetchOpenOrders(
-        address,
-        signature,
-      );
-      final Map<String, dynamic> body = jsonDecode(result.body);
-
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        final orderList = (body['Fine'] as List)
-            .reversed
-            .map((dynamic json) => OrderModel.fromJson(json))
-            .toList();
-
-        orderList.removeWhere((order) =>
-            order.orderType == EnumOrderTypes.market && order.status == 'Open');
-
-        return Right(orderList);
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
-      }
-    } catch (_) {
-      return Left(ApiError(message: 'Unexpected error. Please try again'));
-    }
-  }
-
-  @override
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
     String address,
     String signature,

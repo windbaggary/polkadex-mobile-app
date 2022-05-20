@@ -21,10 +21,6 @@ abstract class IOrderRepository {
     String orderId,
     String signature,
   );
-  Future<Either<ApiError, List<OrderEntity>>> fetchOpenOrders(
-    String address,
-    String signature,
-  );
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
     String address,
     String signature,

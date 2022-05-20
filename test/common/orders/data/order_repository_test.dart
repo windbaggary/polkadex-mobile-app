@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:typed_data';
-import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mysql_client/mysql_client.dart';
@@ -24,7 +22,6 @@ void main() {
   late String price;
   late String address;
   late String signature;
-  late List orderList;
 
   setUp(() {
     dataSource = _MockOrderRemoteDatasource();
@@ -38,38 +35,6 @@ void main() {
     price = "50.0";
     address = 'test';
     signature = 'test';
-    orderList = [
-      {
-        "order_id": "786653432",
-        "main_acc": "5HDnQBPKDNUXL9qvWVzP8j3pgoh6Sa",
-        "price": "7",
-        "amount": "25.0",
-        "order_side": "Buy",
-        "order_type": "Market",
-        "timestamp": 1644853305519,
-        "base_asset": 0,
-        "quote_asset": 1,
-        "status": "Open",
-        "filled_qty": "2.5",
-        "fee": {"currency": 0, "cost": "0"},
-        "trades": []
-      },
-      {
-        "order_id": "786653433",
-        "main_acc": "5HDnQBPKDNUXL9qvWVzP8j3pgoh6Sa",
-        "price": "7",
-        "amount": "25.0",
-        "order_side": "Buy",
-        "order_type": "Limit",
-        "timestamp": 1644853305519,
-        "base_asset": 0,
-        "quote_asset": 1,
-        "status": "Open",
-        "filled_qty": "2.5",
-        "fee": {"currency": 0, "cost": "0"},
-        "trades": []
-      }
-    ];
   });
 
   setUpAll(() {
@@ -143,42 +108,6 @@ void main() {
           signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
-  });
-
-  test('Must return a success open orders fetch response', () async {
-    when(() => dataSource.fetchOpenOrders(
-          any(),
-          any(),
-        )).thenAnswer(
-      (_) async => Response(jsonEncode({"Fine": orderList}), 200),
-    );
-
-    final result = await repository.fetchOpenOrders(
-      address,
-      signature,
-    );
-
-    expect(result.isRight(), true);
-    verify(() => dataSource.fetchOpenOrders(address, signature)).called(1);
-    verifyNoMoreInteractions(dataSource);
-  });
-
-  test('Must return a failed open orders fetch response', () async {
-    when(() => dataSource.fetchOpenOrders(
-          any(),
-          any(),
-        )).thenAnswer(
-      (_) async => Response(jsonEncode({"Bad": "error"}), 400),
-    );
-
-    final result = await repository.fetchOpenOrders(
-      address,
-      signature,
-    );
-
-    expect(result.isLeft(), true);
-    verify(() => dataSource.fetchOpenOrders(address, signature)).called(1);
-    verifyNoMoreInteractions(dataSource);
   });
 
   test('Must return a success orders fetch response', () async {

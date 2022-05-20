@@ -1,5 +1,4 @@
 import 'package:polkadex/common/utils/enums.dart';
-
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
 
