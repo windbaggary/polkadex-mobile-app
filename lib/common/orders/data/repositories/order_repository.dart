@@ -94,10 +94,7 @@ class OrderRepository implements IOrderRepository {
       String address) async {
     try {
       final result = await _orderRemoteDatasource.fetchOrders(address);
-      final listTransaction = result.rows.map((row) {
-        print(row.assoc());
-        return row.assoc();
-      }).toList();
+      final listTransaction = result.rows.map((row) => row.assoc()).toList();
       List<OrderEntity> listOrder = [];
 
       for (var transaction in listTransaction) {

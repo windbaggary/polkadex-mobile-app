@@ -41,7 +41,6 @@ abstract class Coordinator {
         ? _navigationKey.currentState?.pushNamedAndRemoveUntil(
             Routes.walletSettingsScreen,
             (route) {
-              print(route.settings.name);
               return route.settings.name == Routes.introScreen;
             },
             arguments: provider,
