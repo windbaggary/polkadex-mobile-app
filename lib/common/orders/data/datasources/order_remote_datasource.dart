@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:mysql_client/mysql_client.dart';
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
@@ -89,19 +90,12 @@ class OrderRemoteDatasource {
     );
   }
 
-  Future<Response> fetchOrders(
+  Future<IResultSet> fetchOrders(
     String address,
     String signature,
   ) async {
-    return await post(
-      Uri.parse('$_baseUrl/fetch_orders'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'signature': {'Sr25519': signature},
-        'payload': {'account': address},
-      }),
-    );
+    final dbClient = dependency<MysqlClient>();
+
+    return dbClient.getOrderHistory(address);
   }
 }

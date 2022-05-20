@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:mysql_client/mysql_client.dart';
+import 'package:mysql_client/mysql_protocol.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/orders/data/datasources/order_remote_datasource.dart';
 import 'package:polkadex/common/orders/data/repositories/order_repository.dart';
@@ -156,11 +158,7 @@ void main() {
       signature,
     );
 
-    List<OrderEntity> ordersResult = [];
-
-    result.fold((l) => null, (orders) => ordersResult = [...orders]);
-
-    expect(ordersResult.isNotEmpty, true);
+    expect(result.isRight(), true);
     verify(() => dataSource.fetchOpenOrders(address, signature)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
@@ -188,27 +186,27 @@ void main() {
           any(),
           any(),
         )).thenAnswer(
-      (_) async => Response(
-          jsonEncode({
-            "Fine": [
-              {
-                "order_id": "786653432",
-                "main_acc": "5HDnQBPKDNUXL9qvWVzP8j3pgoh6Sa",
-                "price": "7",
-                "amount": "25.0",
-                "order_side": "Buy",
-                "order_type": "Market",
-                "timestamp": 1644853305519,
-                "base_asset": 0,
-                "quote_asset": 1,
-                "status": "Open",
-                "filled_qty": "2.5",
-                "fee": {"currency": 0, "cost": "0"},
-                "trades": []
-              }
-            ]
-          }),
-          200),
+      (_) async => EmptyResultSet(
+        okPacket: MySQLPacketOK.decode(
+          Uint8List.fromList(
+            [
+              0x62,
+              0x6c,
+              0xc3,
+              0xa5,
+              0x62,
+              0xc3,
+              0xa6,
+              0x72,
+              0x67,
+              0x72,
+              0xc3,
+              0xb8,
+              0x64
+            ],
+          ),
+        ),
+      ),
     );
 
     final result = await repository.fetchOrders(
@@ -216,11 +214,7 @@ void main() {
       signature,
     );
 
-    List<OrderEntity> ordersResult = [];
-
-    result.fold((l) => null, (orders) => ordersResult = [...orders]);
-
-    expect(ordersResult.isNotEmpty, true);
+    expect(result.isRight(), true);
     verify(() => dataSource.fetchOrders(address, signature)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
@@ -230,7 +224,7 @@ void main() {
           any(),
           any(),
         )).thenAnswer(
-      (_) async => Response(jsonEncode({"Bad": "error"}), 400),
+      (_) async => throw Exception('Some arbitrary error'),
     );
 
     final result = await repository.fetchOrders(

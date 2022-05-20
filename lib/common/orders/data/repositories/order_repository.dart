@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/orders/data/datasources/order_remote_datasource.dart';
-import 'package:polkadex/common/orders/data/models/fee_model.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
@@ -43,7 +42,6 @@ class OrderRepository implements IOrderRepository {
       if (result != null) {
         final newOrder = OrderModel(
           orderId: result,
-          mainAcc: address,
           amount: amount,
           price: price,
           orderSide: orderSide,
@@ -51,10 +49,8 @@ class OrderRepository implements IOrderRepository {
           timestamp: DateTime.now(),
           baseAsset: baseAsset.toString(),
           quoteAsset: quoteAsset.toString(),
-          status: orderType == EnumOrderTypes.market ? 'Closed' : 'Open',
-          filledQty: orderType == EnumOrderTypes.market ? amount : '0.0',
-          fee: FeeModel(currency: baseAsset.toString(), cost: '0'),
-          trades: [],
+          status:
+              orderType == EnumOrderTypes.market ? 'Filled' : 'PartiallyFilled',
         );
 
         return Right(newOrder);
@@ -133,17 +129,17 @@ class OrderRepository implements IOrderRepository {
         address,
         signature,
       );
-      final Map<String, dynamic> body = jsonDecode(result.body);
+      final listTransaction = result.rows.map((row) {
+        print(row.assoc());
+        return row.assoc();
+      }).toList();
+      List<OrderEntity> listOrder = [];
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        final orderList = (body['Fine'] as List)
-            .map((dynamic json) => OrderModel.fromJson(json))
-            .toList();
-
-        return Right(orderList);
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      for (var transaction in listTransaction) {
+        listOrder.add(OrderModel.fromJson(transaction));
       }
+
+      return Right(listOrder);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

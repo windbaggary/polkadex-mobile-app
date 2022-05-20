@@ -33,7 +33,7 @@ class MysqlClient {
     final mainAccId = await getAccountId(proxyAddress);
 
     return await conn.execute(
-      "select txid , base_asset_type , quote_asset_type, order_type, status, qty, price from transactions where main_account_id = :main_account_id",
+      "select * from transactions where main_account_id = :main_account_id",
       {
         "main_account_id": mainAccId,
       },

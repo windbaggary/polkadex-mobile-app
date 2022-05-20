@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/data/models/fee_model.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
@@ -44,7 +43,6 @@ void main() {
     signature = 'test';
     order = OrderModel(
       orderId: '0',
-      mainAcc: address,
       amount: amount,
       price: price,
       orderSide: orderSide,
@@ -52,10 +50,7 @@ void main() {
       timestamp: DateTime.now(),
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
-      status: 'Open',
-      filledQty: '0.0',
-      fee: FeeModel(currency: baseAsset.toString(), cost: '0'),
-      trades: [],
+      status: 'PartiallyFilled',
     );
   });
 
