@@ -74,10 +74,7 @@ void main() {
         'Orders fetched successfully',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetOrdersUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Right([order]),
           );
@@ -104,10 +101,7 @@ void main() {
         'Orders fetch fail',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetOrdersUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Left(ApiError(message: 'error')),
           );

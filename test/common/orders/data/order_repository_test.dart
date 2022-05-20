@@ -111,10 +111,7 @@ void main() {
   });
 
   test('Must return a success orders fetch response', () async {
-    when(() => dataSource.fetchOrders(
-          any(),
-          any(),
-        )).thenAnswer(
+    when(() => dataSource.fetchOrders(any())).thenAnswer(
       (_) async => EmptyResultSet(
         okPacket: MySQLPacketOK.decode(
           Uint8List.fromList(
@@ -138,31 +135,22 @@ void main() {
       ),
     );
 
-    final result = await repository.fetchOrders(
-      address,
-      signature,
-    );
+    final result = await repository.fetchOrders(address);
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchOrders(address, signature)).called(1);
+    verify(() => dataSource.fetchOrders(address)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 
   test('Must return a failed orders fetch response', () async {
-    when(() => dataSource.fetchOrders(
-          any(),
-          any(),
-        )).thenAnswer(
+    when(() => dataSource.fetchOrders(any())).thenAnswer(
       (_) async => throw Exception('Some arbitrary error'),
     );
 
-    final result = await repository.fetchOrders(
-      address,
-      signature,
-    );
+    final result = await repository.fetchOrders(address);
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchOrders(address, signature)).called(1);
+    verify(() => dataSource.fetchOrders(address)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 }

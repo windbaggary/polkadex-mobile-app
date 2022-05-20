@@ -91,14 +91,9 @@ class OrderRepository implements IOrderRepository {
 
   @override
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
-    String address,
-    String signature,
-  ) async {
+      String address) async {
     try {
-      final result = await _orderRemoteDatasource.fetchOrders(
-        address,
-        signature,
-      );
+      final result = await _orderRemoteDatasource.fetchOrders(address);
       final listTransaction = result.rows.map((row) {
         print(row.assoc());
         return row.assoc();

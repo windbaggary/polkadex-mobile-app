@@ -23,7 +23,6 @@ void main() {
   late String amount;
   late String price;
   late String address;
-  late String signature;
   late OrderModel order;
 
   setUp(() {
@@ -39,7 +38,6 @@ void main() {
     amount = "100.0";
     price = "50.0";
     address = 'test';
-    signature = 'test';
     order = OrderModel(
       orderId: orderId,
       amount: amount,
@@ -63,15 +61,12 @@ void main() {
       'must get open orders successfully',
       () async {
         // arrange
-        when(() => _repository.fetchOrders(any(), any())).thenAnswer(
+        when(() => _repository.fetchOrders(any())).thenAnswer(
           (_) async => Right([order]),
         );
         List<OrderEntity> ordersResult = [];
         // act
-        final result = await _usecase(
-          address: address,
-          signature: signature,
-        );
+        final result = await _usecase(address: address);
         // assert
 
         result.fold(
@@ -80,7 +75,7 @@ void main() {
         );
 
         expect(ordersResult.contains(order), true);
-        verify(() => _repository.fetchOrders(any(), any())).called(1);
+        verify(() => _repository.fetchOrders(any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -89,21 +84,15 @@ void main() {
       'must fail to get open orders',
       () async {
         // arrange
-        when(() => _repository.fetchOrders(
-              any(),
-              any(),
-            )).thenAnswer(
+        when(() => _repository.fetchOrders(any())).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
-        final result = await _usecase(
-          address: address,
-          signature: signature,
-        );
+        final result = await _usecase(address: address);
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.fetchOrders(any(), any())).called(1);
+        verify(() => _repository.fetchOrders(any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

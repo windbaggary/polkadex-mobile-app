@@ -74,10 +74,7 @@ class OrderRemoteDatasource {
     );
   }
 
-  Future<IResultSet> fetchOrders(
-    String address,
-    String signature,
-  ) async {
+  Future<IResultSet> fetchOrders(String address) async {
     final dbClient = dependency<MysqlClient>();
 
     return dbClient.getOrderHistory(address);
