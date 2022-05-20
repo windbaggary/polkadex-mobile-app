@@ -35,8 +35,8 @@ class OrderModel extends OrderEntity {
       orderType: StringUtils.enumFromString<EnumOrderTypes>(
           EnumOrderTypes.values, map['order_type']),
       timestamp: DateTime.parse(map['timestamp']),
-      baseAsset: map['base_asset'].toString(),
-      quoteAsset: map['quote_asset'].toString(),
+      baseAsset: map['base_asset_type'],
+      quoteAsset: map['quote_asset_type'],
       status: map['status'],
     );
   }
