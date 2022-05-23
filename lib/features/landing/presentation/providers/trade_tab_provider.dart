@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
 
-/// The provider to manage the functionality of token pair selection
-class TradeTabViewProvider extends ChangeNotifier {
-  int orderSideIndex = 0;
-}
-
 /// The provider to handle the selection of token pair
 class TradeTabCoinProvider extends ChangeNotifier {
   BasicCoinListModel _tokenCoin = basicCoinDummyList[0];

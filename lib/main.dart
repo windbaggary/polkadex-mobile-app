@@ -14,7 +14,6 @@ import 'package:polkadex/generated/l10n.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'common/navigation/coordinator.dart';
 import 'common/navigation/routes.dart';
-import 'features/landing/presentation/providers/trade_tab_provider.dart';
 
 void main() async {
   // Load the secret keys from .env file
@@ -56,8 +55,6 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<BottomNavigationProvider>(
             create: (_) => BottomNavigationProvider()),
-        ChangeNotifierProvider<TradeTabViewProvider>(
-            create: (context) => TradeTabViewProvider()),
       ],
       builder: (context, _) => MultiBlocProvider(
         providers: [

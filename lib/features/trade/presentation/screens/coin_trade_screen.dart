@@ -9,7 +9,6 @@ import 'package:polkadex/common/utils/time_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
-import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
@@ -748,7 +747,6 @@ class _ThisBottomNavigationBar extends StatelessWidget {
 
   void _onBuySellButtonClick(BuildContext context, int orderSideIndex) {
     BottomNavigationProvider().enumBottomBarItem = EnumBottonBarItem.trade;
-    context.read<TradeTabViewProvider>().orderSideIndex = orderSideIndex;
     Coordinator.goBackToLandingScreen();
   }
 }

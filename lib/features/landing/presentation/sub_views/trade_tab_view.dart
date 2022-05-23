@@ -60,10 +60,6 @@ class _TradeTabViewState extends State<TradeTabView>
       child: ChangeNotifierProvider<OrderBookWidgetFilterProvider>(
         create: (context) => OrderBookWidgetFilterProvider(),
         builder: (context, _) {
-          _ThisInheritedWidget.of(context)
-              ?.buySellTabController
-              .animateTo(context.read<TradeTabViewProvider>().orderSideIndex);
-
           return MultiBlocProvider(
             providers: [
               BlocProvider<PlaceOrderCubit>(
@@ -310,7 +306,4 @@ class _ThisInheritedWidget extends InheritedWidget {
   bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
     return oldWidget.buySellTabController != buySellTabController;
   }
-
-  static _ThisInheritedWidget? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
 }
