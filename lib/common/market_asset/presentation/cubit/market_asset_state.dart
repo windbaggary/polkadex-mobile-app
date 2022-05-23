@@ -1,7 +1,7 @@
-part of 'market_coin_cubit.dart';
+part of 'market_asset_cubit.dart';
 
-abstract class MarketCoinState extends Equatable {
-  MarketCoinState({
+abstract class MarketAssetState extends Equatable {
+  MarketAssetState({
     this.baseTokenId = '0',
     this.quoteTokenId = '0',
   });
@@ -16,10 +16,10 @@ abstract class MarketCoinState extends Equatable {
       ];
 }
 
-class MarketCoinInitial extends MarketCoinState {}
+class MarketAssetInitial extends MarketAssetState {}
 
-class MarketCoinLoaded extends MarketCoinState {
-  MarketCoinLoaded({
+class MarketAssetLoaded extends MarketAssetState {
+  MarketAssetLoaded({
     required String baseTokenId,
     required String quoteTokenId,
   }) : super(

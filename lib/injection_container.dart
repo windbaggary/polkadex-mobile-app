@@ -1,4 +1,4 @@
-import 'package:polkadex/common/cubits/market_coin_cubit/market_coin_cubit.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
@@ -371,6 +371,6 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => MarketCoinCubit(),
+    () => MarketAssetCubit(),
   );
 }

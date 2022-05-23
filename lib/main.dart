@@ -6,7 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/app_lifecycle_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/cubits/market_coin_cubit/market_coin_cubit.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
@@ -63,8 +63,8 @@ class _MyAppState extends State<MyApp> {
             create: (_) =>
                 injection.dependency<AccountCubit>()..loadAccountData(),
           ),
-          BlocProvider<MarketCoinCubit>(
-            create: (_) => injection.dependency<MarketCoinCubit>(),
+          BlocProvider<MarketAssetCubit>(
+            create: (_) => injection.dependency<MarketAssetCubit>(),
           ),
         ],
         child: AppLifecycleWidget(
