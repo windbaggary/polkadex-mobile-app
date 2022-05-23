@@ -1,3 +1,8 @@
+import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
+import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
+import 'package:polkadex/common/market_asset/data/repositories/market_repository.dart';
+import 'package:polkadex/common/market_asset/domain/usecases/get_assets_details_usecase.dart';
+import 'package:polkadex/common/market_asset/domain/usecases/get_markets_usecase.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
@@ -49,6 +54,7 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'common/graph/data/datasources/graph_remote_datasource.dart';
+import 'common/market_asset/data/datasources/asset_remote_datasource.dart';
 import 'common/orderbook/data/repositories/orderbook_repository.dart';
 import 'common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
 import 'common/orders/domain/usecases/get_orders_usecase.dart';
@@ -368,6 +374,30 @@ Future<void> init() async {
     () => TickerCubit(
       fetchLastTickerUseCase: dependency(),
     ),
+  );
+
+  dependency.registerFactory(
+    () => MarketRemoteDatasource(),
+  );
+
+  dependency.registerFactory(
+    () => AssetRemoteDatasource(),
+  );
+
+  dependency.registerFactory(
+    () => MarketRepository(marketRemoteDatasource: dependency()),
+  );
+
+  dependency.registerFactory(
+    () => AssetRepository(assetRemoteDatasource: dependency()),
+  );
+
+  dependency.registerFactory(
+    () => GetMarketsUseCase(marketRepository: dependency()),
+  );
+
+  dependency.registerFactory(
+    () => GetAssetsDetailsUseCase(assetRepository: dependency()),
   );
 
   dependency.registerFactory(
