@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';

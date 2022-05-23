@@ -7,7 +7,7 @@ import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dar
 import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';

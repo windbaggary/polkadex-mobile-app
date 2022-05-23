@@ -9,7 +9,7 @@ import 'package:polkadex/features/landing/presentation/providers/trade_tab_provi
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:shimmer/shimmer.dart';
 

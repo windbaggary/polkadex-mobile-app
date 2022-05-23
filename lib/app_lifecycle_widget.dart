@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/time_utils.dart';
 import 'package:provider/provider.dart';
-import 'common/cubits/account_cubit.dart';
+import 'common/cubits/account_cubit/account_cubit.dart';
 import 'main.dart';
 
 class AppLifecycleWidget extends StatefulWidget {
