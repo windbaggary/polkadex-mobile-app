@@ -1,9 +1,18 @@
 part of 'market_asset_cubit.dart';
 
 abstract class MarketAssetState extends Equatable {
-  MarketAssetState({
-    this.baseTokenId = '0',
-    this.quoteTokenId = '0',
+  MarketAssetState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class MarketAssetInitial extends MarketAssetState {}
+
+class MarketAssetLoaded extends MarketAssetState {
+  MarketAssetLoaded({
+    required this.baseTokenId,
+    required this.quoteTokenId,
   });
 
   final String baseTokenId;
@@ -16,14 +25,11 @@ abstract class MarketAssetState extends Equatable {
       ];
 }
 
-class MarketAssetInitial extends MarketAssetState {}
+class MarketAssetError extends MarketAssetState {
+  MarketAssetError({required this.message});
 
-class MarketAssetLoaded extends MarketAssetState {
-  MarketAssetLoaded({
-    required String baseTokenId,
-    required String quoteTokenId,
-  }) : super(
-          baseTokenId: baseTokenId,
-          quoteTokenId: quoteTokenId,
-        );
+  final String message;
+
+  @override
+  List<Object> get props => [message];
 }

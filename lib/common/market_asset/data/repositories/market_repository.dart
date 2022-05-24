@@ -16,7 +16,7 @@ class MarketRepository implements IMarketRepository {
     try {
       final resultFetch = await _marketRemoteDatasource.getMarkets();
 
-      if (resultFetch != null) {
+      if (resultFetch.isNotEmpty) {
         return Right(
             resultFetch.map((market) => MarketModel.fromJson(market)).toList());
       } else {

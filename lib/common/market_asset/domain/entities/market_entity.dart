@@ -19,14 +19,14 @@ abstract class MarketEntity extends Equatable {
   final String assetId;
   final Map<String, dynamic> baseAsset;
   final Map<String, dynamic> quoteAsset;
-  final double minimumTradeAmount;
-  final double maximumTradeAmount;
-  final double minimumWithdrawalAmount;
-  final double minimumDepositAmount;
-  final double maximumWithdrawalAmount;
-  final double maximumDepositAmount;
-  final double baseWithdrawalFee;
-  final double quoteWithdrawalFee;
+  final int minimumTradeAmount;
+  final int maximumTradeAmount;
+  final int minimumWithdrawalAmount;
+  final int minimumDepositAmount;
+  final int maximumWithdrawalAmount;
+  final int maximumDepositAmount;
+  final int baseWithdrawalFee;
+  final int quoteWithdrawalFee;
   final String enclaveId;
 
   @override

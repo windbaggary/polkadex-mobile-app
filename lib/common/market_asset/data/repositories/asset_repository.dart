@@ -14,8 +14,7 @@ class AssetRepository implements IAssetRepository {
   Future<Either<ApiError, List<AssetModel>>> getAssetsDetails() async {
     try {
       final resultFetch = await _assetRemoteDatasource.getAssetsDetails();
-
-      if (resultFetch != null) {
+      if (resultFetch.isNotEmpty) {
         return Right(
             resultFetch.map((asset) => AssetModel.fromJson(asset)).toList());
       } else {

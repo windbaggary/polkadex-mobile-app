@@ -1,6 +1,8 @@
 import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
 import 'package:polkadex/common/market_asset/data/repositories/market_repository.dart';
+import 'package:polkadex/common/market_asset/domain/repositories/iasset_repository.dart';
+import 'package:polkadex/common/market_asset/domain/repositories/imarket_repository.dart';
 import 'package:polkadex/common/market_asset/domain/usecases/get_assets_details_usecase.dart';
 import 'package:polkadex/common/market_asset/domain/usecases/get_markets_usecase.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
@@ -384,11 +386,11 @@ Future<void> init() async {
     () => AssetRemoteDatasource(),
   );
 
-  dependency.registerFactory(
+  dependency.registerFactory<IMarketRepository>(
     () => MarketRepository(marketRemoteDatasource: dependency()),
   );
 
-  dependency.registerFactory(
+  dependency.registerFactory<IAssetRepository>(
     () => AssetRepository(assetRemoteDatasource: dependency()),
   );
 
@@ -401,6 +403,9 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => MarketAssetCubit(),
+    () => MarketAssetCubit(
+      getMarketsUseCase: dependency(),
+      getAssetsDetailsUseCase: dependency(),
+    ),
   );
 }
