@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/market_asset/domain/repositories/imarket_repository.dart';
+import 'package:polkadex/common/market_asset/domain/entities/market_entity.dart';
 import 'package:polkadex/common/network/error.dart';
 
 class GetMarketsUseCase {
@@ -9,7 +10,7 @@ class GetMarketsUseCase {
 
   final IMarketRepository _marketRepository;
 
-  Future<Either<ApiError, List<Map<String, dynamic>>?>> call() async {
+  Future<Either<ApiError, List<MarketEntity>>> call() async {
     return await _marketRepository.getMarkets();
   }
 }
