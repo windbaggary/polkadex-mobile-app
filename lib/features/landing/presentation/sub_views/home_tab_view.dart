@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
@@ -201,15 +202,22 @@ class _HomeTabViewState extends State<HomeTabView>
               height: 108,
               child: ListView.builder(
                 itemBuilder: (context, index) => TopPairWidget(
-                  rightAsset: basicCoinDummyList[index].baseTokenId,
-                  leftAsset: basicCoinDummyList[index].pairTokenId,
+                  leftAsset: context
+                      .read<MarketAssetCubit>()
+                      .listAvailableMarkets[index][0],
+                  rightAsset: context
+                      .read<MarketAssetCubit>()
+                      .listAvailableMarkets[index][1],
                   onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
                     tokenId: basicCoinDummyList[index].baseTokenId,
                     balanceCubit: context.read<BalanceCubit>(),
                     orderbookCubit: context.read<OrderbookCubit>(),
                   ),
                 ),
-                itemCount: 2,
+                itemCount: context
+                    .read<MarketAssetCubit>()
+                    .listAvailableMarkets
+                    .length,
                 scrollDirection: Axis.horizontal,
                 physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(left: 21),

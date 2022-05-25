@@ -11,17 +11,17 @@ class MarketAssetInitial extends MarketAssetState {}
 
 class MarketAssetLoaded extends MarketAssetState {
   MarketAssetLoaded({
-    required this.baseTokenId,
-    required this.quoteTokenId,
+    required this.baseToken,
+    required this.quoteToken,
   });
 
-  final String baseTokenId;
-  final String quoteTokenId;
+  final AssetEntity baseToken;
+  final AssetEntity quoteToken;
 
   @override
   List<Object> get props => [
-        baseTokenId,
-        quoteTokenId,
+        baseToken,
+        quoteToken,
       ];
 }
 

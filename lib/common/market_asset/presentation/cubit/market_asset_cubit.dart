@@ -17,47 +17,35 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
   final GetMarketsUseCase _getMarketsUseCase;
   final GetAssetsDetailsUseCase _getAssetsDetailsUseCase;
 
-  final Map<String, List<String>> _markets = {};
+  final List<List<AssetEntity>> _marketsList = [];
   final Map<String, AssetEntity> _assets = {};
 
-  String get currentBaseTokenName {
+  List<List<AssetEntity>> get listAvailableMarkets => _marketsList;
+
+  AssetEntity get currentBaseAssetDetails {
     final currentState = state;
 
     return currentState is MarketAssetLoaded
-        ? _assets[currentState.baseTokenId]!.name
-        : '';
+        ? _assets[currentState.baseToken.assetId]!
+        : _assets['POLKADEX']!;
   }
 
-  String get currentBaseTokenSymbol {
+  AssetEntity get currentQuoteAssetDetails {
     final currentState = state;
 
     return currentState is MarketAssetLoaded
-        ? _assets[currentState.baseTokenId]!.symbol
-        : '';
+        ? _assets[currentState.quoteToken.assetId]!
+        : _assets['POLKADEX']!;
   }
 
-  String get currentQuoteTokenName {
-    final currentState = state;
-
-    return currentState is MarketAssetLoaded
-        ? _assets[currentState.quoteTokenId]!.name
-        : '';
-  }
-
-  String get currentQuoteTokenSymbol {
-    final currentState = state;
-
-    return currentState is MarketAssetLoaded
-        ? _assets[currentState.quoteTokenId]!.symbol
-        : '';
+  AssetEntity getAssetDetailsById(String tokenId) {
+    return _assets[tokenId] ?? _assets['POLKADEX']!;
   }
 
   Future<void> getMarkets() async {
-    _markets.clear();
     _assets.clear();
 
     final resultAssets = await _getAssetsDetailsUseCase();
-
     resultAssets.fold(
       (error) => emit(MarketAssetError(message: error.message)),
       (assets) {
@@ -72,25 +60,21 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
       (error) => emit(MarketAssetError(message: error.message)),
       (markets) {
         for (var i = 0; i < markets.length; i++) {
-          final baseAssetId =
-              (markets[i].baseAsset['asset'] ?? 'POLKADEX').toString();
-          final quoteAssetId =
-              (markets[i].quoteAsset['asset'] ?? 'POLKADEX').toString();
+          final baseAsset = getAssetDetailsById(
+              (markets[i].baseAsset['asset'] ?? 'POLKADEX').toString());
+          final quoteAsset = getAssetDetailsById(
+              (markets[i].quoteAsset['asset'] ?? 'POLKADEX').toString());
 
           if (i == 0) {
             emit(
               MarketAssetLoaded(
-                baseTokenId: baseAssetId,
-                quoteTokenId: quoteAssetId,
+                baseToken: baseAsset,
+                quoteToken: quoteAsset,
               ),
             );
           }
 
-          if (_markets[baseAssetId] == null) {
-            _markets[baseAssetId] = [];
-          }
-
-          _markets[baseAssetId]?.add(quoteAssetId);
+          _marketsList.add([baseAsset, quoteAsset]);
         }
       },
     );

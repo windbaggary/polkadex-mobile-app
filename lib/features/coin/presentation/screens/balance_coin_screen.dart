@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
@@ -222,8 +223,12 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                         height: 108,
                         child: ListView.builder(
                           itemBuilder: (context, index) => TopPairWidget(
-                            rightAsset: basicCoinDummyList[index].baseTokenId,
-                            leftAsset: basicCoinDummyList[index].pairTokenId,
+                            rightAsset: context
+                                .read<MarketAssetCubit>()
+                                .listAvailableMarkets[index][0],
+                            leftAsset: context
+                                .read<MarketAssetCubit>()
+                                .listAvailableMarkets[index][0],
                             onTap: () => Coordinator.goToCoinTradeScreen(
                                 orderbookCubit: context.read<OrderbookCubit>(),
                                 leftTokenId:
@@ -232,7 +237,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                     basicCoinDummyList[index].pairTokenId,
                                 balanceCubit: context.read<BalanceCubit>()),
                           ),
-                          itemCount: 2,
+                          itemCount: context
+                              .read<MarketAssetCubit>()
+                              .listAvailableMarkets
+                              .length,
                           scrollDirection: Axis.horizontal,
                           physics: BouncingScrollPhysics(),
                           padding: const EdgeInsets.only(left: 21),

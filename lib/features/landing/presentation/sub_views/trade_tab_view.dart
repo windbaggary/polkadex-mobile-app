@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -246,12 +247,14 @@ class _ThisTopSelectableWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}/${TokenUtils.tokenIdToAcronym(coinProvider.pairCoin?.baseTokenId ?? '')}',
+                        '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
                         style: tsS20W600CFF,
                       ),
                       Text(
-                        TokenUtils.tokenIdToFullName(
-                            coinProvider.tokenCoin.baseTokenId),
+                        context
+                            .read<MarketAssetCubit>()
+                            .currentBaseAssetDetails
+                            .name,
                         style:
                             tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
                       ),
