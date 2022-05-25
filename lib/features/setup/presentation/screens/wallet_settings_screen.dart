@@ -11,6 +11,7 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
@@ -351,9 +352,12 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     );
     final accountState = accountCubit.state;
 
-    accountState is AccountLoaded
-        ? Coordinator.goToLandingScreen(accountState.account)
-        : _onShowRegisterErrorModal();
+    if (accountState is AccountLoaded) {
+      await context.read<MarketAssetCubit>().getMarkets();
+      Coordinator.goToLandingScreen(accountState.account);
+    } else {
+      _onShowRegisterErrorModal();
+    }
   }
 
   void _onShowRegisterErrorModal() {
