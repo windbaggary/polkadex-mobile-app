@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
@@ -9,7 +11,6 @@ import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/bala
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/dialogs/trade_view_dialogs.dart';
-import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
@@ -20,7 +21,6 @@ import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PlaceOrderWidget extends StatefulWidget {
@@ -37,11 +37,13 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TradeTabCoinProvider>(
-      builder: (context, coinProvider, _) {
+    return BlocBuilder<MarketAssetCubit, MarketAssetState>(
+      builder: (context, state) {
+        final cubit = context.read<MarketAssetCubit>();
+
         _onUpdateAvailableBalance(
-            baseTokenId: coinProvider.tokenCoin.baseTokenId,
-            pairTokenId: coinProvider.tokenCoin.pairTokenId);
+            baseTokenId: cubit.currentBaseAssetDetails.assetId,
+            pairTokenId: cubit.currentQuoteAssetDetails.assetId);
 
         return BlocBuilder<PlaceOrderCubit, PlaceOrderState>(
           builder: (context, placeOrderState) => Column(
@@ -52,37 +54,37 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                 onBuyTap: () => _onTapOrderSide(
                   EnumBuySell.buy,
                   context.read<BalanceCubit>(),
-                  coinProvider,
+                  cubit,
                 ),
                 onSellTap: () => _onTapOrderSide(
                   EnumBuySell.sell,
                   context.read<BalanceCubit>(),
-                  coinProvider,
+                  cubit,
                 ),
               ),
               SizedBox(height: 8),
-              _orderTypeWidget(coinProvider),
+              _orderTypeWidget(cubit),
               SizedBox(height: 8),
               _priceInputWidget(
-                coinProvider: coinProvider,
+                marketAssetCubit: cubit,
                 placeOrderState: placeOrderState,
               ),
               SizedBox(height: 8),
               _amountInputWidget(
-                tokenId: coinProvider.tokenCoin.baseTokenId,
+                asset: cubit.currentBaseAssetDetails,
                 orderSide: placeOrderState.orderSide,
               ),
               SizedBox(height: 6),
               BlocConsumer<BalanceCubit, BalanceState>(
                   listener: (context, balanceState) {
                 _onUpdateAvailableBalance(
-                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                    pairTokenId: coinProvider.tokenCoin.pairTokenId);
+                    baseTokenId: cubit.currentBaseAssetDetails.assetId,
+                    pairTokenId: cubit.currentQuoteAssetDetails.assetId);
               }, builder: (context, balanceState) {
                 if (balanceState is BalanceLoaded) {
                   return _balanceWidget(
-                    baseTokenId: coinProvider.tokenCoin.baseTokenId,
-                    pairTokenId: coinProvider.tokenCoin.pairTokenId,
+                    baseTokenId: cubit.currentBaseAssetDetails.assetId,
+                    pairTokenId: cubit.currentQuoteAssetDetails.assetId,
                   );
                 }
 
@@ -90,7 +92,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
               }),
               SizedBox(height: 16),
               _totalWidget(
-                tokenId: coinProvider.tokenCoin.pairTokenId,
+                tokenId: cubit.currentQuoteAssetDetails.assetId,
               ),
               placeOrderState is PlaceOrderLoading
                   ? Padding(
@@ -105,7 +107,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                       valueListenable: _orderTypeNotifier,
                       builder: (_, __, ___) => AppButton(
                         label:
-                            '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.baseTokenId)}',
+                            '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${cubit.currentQuoteAssetDetails.symbol}',
                         enabled:
                             _orderTypeNotifier.value == EnumOrderTypes.market
                                 ? context.read<TickerCubit>().state
@@ -115,8 +117,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                         onTap: () => _onBuyOrSell(
                           placeOrderState.orderSide,
                           _orderTypeNotifier.value,
-                          coinProvider.tokenCoin.baseTokenId,
-                          coinProvider.tokenCoin.pairTokenId,
+                          cubit.currentBaseAssetDetails.assetId,
+                          cubit.currentQuoteAssetDetails.assetId,
                           _priceController.text,
                           _amountController.text,
                           context,
@@ -151,15 +153,15 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   _onTapOrderSide(
     EnumBuySell enumBuySell,
     BalanceCubit balanceCubit,
-    TradeTabCoinProvider coinProvider,
+    MarketAssetCubit marketAssetCubit,
   ) {
     final balanceState = balanceCubit.state;
     double balance;
 
     if (balanceState is BalanceLoaded) {
       balance = double.parse(balanceState.free[enumBuySell == EnumBuySell.buy
-          ? coinProvider.tokenCoin.pairTokenId
-          : coinProvider.tokenCoin.baseTokenId]);
+          ? marketAssetCubit.currentBaseAssetDetails.assetId
+          : marketAssetCubit.currentQuoteAssetDetails.assetId]);
     } else {
       balance = 0.0;
     }
@@ -176,7 +178,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
   void _onTapOrderType(
     BuildContext context,
-    TradeTabCoinProvider coinProvider,
+    MarketAssetCubit marketAssetCubit,
   ) {
     showOrderTypeDialog(
       context: context,
@@ -195,8 +197,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                   ));
 
           context.read<TickerCubit>().getLastTicker(
-                leftTokenId: coinProvider.tokenCoin.baseTokenId,
-                rightTokenId: coinProvider.tokenCoin.pairTokenId,
+                leftTokenId: marketAssetCubit.currentBaseAssetDetails.assetId,
+                rightTokenId: marketAssetCubit.currentQuoteAssetDetails.assetId,
               );
         }
       },
@@ -448,7 +450,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }
 
   Widget _priceInputWidget({
-    required TradeTabCoinProvider coinProvider,
+    required MarketAssetCubit marketAssetCubit,
     required PlaceOrderState placeOrderState,
   }) {
     return ValueListenableBuilder<EnumOrderTypes>(
@@ -487,7 +489,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                   state is TickerLoaded,
               child: QuantityInputWidget(
                 hintText:
-                    'Price (${TokenUtils.tokenIdToAcronym(coinProvider.tokenCoin.pairTokenId)})',
+                    'Price (${marketAssetCubit.currentQuoteAssetDetails.name})',
                 controller: _priceController,
                 onChanged: (price) => _onPriceAmountChanged(
                   context,
@@ -500,8 +502,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                 onError: _orderTypeNotifier.value == EnumOrderTypes.market &&
                         state is TickerError
                     ? () => context.read<TickerCubit>().getLastTicker(
-                          leftTokenId: coinProvider.tokenCoin.baseTokenId,
-                          rightTokenId: coinProvider.tokenCoin.pairTokenId,
+                          leftTokenId:
+                              marketAssetCubit.currentBaseAssetDetails.assetId,
+                          rightTokenId:
+                              marketAssetCubit.currentQuoteAssetDetails.assetId,
                         )
                     : null,
               ),
@@ -513,7 +517,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }
 
   Widget _amountInputWidget({
-    required String tokenId,
+    required AssetEntity asset,
     EnumBuySell orderSide = EnumBuySell.buy,
   }) {
     return Container(
@@ -529,7 +533,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           QuantityInputWidget(
-            hintText: 'Amount (${TokenUtils.tokenIdToAcronym(tokenId)})',
+            hintText: 'Amount (${asset.symbol})',
             controller: _amountController,
             onChanged: (amount) => _onPriceAmountChanged(
               context,
@@ -585,7 +589,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
-  Widget _orderTypeWidget(TradeTabCoinProvider coinProvider) {
+  Widget _orderTypeWidget(MarketAssetCubit marketAssetCubit) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
       decoration: BoxDecoration(
@@ -596,7 +600,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         ),
       ),
       child: GestureDetector(
-        onTapUp: (_) => _onTapOrderType(context, coinProvider),
+        onTapUp: (_) => _onTapOrderType(context, marketAssetCubit),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

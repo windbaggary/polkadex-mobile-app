@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
@@ -123,9 +123,9 @@ class TradeBottomWidget extends StatelessWidget {
               return PolkadexErrorRefreshWidget(
                 onRefresh: () => context.read<OrderHistoryCubit>().getOrders(
                       context
-                          .read<TradeTabCoinProvider>()
-                          .tokenCoin
-                          .baseTokenId,
+                          .read<MarketAssetCubit>()
+                          .currentBaseAssetDetails
+                          .assetId,
                       context.read<AccountCubit>().accountAddress,
                       context.read<AccountCubit>().accountSignature,
                       false,

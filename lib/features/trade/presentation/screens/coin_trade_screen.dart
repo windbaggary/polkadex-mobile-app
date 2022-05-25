@@ -5,6 +5,7 @@ import 'package:k_chart/chart_style.dart';
 import 'package:k_chart/k_chart_widget.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/utils/time_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
@@ -35,14 +36,14 @@ import 'package:polkadex/injection_container.dart';
 /// XD_PAGE: 33
 class CoinTradeScreen extends StatefulWidget {
   const CoinTradeScreen({
-    required this.leftTokenId,
-    required this.rightTokenId,
+    required this.leftToken,
+    required this.rightToken,
     this.enumInitalCardFlipState = EnumCardFlipState.showFirst,
   });
 
   final EnumCardFlipState enumInitalCardFlipState;
-  final String leftTokenId;
-  final String rightTokenId;
+  final AssetEntity leftToken;
+  final AssetEntity rightToken;
 
   @override
   _CoinTradeScreenState createState() => _CoinTradeScreenState();
@@ -84,8 +85,8 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
       builder: (context, _) => BlocProvider<CoinGraphCubit>(
         create: (_) => dependency<CoinGraphCubit>()
           ..loadGraph(
-            widget.leftTokenId,
-            widget.rightTokenId,
+            widget.leftToken.assetId,
+            widget.rightToken.assetId,
           ),
         child: Scaffold(
           backgroundColor: AppColors.color1C2023,
@@ -110,8 +111,8 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                                 ),
                               ),
                               child: _ThisAppBar(
-                                leftTokenId: widget.leftTokenId,
-                                rightTokenId: widget.rightTokenId,
+                                leftTokenId: widget.leftToken.assetId,
+                                rightTokenId: widget.rightToken.assetId,
                               ),
                             ),
                             Column(
@@ -130,12 +131,12 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                                             CardFlipAnimation(
                                       duration: AppConfigs.animDuration,
                                       firstChild: _ThisGraphCard(
-                                        leftTokenId: widget.leftTokenId,
-                                        rightTokenId: widget.rightTokenId,
+                                        leftTokenId: widget.leftToken.assetId,
+                                        rightTokenId: widget.rightToken.assetId,
                                       ),
                                       secondChild: _ThisDetailCard(
-                                        leftTokenId: widget.leftTokenId,
-                                        rightTokenId: widget.rightTokenId,
+                                        leftTokenId: widget.leftToken.assetId,
+                                        rightTokenId: widget.rightToken.assetId,
                                       ),
                                       cardState:
                                           orderDisplayProvider.enumCoinDisplay,
@@ -145,8 +146,8 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                               ],
                             ),
                             OrderBookWidget(
-                              amountTokenId: widget.leftTokenId,
-                              priceTokenId: widget.rightTokenId,
+                              amountToken: widget.leftToken,
+                              priceToken: widget.rightToken,
                             ),
                           ],
                         ),

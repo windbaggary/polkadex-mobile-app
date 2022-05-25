@@ -4,12 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/features/landing/presentation/providers/trade_tab_provider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/trade_bottom_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/place_order_widget.dart';
@@ -69,7 +67,10 @@ class _TradeTabViewState extends State<TradeTabView>
               BlocProvider<OrderHistoryCubit>(
                 create: (_) => dependency<OrderHistoryCubit>()
                   ..getOrders(
-                    context.read<TradeTabCoinProvider>().tokenCoin.baseTokenId,
+                    context
+                        .read<MarketAssetCubit>()
+                        .currentBaseAssetDetails
+                        .assetId,
                     context.read<AccountCubit>().accountAddress,
                     context.read<AccountCubit>().accountSignature,
                     true,
@@ -79,13 +80,13 @@ class _TradeTabViewState extends State<TradeTabView>
                 create: (_) => dependency<TickerCubit>()
                   ..getLastTicker(
                     leftTokenId: context
-                        .read<TradeTabCoinProvider>()
-                        .tokenCoin
-                        .baseTokenId,
+                        .read<MarketAssetCubit>()
+                        .currentBaseAssetDetails
+                        .assetId,
                     rightTokenId: context
-                        .read<TradeTabCoinProvider>()
-                        .tokenCoin
-                        .pairTokenId,
+                        .read<MarketAssetCubit>()
+                        .currentBaseAssetDetails
+                        .assetId,
                   ),
               ),
             ],
@@ -105,10 +106,15 @@ class _TradeTabViewState extends State<TradeTabView>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: Consumer<TradeTabCoinProvider>(
-                            builder: (context, provider, _) => OrderBookWidget(
-                              amountTokenId: provider.tokenCoin.baseTokenId,
-                              priceTokenId: provider.tokenCoin.pairTokenId,
+                          child:
+                              BlocBuilder<MarketAssetCubit, MarketAssetState>(
+                            builder: (context, state) => OrderBookWidget(
+                              amountToken: context
+                                  .read<MarketAssetCubit>()
+                                  .currentBaseAssetDetails,
+                              priceToken: context
+                                  .read<MarketAssetCubit>()
+                                  .currentQuoteAssetDetails,
                             ),
                           ),
                         ),
@@ -149,16 +155,15 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
         top: 8,
         right: 8,
       ),
-      child: Consumer<TradeTabCoinProvider>(
-        builder: (context, coinProvider, child) => Row(
+      child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
+        builder: (context, state) => Row(
           children: [
             Expanded(
                 child: _ThisTopSelectableWidget(
-                    graphColor: coinProvider.tokenCoin.color,
-                    onTap: () => _onMarketSelection(context))),
+                    graphColor: AppColors.color0CA564, onTap: () {})),
             Container(
               decoration: BoxDecoration(
-                color: coinProvider.tokenCoin.color.withOpacity(0.3),
+                color: AppColors.color0CA564.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(5),
               ),
               alignment: Alignment.center,
@@ -171,13 +176,12 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.arrow_drop_down,
-                    color: coinProvider.tokenCoin.color,
+                    color: AppColors.color0CA564,
                     size: 18,
                   ),
                   Text(
-                    "${coinProvider.tokenCoin.percentage}%",
-                    style: tsS14W600CFF.copyWith(
-                        color: coinProvider.tokenCoin.color),
+                    "${36.5}%",
+                    style: tsS14W600CFF.copyWith(color: AppColors.color0CA564),
                   )
                 ],
               ),
@@ -188,20 +192,20 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
     );
   }
 
-  void _onMarketSelection(BuildContext context) {
-    Coordinator.goToMarketTokenSelectionScreen().then((model) {
-      if (model != null) {
-        final provider = context.read<TradeTabCoinProvider>();
-        provider.tokenCoin = model.tokenModel;
-        provider.pairCoin = model.pairModel;
-
-        context.read<TickerCubit>().getLastTicker(
-              leftTokenId: model.tokenModel.baseTokenId,
-              rightTokenId: model.tokenModel.pairTokenId,
-            );
-      }
-    });
-  }
+  //void _onMarketSelection(BuildContext context) {
+  //  Coordinator.goToMarketTokenSelectionScreen().then((model) {
+  //    if (model != null) {
+  //     final cubit = context.read<MarketAssetCubit>();
+  //     provider.tokenCoin = model.tokenModel;
+  //     provider.pairCoin = model.pairModel;
+//
+  //     context.read<TickerCubit>().getLastTicker(
+  //           leftTokenId: model.tokenModel.baseTokenId,
+  //           rightTokenId: model.tokenModel.pairTokenId,
+  //         );
+  //
+  //  });
+  //}
 }
 
 /// The widget to handle the ontap for picker
@@ -221,15 +225,17 @@ class _ThisTopSelectableWidget extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Consumer<TradeTabCoinProvider>(
-            builder: (context, coinProvider, child) => Container(
+          BlocBuilder<MarketAssetCubit, MarketAssetState>(
+            builder: (context, state) => Container(
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(
-                      coinProvider.tokenCoin.baseTokenId),
+                  TokenUtils.tokenIdToAssetImg(context
+                      .read<MarketAssetCubit>()
+                      .currentBaseAssetDetails
+                      .assetId),
                   width: 50,
                   height: 50,
                   fit: BoxFit.contain,
@@ -242,8 +248,8 @@ class _ThisTopSelectableWidget extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 8),
-                child: Consumer<TradeTabCoinProvider>(
-                  builder: (context, coinProvider, child) => Column(
+                child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
+                  builder: (context, state) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
