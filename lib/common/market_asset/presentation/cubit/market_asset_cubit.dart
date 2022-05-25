@@ -20,6 +20,38 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
   final Map<String, List<String>> _markets = {};
   final Map<String, AssetEntity> _assets = {};
 
+  String get currentBaseTokenName {
+    final currentState = state;
+
+    return currentState is MarketAssetLoaded
+        ? _assets[currentState.baseTokenId]!.name
+        : '';
+  }
+
+  String get currentBaseTokenSymbol {
+    final currentState = state;
+
+    return currentState is MarketAssetLoaded
+        ? _assets[currentState.baseTokenId]!.symbol
+        : '';
+  }
+
+  String get currentQuoteTokenName {
+    final currentState = state;
+
+    return currentState is MarketAssetLoaded
+        ? _assets[currentState.quoteTokenId]!.name
+        : '';
+  }
+
+  String get currentQuoteTokenSymbol {
+    final currentState = state;
+
+    return currentState is MarketAssetLoaded
+        ? _assets[currentState.quoteTokenId]!.symbol
+        : '';
+  }
+
   Future<void> getMarkets() async {
     _markets.clear();
     _assets.clear();
