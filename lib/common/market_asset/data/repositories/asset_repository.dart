@@ -16,7 +16,20 @@ class AssetRepository implements IAssetRepository {
       final resultFetch = await _assetRemoteDatasource.getAssetsDetails();
       if (resultFetch.isNotEmpty) {
         return Right(
-            resultFetch.map((asset) => AssetModel.fromJson(asset)).toList());
+          resultFetch.map((asset) => AssetModel.fromJson(asset)).toList()
+            ..add(
+              AssetModel.fromJson(
+                {
+                  'assetId': 'POLKADEX',
+                  'deposit': '22,000,000,000,000',
+                  'name': 'Polkadex',
+                  'symbol': 'PDEX',
+                  'decimals': '12',
+                  'isFrozen': false
+                },
+              ),
+            ),
+        );
       } else {
         return Left(
           ApiError(
