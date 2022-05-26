@@ -49,6 +49,8 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
     _marketsList.clear();
     _marketsMap.clear();
 
+    emit(MarketAssetLoading());
+
     final resultAssets = await _getAssetsDetailsUseCase();
     resultAssets.fold(
       (error) => emit(MarketAssetError(message: error.message)),

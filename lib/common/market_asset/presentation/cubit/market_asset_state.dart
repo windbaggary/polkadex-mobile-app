@@ -9,6 +9,8 @@ abstract class MarketAssetState extends Equatable {
 
 class MarketAssetInitial extends MarketAssetState {}
 
+class MarketAssetLoading extends MarketAssetState {}
+
 class MarketAssetLoaded extends MarketAssetState {
   MarketAssetLoaded({
     required this.baseToken,
