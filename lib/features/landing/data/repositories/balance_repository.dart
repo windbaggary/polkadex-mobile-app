@@ -13,26 +13,23 @@ class BalanceRepository implements IBalanceRepository {
   final BalanceRemoteDatasource _balanceRemoteDatasource;
 
   @override
-  Future<Either<ApiError, BalanceEntity>> fetchBalance(
-    String address,
-    String signature,
-  ) async {
+  Future<Either<ApiError, BalanceEntity>> fetchBalance(String address) async {
     try {
-      final result = await _balanceRemoteDatasource.fetchBalance(
-        address,
-        signature,
-      );
-      final Map<String, dynamic> body = jsonDecode(result.body);
+      final result = await _balanceRemoteDatasource.fetchBalance(address);
+      final listBalance = result.rows.map((row) => row.assoc()).toList();
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        return Right(BalanceModel(
-          free: body['Fine']['free'],
-          used: body['Fine']['used'],
-          total: body['Fine']['total'],
-        ));
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      final mapFree = {};
+      final mapReserved = {};
+
+      for (var assetMap in listBalance) {
+        mapFree[assetMap['asset_type']] = assetMap['free_balance'];
+        mapReserved[assetMap['asset_type']] = assetMap['reserved_balance'];
       }
+
+      return Right(BalanceModel(
+        free: mapFree,
+        reserved: mapReserved,
+      ));
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

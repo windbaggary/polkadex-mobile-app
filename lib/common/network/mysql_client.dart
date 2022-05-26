@@ -29,6 +29,26 @@ class MysqlClient {
     return dbProxyResult.rows.first.colByName('id');
   }
 
+  Future<String?> getMainAddress(String proxyAddress) async {
+    final dbAccId = getAccountId(proxyAddress);
+
+    final dbMainResult =
+        await conn.execute("select * from accounts where id = :acc_id", {
+      "acc_id": dbAccId,
+    });
+    return dbMainResult.rows.first.colByName('main_acc');
+  }
+
+  Future<IResultSet> getBalanceAssets(String proxyAddress) async {
+    final dbAccId = await getAccountId(proxyAddress);
+
+    return await conn.execute(
+        "select free_balance,reserved_balance,asset_type from assets where main_acc = :main_account_id",
+        {
+          "main_account_id": dbAccId,
+        });
+  }
+
   Future<IResultSet> getOrderHistory(String proxyAddress) async {
     final mainAccId = await getAccountId(proxyAddress);
 
