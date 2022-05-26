@@ -48,4 +48,15 @@ class MysqlClient {
           "main_account_id": dbAccId,
         });
   }
+
+  Future<IResultSet> getOrderHistory(String proxyAddress) async {
+    final mainAccId = await getAccountId(proxyAddress);
+
+    return await conn.execute(
+      "select * from transactions where main_account_id = :main_account_id",
+      {
+        "main_account_id": mainAccId,
+      },
+    );
+  }
 }

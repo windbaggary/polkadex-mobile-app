@@ -25,11 +25,9 @@ import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/fetch_last_ticker_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
-import 'package:polkadex/common/orders/domain/usecases/get_open_orders.dart';
 import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
-import 'package:polkadex/features/landing/presentation/cubits/list_orders_cubit/list_orders_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
@@ -217,12 +215,6 @@ Future<void> init() async {
     ),
   );
 
-  dependency.registerFactory(
-    () => ListOrdersCubit(
-      getOpenOrdersUseCase: dependency(),
-    ),
-  );
-
   dependency.registerFactory(() => WalletSettingsProvider());
 
   dependency.registerFactory(
@@ -244,12 +236,6 @@ Future<void> init() async {
   dependency.registerFactory(
     () => CoinGraphCubit(
       getGraphDataUseCase: dependency(),
-    ),
-  );
-
-  dependency.registerFactory(
-    () => GetOpenOrdersUseCase(
-      orderRepository: dependency(),
     ),
   );
 

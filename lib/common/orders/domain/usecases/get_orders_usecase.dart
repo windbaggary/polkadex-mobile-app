@@ -11,7 +11,7 @@ class GetOrdersUseCase {
   final IOrderRepository _orderRepository;
 
   Future<Either<ApiError, List<OrderEntity>>> call(
-      {required String address, required String signature}) async {
-    return await _orderRepository.fetchOrders(address, signature);
+      {required String address}) async {
+    return await _orderRepository.fetchOrders(address);
   }
 }
