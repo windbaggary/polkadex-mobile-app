@@ -27,18 +27,15 @@ class BalanceError extends BalanceState {
 class BalanceLoaded extends BalanceState {
   const BalanceLoaded({
     required this.free,
-    required this.used,
-    required this.total,
+    required this.reserved,
   });
 
   final Map free;
-  final Map used;
-  final Map total;
+  final Map reserved;
 
   @override
   List<Object> get props => [
         free,
-        used,
-        total,
+        reserved,
       ];
 }

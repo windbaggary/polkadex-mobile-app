@@ -11,7 +11,7 @@ class GetBalanceUseCase {
   final IBalanceRepository _balanceRepository;
 
   Future<Either<ApiError, BalanceEntity>> call(
-      {required String address, required String signature}) async {
-    return await _balanceRepository.fetchBalance(address, signature);
+      {required String address}) async {
+    return await _balanceRepository.fetchBalance(address);
   }
 }

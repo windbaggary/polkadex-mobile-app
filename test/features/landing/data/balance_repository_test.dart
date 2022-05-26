@@ -1,8 +1,10 @@
 import 'dart:convert';
-
+import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mysql_client/mysql_client.dart';
+import 'package:mysql_client/mysql_protocol.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/repositories/balance_repository.dart';
 
@@ -24,40 +26,34 @@ void main() {
 
   group('Balance repository tests ', () {
     test('Must return a fetch balance response', () async {
-      when(() => dataSource.fetchBalance(any(), any())).thenAnswer(
-        (_) async => Response(
-            jsonEncode({
-              "Fine": {
-                "free": {"BTC": 0.1},
-                "used": {"BTC": 0.1},
-                "total": {"BTC": 0.2}
-              }
-            }),
-            200),
+      when(() => dataSource.fetchBalance(any())).thenAnswer(
+        (_) async => EmptyResultSet(
+          okPacket: MySQLPacketOK.decode(
+            Uint8List.fromList(
+              [
+                0x62,
+                0x6c,
+                0xc3,
+                0xa5,
+                0x62,
+                0xc3,
+                0xa6,
+                0x72,
+                0x67,
+                0x72,
+                0xc3,
+                0xb8,
+                0x64
+              ],
+            ),
+          ),
+        ),
       );
 
-      final result = await repository.fetchBalance(
-        address,
-        signature,
-      );
+      final result = await repository.fetchBalance(address);
 
       expect(result.isRight(), true);
-      verify(() => dataSource.fetchBalance(address, signature)).called(1);
-      verifyNoMoreInteractions(dataSource);
-    });
-
-    test('Must return a failed fetch balance response', () async {
-      when(() => dataSource.fetchBalance(any(), any())).thenAnswer(
-        (_) async => Response('', 400),
-      );
-
-      final result = await repository.fetchBalance(
-        address,
-        signature,
-      );
-
-      expect(result.isLeft(), true);
-      verify(() => dataSource.fetchBalance(address, signature)).called(1);
+      verify(() => dataSource.fetchBalance(address)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 

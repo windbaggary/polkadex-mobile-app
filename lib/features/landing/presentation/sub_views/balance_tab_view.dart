@@ -85,9 +85,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
                           ),
                           backgroundColor: AppColors.colorE6007A,
                           textColor: Colors.white,
-                          onTap: () => context.read<BalanceCubit>().testDeposit(
-                              context.read<AccountCubit>().accountAddress,
-                              context.read<AccountCubit>().accountSignature),
+                          onTap: () => context.read<BalanceCubit>().getBalance(
+                              context.read<AccountCubit>().accountAddress),
                         ),
                       SizedBox(height: 24),
                       _ThisHoldingWidget(),
