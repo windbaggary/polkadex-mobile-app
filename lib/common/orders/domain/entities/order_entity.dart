@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
 import 'package:polkadex/common/orders/domain/entities/trade_entity.dart';
-import 'package:polkadex/features/landing/utils/token_utils.dart';
 
 abstract class OrderEntity extends Equatable {
   const OrderEntity({
@@ -36,13 +35,9 @@ abstract class OrderEntity extends Equatable {
   final FeeEntity fee;
   final List<TradeEntity> trades;
 
-  String get baseToken => TokenUtils.tokenIdToAcronym(baseAsset);
-
   String get iFormattedDate {
     return DateFormat("MMM dd, yyyy HH:mm:ss").format(timestamp);
   }
-
-  String get quoteToken => TokenUtils.tokenIdToAcronym(quoteAsset);
 
   String get iType {
     switch (orderSide) {
@@ -69,9 +64,6 @@ abstract class OrderEntity extends Equatable {
         return "";
     }
   }
-
-  String get iTokenPairName =>
-      "${TokenUtils.tokenIdToAcronym(baseAsset)}/${TokenUtils.tokenIdToAcronym(quoteAsset)}";
 
   EnumOrderTypes? get iEnumOrderType => orderType;
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -19,6 +21,8 @@ class OrderItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<MarketAssetCubit>();
+
     Color colorBuySell = AppColors.color0CA564;
     if (order.iEnumType == EnumBuySell.sell) {
       colorBuySell = AppColors.colorE6007A;
@@ -44,7 +48,7 @@ class OrderItemWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Amount (${order.baseToken})',
+                              'Amount (${cubit.getAssetDetailsById(order.baseAsset).symbol})',
                               style: tsS14W400CFF.copyWith(
                                   color: AppColors.colorABB2BC),
                             ),
@@ -59,7 +63,7 @@ class OrderItemWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Price (${order.quoteToken})',
+                              'Price ((${cubit.getAssetDetailsById(order.quoteAsset).symbol})',
                               style: tsS14W400CFF.copyWith(
                                   color: AppColors.colorABB2BC),
                             ),
@@ -116,7 +120,7 @@ class OrderItemWidget extends StatelessWidget {
                         SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            order.iTokenPairName,
+                            '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
                             style: tsS14W400CFF.copyWith(
                                 color: AppColors.colorABB2BC),
                           ),

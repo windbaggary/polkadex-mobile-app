@@ -18,9 +18,11 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
   final GetAssetsDetailsUseCase _getAssetsDetailsUseCase;
 
   final List<List<AssetEntity>> _marketsList = [];
+  final Map<String, List<String>> _marketsMap = {};
   final Map<String, AssetEntity> _assets = {};
 
   List<List<AssetEntity>> get listAvailableMarkets => _marketsList;
+  Map<String, List<String>> get mapAvailableMarkets => _marketsMap;
 
   AssetEntity get currentBaseAssetDetails {
     final currentState = state;
@@ -44,6 +46,8 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
 
   Future<void> getMarkets() async {
     _assets.clear();
+    _marketsList.clear();
+    _marketsMap.clear();
 
     final resultAssets = await _getAssetsDetailsUseCase();
     resultAssets.fold(
@@ -74,9 +78,24 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
             );
           }
 
+          if (_marketsMap[baseAsset.assetId] == null) {
+            _marketsMap[baseAsset.assetId] = [];
+          }
+
           _marketsList.add([baseAsset, quoteAsset]);
+          _marketsMap[baseAsset.assetId]?.add(quoteAsset.assetId);
         }
       },
+    );
+  }
+
+  Future<void> changeSelectedMarket(
+      AssetEntity baseAsset, AssetEntity quoteAsset) async {
+    emit(
+      MarketAssetLoaded(
+        baseToken: baseAsset,
+        quoteToken: quoteAsset,
+      ),
     );
   }
 }

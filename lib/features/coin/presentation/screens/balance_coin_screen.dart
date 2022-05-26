@@ -530,10 +530,10 @@ class _ThisItemWidget extends StatelessWidget {
     Widget child = Container();
     switch (order.orderSide) {
       case EnumBuySell.buy:
-        child = _buildBuyWidget(order);
+        child = _buildBuyWidget(context, order);
         break;
       case EnumBuySell.sell:
-        child = _buildSellWidget(order);
+        child = _buildSellWidget(context, order);
         break;
       default:
         child = Container();
@@ -573,7 +573,9 @@ class _ThisItemWidget extends StatelessWidget {
     return cardWidget;
   }
 
-  Widget _buildBuyWidget(OrderEntity order) {
+  Widget _buildBuyWidget(BuildContext context, OrderEntity order) {
+    final cubit = context.read<MarketAssetCubit>();
+
     return Row(
       children: [
         Container(
@@ -593,7 +595,7 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                order.iTokenPairName,
+                '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
@@ -638,7 +640,9 @@ class _ThisItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSellWidget(OrderEntity order) {
+  Widget _buildSellWidget(BuildContext context, OrderEntity order) {
+    final cubit = context.read<MarketAssetCubit>();
+
     return Row(
       children: [
         Container(
@@ -658,7 +662,7 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                order.iTokenPairName,
+                '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),

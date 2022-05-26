@@ -2,6 +2,7 @@ import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
@@ -160,7 +161,8 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
           children: [
             Expanded(
                 child: _ThisTopSelectableWidget(
-                    graphColor: AppColors.color0CA564, onTap: () {})),
+                    graphColor: AppColors.color0CA564,
+                    onTap: () => _onMarketSelection(context))),
             Container(
               decoration: BoxDecoration(
                 color: AppColors.color0CA564.withOpacity(0.3),
@@ -192,20 +194,21 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
     );
   }
 
-  //void _onMarketSelection(BuildContext context) {
-  //  Coordinator.goToMarketTokenSelectionScreen().then((model) {
-  //    if (model != null) {
-  //     final cubit = context.read<MarketAssetCubit>();
-  //     provider.tokenCoin = model.tokenModel;
-  //     provider.pairCoin = model.pairModel;
-//
-  //     context.read<TickerCubit>().getLastTicker(
-  //           leftTokenId: model.tokenModel.baseTokenId,
-  //           rightTokenId: model.tokenModel.pairTokenId,
-  //         );
-  //
-  //  });
-  //}
+  void _onMarketSelection(BuildContext context) {
+    Coordinator.goToMarketTokenSelectionScreen().then(
+      (model) {
+        if (model != null) {
+          context.read<MarketAssetCubit>().changeSelectedMarket(
+              model.selectedBaseAsset, model.selectedQuoteAsset);
+
+          context.read<TickerCubit>().getLastTicker(
+                leftTokenId: model.selectedBaseAsset.assetId,
+                rightTokenId: model.selectedQuoteAsset.assetId,
+              );
+        }
+      },
+    );
+  }
 }
 
 /// The widget to handle the ontap for picker
