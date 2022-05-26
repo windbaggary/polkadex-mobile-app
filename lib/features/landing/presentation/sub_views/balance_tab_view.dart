@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
@@ -329,20 +330,23 @@ class _BalanceTabViewState extends State<BalanceTabView>
                             padding: const EdgeInsets.only(bottom: 24),
                             itemBuilder: (context, index) {
                               String key = state.free.keys.elementAt(index);
+                              final asset = context
+                                  .read<MarketAssetCubit>()
+                                  .getAssetDetailsById(key);
+
                               return InkWell(
                                 onTap: () =>
                                     Coordinator.goToBalanceCoinPreviewScreen(
-                                  tokenId: key,
+                                  asset: asset,
                                   balanceCubit: context.read<BalanceCubit>(),
                                   orderbookCubit:
                                       context.read<OrderbookCubit>(),
                                 ),
                                 child: BalanceItemWidget(
-                                  tokenAcronym:
-                                      TokenUtils.tokenIdToAcronym(key),
-                                  tokenFullName:
-                                      TokenUtils.tokenIdToFullName(key),
-                                  assetImg: TokenUtils.tokenIdToAssetImg(key),
+                                  tokenAcronym: asset.symbol,
+                                  tokenFullName: asset.name,
+                                  assetImg: TokenUtils.tokenIdToAssetImg(
+                                      asset.assetId),
                                   amount: state.free[key],
                                 ),
                               );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
-import 'package:polkadex/features/landing/data/models/home_models.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_loading_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_tab_view_provider.dart';
@@ -91,6 +92,8 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<MarketAssetCubit>();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ExchangeTabViewProvider>(
@@ -183,7 +186,8 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
                             AppHeightFactorAnimatedWidget(
                           index: index,
                           child: _ThisListItemWidget(
-                            model: provider.list[index],
+                            baseAsset: cubit.listAvailableMarkets[index][0],
+                            quoteAsset: cubit.listAvailableMarkets[index][1],
                           ),
                           animationController: _animationController,
                           interval: Interval(
@@ -193,7 +197,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
                           ),
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 12),
-                        itemCount: provider.list.length,
+                        itemCount: cubit.listAvailableMarkets.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                       ),
@@ -482,8 +486,13 @@ class _ThisHeaderWidget extends StatelessWidget {
 
 /// The item widget which will be displayed in list view
 class _ThisListItemWidget extends StatelessWidget {
-  final BasicCoinListModel model;
-  const _ThisListItemWidget({required this.model});
+  const _ThisListItemWidget({
+    required this.baseAsset,
+    required this.quoteAsset,
+  });
+
+  final AssetEntity baseAsset;
+  final AssetEntity quoteAsset;
 
   @override
   Widget build(BuildContext context) {
@@ -491,8 +500,8 @@ class _ThisListItemWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 9),
       child: buildInkWell(
         onTap: () => Coordinator.goToCoinTradeScreen(
-          leftTokenId: model.baseTokenId,
-          rightTokenId: model.pairTokenId,
+          baseToken: baseAsset,
+          quoteToken: quoteAsset,
           balanceCubit: context.read<BalanceCubit>(),
           orderbookCubit: context.read<OrderbookCubit>(),
         ),
@@ -514,7 +523,7 @@ class _ThisListItemWidget extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(3),
                 child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(model.baseTokenId),
+                  TokenUtils.tokenIdToAssetImg(baseAsset.assetId),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -529,20 +538,18 @@ class _ThisListItemWidget extends StatelessWidget {
                           child: RichText(
                               text: TextSpan(children: <TextSpan>[
                             TextSpan(
-                              text: TokenUtils.tokenIdToAcronym(
-                                  model.baseTokenId),
+                              text: baseAsset.symbol,
                               style: tsS15W500CFF,
                             ),
                             TextSpan(
-                              text:
-                                  '/${TokenUtils.tokenIdToAcronym(model.pairTokenId)}',
+                              text: '/${quoteAsset.symbol}',
                               style: tsS11W400CABB2BC,
                             ),
                           ])),
                         ),
                         SizedBox(width: 8),
                         Text(
-                          model.amount,
+                          '',
                           style: tsS15W500CFF,
                         ),
                       ],
@@ -551,7 +558,7 @@ class _ThisListItemWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'VOL \$${model.volume} BTC',
+                            'VOL \$${5} BTC',
                             style: tsS12W400CFF.copyWith(
                               color: AppColors.colorABB2BC.withOpacity(0.70),
                             ),
@@ -581,14 +588,14 @@ class _ThisListItemWidget extends StatelessWidget {
               SizedBox(width: 16),
               Container(
                 decoration: BoxDecoration(
-                  color: model.color,
+                  color: AppColors.color0CA564,
                   borderRadius: BorderRadius.circular(7),
                 ),
                 padding: const EdgeInsets.all(5),
                 child: RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                    text: model.percentage,
+                    text: '+10.00',
                     style: tsS15W500CFF,
                   ),
                   TextSpan(
@@ -598,11 +605,7 @@ class _ThisListItemWidget extends StatelessWidget {
                 ])),
               ),
               InkWell(
-                onTap: () {
-                  context
-                      .read<ExchangeTabViewProvider>()
-                      .toggleFavoriteItem(model);
-                },
+                onTap: () {},
                 child: Container(
                   margin: const EdgeInsets.only(left: 8),
                   width: 15 + 17.0,
@@ -610,7 +613,7 @@ class _ThisListItemWidget extends StatelessWidget {
                   padding:
                       const EdgeInsets.only(right: 12, top: 4.0, bottom: 4.0),
                   child: Opacity(
-                    opacity: model.isFavorite ? 1.0 : 0.40,
+                    opacity: 0.40,
                     child: SvgPicture.asset(
                       'star-filled'.asAssetSvg(),
                     ),

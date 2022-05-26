@@ -183,8 +183,8 @@ abstract class Routes {
             child: CoinTradeScreen(
               enumInitalCardFlipState:
                   coinTradeArguments['enumCardFlipState'] as EnumCardFlipState,
-              leftToken: coinTradeArguments['leftToken'] as AssetEntity,
-              rightToken: coinTradeArguments['rightToken'] as AssetEntity,
+              leftToken: coinTradeArguments['baseToken'] as AssetEntity,
+              rightToken: coinTradeArguments['quoteToken'] as AssetEntity,
             ),
           );
         };
@@ -225,7 +225,7 @@ abstract class Routes {
                       balanceCoinArguments['orderbookCubit'] as OrderbookCubit)
             ],
             child: BalanceCoinScreen(
-              tokenId: balanceCoinArguments['tokenId'] as String,
+              asset: balanceCoinArguments['asset'] as AssetEntity,
             ),
           );
         };

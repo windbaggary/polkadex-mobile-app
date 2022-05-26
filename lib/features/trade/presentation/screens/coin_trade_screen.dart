@@ -111,8 +111,8 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                                 ),
                               ),
                               child: _ThisAppBar(
-                                leftTokenId: widget.leftToken.assetId,
-                                rightTokenId: widget.rightToken.assetId,
+                                leftToken: widget.leftToken,
+                                rightToken: widget.rightToken,
                               ),
                             ),
                             Column(
@@ -131,12 +131,12 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
                                             CardFlipAnimation(
                                       duration: AppConfigs.animDuration,
                                       firstChild: _ThisGraphCard(
-                                        leftTokenId: widget.leftToken.assetId,
-                                        rightTokenId: widget.rightToken.assetId,
+                                        leftToken: widget.leftToken,
+                                        rightToken: widget.rightToken,
                                       ),
                                       secondChild: _ThisDetailCard(
-                                        leftTokenId: widget.leftToken.assetId,
-                                        rightTokenId: widget.rightToken.assetId,
+                                        leftToken: widget.leftToken,
+                                        rightToken: widget.rightToken,
                                       ),
                                       cardState:
                                           orderDisplayProvider.enumCoinDisplay,
@@ -176,12 +176,12 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
 /// The detail card on top that flip. This card list the details about the coin
 class _ThisDetailCard extends StatelessWidget {
   const _ThisDetailCard({
-    required this.leftTokenId,
-    required this.rightTokenId,
+    required this.leftToken,
+    required this.rightToken,
   });
 
-  final String leftTokenId;
-  final String rightTokenId;
+  final AssetEntity leftToken;
+  final AssetEntity rightToken;
 
   @override
   Widget build(BuildContext context) {
@@ -205,8 +205,8 @@ class _ThisDetailCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _TopCoinWidget(
-                  leftTokenId: leftTokenId,
-                  rightTokenId: rightTokenId,
+                  leftToken: leftToken,
+                  rightToken: rightToken,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -388,12 +388,12 @@ class _ThisDetailCard extends StatelessWidget {
 /// The card shows the graph on top section
 class _ThisGraphCard extends StatelessWidget {
   _ThisGraphCard({
-    required this.leftTokenId,
-    required this.rightTokenId,
+    required this.leftToken,
+    required this.rightToken,
   });
 
-  final String leftTokenId;
-  final String rightTokenId;
+  final AssetEntity leftToken;
+  final AssetEntity rightToken;
 
   final ValueNotifier<EnumAppChartDataTypes> _dataTypeNotifier =
       ValueNotifier<EnumAppChartDataTypes>(EnumAppChartDataTypes.average);
@@ -423,8 +423,8 @@ class _ThisGraphCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 25, right: 22),
                   child: _TopCoinWidget(
-                    leftTokenId: leftTokenId,
-                    rightTokenId: rightTokenId,
+                    leftToken: leftToken,
+                    rightToken: rightToken,
                   ),
                 ),
                 Padding(
@@ -466,8 +466,8 @@ class _ThisGraphCard extends StatelessWidget {
                           return PolkadexErrorRefreshWidget(
                               onRefresh: () =>
                                   context.read<CoinGraphCubit>().loadGraph(
-                                        leftTokenId,
-                                        rightTokenId,
+                                        leftToken.assetId,
+                                        rightToken.assetId,
                                       ));
                         }
 
@@ -477,8 +477,8 @@ class _ThisGraphCard extends StatelessWidget {
                   ),
                 ),
                 _ThisGraphOptionWidget(
-                  leftTokenId: leftTokenId,
-                  rightTokenId: rightTokenId,
+                  leftToken: leftToken,
+                  rightToken: rightToken,
                   dataTypeNotifier: _dataTypeNotifier,
                 ),
               ],
@@ -515,13 +515,13 @@ class _ThisGraphCard extends StatelessWidget {
 
 class _ThisGraphOptionWidget extends StatelessWidget {
   _ThisGraphOptionWidget({
-    required this.leftTokenId,
-    required this.rightTokenId,
+    required this.leftToken,
+    required this.rightToken,
     required this.dataTypeNotifier,
   });
 
-  final String leftTokenId;
-  final String rightTokenId;
+  final AssetEntity leftToken;
+  final AssetEntity rightToken;
   final ValueNotifier<EnumAppChartDataTypes> dataTypeNotifier;
 
   @override
@@ -560,8 +560,8 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                       onTap: () => context
                                           .read<CoinGraphCubit>()
                                           .loadGraph(
-                                            leftTokenId,
-                                            rightTokenId,
+                                            leftToken.assetId,
+                                            rightToken.assetId,
                                             timestampSelected: item,
                                           ),
                                       child: AnimatedContainer(
@@ -753,10 +753,13 @@ class _ThisBottomNavigationBar extends StatelessWidget {
 }
 
 class _ThisAppBar extends StatelessWidget {
-  const _ThisAppBar({required this.leftTokenId, required this.rightTokenId});
+  const _ThisAppBar({
+    required this.leftToken,
+    required this.rightToken,
+  });
 
-  final String leftTokenId;
-  final String rightTokenId;
+  final AssetEntity leftToken;
+  final AssetEntity rightToken;
 
   @override
   Widget build(BuildContext context) {
@@ -810,11 +813,11 @@ class _ThisAppBar extends StatelessWidget {
         text: TextSpan(
           children: <TextSpan>[
             TextSpan(
-              text: TokenUtils.tokenIdToAcronym(leftTokenId),
+              text: leftToken.symbol,
               style: tsS19W700CFF,
             ),
             TextSpan(
-              text: " /${TokenUtils.tokenIdToAcronym(rightTokenId)}",
+              text: " /${rightToken.symbol}",
               style: tsS13W500CFFOP50,
             ),
           ],
@@ -839,12 +842,12 @@ class _ThisAppBar extends StatelessWidget {
 
 class _TopCoinWidget extends StatelessWidget {
   const _TopCoinWidget({
-    required this.leftTokenId,
-    required this.rightTokenId,
+    required this.leftToken,
+    required this.rightToken,
   });
 
-  final String leftTokenId;
-  final String rightTokenId;
+  final AssetEntity leftToken;
+  final AssetEntity rightToken;
 
   @override
   Widget build(BuildContext context) {
@@ -857,7 +860,7 @@ class _TopCoinWidget extends StatelessWidget {
               width: 48,
               height: 48,
               child: Image.asset(
-                TokenUtils.tokenIdToAssetImg(leftTokenId),
+                TokenUtils.tokenIdToAssetImg(leftToken.assetId),
               ),
             ),
             SizedBox(width: 11),
@@ -866,14 +869,14 @@ class _TopCoinWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    TokenUtils.tokenIdToFullName(leftTokenId),
+                    leftToken.name,
                     style: tsS13W400CFFOP60,
                   ),
                   BlocBuilder<BalanceCubit, BalanceState>(
                     builder: (context, state) {
                       return state is BalanceLoaded
                           ? Text(
-                              '${double.parse(state.free[leftTokenId] ?? '0')}',
+                              '${double.parse(state.free[leftToken.assetId] ?? '0')}',
                               style: tsS26W500CFF,
                             )
                           : _amountCoinTradeShimmer();
