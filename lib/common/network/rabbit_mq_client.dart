@@ -6,8 +6,8 @@ class RabbitMqClient {
   final Completer connected = Completer();
   final Client _client;
   bool _isConnected = false;
-  Exchange? _exchange;
-  Channel? _channel;
+  late Exchange _exchange;
+  late Channel _channel;
 
   RabbitMqClient()
       : _client = Client(
@@ -22,7 +22,7 @@ class RabbitMqClient {
         );
 
   bool get isConnected => _isConnected;
-  Exchange? get exchange => _exchange;
+  Exchange get exchange => _exchange;
 
   Future<void> init() async {
     try {
@@ -31,8 +31,7 @@ class RabbitMqClient {
       _isConnected = true;
       print('Connected to rabbitmq server');
 
-      _exchange =
-          await _channel?.exchange('topic_exchange', ExchangeType.TOPIC);
+      _exchange = await _channel.exchange('topic_exchange', ExchangeType.TOPIC);
     } catch (e) {
       print(e);
     }
@@ -41,8 +40,10 @@ class RabbitMqClient {
   Future<Consumer?> tryBindQueueToConsumer(String queueName, String routingKey,
       {bool nullOnError = false}) async {
     try {
-      return await _exchange?.bindQueueConsumer(queueName, [routingKey],
-          noAck: false);
+      final queue = await _channel.queue(queueName, autoDelete: true);
+      await queue.bind(_exchange, routingKey);
+
+      return await queue.consume();
     } catch (_) {
       if (!nullOnError) {
         await init();
