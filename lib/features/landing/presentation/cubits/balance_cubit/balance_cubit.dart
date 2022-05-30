@@ -25,9 +25,8 @@ class BalanceCubit extends Cubit<BalanceState> {
   final GetBalanceLiveDataUseCase _getBalanceLiveDataUseCase;
   final TestDepositUseCase _testDepositUseCase;
   final RegisterUserUseCase _registerUserUseCase;
-  Timer? _balanceTimer;
-
-  Timer? get balanceTimer => _balanceTimer;
+  Map _baseFree = {};
+  Map _baseReserved = {};
 
   Future<void> getBalance(String address) async {
     emit(BalanceLoading());
@@ -36,10 +35,13 @@ class BalanceCubit extends Cubit<BalanceState> {
 
     final resultLiveData = await _getBalanceLiveDataUseCase(
       address: address,
-      onMsgReceived: () {
+      onMsgReceived: (balanceUpdate) {
+        _baseFree.addAll(balanceUpdate.free);
+        _baseReserved.addAll(balanceUpdate.reserved);
+
         emit(BalanceLoaded(
-          free: {},
-          reserved: {},
+          free: _baseFree,
+          reserved: _baseReserved,
         ));
       },
       onMsgError: (error) => emit(
@@ -63,6 +65,9 @@ class BalanceCubit extends Cubit<BalanceState> {
           BalanceError(message: error.message),
         ),
         (balance) {
+          _baseFree = balance.free;
+          _baseReserved = balance.reserved;
+
           emit(
             BalanceLoaded(
               free: balance.free,

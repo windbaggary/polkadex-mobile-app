@@ -6,7 +6,7 @@ abstract class IBalanceRepository {
   Future<Either<ApiError, BalanceEntity>> fetchBalance(String address);
   Future<Either<ApiError, void>> fetchBalanceLiveData(
     String address,
-    Function() onMsgReceived,
+    Function(BalanceEntity) onMsgReceived,
     Function(Object) onMsgError,
   );
   Future<Either<ApiError, String>> testDeposit(

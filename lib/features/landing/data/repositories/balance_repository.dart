@@ -17,20 +17,8 @@ class BalanceRepository implements IBalanceRepository {
   Future<Either<ApiError, BalanceEntity>> fetchBalance(String address) async {
     try {
       final result = await _balanceRemoteDatasource.fetchBalance(address);
-      final listBalance = result.rows.map((row) => row.assoc()).toList();
 
-      final mapFree = {};
-      final mapReserved = {};
-
-      for (var assetMap in listBalance) {
-        mapFree[assetMap['asset_type']] = assetMap['free_balance'];
-        mapReserved[assetMap['asset_type']] = assetMap['reserved_balance'];
-      }
-
-      return Right(BalanceModel(
-        free: mapFree,
-        reserved: mapReserved,
-      ));
+      return Right(BalanceModel.fromResultSet(result));
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
@@ -39,7 +27,7 @@ class BalanceRepository implements IBalanceRepository {
   @override
   Future<Either<ApiError, void>> fetchBalanceLiveData(
     String address,
-    Function() onMsgReceived,
+    Function(BalanceEntity) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
     final Consumer? consumer =
@@ -48,9 +36,10 @@ class BalanceRepository implements IBalanceRepository {
       consumer?.listen((message) {
         final payload = message.payloadAsString;
         message.ack();
-        print(payload);
 
-        onMsgReceived();
+        final liveDataJson = json.decode(payload);
+
+        onMsgReceived(BalanceModel.fromLiveJson(liveDataJson));
       });
     } catch (error) {
       onMsgError(error);

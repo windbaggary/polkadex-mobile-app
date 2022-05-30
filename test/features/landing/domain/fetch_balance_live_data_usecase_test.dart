@@ -31,7 +31,7 @@ void main() {
         // act
         final result = await _usecase(
           address: '',
-          onMsgReceived: () {},
+          onMsgReceived: (_) {},
           onMsgError: (_) {},
         );
 
@@ -60,7 +60,7 @@ void main() {
         // act
         final result = await _usecase(
           address: '',
-          onMsgReceived: () {},
+          onMsgReceived: (_) {},
           onMsgError: (_) {},
         );
         // assert

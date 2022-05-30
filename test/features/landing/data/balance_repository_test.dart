@@ -103,7 +103,7 @@ void main() {
 
       final result = await repository.fetchBalanceLiveData(
         '',
-        () {},
+        (_) {},
         (_) {},
       );
 
@@ -121,7 +121,7 @@ void main() {
 
       final result = await repository.fetchBalanceLiveData(
         '',
-        () {},
+        (_) {},
         (_) {},
       );
 
