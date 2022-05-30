@@ -10,10 +10,12 @@ class GetBalanceLiveDataUseCase {
   final IBalanceRepository _balanceRepository;
 
   Future<Either<ApiError, void>> call({
+    required String address,
     required Function() onMsgReceived,
     required Function(Object) onMsgError,
   }) async {
     return await _balanceRepository.fetchBalanceLiveData(
+      address,
       onMsgReceived,
       onMsgError,
     );

@@ -17,11 +17,11 @@ class BalanceRemoteDatasource {
     return await dbClient.getBalanceAssets(address);
   }
 
-  Future<Consumer?> fetchBalanceConsumer() async {
+  Future<Consumer?> fetchBalanceConsumer(String address) async {
     final Consumer? consumer = await dependency<RabbitMqClient>()
         .tryBindQueueToConsumer(
             '${StringUtils.generateCryptoRandomString()}-balance-update-events',
-            '*.balance-update-events');
+            '$address.balance-update-events');
 
     return consumer;
   }

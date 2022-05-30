@@ -38,11 +38,12 @@ class BalanceRepository implements IBalanceRepository {
 
   @override
   Future<Either<ApiError, void>> fetchBalanceLiveData(
+    String address,
     Function() onMsgReceived,
     Function(Object) onMsgError,
   ) async {
     final Consumer? consumer =
-        await _balanceRemoteDatasource.fetchBalanceConsumer();
+        await _balanceRemoteDatasource.fetchBalanceConsumer(address);
     try {
       consumer?.listen((message) {
         final payload = message.payloadAsString;

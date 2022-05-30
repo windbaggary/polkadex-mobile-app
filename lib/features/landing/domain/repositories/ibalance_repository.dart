@@ -5,6 +5,7 @@ import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
 abstract class IBalanceRepository {
   Future<Either<ApiError, BalanceEntity>> fetchBalance(String address);
   Future<Either<ApiError, void>> fetchBalanceLiveData(
+    String address,
     Function() onMsgReceived,
     Function(Object) onMsgError,
   );
