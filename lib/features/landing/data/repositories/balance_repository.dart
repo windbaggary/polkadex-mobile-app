@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dart_amqp/dart_amqp.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
@@ -32,6 +33,33 @@ class BalanceRepository implements IBalanceRepository {
       ));
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
+
+  @override
+  Future<Either<ApiError, void>> fetchBalanceLiveData(
+    Function() onMsgReceived,
+    Function(Object) onMsgError,
+  ) async {
+    final Consumer? consumer =
+        await _balanceRemoteDatasource.fetchBalanceConsumer();
+    try {
+      consumer?.listen((message) {
+        final payload = message.payloadAsString;
+        message.ack();
+        print(payload);
+
+        onMsgReceived();
+      });
+    } catch (error) {
+      onMsgError(error);
+    }
+
+    if (consumer != null) {
+      return Right(null);
+    } else {
+      return Left(ApiError(
+          message: 'Connection error while trying to fetch orderbook data.'));
     }
   }
 
