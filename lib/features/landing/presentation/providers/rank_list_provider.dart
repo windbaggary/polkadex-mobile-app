@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
 import 'package:polkadex/features/landing/data/models/home_models.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
@@ -9,7 +8,7 @@ class HomeRankListProvider extends ChangeNotifier {
   EnumRankingListSorts get listType => _listType;
 
   List<BasicCoinListModel> get list {
-    final tmpList = List<BasicCoinListModel>.from(basicCoinDummyList);
+    final tmpList = List<BasicCoinListModel>.from([]);
     switch (_listType) {
       case EnumRankingListSorts.gainers:
         return tmpList.where((e) => e.buySell == EnumBuySell.buy).toList();

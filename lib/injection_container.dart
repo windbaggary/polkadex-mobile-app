@@ -1,3 +1,11 @@
+import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
+import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
+import 'package:polkadex/common/market_asset/data/repositories/market_repository.dart';
+import 'package:polkadex/common/market_asset/domain/repositories/iasset_repository.dart';
+import 'package:polkadex/common/market_asset/domain/repositories/imarket_repository.dart';
+import 'package:polkadex/common/market_asset/domain/usecases/get_assets_details_usecase.dart';
+import 'package:polkadex/common/market_asset/domain/usecases/get_markets_usecase.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
@@ -22,7 +30,7 @@ import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dar
 import 'package:polkadex/features/landing/domain/repositories/iticker_repository.dart';
 import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:biometric_storage/biometric_storage.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/fetch_last_ticker_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
@@ -46,13 +54,14 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'common/graph/data/datasources/graph_remote_datasource.dart';
+import 'common/market_asset/data/datasources/asset_remote_datasource.dart';
 import 'common/orderbook/data/repositories/orderbook_repository.dart';
 import 'common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
 import 'common/orders/domain/usecases/get_orders_usecase.dart';
 import 'features/coin/domain/usecases/withdraw_usecase.dart';
 import 'features/coin/presentation/cubits/withdraw_cubit.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
-import 'common/cubits/account_cubit.dart';
+import 'common/cubits/account_cubit/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
 import 'features/setup/domain/usecases/get_password_usecase.dart';
 import 'features/setup/domain/usecases/import_account_usecase.dart';
@@ -352,6 +361,37 @@ Future<void> init() async {
   dependency.registerFactory(
     () => TickerCubit(
       fetchLastTickerUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => MarketRemoteDatasource(),
+  );
+
+  dependency.registerFactory(
+    () => AssetRemoteDatasource(),
+  );
+
+  dependency.registerFactory<IMarketRepository>(
+    () => MarketRepository(marketRemoteDatasource: dependency()),
+  );
+
+  dependency.registerFactory<IAssetRepository>(
+    () => AssetRepository(assetRemoteDatasource: dependency()),
+  );
+
+  dependency.registerFactory(
+    () => GetMarketsUseCase(marketRepository: dependency()),
+  );
+
+  dependency.registerFactory(
+    () => GetAssetsDetailsUseCase(assetRepository: dependency()),
+  );
+
+  dependency.registerFactory(
+    () => MarketAssetCubit(
+      getMarketsUseCase: dependency(),
+      getAssetsDetailsUseCase: dependency(),
     ),
   );
 }

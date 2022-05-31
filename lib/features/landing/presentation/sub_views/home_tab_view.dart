@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
-import 'package:polkadex/features/landing/data/models/home_models.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/rank_list_provider.dart';
@@ -26,99 +26,12 @@ class HomeTabView extends StatefulWidget {
 
 class _HomeTabViewState extends State<HomeTabView>
     with SingleTickerProviderStateMixin {
-  // AnimationController _entryAnimationController;
-
-  // Animation<double> _sliderAnimation;
-  // Animation<Offset> _topPairsHeadingAnimation;
-  // Animation<Offset> _rankingListHeadingAnimation;
-  // Animation<Offset> _rankingListFilterAnimation;
-  // Animation<double> _rankingListOpacityAnimation;
-  // Animation<double> _topPairsOpacityAnimation;
-  // Animation<double> _rankingListFilterOpacityAnimation;
-
   late ScrollController _scrollController;
 
   @override
   void initState() {
-    // _entryAnimationController = AnimationController(
-    //     vsync: this,
-    //     duration: AppConfigs.animDuration,
-    //     reverseDuration: AppConfigs.animReverseDuration);
-
-    // this._sliderAnimation = CurvedAnimation(
-    //   parent: _entryAnimationController,
-    //   curve: Interval(
-    //     0.0,
-    //     0.50,
-    //     curve: Curves.decelerate,
-    //   ),
-    // );
-    // this._topPairsHeadingAnimation = Tween<Offset>(
-    //   begin: Offset(-1.0, 0.0),
-    //   end: Offset(0.0, 0.0),
-    // ).animate(
-    //   CurvedAnimation(
-    //     parent: _entryAnimationController,
-    //     curve: Interval(
-    //       0.25,
-    //       0.850,
-    //       curve: Curves.decelerate,
-    //     ),
-    //   ),
-    // );
-    // this._topPairsOpacityAnimation = CurvedAnimation(
-    //   parent: _entryAnimationController,
-    //   curve: Interval(
-    //     0.25,
-    //     0.650,
-    //     curve: Curves.decelerate,
-    //   ),
-    // );
-    // this._rankingListHeadingAnimation = Tween<Offset>(
-    //   begin: Offset(-1.0, 0.0),
-    //   end: Offset(0.0, 0.0),
-    // ).animate(
-    //   CurvedAnimation(
-    //     parent: _entryAnimationController,
-    //     curve: Interval(
-    //       0.40,
-    //       0.950,
-    //       curve: Curves.decelerate,
-    //     ),
-    //   ),
-    // );
-    // this._rankingListOpacityAnimation = CurvedAnimation(
-    //   parent: _entryAnimationController,
-    //   curve: Interval(
-    //     0.40,
-    //     0.850,
-    //     curve: Curves.decelerate,
-    //   ),
-    // );
-    // this._rankingListFilterAnimation = Tween<Offset>(
-    //   begin: Offset(-1.0, 0.0),
-    //   end: Offset(0.0, 0.0),
-    // ).animate(
-    //   CurvedAnimation(
-    //     parent: _entryAnimationController,
-    //     curve: Interval(
-    //       0.65,
-    //       1.0,
-    //       curve: Curves.decelerate,
-    //     ),
-    //   ),
-    // );
-    // this._rankingListFilterOpacityAnimation = CurvedAnimation(
-    //   parent: _entryAnimationController,
-    //   curve: Interval(
-    //     0.65,
-    //     0.750,
-    //     curve: Curves.decelerate,
-    //   ),
-    // );
     _scrollController = ScrollController()..addListener(_scrollListener);
     super.initState();
-    // Future.microtask(() => _entryAnimationController.forward().orCancel);
   }
 
   @override
@@ -130,6 +43,8 @@ class _HomeTabViewState extends State<HomeTabView>
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<MarketAssetCubit>();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<HomeRankListProvider>(
@@ -201,15 +116,24 @@ class _HomeTabViewState extends State<HomeTabView>
               height: 108,
               child: ListView.builder(
                 itemBuilder: (context, index) => TopPairWidget(
-                  rightAsset: basicCoinDummyList[index].baseTokenId,
-                  leftAsset: basicCoinDummyList[index].pairTokenId,
+                  leftAsset: context
+                      .read<MarketAssetCubit>()
+                      .listAvailableMarkets[index][0],
+                  rightAsset: context
+                      .read<MarketAssetCubit>()
+                      .listAvailableMarkets[index][1],
                   onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
-                    tokenId: basicCoinDummyList[index].baseTokenId,
+                    asset: context
+                        .read<MarketAssetCubit>()
+                        .listAvailableMarkets[index][0],
                     balanceCubit: context.read<BalanceCubit>(),
                     orderbookCubit: context.read<OrderbookCubit>(),
                   ),
                 ),
-                itemCount: 2,
+                itemCount: context
+                    .read<MarketAssetCubit>()
+                    .listAvailableMarkets
+                    .length,
                 scrollDirection: Axis.horizontal,
                 physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(left: 21),
@@ -222,31 +146,20 @@ class _HomeTabViewState extends State<HomeTabView>
                 top: 45,
                 bottom: 9,
               ),
-              // child: FadeTransition(
-              //   opacity: _rankingListOpacityAnimation,
-              //   child: SlideTransition(
-              //     position: _rankingListHeadingAnimation,
               child: Text(
                 'Ranking List',
                 style: tsS20W600CFF,
               ),
             ),
-            //   ),
-            // ),
-            // FadeTransition(
-            //   opacity: _rankingListFilterOpacityAnimation,
-            //   child: SlideTransition(
-            //       position: _rankingListFilterAnimation,
-            // child:
-            _ThisRankingListFilterWidget(), //  ),
-            // ),
+            _ThisRankingListFilterWidget(),
             Consumer<HomeRankListProvider>(
               builder: (context, rankProvider, child) => ListView.builder(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
                 itemBuilder: (context, index) => _ThisRankingListItemWidget(
-                  model: rankProvider.list[index],
+                  baseAsset: cubit.listAvailableMarkets[index][0],
+                  quoteAsset: cubit.listAvailableMarkets[index][1],
                 ),
-                itemCount: rankProvider.list.length,
+                itemCount: cubit.listAvailableMarkets.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
               ),
@@ -451,10 +364,13 @@ class _ThisSliderItemWidget extends StatelessWidget {
 
 /// The item widget for the ranking list
 class _ThisRankingListItemWidget extends StatelessWidget {
-  final BasicCoinListModel model;
   const _ThisRankingListItemWidget({
-    required this.model,
+    required this.baseAsset,
+    required this.quoteAsset,
   });
+
+  final AssetEntity baseAsset;
+  final AssetEntity quoteAsset;
 
   @override
   Widget build(BuildContext context) {
@@ -463,8 +379,8 @@ class _ThisRankingListItemWidget extends StatelessWidget {
       child: buildInkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () => Coordinator.goToCoinTradeScreen(
-          leftTokenId: model.baseTokenId,
-          rightTokenId: model.pairTokenId,
+          baseToken: baseAsset,
+          quoteToken: quoteAsset,
           balanceCubit: context.read<BalanceCubit>(),
           orderbookCubit: context.read<OrderbookCubit>(),
         ),
@@ -483,7 +399,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(model.baseTokenId),
+                  TokenUtils.tokenIdToAssetImg(baseAsset.assetId),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -493,19 +409,19 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 children: [
                   Row(children: <Widget>[
                     Text(
-                      '${TokenUtils.tokenIdToAcronym(model.baseTokenId)} ',
+                      '${baseAsset.symbol} ',
                       style: tsS15W500CFF,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 1.0),
                       child: Text(
-                        '/${TokenUtils.tokenIdToAcronym(model.pairTokenId)}',
+                        '/${quoteAsset.symbol}',
                         style: tsS11W400CABB2BC,
                       ),
                     ),
                   ]),
                   Text(
-                    'VOL ${model.volume} BTC',
+                    'VOL 7.82 BTC',
                     style: tsS12W400CFF.copyWith(
                       color: AppColors.colorABB2BC.withOpacity(0.70),
                     ),
@@ -517,7 +433,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    model.amount,
+                    '\$31,56',
                     style: tsS15W500CFF,
                   ),
                   Text(
@@ -533,14 +449,14 @@ class _ThisRankingListItemWidget extends StatelessWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: model.color,
+                  color: AppColors.color0CA564,
                   borderRadius: BorderRadius.circular(7),
                 ),
                 padding: const EdgeInsets.all(5),
                 child: RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                    text: model.percentage,
+                    text: '10.00',
                     style: tsS15W500CFF,
                   ),
                   TextSpan(

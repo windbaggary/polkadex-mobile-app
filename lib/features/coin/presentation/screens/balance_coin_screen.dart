@@ -4,10 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
-import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -41,9 +42,9 @@ enum _EnumMenus {
 /// XD_PAGE: 20
 /// XD_PAGE: 31
 class BalanceCoinScreen extends StatefulWidget {
-  BalanceCoinScreen({required this.tokenId});
+  BalanceCoinScreen({required this.asset});
 
-  final String tokenId;
+  final AssetEntity asset;
 
   @override
   _BalanceCoinPreviewScreenState createState() =>
@@ -61,7 +62,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
     return BlocProvider(
       create: (_) => dependency<OrderHistoryCubit>()
         ..getOrders(
-          widget.tokenId,
+          widget.asset.assetId,
           context.read<AccountCubit>().accountAddress,
           context.read<AccountCubit>().accountSignature,
           false,
@@ -76,8 +77,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
           backgroundColor: AppColors.color1C2023,
           body: SafeArea(
             child: CustomAppBar(
-              title:
-                  '${TokenUtils.tokenIdToFullName(widget.tokenId)} (${TokenUtils.tokenIdToAcronym(widget.tokenId)})',
+              title: '${widget.asset.name} (${widget.asset.symbol})',
               titleStyle: tsS19W700CFF,
               onTapBack: () => Navigator.of(context).pop(),
               child: Container(
@@ -98,7 +98,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                 !_isShowGraphNotifier.value;
                           },
                           child: _TopCoinTitleWidget(
-                            tokenId: widget.tokenId,
+                            tokenId: widget.asset.assetId,
                           )),
                       ValueListenableBuilder<bool>(
                         valueListenable: _isShowGraphNotifier,
@@ -165,7 +165,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                 borderRadius: BorderRadius.circular(20),
                                 onTap: () =>
                                     Coordinator.goToBalanceDepositScreenOne(
-                                        tokenId: widget.tokenId,
+                                        tokenId: widget.asset.assetId,
                                         balanceCubit:
                                             context.read<BalanceCubit>()),
                                 child: _ThisMenuItemWidget(
@@ -180,7 +180,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                               child: buildInkWell(
                                 borderRadius: BorderRadius.circular(20),
                                 onTap: () => Coordinator.goToCoinWithdrawScreen(
-                                    tokenId: widget.tokenId,
+                                    tokenId: widget.asset.assetId,
                                     balanceCubit: context.read<BalanceCubit>()),
                                 child: _ThisMenuItemWidget(
                                   menu: _EnumMenus.withdraw,
@@ -197,11 +197,13 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                     orderbookCubit:
                                         context.read<OrderbookCubit>(),
                                     balanceCubit: context.read<BalanceCubit>(),
-                                    leftTokenId: widget.tokenId,
-                                    rightTokenId: basicCoinDummyList
-                                        .firstWhere((coin) =>
-                                            coin.baseTokenId != widget.tokenId)
-                                        .baseTokenId),
+                                    baseToken: widget.asset,
+                                    quoteToken: context
+                                        .read<MarketAssetCubit>()
+                                        .listAvailableMarkets
+                                        .firstWhere((market) =>
+                                            market[0].assetId ==
+                                            widget.asset.assetId)[1]),
                                 child: _ThisMenuItemWidget(
                                   menu: _EnumMenus.trade,
                                 ),
@@ -222,17 +224,26 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                         height: 108,
                         child: ListView.builder(
                           itemBuilder: (context, index) => TopPairWidget(
-                            rightAsset: basicCoinDummyList[index].baseTokenId,
-                            leftAsset: basicCoinDummyList[index].pairTokenId,
+                            rightAsset: context
+                                .read<MarketAssetCubit>()
+                                .listAvailableMarkets[index][0],
+                            leftAsset: context
+                                .read<MarketAssetCubit>()
+                                .listAvailableMarkets[index][0],
                             onTap: () => Coordinator.goToCoinTradeScreen(
                                 orderbookCubit: context.read<OrderbookCubit>(),
-                                leftTokenId:
-                                    basicCoinDummyList[index].baseTokenId,
-                                rightTokenId:
-                                    basicCoinDummyList[index].pairTokenId,
+                                baseToken: context
+                                    .read<MarketAssetCubit>()
+                                    .listAvailableMarkets[index][0],
+                                quoteToken: context
+                                    .read<MarketAssetCubit>()
+                                    .listAvailableMarkets[index][1],
                                 balanceCubit: context.read<BalanceCubit>()),
                           ),
-                          itemCount: 2,
+                          itemCount: context
+                              .read<MarketAssetCubit>()
+                              .listAvailableMarkets
+                              .length,
                           scrollDirection: Axis.horizontal,
                           physics: BouncingScrollPhysics(),
                           padding: const EdgeInsets.only(left: 21),
@@ -420,7 +431,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                   onRefresh: () => context
                                       .read<OrderHistoryCubit>()
                                       .getOrders(
-                                        widget.tokenId,
+                                        widget.asset.assetId,
                                         context
                                             .read<AccountCubit>()
                                             .accountAddress,
@@ -522,10 +533,10 @@ class _ThisItemWidget extends StatelessWidget {
     Widget child = Container();
     switch (order.orderSide) {
       case EnumBuySell.buy:
-        child = _buildBuyWidget(order);
+        child = _buildBuyWidget(context, order);
         break;
       case EnumBuySell.sell:
-        child = _buildSellWidget(order);
+        child = _buildSellWidget(context, order);
         break;
       default:
         child = Container();
@@ -565,7 +576,9 @@ class _ThisItemWidget extends StatelessWidget {
     return cardWidget;
   }
 
-  Widget _buildBuyWidget(OrderEntity order) {
+  Widget _buildBuyWidget(BuildContext context, OrderEntity order) {
+    final cubit = context.read<MarketAssetCubit>();
+
     return Row(
       children: [
         Container(
@@ -585,7 +598,7 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                order.iTokenPairName,
+                '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
@@ -630,7 +643,9 @@ class _ThisItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSellWidget(OrderEntity order) {
+  Widget _buildSellWidget(BuildContext context, OrderEntity order) {
+    final cubit = context.read<MarketAssetCubit>();
+
     return Row(
       children: [
         Container(
@@ -650,7 +665,7 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                order.iTokenPairName,
+                '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),

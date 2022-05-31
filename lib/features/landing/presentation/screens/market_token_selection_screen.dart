@@ -1,10 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/dummy_providers/dummy_lists.dart';
-import 'package:polkadex/features/landing/data/models/home_models.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/token_pair_expanded_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -19,16 +18,13 @@ const _shrinkWidgetWidth = 120.0;
 /// The response model for the seletion. This model will be passed on
 /// navigator pop. So the previous screen get the result of selection
 class MarketSelectionResultModel {
-  /// The selected token model
-  final BasicCoinListModel tokenModel;
-
-  /// The selected pair model
-  final BasicCoinListModel? pairModel;
-
   MarketSelectionResultModel({
-    required this.tokenModel,
-    required this.pairModel,
+    required this.selectedBaseAsset,
+    required this.selectedQuoteAsset,
   });
+
+  final AssetEntity selectedBaseAsset;
+  final AssetEntity selectedQuoteAsset;
 }
 
 /// XD_PAGE: 10
@@ -66,7 +62,8 @@ class _MarketTokenSelectionScreenState extends State<MarketTokenSelectionScreen>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<_ThisProvider>(
-      create: (_) => _ThisProvider(),
+      create: (_) => _ThisProvider(
+          marketList: context.read<MarketAssetCubit>().listAvailableMarkets),
       builder: (context, _) => WillPopScope(
         onWillPop: () => _onBack(context),
         child: Scaffold(
@@ -165,12 +162,12 @@ class __ThisTokenPairWidgetState extends State<_ThisTokenPairWidget>
       builder: (context, child) => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ThisTokenLayoutWidget(
+          _ThisBaseLayoutWidget(
               onExpandWidget: _expandTokenWidget,
               onShrinkWidget: _shrinkTokenWidget,
               tokenAnimation: _tokenAnimation),
           SizedBox(width: 18),
-          _ThisPairLayoutWidget(
+          _ThisQuoteLayoutWidget(
             pairAnimation: _pairAnimation,
           ),
         ],
@@ -201,8 +198,8 @@ class __ThisTokenPairWidgetState extends State<_ThisTokenPairWidget>
 /// The base layout of the pair list. This widget shrink/expand its size
 /// based on the user intraction
 ///
-class _ThisPairLayoutWidget extends AnimatedWidget {
-  const _ThisPairLayoutWidget({
+class _ThisQuoteLayoutWidget extends AnimatedWidget {
+  const _ThisQuoteLayoutWidget({
     required Animation<double> pairAnimation,
   }) : super(listenable: pairAnimation);
 
@@ -238,20 +235,20 @@ class _ThisPairLayoutWidget extends AnimatedWidget {
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    thisProvider.selectedPairModel =
-                        thisProvider.pairList[index];
+                    thisProvider.selectedQuoteToken =
+                        thisProvider.quoteList[index];
                     Navigator.of(context).pop(MarketSelectionResultModel(
-                        tokenModel: thisProvider.selectedTokenModel,
-                        pairModel: thisProvider.selectedPairModel));
+                        selectedBaseAsset: thisProvider.selectedBaseToken!,
+                        selectedQuoteAsset: thisProvider.selectedQuoteToken!));
                   },
-                  child: _ThisPairItemWidget(
-                    model: thisProvider.pairList[index],
-                    isSelected: thisProvider.pairList[index] ==
-                        thisProvider.selectedPairModel,
+                  child: _ThisQuoteItemWidget(
+                    asset: thisProvider.quoteList[index],
+                    isSelected: thisProvider.quoteList[index].assetId ==
+                        thisProvider.selectedQuoteToken?.assetId,
                     pairAnimation: _pairAnimation,
                   ),
                 ),
-                itemCount: thisProvider.pairList.length,
+                itemCount: thisProvider.quoteList.length,
               ),
             ),
           )
@@ -264,8 +261,8 @@ class _ThisPairLayoutWidget extends AnimatedWidget {
 /// The base layout of the token list. This widget shrink/expand its size
 /// based on the user intraction
 ///
-class _ThisTokenLayoutWidget extends AnimatedWidget {
-  const _ThisTokenLayoutWidget({
+class _ThisBaseLayoutWidget extends AnimatedWidget {
+  const _ThisBaseLayoutWidget({
     required this.onShrinkWidget,
     required this.onExpandWidget,
     required Animation<double> tokenAnimation,
@@ -315,43 +312,22 @@ class _ThisTokenLayoutWidget extends AnimatedWidget {
               builder: (context, thisProvider, child) => ListView.builder(
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) => InkWell(
-                  onTap:
-                      //  !context
-                      //         .watch<TokenPairExpandedProvider>()
-                      //         .isTokenExpanded
-                      //     ?
-                      //      () {
-                      //         final isTokenExpanded = context
-                      //             .read<TokenPairExpandedProvider>()
-                      //             .isTokenExpanded;
-                      //         if (isTokenExpanded) {
-                      //           onShrinkWidget();
-                      //         } else {
-                      //           onExpandWidget();
-                      //         }
-                      //         context
-                      //             .read<TokenPairExpandedProvider>()
-                      //             .isTokenExpanded = !isTokenExpanded;
-                      //       }
-                      //     :
-                      () {
-                    // if (this._tokenAnimation.isCompleted) {
-
-                    thisProvider.selectedTokenModel =
-                        thisProvider.tokenList[index];
+                  onTap: () {
+                    thisProvider.selectedBaseToken =
+                        thisProvider.baseList[index];
                     // this.onShrinkWidget();
                     context.read<TokenPairExpandedProvider>().isTokenExpanded =
                         false;
                     // }
                   },
-                  child: _ThisTokenItemWidget(
+                  child: _ThisBaseItemWidget(
                     tokenAnimation: _tokenAnimation,
-                    model: thisProvider.tokenList[index],
-                    isSelected: thisProvider.tokenList[index] ==
-                        thisProvider.selectedTokenModel,
+                    asset: thisProvider.baseList[index],
+                    isSelected: thisProvider.baseList[index].assetId ==
+                        thisProvider.selectedBaseToken?.assetId,
                   ),
                 ),
-                itemCount: thisProvider.tokenList.length,
+                itemCount: thisProvider.baseList.length,
               ),
             ),
           ),
@@ -364,14 +340,15 @@ class _ThisTokenLayoutWidget extends AnimatedWidget {
 /// The complete item widget of pair card. This item expand and shrink based
 /// on [pairAnimation] value
 ///
-class _ThisPairItemWidget extends AnimatedWidget {
-  final BasicCoinListModel model;
-  final bool isSelected;
-  const _ThisPairItemWidget({
-    required this.model,
+class _ThisQuoteItemWidget extends AnimatedWidget {
+  const _ThisQuoteItemWidget({
+    required this.asset,
     required Animation<double> pairAnimation,
     required this.isSelected,
   }) : super(listenable: pairAnimation);
+
+  final AssetEntity asset;
+  final bool isSelected;
 
   Animation<double> get _pairAnimation => listenable as Animation<double>;
 
@@ -392,7 +369,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
           return Row(
             children: [
               Image.asset(
-                TokenUtils.tokenIdToAssetImg(model.baseTokenId),
+                TokenUtils.tokenIdToAssetImg(asset.assetId),
                 width: 43,
                 height: 43,
               ),
@@ -412,7 +389,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                               opacity: Interval(0.00, 0.50)
                                   .transform(_pairAnimation.value),
                               child: Text(
-                                TokenUtils.tokenIdToFullName(model.baseTokenId),
+                                asset.name,
                                 style: tsS16W500CFF,
                                 textAlign: TextAlign.start,
                               ),
@@ -424,7 +401,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                     Transform.translate(
                       offset: Offset(0.0, -9 * (1.0 - _pairAnimation.value)),
                       child: Text(
-                        TokenUtils.tokenIdToAcronym(model.baseTokenId),
+                        asset.symbol,
                         style: tsS12W400CFF.copyWith(
                           color: AppColors.colorFFFFFF
                               .withOpacity(isSelected ? 1.0 : 0.6),
@@ -444,7 +421,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                         children: [
                           SizedBox(height: 6),
                           Text(
-                            model.amount,
+                            'model.amount',
                             style: tsS12W600CFF,
                           ),
                           Container(
@@ -460,7 +437,7 @@ class _ThisPairItemWidget extends AnimatedWidget {
                                 style: tsS12W500CFF,
                                 children: <TextSpan>[
                                   TextSpan(
-                                    text: model.percentage,
+                                    text: 'model.percentage',
                                     style: tsS12W500CFF,
                                   ),
                                   TextSpan(
@@ -489,15 +466,15 @@ class _ThisPairItemWidget extends AnimatedWidget {
 /// The complete item widget of token card. This item expand and shrink based
 /// on [tokenAnimation] value
 ///
-class _ThisTokenItemWidget extends AnimatedWidget {
-  final BasicCoinListModel model;
-  final bool isSelected;
-
-  const _ThisTokenItemWidget({
+class _ThisBaseItemWidget extends AnimatedWidget {
+  const _ThisBaseItemWidget({
     required this.isSelected,
     required Animation<double> tokenAnimation,
-    required this.model,
+    required this.asset,
   }) : super(listenable: tokenAnimation);
+
+  final AssetEntity asset;
+  final bool isSelected;
 
   Animation<double> get tokenAnimation => listenable as Animation<double>;
 
@@ -516,7 +493,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
       child: Row(
         children: [
           Image.asset(
-            TokenUtils.tokenIdToAssetImg(model.baseTokenId),
+            TokenUtils.tokenIdToAssetImg(asset.assetId),
             width: 43,
             height: 43,
           ),
@@ -536,7 +513,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                           opacity: Interval(0.50, 1.0)
                               .transform(tokenAnimation.value),
                           child: Text(
-                            TokenUtils.tokenIdToFullName(model.baseTokenId),
+                            asset.name,
                             style: tsS16W500CFF,
                             textAlign: TextAlign.start,
                           ),
@@ -548,7 +525,7 @@ class _ThisTokenItemWidget extends AnimatedWidget {
                 Transform.translate(
                   offset: Offset(0.0, -9 * (1.0 - tokenAnimation.value)),
                   child: Text(
-                    TokenUtils.tokenIdToAcronym(model.baseTokenId),
+                    asset.assetId,
                     style: tsS12W400CFF.copyWith(
                       color: AppColors.colorFFFFFF
                           .withOpacity(isSelected ? 1.0 : 0.6),
@@ -624,55 +601,68 @@ class _ThisSearchBarWidget extends StatelessWidget {
 
 /// The provider for the screen to manage the list and selection
 class _ThisProvider extends ChangeNotifier {
+  _ThisProvider({required List<List<AssetEntity>> marketList})
+      : _marketList = marketList;
+
+  final List<List<AssetEntity>> _marketList;
+
   String? _searchText;
-  BasicCoinListModel _selectedTokenModel = _dummyTokenList[0];
-  BasicCoinListModel? _selectedPairModel;
+  AssetEntity? _selectedBaseToken;
+  AssetEntity? _selectedQuoteToken;
 
-  BasicCoinListModel get selectedTokenModel => _selectedTokenModel;
-  BasicCoinListModel? get selectedPairModel => _selectedPairModel;
+  AssetEntity? get selectedBaseToken => _selectedBaseToken;
+  AssetEntity? get selectedQuoteToken => _selectedQuoteToken;
 
-  List<BasicCoinListModel> get tokenList {
+  List<AssetEntity> get baseList {
     if (_searchText?.isNotEmpty ?? false) {
-      return _dummyTokenList
-          .where((e) =>
-              TokenUtils.tokenIdToFullName(e.baseTokenId)
-                  .toLowerCase()
-                  .contains(_searchText!.toLowerCase()) ||
-              TokenUtils.tokenIdToAcronym(e.baseTokenId)
-                  .toLowerCase()
-                  .contains(_searchText!.toLowerCase()))
+      final filteredMarkets = _marketList
+          .where(
+            (market) =>
+                market[0]
+                    .name
+                    .toLowerCase()
+                    .contains(_searchText!.toLowerCase()) ||
+                market[1].name.toLowerCase().contains(
+                      _searchText!.toLowerCase(),
+                    ),
+          )
           .toList();
+      return filteredMarkets.map((market) => market[0]).toList();
+    } else {
+      return _marketList.map((market) => market[0]).toList();
     }
-    return _dummyTokenList;
   }
 
-  List<BasicCoinListModel> get pairList {
-    final initialList = [..._dummyTokenList]..removeWhere(
-        (coin) => coin.baseTokenId == _selectedTokenModel.baseTokenId);
-
-    if (_searchText?.isNotEmpty ?? false) {
-      return initialList
-          .where((e) =>
-              TokenUtils.tokenIdToFullName(e.baseTokenId)
-                  .toLowerCase()
-                  .contains(_searchText!.toLowerCase()) ||
-              TokenUtils.tokenIdToAcronym(e.baseTokenId)
-                  .toLowerCase()
-                  .contains(_searchText!.toLowerCase()))
+  List<AssetEntity> get quoteList {
+    if (_selectedBaseToken == null) {
+      return [];
+    } else if (_searchText?.isNotEmpty ?? false) {
+      final filteredMarkets = _marketList
+          .where(
+            (market) =>
+                market[0]
+                    .name
+                    .toLowerCase()
+                    .contains(_searchText!.toLowerCase()) ||
+                market[1].name.toLowerCase().contains(
+                      _searchText!.toLowerCase(),
+                    ),
+          )
           .toList();
+      return filteredMarkets.map((market) => market[1]).toList();
+    } else {
+      return _marketList.map((market) => market[1]).toList();
     }
-
-    return initialList;
   }
 
-  set selectedTokenModel(BasicCoinListModel value) {
-    _selectedTokenModel = value;
-    _selectedPairModel = null;
+  set selectedBaseToken(AssetEntity? asset) {
+    _selectedBaseToken = asset;
+    _selectedQuoteToken = null;
     notifyListeners();
   }
 
-  set selectedPairModel(BasicCoinListModel? value) {
-    _selectedPairModel = value;
+  set selectedQuoteToken(AssetEntity? asset) {
+    _selectedQuoteToken = asset;
     notifyListeners();
   }
 
@@ -681,111 +671,3 @@ class _ThisProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-/// Remove the dummy data below
-// class _TokenModel {
-//   final String assetImage;
-//   final String name;
-//   final String code;
-
-//   const _TokenModel({
-//     @required this.assetImage,
-//     @required this.name,
-//     @required this.code,
-//   });
-// }
-
-// class _PairModel {
-//   final String assetImage;
-//   final String name;
-//   final String code;
-//   final String amount;
-//   final String percentage;
-
-//   const _PairModel({
-//     @required this.assetImage,
-//     @required this.name,
-//     @required this.code,
-//     @required this.amount,
-//     @required this.percentage,
-//   });
-// }
-
-// const _DUMMY_TOKEN_LIST = <_TokenModel>[
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_1.png',
-//     name: 'Polkadex',
-//     code: 'DEX',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_2.png',
-//     name: 'Ethereum',
-//     code: 'ETH',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_3.png',
-//     name: 'Cardano',
-//     code: 'ADA',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_4.png',
-//     name: 'Monero',
-//     code: 'XMR',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_5.png',
-//     name: 'Dogecoin',
-//     code: 'DOGE',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_6.png',
-//     name: 'IOST',
-//     code: 'IOST',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_7.png',
-//     name: 'Ripple',
-//     code: 'XRP',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_8.png',
-//     name: 'Polkadot',
-//     code: 'DOT',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_9.png',
-//     name: 'Litecoin',
-//     code: 'LTC',
-//   ),
-//   _TokenModel(
-//     assetImage: 'trade_open/trade_open_10.png',
-//     name: 'Theter',
-//     code: 'USDT',
-//   ),
-// ];
-
-// const _DUMMY_PAIR_LIST = <_PairModel>[
-//   _PairModel(
-//     assetImage: 'trade_open/trade_open_11.png',
-//     name: 'Bitcoin',
-//     code: 'BTC',
-//     amount: '0.7261',
-//     percentage: '+13.07',
-//   ),
-//   _PairModel(
-//     assetImage: 'trade_open/trade_open_10.png',
-//     name: 'Tether',
-//     code: 'USDT',
-//     amount: '42.50',
-//     percentage: '+9.12',
-//   ),
-//   _PairModel(
-//     assetImage: 'trade_open/trade_open_12.png',
-//     name: 'Polkadot',
-//     code: 'DOT',
-//     amount: '0.90',
-//     percentage: '+23.09',
-//   ),
-// ];
-
-final _dummyTokenList = basicCoinDummyList;
