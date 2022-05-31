@@ -466,8 +466,8 @@ class _ThisGraphCard extends StatelessWidget {
                           return PolkadexErrorRefreshWidget(
                               onRefresh: () =>
                                   context.read<CoinGraphCubit>().loadGraph(
-                                        leftToken.assetId,
-                                        rightToken.assetId,
+                                        leftToken.symbol,
+                                        rightToken.symbol,
                                       ));
                         }
 
