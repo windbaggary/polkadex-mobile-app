@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/app_lifecycle_widget.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,6 @@ import 'package:polkadex/generated/l10n.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'common/navigation/coordinator.dart';
 import 'common/navigation/routes.dart';
-import 'features/landing/presentation/providers/trade_tab_provider.dart';
 
 void main() async {
   // Load the secret keys from .env file
@@ -56,14 +56,15 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider<BottomNavigationProvider>(
             create: (_) => BottomNavigationProvider()),
-        ChangeNotifierProvider<TradeTabViewProvider>(
-            create: (context) => TradeTabViewProvider()),
       ],
       builder: (context, _) => MultiBlocProvider(
         providers: [
           BlocProvider<AccountCubit>(
             create: (_) =>
                 injection.dependency<AccountCubit>()..loadAccountData(),
+          ),
+          BlocProvider<MarketAssetCubit>(
+            create: (_) => injection.dependency<MarketAssetCubit>(),
           ),
         ],
         child: AppLifecycleWidget(

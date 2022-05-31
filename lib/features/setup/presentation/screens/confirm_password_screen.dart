@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polkadex/common/cubits/account_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -8,6 +8,8 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
+
 import 'package:provider/provider.dart';
 
 class ConfirmPasswordScreen extends StatefulWidget {
@@ -156,9 +158,12 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                           .confirmPassword(_passwordController.text);
                       final accountState = context.read<AccountCubit>().state;
 
-                      isCorrect && accountState is AccountLoaded
-                          ? Coordinator.goToLandingScreen(accountState.account)
-                          : _onShowIncorrectPasswordModal(context);
+                      if (isCorrect && accountState is AccountLoaded) {
+                        await context.read<MarketAssetCubit>().getMarkets();
+                        Coordinator.goToLandingScreen(accountState.account);
+                      } else {
+                        _onShowIncorrectPasswordModal(context);
+                      }
                     },
                   ),
                 ],

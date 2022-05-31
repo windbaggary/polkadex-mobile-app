@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:polkadex/features/landing/utils/token_utils.dart';
 
 class TopPairWidget extends StatelessWidget {
   const TopPairWidget({
@@ -11,8 +11,8 @@ class TopPairWidget extends StatelessWidget {
     required this.onTap,
   });
 
-  final String leftAsset;
-  final String rightAsset;
+  final AssetEntity leftAsset;
+  final AssetEntity rightAsset;
   final VoidCallback onTap;
 
   @override
@@ -33,10 +33,9 @@ class TopPairWidget extends StatelessWidget {
                 children: [
                   RichText(
                       text: TextSpan(style: tsS14W400CFF, children: <TextSpan>[
+                    TextSpan(text: '${leftAsset.symbol}/'),
                     TextSpan(
-                        text: '${TokenUtils.tokenIdToAcronym(leftAsset)}/'),
-                    TextSpan(
-                      text: TokenUtils.tokenIdToAcronym(rightAsset),
+                      text: rightAsset.symbol,
                       style: tsS16W700CFF,
                     ),
                   ])),

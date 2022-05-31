@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_item_entity.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_heading_widget.dart';
@@ -16,12 +17,12 @@ import 'package:polkadex/common/utils/styles.dart';
 /// The order book widget
 class OrderBookWidget extends StatelessWidget {
   OrderBookWidget({
-    required this.amountTokenId,
-    required this.priceTokenId,
+    required this.amountToken,
+    required this.priceToken,
   });
 
-  final String amountTokenId;
-  final String priceTokenId;
+  final AssetEntity amountToken;
+  final AssetEntity priceToken;
   final ValueNotifier<int> priceLengthNotifier = ValueNotifier<int>(0);
   final ValueNotifier<EnumMarketDropdownTypes> marketDropDownNotifier =
       ValueNotifier<EnumMarketDropdownTypes>(EnumMarketDropdownTypes.orderbook);
@@ -47,8 +48,8 @@ class OrderBookWidget extends StatelessWidget {
                     valueListenable: priceLengthNotifier,
                     builder: (context, selectedPriceLenIndex, child) {
                       return _ThisOrderBookChartWidget(
-                        amountTokenId: amountTokenId,
-                        priceTokenId: priceTokenId,
+                        amountTokenId: amountToken.assetId,
+                        priceTokenId: priceToken.assetId,
                         buyItems: state.orderbook.bid,
                         sellItems: state.orderbook.ask,
                         marketDropDownNotifier: marketDropDownNotifier,
@@ -65,7 +66,8 @@ class OrderBookWidget extends StatelessWidget {
         if (state is OrderbookError) {
           return PolkadexErrorRefreshWidget(
             onRefresh: () => context.read<OrderbookCubit>().fetchOrderbookData(
-                leftTokenId: priceTokenId, rightTokenId: amountTokenId),
+                leftTokenId: priceToken.assetId,
+                rightTokenId: amountToken.assetId),
           );
         }
 
