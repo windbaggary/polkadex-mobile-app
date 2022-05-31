@@ -85,8 +85,12 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
       builder: (context, _) => BlocProvider<CoinGraphCubit>(
         create: (_) => dependency<CoinGraphCubit>()
           ..loadGraph(
-            widget.leftToken.assetId,
-            widget.rightToken.assetId,
+            widget.leftToken.assetId == 'POLKADEX'
+                ? widget.leftToken.symbol
+                : widget.leftToken.assetId,
+            widget.rightToken.assetId == 'POLKADEX'
+                ? widget.rightToken.symbol
+                : widget.rightToken.assetId,
           ),
         child: Scaffold(
           backgroundColor: AppColors.color1C2023,
@@ -466,8 +470,12 @@ class _ThisGraphCard extends StatelessWidget {
                           return PolkadexErrorRefreshWidget(
                               onRefresh: () =>
                                   context.read<CoinGraphCubit>().loadGraph(
-                                        leftToken.assetId,
-                                        rightToken.assetId,
+                                        leftToken.assetId == 'POLKADEX'
+                                            ? leftToken.symbol
+                                            : leftToken.assetId,
+                                        rightToken.assetId == 'POLKADEX'
+                                            ? rightToken.symbol
+                                            : rightToken.assetId,
                                       ));
                         }
 
@@ -560,8 +568,12 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                                       onTap: () => context
                                           .read<CoinGraphCubit>()
                                           .loadGraph(
-                                            leftToken.assetId,
-                                            rightToken.assetId,
+                                            leftToken.assetId == 'POLKADEX'
+                                                ? leftToken.symbol
+                                                : leftToken.assetId,
+                                            rightToken.assetId == 'POLKADEX'
+                                                ? rightToken.symbol
+                                                : rightToken.assetId,
                                             timestampSelected: item,
                                           ),
                                       child: AnimatedContainer(
