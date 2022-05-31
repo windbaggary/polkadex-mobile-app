@@ -8,8 +8,7 @@ void main() {
   setUp(() {
     tBalance = BalanceModel(
       free: {'BTC': 1.0},
-      used: {'BTC': 1.0},
-      total: {'BTC': 2.0},
+      reserved: {'BTC': 1.0},
     );
   });
 

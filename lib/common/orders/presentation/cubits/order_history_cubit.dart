@@ -28,10 +28,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   ) async {
     emit(OrderHistoryLoading());
 
-    final result = await _getOrdersUseCase(
-      address: address,
-      signature: signature,
-    );
+    final result = await _getOrdersUseCase(address: address);
 
     result.fold(
       (_) => emit(OrderHistoryError()),
@@ -48,7 +45,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
                   order.baseAsset == asset || order.quoteAsset == asset)
               .toList();
           _allOrders.sort((a, b) {
-            if (b.status == 'Open') {
+            if (b.status == 'PartiallyFilled') {
               return 1;
             }
             return -1;

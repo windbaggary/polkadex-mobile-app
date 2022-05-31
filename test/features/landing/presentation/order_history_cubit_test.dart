@@ -2,9 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/orders/data/models/fee_model.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
-import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
 import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -20,21 +18,16 @@ void main() {
   late _MockCancelOrderUsecase _mockCancelOrderUsecase;
   late OrderHistoryCubit cubit;
   late String orderId;
-  late String mainAcc;
   late String baseAsset;
   late String quoteAsset;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late DateTime timestamp;
   late String status;
-  late String filledQty;
-  late String currency;
-  late String cost;
   late String amount;
   late String price;
   late String address;
   late String signature;
-  late FeeEntity fee;
   late OrderModel order;
 
   setUp(() {
@@ -47,24 +40,18 @@ void main() {
     );
 
     orderId = '786653432';
-    mainAcc = '5HDnQBPKDNUXL9qvWVzP8j3pgoh6Sa';
     baseAsset = "0";
     quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
-    status = 'open';
-    filledQty = '2.5';
-    currency = '0';
-    cost = '0';
+    status = 'PartiallyFilled';
     amount = "100.0";
     price = "50.0";
     address = 'test';
     signature = 'test';
-    fee = FeeModel(currency: currency, cost: cost);
     order = OrderModel(
       orderId: orderId,
-      mainAcc: mainAcc,
       amount: amount,
       price: price,
       orderSide: orderSide,
@@ -73,9 +60,6 @@ void main() {
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
       status: status,
-      filledQty: filledQty,
-      fee: fee,
-      trades: [],
     );
   });
 
@@ -90,10 +74,7 @@ void main() {
         'Orders fetched successfully',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetOrdersUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Right([order]),
           );
@@ -120,10 +101,7 @@ void main() {
         'Orders fetch fail',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(
-              address: any(named: 'address'),
-              signature: any(named: 'signature'),
-            ),
+            () => _mockGetOrdersUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Left(ApiError(message: 'error')),
           );

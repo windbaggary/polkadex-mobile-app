@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:mysql_client/mysql_client.dart';
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
@@ -22,22 +23,10 @@ class OrderRemoteDatasource {
   ) async {
     try {
       final dbClient = dependency<MysqlClient>();
-      await dbClient.init();
-
-      final dbProxyResult = await dbClient.conn
-          .execute("select * from proxies where proxy = :proxyAddress", {
-        "proxyAddress": address,
-      });
-      final dbAccId = dbProxyResult.rows.first.colByName('id');
-
-      final dbMainResult = await dbClient.conn
-          .execute("select * from accounts where id = :acc_id", {
-        "acc_id": dbAccId,
-      });
-      final dbMainAddress = dbMainResult.rows.first.colByName('main_acc');
+      final mainAddress = await dbClient.getMainAddress(address);
 
       final nonce = await BlockchainRpcHelper.sendRpcRequest(
-          'enclave_getNonce', [dbMainAddress]);
+          'enclave_getNonce', [mainAddress]);
 
       final String _callPlaceOrderJSON =
           "polkadexWorker.placeOrderJSON(keyring.getPair('$address'), ${nonce + 1}, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
@@ -73,35 +62,9 @@ class OrderRemoteDatasource {
     );
   }
 
-  Future<Response> fetchOpenOrders(
-    String address,
-    String signature,
-  ) async {
-    return await post(
-      Uri.parse('$_baseUrl/fetch_open_orders'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'signature': {'Sr25519': signature},
-        'payload': {'account': address},
-      }),
-    );
-  }
+  Future<IResultSet> fetchOrders(String address) async {
+    final dbClient = dependency<MysqlClient>();
 
-  Future<Response> fetchOrders(
-    String address,
-    String signature,
-  ) async {
-    return await post(
-      Uri.parse('$_baseUrl/fetch_orders'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'signature': {'Sr25519': signature},
-        'payload': {'account': address},
-      }),
-    );
+    return dbClient.getOrderHistory(address);
   }
 }

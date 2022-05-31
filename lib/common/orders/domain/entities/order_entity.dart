@@ -1,13 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/domain/entities/fee_entity.dart';
-import 'package:polkadex/common/orders/domain/entities/trade_entity.dart';
 
 abstract class OrderEntity extends Equatable {
   const OrderEntity({
     required this.orderId,
-    required this.mainAcc,
     required this.amount,
     required this.price,
     required this.orderSide,
@@ -16,13 +13,9 @@ abstract class OrderEntity extends Equatable {
     required this.baseAsset,
     required this.quoteAsset,
     required this.status,
-    required this.filledQty,
-    required this.fee,
-    required this.trades,
   });
 
   final String orderId;
-  final String mainAcc;
   final String amount;
   final String price;
   final EnumBuySell? orderSide;
@@ -31,9 +24,6 @@ abstract class OrderEntity extends Equatable {
   final String baseAsset;
   final String quoteAsset;
   final String status;
-  final String filledQty;
-  final FeeEntity fee;
-  final List<TradeEntity> trades;
 
   String get iFormattedDate {
     return DateFormat("MMM dd, yyyy HH:mm:ss").format(timestamp);
@@ -70,7 +60,6 @@ abstract class OrderEntity extends Equatable {
   @override
   List<Object?> get props => [
         orderId,
-        mainAcc,
         amount,
         price,
         orderSide,
