@@ -14,7 +14,7 @@ class GraphRemoteDatasource {
         'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, dynamic>{
-        'symbol': '$leftTokenId-$rightTokenId',
+        'symbol': '$leftTokenId/$rightTokenId',
         'timeframe': timestamp,
         'timestamp_start': -1296000
       }),

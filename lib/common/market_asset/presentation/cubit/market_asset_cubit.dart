@@ -29,7 +29,7 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
 
     return currentState is MarketAssetLoaded
         ? _assets[currentState.baseToken.assetId]!
-        : _assets['POLKADEX']!;
+        : _assets['PDEX']!;
   }
 
   AssetEntity get currentQuoteAssetDetails {
@@ -37,11 +37,11 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
 
     return currentState is MarketAssetLoaded
         ? _assets[currentState.quoteToken.assetId]!
-        : _assets['POLKADEX']!;
+        : _assets['PDEX']!;
   }
 
   AssetEntity getAssetDetailsById(String tokenId) {
-    return _assets[tokenId] ?? _assets['POLKADEX']!;
+    return _assets[tokenId] ?? _assets['PDEX']!;
   }
 
   Future<void> getMarkets() async {
@@ -67,9 +67,9 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
       (markets) {
         for (var i = 0; i < markets.length; i++) {
           final baseAsset = getAssetDetailsById(
-              (markets[i].baseAsset['asset'] ?? 'POLKADEX').toString());
+              (markets[i].baseAsset['asset'] ?? 'PDEX').toString());
           final quoteAsset = getAssetDetailsById(
-              (markets[i].quoteAsset['asset'] ?? 'POLKADEX').toString());
+              (markets[i].quoteAsset['asset'] ?? 'PDEX').toString());
 
           if (i == 0) {
             emit(

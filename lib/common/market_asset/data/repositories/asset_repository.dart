@@ -20,7 +20,7 @@ class AssetRepository implements IAssetRepository {
             ..add(
               AssetModel.fromJson(
                 {
-                  'assetId': 'POLKADEX',
+                  'assetId': 'PDEX',
                   'deposit': '22,000,000,000,000',
                   'name': 'Polkadex',
                   'symbol': 'PDEX',
