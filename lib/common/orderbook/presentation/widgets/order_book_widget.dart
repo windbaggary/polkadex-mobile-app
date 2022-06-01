@@ -6,7 +6,6 @@ import 'package:polkadex/common/orderbook/domain/entities/orderbook_item_entity.
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_heading_widget.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
-import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_buy_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_sell_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_shimmer_widget.dart';
@@ -48,8 +47,8 @@ class OrderBookWidget extends StatelessWidget {
                     valueListenable: priceLengthNotifier,
                     builder: (context, selectedPriceLenIndex, child) {
                       return _ThisOrderBookChartWidget(
-                        amountTokenId: amountToken.assetId,
-                        priceTokenId: priceToken.assetId,
+                        amountToken: amountToken,
+                        priceToken: priceToken,
                         buyItems: state.orderbook.bid,
                         sellItems: state.orderbook.ask,
                         marketDropDownNotifier: marketDropDownNotifier,
@@ -80,16 +79,16 @@ class OrderBookWidget extends StatelessWidget {
 /// The widget displays the chart on order book content
 class _ThisOrderBookChartWidget extends StatelessWidget {
   _ThisOrderBookChartWidget({
-    required this.amountTokenId,
-    required this.priceTokenId,
+    required this.amountToken,
+    required this.priceToken,
     required this.buyItems,
     required this.sellItems,
     required this.marketDropDownNotifier,
     required this.priceLengthNotifier,
   });
 
-  final String amountTokenId;
-  final String priceTokenId;
+  final AssetEntity amountToken;
+  final AssetEntity priceToken;
   final List<OrderbookItemEntity> buyItems;
   final List<OrderbookItemEntity> sellItems;
   final ValueNotifier<EnumMarketDropdownTypes> marketDropDownNotifier;
@@ -193,12 +192,12 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              'Price (${TokenUtils.tokenIdToAcronym(priceTokenId)})',
+              'Price (${priceToken.symbol})',
               style: tsS13W500CFFOP40,
             ),
           ),
           Text(
-            '$amountColumnTitle (${TokenUtils.tokenIdToAcronym(amountTokenId)})',
+            '$amountColumnTitle (${amountToken.symbol})',
             style: tsS13W500CFFOP40,
             textAlign: TextAlign.end,
           )
