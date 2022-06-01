@@ -40,7 +40,7 @@ class MysqlClient {
   }
 
   Future<String?> getMainAddress(String proxyAddress) async {
-    final dbAccId = getAccountId(proxyAddress);
+    final dbAccId = await getAccountId(proxyAddress);
 
     final dbMainResult =
         await conn.execute("select * from accounts where id = :acc_id", {
