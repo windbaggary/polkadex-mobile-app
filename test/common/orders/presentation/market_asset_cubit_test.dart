@@ -48,7 +48,7 @@ void main() {
     );
 
     tAsset = AssetModel(
-      assetId: 'POLKADEX',
+      assetId: 'PDEX',
       deposit: '18,000,000,000,000',
       name: 'TBTC',
       symbol: 'TBTC',
