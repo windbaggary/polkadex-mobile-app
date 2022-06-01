@@ -13,20 +13,30 @@ class MysqlClient {
       password: dotenv.get('DB_PASSWORD'),
       databaseName: dotenv.get('DB_NAME'),
     );
+  }
 
+  Future<dynamic> checkConnection() async {
     if (!conn.connected) {
+      conn = await MySQLConnection.createConnection(
+        host: dotenv.get('DB_HOST'),
+        port: int.parse(dotenv.get('DB_PORT')),
+        userName: dotenv.get('DB_USER'),
+        password: dotenv.get('DB_PASSWORD'),
+        databaseName: dotenv.get('DB_NAME'),
+      );
+
       await conn.connect();
     }
   }
 
   Future<String?> getAccountId(String proxyAddress) async {
-    await init();
+    await checkConnection();
 
-    final dbProxyResult =
-        await conn.execute("select * from proxies where :proxyAddress", {
+    final dbProxyResult = await conn
+        .execute("select * from proxies where proxy = :proxyAddress", {
       "proxyAddress": proxyAddress,
     });
-    return dbProxyResult.rows.first.colByName('id');
+    return dbProxyResult.rows.first.colByName('main_acc_id');
   }
 
   Future<String?> getMainAddress(String proxyAddress) async {
