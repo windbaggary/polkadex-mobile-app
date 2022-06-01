@@ -31,7 +31,7 @@ class OrderModel extends OrderEntity {
       amount: map['qty'],
       price: map['price'],
       orderSide: StringUtils.enumFromString<EnumBuySell>(
-          EnumBuySell.values, map['order_side'] == 'Ask' ? 'Buy' : 'Sell'),
+          EnumBuySell.values, map['order_side'] == 'Bid' ? 'Buy' : 'Sell'),
       orderType: StringUtils.enumFromString<EnumOrderTypes>(
           EnumOrderTypes.values, map['order_type']),
       timestamp: DateTime.parse(map['timestamp']),
