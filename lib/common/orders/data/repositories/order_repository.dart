@@ -29,8 +29,8 @@ class OrderRepository implements IOrderRepository {
     try {
       final result = await _orderRemoteDatasource.placeOrder(
         nonce,
-        int.parse(baseAsset),
-        int.parse(quoteAsset),
+        baseAsset == 'PDEX' ? '' : baseAsset,
+        quoteAsset == 'PDEX' ? '' : quoteAsset,
         orderType.toString().split('.')[1].capitalize(),
         orderSide == EnumBuySell.buy ? 'Bid' : 'Ask',
         price,
@@ -47,8 +47,8 @@ class OrderRepository implements IOrderRepository {
           orderSide: orderSide,
           orderType: orderType,
           timestamp: DateTime.now(),
-          baseAsset: baseAsset.toString(),
-          quoteAsset: quoteAsset.toString(),
+          baseAsset: baseAsset,
+          quoteAsset: quoteAsset,
           status:
               orderType == EnumOrderTypes.market ? 'Filled' : 'PartiallyFilled',
         );

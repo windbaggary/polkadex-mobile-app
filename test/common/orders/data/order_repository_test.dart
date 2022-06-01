@@ -63,16 +63,8 @@ void main() {
       );
 
       expect(result.isRight(), true);
-      verify(() => dataSource.placeOrder(
-          nonce,
-          int.parse(baseAsset),
-          int.parse(quoteAsset),
-          'Market',
-          'Bid',
-          price,
-          amount,
-          address,
-          signature)).called(1);
+      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset, 'Market',
+          'Bid', price, amount, address, signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
@@ -96,16 +88,8 @@ void main() {
       );
 
       expect(result.isLeft(), true);
-      verify(() => dataSource.placeOrder(
-          nonce,
-          int.parse(baseAsset),
-          int.parse(quoteAsset),
-          'Market',
-          'Bid',
-          price,
-          amount,
-          address,
-          signature)).called(1);
+      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset, 'Market',
+          'Bid', price, amount, address, signature)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });

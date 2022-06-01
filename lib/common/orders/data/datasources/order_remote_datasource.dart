@@ -12,8 +12,8 @@ class OrderRemoteDatasource {
 
   Future<String?> placeOrder(
     int nonce,
-    int baseAsset,
-    int quoteAsset,
+    String baseAsset,
+    String quoteAsset,
     String orderType,
     String orderSide,
     String price,
