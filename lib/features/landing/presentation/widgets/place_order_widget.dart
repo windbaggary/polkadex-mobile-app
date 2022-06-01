@@ -15,7 +15,6 @@ import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
-import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -42,8 +41,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         final cubit = context.read<MarketAssetCubit>();
 
         _onUpdateAvailableBalance(
-            baseTokenId: cubit.currentBaseAssetDetails.assetId,
-            pairTokenId: cubit.currentQuoteAssetDetails.assetId);
+            baseToken: cubit.currentBaseAssetDetails,
+            pairToken: cubit.currentQuoteAssetDetails);
 
         return BlocBuilder<PlaceOrderCubit, PlaceOrderState>(
           builder: (context, placeOrderState) => Column(
@@ -78,21 +77,24 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
               BlocConsumer<BalanceCubit, BalanceState>(
                   listener: (context, balanceState) {
                 _onUpdateAvailableBalance(
-                    baseTokenId: cubit.currentBaseAssetDetails.assetId,
-                    pairTokenId: cubit.currentQuoteAssetDetails.assetId);
+                    baseToken: cubit.currentBaseAssetDetails,
+                    pairToken: cubit.currentQuoteAssetDetails);
               }, builder: (context, balanceState) {
                 if (balanceState is BalanceLoaded) {
                   return _balanceWidget(
-                    baseTokenId: cubit.currentBaseAssetDetails.assetId,
-                    pairTokenId: cubit.currentQuoteAssetDetails.assetId,
+                    baseToken: cubit.currentBaseAssetDetails,
+                    pairToken: cubit.currentQuoteAssetDetails,
                   );
                 }
 
-                return _balanceShimmerWidget();
+                return _balanceShimmerWidget(
+                  baseToken: cubit.currentBaseAssetDetails,
+                  pairToken: cubit.currentQuoteAssetDetails,
+                );
               }),
               SizedBox(height: 16),
               _totalWidget(
-                tokenId: cubit.currentQuoteAssetDetails.assetId,
+                token: cubit.currentQuoteAssetDetails,
               ),
               placeOrderState is PlaceOrderLoading
                   ? Padding(
@@ -206,8 +208,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }
 
   void _onUpdateAvailableBalance({
-    required String baseTokenId,
-    required String pairTokenId,
+    required AssetEntity baseToken,
+    required AssetEntity pairToken,
     EnumBuySell? orderSide,
   }) {
     final balanceCubit = context.read<BalanceCubit>();
@@ -219,7 +221,9 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       context.read<PlaceOrderCubit>().updateOrderParams(
           orderside: newOrderSide,
           balance: double.parse(balanceState.free[
-              newOrderSide == EnumBuySell.buy ? pairTokenId : baseTokenId]));
+              newOrderSide == EnumBuySell.buy
+                  ? pairToken.assetId
+                  : baseToken.assetId]));
       return;
     }
 
@@ -363,8 +367,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }
 
   Widget _balanceWidget({
-    required String baseTokenId,
-    required String pairTokenId,
+    required AssetEntity baseToken,
+    required AssetEntity pairToken,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -383,15 +387,18 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         ),
         Text(
           context.read<PlaceOrderCubit>().state.orderSide == EnumBuySell.buy
-              ? TokenUtils.tokenIdToAcronym(pairTokenId)
-              : TokenUtils.tokenIdToAcronym(baseTokenId),
+              ? pairToken.symbol
+              : baseToken.symbol,
           style: tsS16W600CFF,
         ),
       ],
     );
   }
 
-  Widget _balanceShimmerWidget() {
+  Widget _balanceShimmerWidget({
+    required AssetEntity baseToken,
+    required AssetEntity pairToken,
+  }) {
     return Shimmer.fromColors(
       highlightColor: AppColors.color8BA1BE,
       baseColor: AppColors.color2E303C,
@@ -408,7 +415,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
               style: tsS16W400CABB2BC,
             ),
             Text(
-              '${context.read<PlaceOrderCubit>().state.balance} ${context.read<PlaceOrderCubit>().state.orderSide == EnumBuySell.buy ? TokenUtils.tokenIdToAcronym('0') : TokenUtils.tokenIdToAcronym('1')}',
+              '${context.read<PlaceOrderCubit>().state.balance} ${context.read<PlaceOrderCubit>().state.orderSide == EnumBuySell.buy ? baseToken.symbol : baseToken.symbol}',
               style: tsS16W600CFF,
             ),
           ],
@@ -489,7 +496,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                   state is TickerLoaded,
               child: QuantityInputWidget(
                 hintText:
-                    'Price (${marketAssetCubit.currentQuoteAssetDetails.name})',
+                    'Price (${marketAssetCubit.currentQuoteAssetDetails.symbol})',
                 controller: _priceController,
                 onChanged: (price) => _onPriceAmountChanged(
                   context,
@@ -571,7 +578,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     );
   }
 
-  Widget _totalWidget({required String tokenId}) {
+  Widget _totalWidget({required AssetEntity token}) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       decoration: BoxDecoration(
@@ -584,7 +591,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       alignment: Alignment.center,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: _evalTotalWidget(TokenUtils.tokenIdToAcronym(tokenId)),
+        child: _evalTotalWidget(token.symbol),
       ),
     );
   }
