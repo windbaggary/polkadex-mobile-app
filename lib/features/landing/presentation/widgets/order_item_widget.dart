@@ -63,7 +63,7 @@ class OrderItemWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Price ((${cubit.getAssetDetailsById(order.quoteAsset).symbol})',
+                              'Price (${cubit.getAssetDetailsById(order.quoteAsset).symbol})',
                               style: tsS14W400CFF.copyWith(
                                   color: AppColors.colorABB2BC),
                             ),
