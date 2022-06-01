@@ -222,8 +222,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           orderside: newOrderSide,
           balance: double.parse(balanceState.free[
               newOrderSide == EnumBuySell.buy
-                  ? pairToken.assetId
-                  : baseToken.assetId]));
+                  ? baseToken.assetId
+                  : pairToken.assetId]));
       return;
     }
 
