@@ -418,13 +418,6 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      context.read<BalanceCubit>().balanceTimer?.cancel();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<EnumBottonBarItem>(
       valueListenable: _bottomNavbarNotifier,

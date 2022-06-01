@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:dart_amqp/dart_amqp.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,14 +12,18 @@ import 'package:polkadex/features/landing/data/repositories/balance_repository.d
 class _MockBalanceRemoteDatasource extends Mock
     implements BalanceRemoteDatasource {}
 
+class _MockConsumer extends Mock implements Consumer {}
+
 void main() {
   late _MockBalanceRemoteDatasource dataSource;
+  late _MockConsumer consumer;
   late BalanceRepository repository;
   late String address;
   late String signature;
 
   setUp(() {
     dataSource = _MockBalanceRemoteDatasource();
+    consumer = _MockConsumer();
     repository = BalanceRepository(balanceRemoteDatasource: dataSource);
     address = 'addressTest';
     signature = 'signatureTest';
@@ -86,6 +91,42 @@ void main() {
 
       expect(result.isLeft(), true);
       verify(() => dataSource.testDeposit(0, address, signature)).called(1);
+      verifyNoMoreInteractions(dataSource);
+    });
+
+    test('Must return a successful fetch balance live data response', () async {
+      when(() => dataSource.fetchBalanceConsumer(
+            any(),
+          )).thenAnswer(
+        (_) async => consumer,
+      );
+
+      final result = await repository.fetchBalanceLiveData(
+        '',
+        (_) {},
+        (_) {},
+      );
+
+      expect(result.isRight(), true);
+      verify(() => dataSource.fetchBalanceConsumer('')).called(1);
+      verifyNoMoreInteractions(dataSource);
+    });
+
+    test('Must return a failed fetch orderbook live data response', () async {
+      when(() => dataSource.fetchBalanceConsumer(
+            any(),
+          )).thenAnswer(
+        (_) async => null,
+      );
+
+      final result = await repository.fetchBalanceLiveData(
+        '',
+        (_) {},
+        (_) {},
+      );
+
+      expect(result.isLeft(), true);
+      verify(() => dataSource.fetchBalanceConsumer('')).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });
