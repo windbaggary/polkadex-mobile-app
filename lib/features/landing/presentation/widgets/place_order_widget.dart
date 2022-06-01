@@ -94,7 +94,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
               }),
               SizedBox(height: 16),
               _totalWidget(
-                token: cubit.currentQuoteAssetDetails,
+                token: cubit.currentBaseAssetDetails,
               ),
               placeOrderState is PlaceOrderLoading
                   ? Padding(
@@ -109,7 +109,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                       valueListenable: _orderTypeNotifier,
                       builder: (_, __, ___) => AppButton(
                         label:
-                            '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${cubit.currentQuoteAssetDetails.symbol}',
+                            '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${cubit.currentBaseAssetDetails.symbol}',
                         enabled:
                             _orderTypeNotifier.value == EnumOrderTypes.market
                                 ? context.read<TickerCubit>().state
