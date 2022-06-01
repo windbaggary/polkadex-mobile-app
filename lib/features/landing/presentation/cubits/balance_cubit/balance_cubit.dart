@@ -5,61 +5,78 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
 
 part 'balance_state.dart';
 
 class BalanceCubit extends Cubit<BalanceState> {
   BalanceCubit({
     required GetBalanceUseCase getBalanceUseCase,
+    required GetBalanceLiveDataUseCase getBalanceLiveDataUseCase,
     required TestDepositUseCase testDepositUseCase,
     required RegisterUserUseCase registerUserUseCase,
   })  : _getBalanceUseCase = getBalanceUseCase,
+        _getBalanceLiveDataUseCase = getBalanceLiveDataUseCase,
         _testDepositUseCase = testDepositUseCase,
         _registerUserUseCase = registerUserUseCase,
         super(BalanceInitial());
 
   final GetBalanceUseCase _getBalanceUseCase;
+  final GetBalanceLiveDataUseCase _getBalanceLiveDataUseCase;
   final TestDepositUseCase _testDepositUseCase;
   final RegisterUserUseCase _registerUserUseCase;
-  Timer? _balanceTimer;
-
-  Timer? get balanceTimer => _balanceTimer;
+  Map _baseFree = {};
+  Map _baseReserved = {};
 
   Future<void> getBalance(String address) async {
     emit(BalanceLoading());
 
     final result = await _getBalanceUseCase(address: address);
 
-    result.fold(
-      (error) => emit(
-        BalanceError(message: error.message),
-      ),
-      (balance) {
-        emit(
-          BalanceLoaded(
-            free: balance.free,
-            reserved: balance.reserved,
-          ),
-        );
+    final resultLiveData = await _getBalanceLiveDataUseCase(
+      address: address,
+      onMsgReceived: (balanceUpdate) {
+        _baseFree.addAll(balanceUpdate.free);
+        _baseReserved.addAll(balanceUpdate.reserved);
 
-        _balanceTimer = Timer.periodic(
-          Duration(seconds: 5),
-          (timer) async {
-            final resultPeriodic = await _getBalanceUseCase(address: address);
-
-            resultPeriodic.fold(
-              (_) => timer.cancel(),
-              (balancePeriodic) => emit(
-                BalanceLoaded(
-                  free: balancePeriodic.free,
-                  reserved: balancePeriodic.reserved,
-                ),
-              ),
-            );
-          },
-        );
+        emit(BalanceLoaded(
+          free: _baseFree,
+          reserved: _baseReserved,
+        ));
       },
+      onMsgError: (error) => emit(
+        BalanceError(
+          message: error.toString(),
+        ),
+      ),
     );
+
+    resultLiveData.fold(
+        (error) => emit(
+              BalanceError(message: error.message),
+            ),
+        (_) => null);
+
+    final currentState = state;
+
+    if (currentState is BalanceLoading) {
+      result.fold(
+        (error) => emit(
+          BalanceError(message: error.message),
+        ),
+        (balance) {
+          _baseFree = balance.free;
+          _baseReserved = balance.reserved;
+
+          emit(
+            BalanceLoaded(
+              free: balance.free,
+              reserved: balance.reserved,
+            ),
+          );
+        },
+      );
+    }
   }
 
   Future<void> testDeposit(String address, String signature) async {

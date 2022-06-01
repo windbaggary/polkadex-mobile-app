@@ -32,6 +32,7 @@ import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/fetch_last_ticker_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
@@ -265,8 +266,15 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => GetBalanceLiveDataUseCase(
+      balanceRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
+      getBalanceLiveDataUseCase: dependency(),
       testDepositUseCase: dependency(),
       registerUserUseCase: dependency(),
     ),
