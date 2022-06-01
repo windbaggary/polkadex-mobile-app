@@ -43,7 +43,7 @@ class RabbitMqClient {
       final queue = await _channel.queue(queueName, autoDelete: true);
       await queue.bind(_exchange, routingKey);
 
-      return await queue.consume();
+      return await queue.consume(noAck: false);
     } catch (_) {
       if (!nullOnError) {
         await init();
