@@ -224,12 +224,12 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                         height: 108,
                         child: ListView.builder(
                           itemBuilder: (context, index) => TopPairWidget(
-                            rightAsset: context
-                                .read<MarketAssetCubit>()
-                                .listAvailableMarkets[index][0],
                             leftAsset: context
                                 .read<MarketAssetCubit>()
                                 .listAvailableMarkets[index][0],
+                            rightAsset: context
+                                .read<MarketAssetCubit>()
+                                .listAvailableMarkets[index][1],
                             onTap: () => Coordinator.goToCoinTradeScreen(
                                 orderbookCubit: context.read<OrderbookCubit>(),
                                 baseToken: context
@@ -615,7 +615,7 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${order.amount} ${TokenUtils.tokenIdToAcronym(order.baseAsset)}',
+                  '${order.amount} ${cubit.getAssetDetailsById(order.baseAsset).symbol}',
                   style: tsS14W500CFF.copyWith(
                     color: AppColors.color0CA564,
                   ),
@@ -632,7 +632,7 @@ class _ThisItemWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${double.parse(order.amount) * double.parse(order.price)} ${TokenUtils.tokenIdToAcronym(order.quoteAsset)}',
+                  '${double.parse(order.amount) * double.parse(order.price)} ${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
                   style: tsS14W500CFF,
                 ),
               ],
@@ -682,7 +682,7 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${order.amount} ${TokenUtils.tokenIdToAcronym(order.baseAsset)}',
+                  '${order.amount} ${cubit.getAssetDetailsById(order.baseAsset).symbol}',
                   style: tsS14W500CFF.copyWith(
                     color: AppColors.colorE6007A,
                   ),
@@ -699,7 +699,7 @@ class _ThisItemWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${double.parse(order.amount) * double.parse(order.price)} ${TokenUtils.tokenIdToAcronym(order.quoteAsset)}',
+                  '${double.parse(order.amount) * double.parse(order.price)} ${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
                   style: tsS14W500CFF,
                 ),
               ],
