@@ -162,8 +162,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
     if (balanceState is BalanceLoaded) {
       balance = double.parse(balanceState.free[enumBuySell == EnumBuySell.buy
-          ? marketAssetCubit.currentBaseAssetDetails.assetId
-          : marketAssetCubit.currentQuoteAssetDetails.assetId]);
+          ? marketAssetCubit.currentQuoteAssetDetails.assetId
+          : marketAssetCubit.currentBaseAssetDetails.assetId]);
     } else {
       balance = 0.0;
     }
@@ -222,8 +222,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           orderside: newOrderSide,
           balance: double.parse(balanceState.free[
               newOrderSide == EnumBuySell.buy
-                  ? baseToken.assetId
-                  : pairToken.assetId]));
+                  ? pairToken.assetId
+                  : baseToken.assetId]));
       return;
     }
 
