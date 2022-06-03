@@ -5,7 +5,6 @@ import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_item_entity.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_heading_widget.dart';
-import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_buy_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_sell_item_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_shimmer_widget.dart';
@@ -63,10 +62,34 @@ class OrderBookWidget extends StatelessWidget {
         }
 
         if (state is OrderbookError) {
-          return PolkadexErrorRefreshWidget(
-            onRefresh: () => context.read<OrderbookCubit>().fetchOrderbookData(
-                leftTokenId: priceToken.assetId,
-                rightTokenId: amountToken.assetId),
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: OrderBookHeadingWidget(
+                  marketDropDownNotifier: marketDropDownNotifier,
+                  priceLengthNotifier: priceLengthNotifier,
+                ),
+              ),
+              ValueListenableBuilder<EnumMarketDropdownTypes>(
+                valueListenable: marketDropDownNotifier,
+                builder: (context, dropdownMarketIndex, child) {
+                  return ValueListenableBuilder<int>(
+                    valueListenable: priceLengthNotifier,
+                    builder: (context, selectedPriceLenIndex, child) {
+                      return _ThisOrderBookChartWidget(
+                        amountToken: amountToken,
+                        priceToken: priceToken,
+                        buyItems: [],
+                        sellItems: [],
+                        marketDropDownNotifier: marketDropDownNotifier,
+                        priceLengthNotifier: priceLengthNotifier,
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
           );
         }
 
@@ -97,46 +120,45 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<OrderBookWidgetFilterProvider>();
-    Widget child = Container();
+    List<Widget> columnChildren;
+
     switch (provider.enumBuySellAll) {
       case EnumBuySellAll.buy:
-        child = Column(
-          key: ValueKey("buy"),
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeadingWidget(),
-            _buildBuyWidget(buyItems),
-            _buildLatestTransactionWidget(),
-          ],
-        );
+        columnChildren = [
+          _buildBuyWidget(buyItems),
+          _buildLatestTransactionWidget(),
+        ];
         break;
       case EnumBuySellAll.sell:
-        child = Column(
-          key: ValueKey("sell"),
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeadingWidget(),
-            _buildSellWidget(sellItems),
-            _buildLatestTransactionWidget(),
-          ],
-        );
+        columnChildren = [
+          _buildSellWidget(sellItems),
+          _buildLatestTransactionWidget(),
+        ];
         break;
       case EnumBuySellAll.all:
-        child = Column(
-          key: ValueKey("all"),
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeadingWidget(),
-            _buildSellWidget(sellItems),
-            _buildLatestTransactionWidget(),
-            _buildBuyWidget(buyItems),
-          ],
-        );
+        columnChildren = [
+          _buildSellWidget(sellItems),
+          _buildLatestTransactionWidget(),
+          _buildBuyWidget(buyItems),
+        ];
         break;
     }
+
     return AnimatedSwitcher(
       duration: AppConfigs.animDurationSmall,
-      child: child,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildHeadingWidget(),
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 430),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: columnChildren,
+            ),
+          )
+        ],
+      ),
     );
   }
 
