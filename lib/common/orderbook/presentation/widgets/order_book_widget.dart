@@ -127,12 +127,20 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
         columnChildren = [
           _buildBuyWidget(buyItems),
           _buildLatestTransactionWidget(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [],
+          ),
         ];
         break;
       case EnumBuySellAll.sell:
         columnChildren = [
           _buildSellWidget(sellItems),
           _buildLatestTransactionWidget(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [],
+          ),
         ];
         break;
       case EnumBuySellAll.all:
