@@ -21,7 +21,7 @@ class BalanceRemoteDatasource {
     final Consumer? consumer = await dependency<RabbitMqClient>()
         .tryBindQueueToConsumer(
             '${StringUtils.generateCryptoRandomString()}-balance-update-events',
-            '$address.balance-update-events');
+            '$address-balance-update-events');
 
     return consumer;
   }

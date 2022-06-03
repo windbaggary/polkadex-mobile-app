@@ -40,8 +40,8 @@ class BalanceCubit extends Cubit<BalanceState> {
         _baseReserved.addAll(balanceUpdate.reserved);
 
         emit(BalanceLoaded(
-          free: _baseFree,
-          reserved: _baseReserved,
+          free: Map.from(_baseFree),
+          reserved: Map.from(_baseReserved),
         ));
       },
       onMsgError: (error) => emit(

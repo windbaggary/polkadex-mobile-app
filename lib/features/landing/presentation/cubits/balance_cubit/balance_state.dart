@@ -35,7 +35,7 @@ class BalanceLoaded extends BalanceState {
 
   @override
   List<Object> get props => [
-        free,
-        reserved,
+        free.hashCode,
+        reserved.hashCode,
       ];
 }

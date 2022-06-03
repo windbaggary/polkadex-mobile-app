@@ -34,10 +34,10 @@ class BalanceModel extends BalanceEntity {
     final mapFree = {};
     final mapReserved = {};
 
-    mapFree[baseAsset] = map['update']['base_free'];
-    mapReserved[baseAsset] = map['update']['base_reserved'];
-    mapFree[quoteAsset] = map['update']['quote_free'];
-    mapReserved[quoteAsset] = map['update']['quote_reserved'];
+    mapFree[baseAsset] = map['update']['BalanceUpdate']['base_free'];
+    mapReserved[baseAsset] = map['update']['BalanceUpdate']['base_reserved'];
+    mapFree[quoteAsset] = map['update']['BalanceUpdate']['quote_free'];
+    mapReserved[quoteAsset] = map['update']['BalanceUpdate']['quote_reserved'];
 
     return BalanceModel(
       free: mapFree,
