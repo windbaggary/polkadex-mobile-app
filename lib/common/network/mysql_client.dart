@@ -69,4 +69,15 @@ class MysqlClient {
       },
     );
   }
+
+  Future<IResultSet> getTradeHistory(String proxyAddress) async {
+    final mainAccId = await getAccountId(proxyAddress);
+
+    return await conn.execute(
+      'select * from balance_history where main_acc_id = :main_account_id and (event = "Deposit" or event = "Withdraw")',
+      {
+        "main_account_id": mainAccId,
+      },
+    );
+  }
 }
