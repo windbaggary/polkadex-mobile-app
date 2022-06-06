@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
-import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/usecases/place_order_usecase.dart';
 
 part 'place_order_state.dart';
 

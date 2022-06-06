@@ -9,7 +9,7 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -18,7 +18,7 @@ import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
-import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_pair_widget.dart';

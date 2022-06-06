@@ -2,13 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/data/models/order_model.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
-import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/trades/data/models/order_model.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dart';
 
-class _OrderRepositoryMock extends Mock implements IOrderRepository {}
+class _OrderRepositoryMock extends Mock implements ITradeRepository {}
 
 void main() {
   late GetOrdersUseCase _usecase;
@@ -27,7 +27,7 @@ void main() {
 
   setUp(() {
     _repository = _OrderRepositoryMock();
-    _usecase = GetOrdersUseCase(orderRepository: _repository);
+    _usecase = GetOrdersUseCase(tradeRepository: _repository);
     orderId = '786653432';
     baseAsset = "0";
     quoteAsset = "1";

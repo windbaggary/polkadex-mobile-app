@@ -2,17 +2,17 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/data/datasources/order_remote_datasource.dart';
-import 'package:polkadex/common/orders/data/models/order_model.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
-import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
+import 'package:polkadex/common/trades/data/models/order_model.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 
-class OrderRepository implements IOrderRepository {
-  OrderRepository({required OrderRemoteDatasource orderRemoteDatasource})
-      : _orderRemoteDatasource = orderRemoteDatasource;
+class TradeRepository implements ITradeRepository {
+  TradeRepository({required TradeRemoteDatasource tradeRemoteDatasource})
+      : _tradeRemoteDatasource = tradeRemoteDatasource;
 
-  final OrderRemoteDatasource _orderRemoteDatasource;
+  final TradeRemoteDatasource _tradeRemoteDatasource;
 
   @override
   Future<Either<ApiError, OrderEntity>> placeOrder(
@@ -27,7 +27,7 @@ class OrderRepository implements IOrderRepository {
     String signature,
   ) async {
     try {
-      final result = await _orderRemoteDatasource.placeOrder(
+      final result = await _tradeRemoteDatasource.placeOrder(
         nonce,
         baseAsset == 'PDEX' ? '' : baseAsset,
         quoteAsset == 'PDEX' ? '' : quoteAsset,
@@ -71,7 +71,7 @@ class OrderRepository implements IOrderRepository {
     String signature,
   ) async {
     try {
-      final result = await _orderRemoteDatasource.cancelOrder(
+      final result = await _tradeRemoteDatasource.cancelOrder(
         nonce,
         address,
         int.parse(orderId),
@@ -93,7 +93,7 @@ class OrderRepository implements IOrderRepository {
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
       String address) async {
     try {
-      final result = await _orderRemoteDatasource.fetchOrders(address);
+      final result = await _tradeRemoteDatasource.fetchOrders(address);
       final listTransaction = result.rows.map((row) => row.assoc()).toList();
       List<OrderEntity> listOrder = [];
 

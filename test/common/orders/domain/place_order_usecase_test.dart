@@ -3,12 +3,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/data/models/order_model.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
-import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
-import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
+import 'package:polkadex/common/trades/data/models/order_model.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dart';
+import 'package:polkadex/common/trades/domain/usecases/place_order_usecase.dart';
 
-class _OrderRepositoryMock extends Mock implements IOrderRepository {}
+class _OrderRepositoryMock extends Mock implements ITradeRepository {}
 
 void main() {
   late PlaceOrderUseCase _usecase;
@@ -26,7 +26,7 @@ void main() {
 
   setUp(() {
     _repository = _OrderRepositoryMock();
-    _usecase = PlaceOrderUseCase(orderRepository: _repository);
+    _usecase = PlaceOrderUseCase(tradeRepository: _repository);
     nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";

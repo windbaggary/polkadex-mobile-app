@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/data/models/order_model.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/data/models/order_model.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 
 void main() {
   late OrderModel tOrder;

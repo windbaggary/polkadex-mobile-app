@@ -1,20 +1,20 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dart';
 
 class CancelOrderUseCase {
   CancelOrderUseCase({
-    required IOrderRepository orderRepository,
-  }) : _orderRepository = orderRepository;
+    required ITradeRepository tradeRepository,
+  }) : _tradeRepository = tradeRepository;
 
-  final IOrderRepository _orderRepository;
+  final ITradeRepository _tradeRepository;
 
   Future<Either<ApiError, String>> call(
       {required int nonce,
       required String address,
       required String orderId,
       required String signature}) async {
-    return await _orderRepository.cancelOrder(
+    return await _tradeRepository.cancelOrder(
       nonce,
       address,
       orderId,

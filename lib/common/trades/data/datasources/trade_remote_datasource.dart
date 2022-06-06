@@ -7,7 +7,7 @@ import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/common/network/mysql_client.dart';
 
-class OrderRemoteDatasource {
+class TradeRemoteDatasource {
   final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
 
   Future<String?> placeOrder(

@@ -1,15 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
-import 'package:polkadex/common/orders/domain/repositories/iorder_repository.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dart';
 
 class PlaceOrderUseCase {
   PlaceOrderUseCase({
-    required IOrderRepository orderRepository,
-  }) : _orderRepository = orderRepository;
+    required ITradeRepository tradeRepository,
+  }) : _tradeRepository = tradeRepository;
 
-  final IOrderRepository _orderRepository;
+  final ITradeRepository _tradeRepository;
 
   Future<Either<ApiError, OrderEntity>> call({
     required int nonce,
@@ -22,7 +22,7 @@ class PlaceOrderUseCase {
     required String address,
     required String signature,
   }) async {
-    return await _orderRepository.placeOrder(
+    return await _tradeRepository.placeOrder(
       nonce,
       baseAsset,
       quoteAsset,

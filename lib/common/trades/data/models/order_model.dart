@@ -1,5 +1,5 @@
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
 
 class OrderModel extends OrderEntity {
@@ -34,7 +34,7 @@ class OrderModel extends OrderEntity {
           EnumBuySell.values, map['order_side'] == 'Bid' ? 'Buy' : 'Sell'),
       orderType: StringUtils.enumFromString<EnumOrderTypes>(
           EnumOrderTypes.values, map['order_type']),
-      timestamp: DateTime.parse(map['timestamp']),
+      timestamp: DateTime.now(),
       baseAsset: map['base_asset_type'],
       quoteAsset: map['quote_asset_type'],
       status: map['status'],

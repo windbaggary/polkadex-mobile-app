@@ -4,15 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:mysql_client/mysql_protocol.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/data/datasources/order_remote_datasource.dart';
-import 'package:polkadex/common/orders/data/repositories/order_repository.dart';
+import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
+import 'package:polkadex/common/trades/data/repositories/trade_repository.dart';
 
-class _MockOrderRemoteDatasource extends Mock implements OrderRemoteDatasource {
+class _MockOrderRemoteDatasource extends Mock implements TradeRemoteDatasource {
 }
 
 void main() {
   late _MockOrderRemoteDatasource dataSource;
-  late OrderRepository repository;
+  late TradeRepository repository;
   late int nonce;
   late String baseAsset;
   late String quoteAsset;
@@ -25,7 +25,7 @@ void main() {
 
   setUp(() {
     dataSource = _MockOrderRemoteDatasource();
-    repository = OrderRepository(orderRemoteDatasource: dataSource);
+    repository = TradeRepository(tradeRemoteDatasource: dataSource);
     nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";

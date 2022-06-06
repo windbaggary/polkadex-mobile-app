@@ -2,11 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/orders/data/models/order_model.dart';
-import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
-import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
+import 'package:polkadex/common/trades/data/models/order_model.dart';
+import 'package:polkadex/common/trades/domain/usecases/cancel_order_usecase.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit.dart';
 import 'package:test/test.dart';
 
 class _MockGetOrdersUsecase extends Mock implements GetOrdersUseCase {}
