@@ -27,7 +27,10 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     result.fold(
       (_) => emit(TradeHistoryError()),
       (trades) {
-        _allTrades = trades.where((trade) => trade.assetId == asset).toList();
+        _allTrades = trades
+            .where((trade) =>
+                trade.baseAsset == asset || trade.quoteAsset == asset)
+            .toList();
         _allTrades.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
         emit(TradeHistoryLoaded(

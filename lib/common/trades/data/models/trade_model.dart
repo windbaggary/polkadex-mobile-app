@@ -5,7 +5,8 @@ import 'package:polkadex/common/utils/string_utils.dart';
 class TradeModel extends TradeEntity {
   const TradeModel({
     required String tradeId,
-    required String assetId,
+    required String baseAsset,
+    required String quoteAsset,
     required String mainAccId,
     required String amount,
     required DateTime timestamp,
@@ -14,7 +15,8 @@ class TradeModel extends TradeEntity {
     required String market,
   }) : super(
           tradeId: tradeId,
-          assetId: assetId,
+          baseAsset: baseAsset,
+          quoteAsset: quoteAsset,
           mainAccId: mainAccId,
           amount: amount,
           timestamp: timestamp,
@@ -26,28 +28,30 @@ class TradeModel extends TradeEntity {
   factory TradeModel.fromDepWithJson(Map<String, dynamic> map) {
     return TradeModel(
       tradeId: map['id'],
-      assetId: map['asset_type'],
+      baseAsset: map['asset_type'],
+      quoteAsset: '',
       mainAccId: map['main_acc_id'],
       amount: map['amount'],
-      timestamp: map['timestamp'],
+      timestamp: DateTime.parse(map['timestamp']),
       status: map['status'],
       event: StringUtils.enumFromString<EnumTradeTypes>(
           EnumTradeTypes.values, map['event']),
-      market: map['id'],
+      market: map['market'],
     );
   }
 
   factory TradeModel.fromOrderJson(Map<String, dynamic> map) {
     return TradeModel(
       tradeId: map['id'],
-      assetId: map['asset_type'],
-      mainAccId: map['main_acc_id'],
-      amount: map['amount'],
-      timestamp: map['timestamp'],
+      baseAsset: map['base_asset_type'],
+      quoteAsset: map['quote_asset_type'],
+      mainAccId: '',
+      amount: map['qty'],
+      timestamp: DateTime.parse(map['timestamp']),
       status: map['status'],
       event: StringUtils.enumFromString<EnumTradeTypes>(
           EnumTradeTypes.values, map['event']),
-      market: map['id'],
+      market: '${map['base_asset_type']}/${map['quote_asset_type']}',
     );
   }
 }
