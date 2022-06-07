@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';

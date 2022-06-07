@@ -16,10 +16,11 @@ import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_reposit
 import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_trades_usecase.dart';
+import 'package:polkadex/common/trades/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
 import 'package:polkadex/features/coin/domain/repositories/icoin_repository.dart';
-import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit.dart';
+import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
 import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/datasources/ticker_remote_datasource.dart';
@@ -354,6 +355,12 @@ Future<void> init() async {
     () => OrderHistoryCubit(
       getOrdersUseCase: dependency(),
       cancelOrderUseCase: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => TradeHistoryCubit(
+      getTradesUseCase: dependency(),
     ),
   );
 
