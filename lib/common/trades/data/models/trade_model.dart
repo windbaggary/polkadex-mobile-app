@@ -23,7 +23,21 @@ class TradeModel extends TradeEntity {
           market: market,
         );
 
-  factory TradeModel.fromJson(Map<String, dynamic> map) {
+  factory TradeModel.fromDepWithJson(Map<String, dynamic> map) {
+    return TradeModel(
+      tradeId: map['id'],
+      assetId: map['asset_type'],
+      mainAccId: map['main_acc_id'],
+      amount: map['amount'],
+      timestamp: map['timestamp'],
+      status: map['status'],
+      event: StringUtils.enumFromString<EnumTradeTypes>(
+          EnumTradeTypes.values, map['event']),
+      market: map['id'],
+    );
+  }
+
+  factory TradeModel.fromOrderJson(Map<String, dynamic> map) {
     return TradeModel(
       tradeId: map['id'],
       assetId: map['asset_type'],

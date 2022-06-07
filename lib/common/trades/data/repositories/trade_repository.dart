@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
+import 'package:polkadex/common/trades/data/models/trade_model.dart';
+import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
 import 'package:polkadex/common/trades/data/models/order_model.dart';
@@ -102,6 +104,30 @@ class TradeRepository implements ITradeRepository {
       }
 
       return Right(listOrder);
+    } catch (_) {
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
+
+  @override
+  Future<Either<ApiError, List<TradeEntity>>> fetchTrades(
+      String address) async {
+    try {
+      final resultDepWith = await _tradeRemoteDatasource.fetchTrades(address);
+      final resultOrders = await _tradeRemoteDatasource.fetchOrders(address);
+      final listDepWith = resultDepWith.rows.map((row) => row.assoc()).toList();
+      final listOrders = resultOrders.rows.map((row) => row.assoc()).toList();
+      List<TradeEntity> listTrades = [];
+
+      for (var transaction in listDepWith) {
+        listTrades.add(TradeModel.fromDepWithJson(transaction));
+      }
+
+      for (var transaction in listOrders) {
+        listTrades.add(TradeModel.fromOrderJson(transaction));
+      }
+
+      return Right(listTrades);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
