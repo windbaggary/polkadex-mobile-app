@@ -9,6 +9,7 @@ class TradeModel extends TradeEntity {
     required String quoteAsset,
     required String mainAccId,
     required String amount,
+    required String price,
     required DateTime timestamp,
     required String status,
     required EnumTradeTypes? event,
@@ -19,6 +20,7 @@ class TradeModel extends TradeEntity {
           quoteAsset: quoteAsset,
           mainAccId: mainAccId,
           amount: amount,
+          price: price,
           timestamp: timestamp,
           status: status,
           event: event,
@@ -32,7 +34,8 @@ class TradeModel extends TradeEntity {
       quoteAsset: '',
       mainAccId: map['main_acc_id'],
       amount: map['amount'],
-      timestamp: DateTime.parse(map['timestamp']),
+      price: '',
+      timestamp: DateTime.now(),
       status: map['status'],
       event: StringUtils.enumFromString<EnumTradeTypes>(
           EnumTradeTypes.values, map['event']),
@@ -47,10 +50,11 @@ class TradeModel extends TradeEntity {
       quoteAsset: map['quote_asset_type'],
       mainAccId: '',
       amount: map['qty'],
-      timestamp: DateTime.parse(map['timestamp']),
+      price: map['price'],
+      timestamp: DateTime.now(),
       status: map['status'],
       event: StringUtils.enumFromString<EnumTradeTypes>(
-          EnumTradeTypes.values, map['event']),
+          EnumTradeTypes.values, map['order_side']),
       market: '${map['base_asset_type']}/${map['quote_asset_type']}',
     );
   }

@@ -8,6 +8,7 @@ abstract class TradeEntity extends Equatable {
     required this.quoteAsset,
     required this.mainAccId,
     required this.amount,
+    required this.price,
     required this.timestamp,
     required this.status,
     required this.event,
@@ -19,6 +20,7 @@ abstract class TradeEntity extends Equatable {
   final String quoteAsset;
   final String mainAccId;
   final String amount;
+  final String price;
   final DateTime timestamp;
   final String status;
   final EnumTradeTypes? event;
@@ -31,6 +33,7 @@ abstract class TradeEntity extends Equatable {
         quoteAsset,
         mainAccId,
         amount,
+        price,
         timestamp,
         status,
         event,
