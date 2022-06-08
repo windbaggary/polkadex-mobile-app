@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/data/models/order_model.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
@@ -24,5 +25,9 @@ void main() {
 
   test('OrderModel must be a OrderEntity', () {
     expect(tOrder, isA<OrderEntity>());
+  });
+
+  test('OrderModel must be a TradeEntity', () {
+    expect(tOrder, isA<TradeEntity>());
   });
 }

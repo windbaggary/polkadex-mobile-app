@@ -7,11 +7,11 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
 import 'package:polkadex/common/trades/data/repositories/trade_repository.dart';
 
-class _MockOrderRemoteDatasource extends Mock implements TradeRemoteDatasource {
+class _MockTradeRemoteDatasource extends Mock implements TradeRemoteDatasource {
 }
 
 void main() {
-  late _MockOrderRemoteDatasource dataSource;
+  late _MockTradeRemoteDatasource dataSource;
   late TradeRepository repository;
   late int nonce;
   late String baseAsset;
@@ -24,7 +24,7 @@ void main() {
   late String signature;
 
   setUp(() {
-    dataSource = _MockOrderRemoteDatasource();
+    dataSource = _MockTradeRemoteDatasource();
     repository = TradeRepository(tradeRemoteDatasource: dataSource);
     nonce = 0;
     baseAsset = "0";
@@ -42,7 +42,7 @@ void main() {
     registerFallbackValue<EnumBuySell>(EnumBuySell.buy);
   });
 
-  group('Order repository tests ', () {
+  group('Trade repository tests ', () {
     test('Must return a success orders submit response', () async {
       when(() => dataSource.placeOrder(
               any(), any(), any(), any(), any(), any(), any(), any(), any()))

@@ -8,11 +8,11 @@ import 'package:polkadex/common/trades/data/models/order_model.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dart';
 
-class _OrderRepositoryMock extends Mock implements ITradeRepository {}
+class _TradeRepositoryMock extends Mock implements ITradeRepository {}
 
 void main() {
   late GetOrdersUseCase _usecase;
-  late _OrderRepositoryMock _repository;
+  late _TradeRepositoryMock _repository;
   late String orderId;
   late String baseAsset;
   late String quoteAsset;
@@ -27,7 +27,7 @@ void main() {
   late OrderModel order;
 
   setUp(() {
-    _repository = _OrderRepositoryMock();
+    _repository = _TradeRepositoryMock();
     _usecase = GetOrdersUseCase(tradeRepository: _repository);
     orderId = '786653432';
     baseAsset = "0";
