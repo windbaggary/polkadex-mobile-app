@@ -5,8 +5,8 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/trades/data/models/trade_model.dart';
 import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_trades_usecase.dart';
-import 'package:polkadex/common/trades/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:test/test.dart';
 
 class _MockGetTradesUsecase extends Mock implements GetTradesUseCase {}

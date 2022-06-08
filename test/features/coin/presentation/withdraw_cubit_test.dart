@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/coin/domain/usecases/withdraw_usecase.dart';
-import 'package:polkadex/features/coin/presentation/cubits/withdraw_cubit.dart';
+import 'package:polkadex/features/coin/presentation/cubits/withdraw_cubit/withdraw_cubit.dart';
 import 'package:test/test.dart';
 
 class _MockWithdrawUsecase extends Mock implements WithdrawUseCase {}
