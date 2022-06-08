@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
 
@@ -13,18 +12,13 @@ class BalanceCubit extends Cubit<BalanceState> {
   BalanceCubit({
     required GetBalanceUseCase getBalanceUseCase,
     required GetBalanceLiveDataUseCase getBalanceLiveDataUseCase,
-    required TestDepositUseCase testDepositUseCase,
     required RegisterUserUseCase registerUserUseCase,
   })  : _getBalanceUseCase = getBalanceUseCase,
         _getBalanceLiveDataUseCase = getBalanceLiveDataUseCase,
-        _testDepositUseCase = testDepositUseCase,
-        _registerUserUseCase = registerUserUseCase,
         super(BalanceInitial());
 
   final GetBalanceUseCase _getBalanceUseCase;
   final GetBalanceLiveDataUseCase _getBalanceLiveDataUseCase;
-  final TestDepositUseCase _testDepositUseCase;
-  final RegisterUserUseCase _registerUserUseCase;
   Map _baseFree = {};
   Map _baseReserved = {};
 
@@ -77,29 +71,5 @@ class BalanceCubit extends Cubit<BalanceState> {
         },
       );
     }
-  }
-
-  Future<void> testDeposit(String address, String signature) async {
-    final previousState = state;
-
-    emit(BalanceLoading());
-
-    await _registerUserUseCase(address: address);
-
-    final result0 = await _testDepositUseCase(
-      asset: 0,
-      address: address,
-      signature: signature,
-    );
-
-    final result1 = await _testDepositUseCase(
-      asset: 1,
-      address: address,
-      signature: signature,
-    );
-
-    result0.isRight() || result1.isRight()
-        ? getBalance(address)
-        : emit(previousState);
   }
 }
