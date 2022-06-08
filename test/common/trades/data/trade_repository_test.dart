@@ -126,6 +126,62 @@ void main() {
     verifyNoMoreInteractions(dataSource);
   });
 
+  test('Must return a success trades fetch response', () async {
+    when(() => dataSource.fetchOrders(any())).thenAnswer(
+      (_) async => EmptyResultSet(
+        okPacket: MySQLPacketOK.decode(
+          Uint8List.fromList(
+            [
+              0x62,
+              0x6c,
+              0xc3,
+              0xa5,
+              0x62,
+              0xc3,
+              0xa6,
+              0x72,
+              0x67,
+              0x72,
+              0xc3,
+              0xb8,
+              0x64
+            ],
+          ),
+        ),
+      ),
+    );
+    when(() => dataSource.fetchTrades(any())).thenAnswer(
+      (_) async => EmptyResultSet(
+        okPacket: MySQLPacketOK.decode(
+          Uint8List.fromList(
+            [
+              0x62,
+              0x6c,
+              0xc3,
+              0xa5,
+              0x62,
+              0xc3,
+              0xa6,
+              0x72,
+              0x67,
+              0x72,
+              0xc3,
+              0xb8,
+              0x64
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final result = await repository.fetchTrades(address);
+
+    expect(result.isRight(), true);
+    verify(() => dataSource.fetchOrders(address)).called(1);
+    verify(() => dataSource.fetchTrades(address)).called(1);
+    verifyNoMoreInteractions(dataSource);
+  });
+
   test('Must return a failed orders fetch response', () async {
     when(() => dataSource.fetchOrders(any())).thenAnswer(
       (_) async => throw Exception('Some arbitrary error'),
@@ -135,6 +191,18 @@ void main() {
 
     expect(result.isLeft(), true);
     verify(() => dataSource.fetchOrders(address)).called(1);
+    verifyNoMoreInteractions(dataSource);
+  });
+
+  test('Must return a failed trades fetch response', () async {
+    when(() => dataSource.fetchTrades(any())).thenAnswer(
+      (_) async => throw Exception('Some arbitrary error'),
+    );
+
+    final result = await repository.fetchTrades(address);
+
+    expect(result.isLeft(), true);
+    verify(() => dataSource.fetchTrades(address)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 }
