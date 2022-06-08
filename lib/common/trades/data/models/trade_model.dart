@@ -6,21 +6,15 @@ class TradeModel extends TradeEntity {
   const TradeModel({
     required String tradeId,
     required String baseAsset,
-    required String quoteAsset,
-    required String mainAccId,
     required String amount,
-    required String price,
     required DateTime timestamp,
     required String status,
-    required EnumTradeTypes? event,
+    required EnumTradeTypes event,
     required String market,
   }) : super(
           tradeId: tradeId,
           baseAsset: baseAsset,
-          quoteAsset: quoteAsset,
-          mainAccId: mainAccId,
           amount: amount,
-          price: price,
           timestamp: timestamp,
           status: status,
           event: event,
@@ -31,31 +25,12 @@ class TradeModel extends TradeEntity {
     return TradeModel(
       tradeId: map['id'],
       baseAsset: map['asset_type'],
-      quoteAsset: '',
-      mainAccId: map['main_acc_id'],
       amount: map['amount'],
-      price: '',
       timestamp: DateTime.now(),
       status: map['status'],
       event: StringUtils.enumFromString<EnumTradeTypes>(
-          EnumTradeTypes.values, map['event']),
+          EnumTradeTypes.values, map['event'])!,
       market: map['market'],
-    );
-  }
-
-  factory TradeModel.fromOrderJson(Map<String, dynamic> map) {
-    return TradeModel(
-      tradeId: map['id'],
-      baseAsset: map['base_asset_type'],
-      quoteAsset: map['quote_asset_type'],
-      mainAccId: '',
-      amount: map['qty'],
-      price: map['price'],
-      timestamp: DateTime.now(),
-      status: map['status'],
-      event: StringUtils.enumFromString<EnumTradeTypes>(
-          EnumTradeTypes.values, map['order_side']),
-      market: '${map['base_asset_type']}/${map['quote_asset_type']}',
     );
   }
 }

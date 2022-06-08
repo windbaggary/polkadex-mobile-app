@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_trades_usecase.dart';
 
@@ -27,10 +28,13 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     result.fold(
       (_) => emit(TradeHistoryError()),
       (trades) {
-        _allTrades = trades
-            .where((trade) =>
-                trade.baseAsset == asset || trade.quoteAsset == asset)
-            .toList();
+        _allTrades = trades.where((trade) {
+          if (trade is OrderEntity) {
+            return trade.baseAsset == asset || trade.quoteAsset == asset;
+          } else {
+            return trade.baseAsset == asset;
+          }
+        }).toList();
         _allTrades.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
         emit(TradeHistoryLoaded(

@@ -1,46 +1,49 @@
-import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
+import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
-abstract class OrderEntity extends Equatable {
+abstract class OrderEntity extends TradeEntity {
   const OrderEntity({
-    required this.orderId,
-    required this.amount,
+    required String tradeId,
+    required String baseAsset,
+    required String amount,
+    required DateTime timestamp,
+    required String status,
+    required EnumTradeTypes event,
+    required String market,
     required this.price,
     required this.orderSide,
     required this.orderType,
-    required this.timestamp,
-    required this.baseAsset,
     required this.quoteAsset,
-    required this.status,
-  });
+  }) : super(
+          tradeId: tradeId,
+          baseAsset: baseAsset,
+          amount: amount,
+          timestamp: timestamp,
+          status: status,
+          event: event,
+          market: market,
+        );
 
-  final String orderId;
-  final String amount;
   final String price;
-  final EnumBuySell? orderSide;
+  final EnumBuySell orderSide;
   final EnumOrderTypes? orderType;
-  final DateTime timestamp;
-  final String baseAsset;
   final String quoteAsset;
-  final String status;
 
   String get iFormattedDate {
     return DateFormat("MMM dd, yyyy HH:mm:ss").format(timestamp);
   }
 
   String get iType {
-    switch (orderSide) {
-      case EnumBuySell.buy:
+    switch (event) {
+      case EnumTradeTypes.bid:
         return "Buy";
-      case EnumBuySell.sell:
+      case EnumTradeTypes.ask:
         return "Sell";
       default:
         return "";
     }
   }
-
-  EnumBuySell? get iEnumType => orderSide;
 
   String get iOrderTypeName {
     switch (orderType) {
@@ -59,10 +62,10 @@ abstract class OrderEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        orderId,
+        tradeId,
         amount,
         price,
-        orderSide,
+        event,
         orderType,
         timestamp,
         baseAsset,

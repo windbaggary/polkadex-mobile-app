@@ -8,15 +8,17 @@ void main() {
 
   setUp(() {
     tOrder = OrderModel(
-      orderId: '0',
+      tradeId: '0',
       amount: "1",
       price: "50.0",
+      event: EnumTradeTypes.bid,
       orderSide: EnumBuySell.buy,
       orderType: EnumOrderTypes.market,
       timestamp: DateTime.now(),
       baseAsset: '0',
       quoteAsset: '1',
       status: 'PartiallyFilled',
+      market: '0/1',
     );
   });
 

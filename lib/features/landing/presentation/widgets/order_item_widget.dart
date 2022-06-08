@@ -24,7 +24,7 @@ class OrderItemWidget extends StatelessWidget {
     final cubit = context.read<MarketAssetCubit>();
 
     Color colorBuySell = AppColors.color0CA564;
-    if (order.iEnumType == EnumBuySell.sell) {
+    if (order.orderSide == EnumBuySell.sell) {
       colorBuySell = AppColors.colorE6007A;
     }
     return IgnorePointer(

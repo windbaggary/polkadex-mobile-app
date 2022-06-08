@@ -4,40 +4,47 @@ import 'package:polkadex/common/utils/string_utils.dart';
 
 class OrderModel extends OrderEntity {
   const OrderModel({
-    required String orderId,
+    required String tradeId,
     required String amount,
     required String price,
-    required EnumBuySell? orderSide,
-    required EnumOrderTypes? orderType,
+    required EnumTradeTypes event,
+    required EnumBuySell orderSide,
+    required EnumOrderTypes orderType,
     required DateTime timestamp,
     required String baseAsset,
     required String quoteAsset,
     required String status,
+    required String market,
   }) : super(
-          orderId: orderId,
+          tradeId: tradeId,
           amount: amount,
           price: price,
+          event: event,
           orderSide: orderSide,
           orderType: orderType,
           timestamp: timestamp,
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
           status: status,
+          market: market,
         );
 
   factory OrderModel.fromJson(Map<String, dynamic> map) {
     return OrderModel(
-      orderId: map['id'],
+      tradeId: map['id'],
       amount: map['qty'],
       price: map['price'],
+      event: StringUtils.enumFromString<EnumTradeTypes>(
+          EnumTradeTypes.values, map['order_side'])!,
       orderSide: StringUtils.enumFromString<EnumBuySell>(
-          EnumBuySell.values, map['order_side'] == 'Bid' ? 'Buy' : 'Sell'),
+          EnumBuySell.values, map['order_side'] == 'Bid' ? 'Buy' : 'Sell')!,
       orderType: StringUtils.enumFromString<EnumOrderTypes>(
-          EnumOrderTypes.values, map['order_type']),
+          EnumOrderTypes.values, map['order_type'])!,
       timestamp: DateTime.parse(map['timestamp']),
       baseAsset: map['base_asset_type'],
       quoteAsset: map['quote_asset_type'],
       status: map['status'],
+      market: '${map['base_asset_type']}/${map['quote_asset_type']}',
     );
   }
 }

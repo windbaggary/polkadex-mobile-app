@@ -10,6 +10,7 @@ import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -525,15 +526,17 @@ class _ThisItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget child = Container();
-    switch (trade.event) {
-      case EnumTradeTypes.bid:
-        child = _buildHistoryItemWidget(context, trade);
-        break;
-      case EnumTradeTypes.ask:
-        child = _buildHistoryItemWidget(context, trade);
-        break;
-      default:
-        child = Container();
+    if (trade is OrderEntity) {
+      switch (trade.event) {
+        case EnumTradeTypes.bid:
+          child = _buildHistoryOrderItemWidget(context, trade as OrderEntity);
+          break;
+        case EnumTradeTypes.ask:
+          child = _buildHistoryOrderItemWidget(context, trade as OrderEntity);
+          break;
+        default:
+          child = Container();
+      }
     }
 
     final cardWidget = Padding(
@@ -570,7 +573,7 @@ class _ThisItemWidget extends StatelessWidget {
     return cardWidget;
   }
 
-  Widget _buildHistoryItemWidget(BuildContext context, TradeEntity trade) {
+  Widget _buildHistoryOrderItemWidget(BuildContext context, OrderEntity trade) {
     final cubit = context.read<MarketAssetCubit>();
     Widget mainIcon, arrowIcon;
 

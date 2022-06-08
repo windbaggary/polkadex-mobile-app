@@ -16,6 +16,7 @@ void main() {
   late int nonce;
   late String baseAsset;
   late String quoteAsset;
+  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late String amount;
@@ -30,6 +31,7 @@ void main() {
     nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";
+    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     amount = "100.0";
@@ -37,16 +39,17 @@ void main() {
     address = 'test';
     signature = 'test';
     order = order = OrderModel(
-      orderId: '0',
-      amount: amount,
-      price: price,
-      orderSide: orderSide,
-      orderType: orderType,
-      timestamp: DateTime.now(),
-      baseAsset: baseAsset,
-      quoteAsset: quoteAsset,
-      status: 'Open',
-    );
+        tradeId: '0',
+        amount: amount,
+        price: price,
+        event: event,
+        orderSide: orderSide,
+        orderType: orderType,
+        timestamp: DateTime.now(),
+        baseAsset: baseAsset,
+        quoteAsset: quoteAsset,
+        status: 'Open',
+        market: '$baseAsset/$quoteAsset');
   });
 
   setUpAll(() {

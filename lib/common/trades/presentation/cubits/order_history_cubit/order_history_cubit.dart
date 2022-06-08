@@ -104,14 +104,14 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
         orders: [...firstPreviousState.orders],
         orderIdsLoading: [
           ...firstPreviousState.orderIdsLoading,
-          order.orderId,
+          order.tradeId,
         ],
       ));
 
       final result = await _cancelOrderUseCase(
         nonce: 0,
         address: address,
-        orderId: order.orderId,
+        orderId: order.tradeId,
         signature: signature,
       );
 
@@ -123,7 +123,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
               ? ([...secondPreviousState.orders]..remove(order))
               : [...secondPreviousState.orders],
           orderIdsLoading: [...secondPreviousState.orderIdsLoading]
-            ..remove(order.orderId),
+            ..remove(order.tradeId),
         ));
       }
 

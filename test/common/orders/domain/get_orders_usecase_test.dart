@@ -16,6 +16,7 @@ void main() {
   late String orderId;
   late String baseAsset;
   late String quoteAsset;
+  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late DateTime timestamp;
@@ -31,6 +32,7 @@ void main() {
     orderId = '786653432';
     baseAsset = "0";
     quoteAsset = "1";
+    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
@@ -39,15 +41,17 @@ void main() {
     price = "50.0";
     address = 'test';
     order = OrderModel(
-      orderId: orderId,
+      tradeId: orderId,
       amount: amount,
       price: price,
+      event: event,
       orderSide: orderSide,
       orderType: orderType,
       timestamp: timestamp,
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
       status: status,
+      market: '$baseAsset/$quoteAsset',
     );
   });
 

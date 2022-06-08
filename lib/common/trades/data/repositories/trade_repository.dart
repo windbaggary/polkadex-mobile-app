@@ -43,9 +43,12 @@ class TradeRepository implements ITradeRepository {
 
       if (result != null) {
         final newOrder = OrderModel(
-          orderId: result,
+          tradeId: result,
           amount: amount,
           price: price,
+          event: orderSide == EnumBuySell.buy
+              ? EnumTradeTypes.bid
+              : EnumTradeTypes.ask,
           orderSide: orderSide,
           orderType: orderType,
           timestamp: DateTime.now(),
@@ -53,6 +56,7 @@ class TradeRepository implements ITradeRepository {
           quoteAsset: quoteAsset,
           status:
               orderType == EnumOrderTypes.market ? 'Filled' : 'PartiallyFilled',
+          market: '$baseAsset/$quoteAsset',
         );
 
         return Right(newOrder);
@@ -124,7 +128,7 @@ class TradeRepository implements ITradeRepository {
       }
 
       for (var transaction in listOrders) {
-        listTrades.add(TradeModel.fromOrderJson(transaction));
+        listTrades.add(OrderModel.fromJson(transaction));
       }
 
       return Right(listTrades);

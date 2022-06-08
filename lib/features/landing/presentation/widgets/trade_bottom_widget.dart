@@ -85,7 +85,7 @@ class TradeBottomWidget extends StatelessWidget {
                           OrderItemWidget(
                             order: order,
                             isProcessing: orderHistoryState.orderIdsLoading
-                                .contains(order.orderId),
+                                .contains(order.tradeId),
                             onTapClose: () async {
                               final cancelSuccess = await context
                                   .read<OrderHistoryCubit>()
