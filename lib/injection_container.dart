@@ -36,8 +36,6 @@ import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/fetch_last_ticker_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
-import 'package:polkadex/common/trades/domain/usecases/place_order_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/test_deposit_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
@@ -61,6 +59,7 @@ import 'common/market_asset/data/datasources/asset_remote_datasource.dart';
 import 'common/orderbook/data/repositories/orderbook_repository.dart';
 import 'common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
 import 'common/trades/domain/usecases/get_orders_usecase.dart';
+import 'common/trades/domain/usecases/place_order_usecase.dart';
 import 'features/coin/domain/usecases/withdraw_usecase.dart';
 import 'features/coin/presentation/cubits/withdraw_cubit/withdraw_cubit.dart';
 import 'features/setup/data/datasources/account_local_datasource.dart';
@@ -277,7 +276,6 @@ Future<void> init() async {
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
       getBalanceLiveDataUseCase: dependency(),
-      testDepositUseCase: dependency(),
       registerUserUseCase: dependency(),
     ),
   );
@@ -301,12 +299,6 @@ Future<void> init() async {
   dependency.registerFactory(
     () => WithdrawCubit(
       withdrawUseCase: dependency(),
-    ),
-  );
-
-  dependency.registerFactory(
-    () => TestDepositUseCase(
-      balanceRepository: dependency(),
     ),
   );
 
