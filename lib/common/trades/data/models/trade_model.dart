@@ -26,7 +26,7 @@ class TradeModel extends TradeEntity {
       tradeId: map['id'],
       baseAsset: map['asset_type'],
       amount: map['amount'],
-      timestamp: DateTime.now(),
+      timestamp: DateTime.parse(map['timestamp']),
       status: map['status'],
       event: StringUtils.enumFromString<EnumTradeTypes>(
           EnumTradeTypes.values, map['event'])!,
