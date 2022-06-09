@@ -533,6 +533,11 @@ class _ThisItemWidget extends StatelessWidget {
           child =
               _buildHistoryOrderItemWidget(context, tradeItem as OrderEntity);
           break;
+        default:
+          child = Container();
+      }
+    } else {
+      switch (tradeItem.event) {
         case EnumTradeTypes.deposit:
         case EnumTradeTypes.withdraw:
           child = _buildHistoryTradeItemWidget(context, tradeItem);
