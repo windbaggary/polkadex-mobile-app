@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/orders/domain/entities/order_update_entity.dart';
 
 abstract class IOrderRepository {
   Future<Either<ApiError, OrderEntity>> placeOrder(
@@ -24,7 +25,7 @@ abstract class IOrderRepository {
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(String address);
   Future<Either<ApiError, void>> fetcOrdersLiveData(
     String address,
-    Function() onMsgReceived,
+    Function(OrderUpdateEntity) onMsgReceived,
     Function(Object) onMsgError,
   );
 }

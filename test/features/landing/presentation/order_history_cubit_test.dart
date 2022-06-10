@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
 import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
+import 'package:polkadex/common/orders/domain/usecases/get_orders_live_data_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
@@ -11,10 +12,14 @@ import 'package:test/test.dart';
 
 class _MockGetOrdersUsecase extends Mock implements GetOrdersUseCase {}
 
+class _MockGetOrdersLiveDataUseCase extends Mock
+    implements GetOrdersLiveDataUseCase {}
+
 class _MockCancelOrderUsecase extends Mock implements CancelOrderUseCase {}
 
 void main() {
   late _MockGetOrdersUsecase _mockGetOrdersUsecase;
+  late _MockGetOrdersLiveDataUseCase _mockGetOrdersLiveDataUseCase;
   late _MockCancelOrderUsecase _mockCancelOrderUsecase;
   late OrderHistoryCubit cubit;
   late String orderId;
@@ -32,10 +37,12 @@ void main() {
 
   setUp(() {
     _mockGetOrdersUsecase = _MockGetOrdersUsecase();
+    _mockGetOrdersLiveDataUseCase = _MockGetOrdersLiveDataUseCase();
     _mockCancelOrderUsecase = _MockCancelOrderUsecase();
 
     cubit = OrderHistoryCubit(
       getOrdersUseCase: _mockGetOrdersUsecase,
+      getOrdersLiveDataUseCase: _mockGetOrdersLiveDataUseCase,
       cancelOrderUseCase: _mockCancelOrderUsecase,
     );
 

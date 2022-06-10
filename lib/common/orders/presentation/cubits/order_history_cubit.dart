@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:polkadex/common/orders/domain/usecases/get_orders_live_data_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
-
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
@@ -12,12 +12,15 @@ part 'order_history_state.dart';
 class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   OrderHistoryCubit({
     required GetOrdersUseCase getOrdersUseCase,
+    required GetOrdersLiveDataUseCase getOrdersLiveDataUseCase,
     required CancelOrderUseCase cancelOrderUseCase,
   })  : _getOrdersUseCase = getOrdersUseCase,
+        _getOrdersLiveDataUseCase = getOrdersLiveDataUseCase,
         _cancelOrderUseCase = cancelOrderUseCase,
         super(OrderHistoryInitial());
 
   final GetOrdersUseCase _getOrdersUseCase;
+  final GetOrdersLiveDataUseCase _getOrdersLiveDataUseCase;
   final CancelOrderUseCase _cancelOrderUseCase;
 
   List<OrderEntity> _allOrders = [];
@@ -31,6 +34,22 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     emit(OrderHistoryLoading());
 
     final result = await _getOrdersUseCase(address: address);
+
+    final resultLiveData = await _getOrdersLiveDataUseCase(
+      address: address,
+      onMsgReceived: (orderUpdate) {
+        print(orderUpdate.toString());
+      },
+      onMsgError: (error) => emit(
+        OrderHistoryError(),
+      ),
+    );
+
+    resultLiveData.fold(
+        (error) => emit(
+              OrderHistoryError(),
+            ),
+        (_) => null);
 
     result.fold(
       (_) => emit(OrderHistoryError()),

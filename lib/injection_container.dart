@@ -345,6 +345,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => OrderHistoryCubit(
       getOrdersUseCase: dependency(),
+      getOrdersLiveDataUseCase: dependency(),
       cancelOrderUseCase: dependency(),
     ),
   );

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:dart_amqp/dart_amqp.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
+import 'package:polkadex/common/orders/data/models/order_update_model.dart';
+import 'package:polkadex/common/orders/domain/entities/order_update_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/orders/data/datasources/order_remote_datasource.dart';
 import 'package:polkadex/common/orders/data/models/order_model.dart';
@@ -110,7 +112,7 @@ class OrderRepository implements IOrderRepository {
   @override
   Future<Either<ApiError, void>> fetcOrdersLiveData(
     String address,
-    Function() onMsgReceived,
+    Function(OrderUpdateEntity) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
     final Consumer? consumer =
@@ -119,9 +121,10 @@ class OrderRepository implements IOrderRepository {
       consumer?.listen((message) {
         final payload = message.payloadAsString;
         message.ack();
-        print(payload);
 
-        onMsgReceived();
+        final liveDataJson = json.decode(payload);
+
+        onMsgReceived(OrderUpdateModel.fromJson(liveDataJson));
       });
     } catch (error) {
       onMsgError(error);
