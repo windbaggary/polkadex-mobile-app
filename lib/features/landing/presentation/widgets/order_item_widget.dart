@@ -138,10 +138,12 @@ class OrderItemWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: InkWell(
-                  onTap: order.status == 'PartiallyFilled' ? onTapClose : () {},
+                  onTap: order.status == EnumOrderStatus.partiallyFilled
+                      ? onTapClose
+                      : () {},
                   child: SvgPicture.asset(
                     'close'.asAssetSvg(),
-                    color: order.status == 'PartiallyFilled'
+                    color: order.status == EnumOrderStatus.partiallyFilled
                         ? Colors.white
                         : Colors.transparent,
                     width: 10,

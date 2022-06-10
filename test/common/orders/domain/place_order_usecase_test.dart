@@ -45,7 +45,7 @@ void main() {
       timestamp: DateTime.now(),
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
-      status: 'Open',
+      status: EnumOrderStatus.accepted,
     );
   });
 

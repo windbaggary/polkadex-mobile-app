@@ -50,7 +50,7 @@ void main() {
       timestamp: DateTime.now(),
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
-      status: 'PartiallyFilled',
+      status: EnumOrderStatus.partiallyFilled,
     );
   });
 

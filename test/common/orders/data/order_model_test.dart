@@ -16,7 +16,7 @@ void main() {
       timestamp: DateTime.now(),
       baseAsset: '0',
       quoteAsset: '1',
-      status: 'PartiallyFilled',
+      status: EnumOrderStatus.partiallyFilled,
     );
   });
 

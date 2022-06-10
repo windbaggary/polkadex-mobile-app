@@ -12,7 +12,7 @@ class OrderModel extends OrderEntity {
     required DateTime timestamp,
     required String baseAsset,
     required String quoteAsset,
-    required String status,
+    required EnumOrderStatus? status,
   }) : super(
           orderId: orderId,
           amount: amount,
@@ -37,7 +37,8 @@ class OrderModel extends OrderEntity {
       timestamp: DateTime.parse(map['timestamp']),
       baseAsset: map['base_asset_type'],
       quoteAsset: map['quote_asset_type'],
-      status: map['status'],
+      status: StringUtils.enumFromString<EnumOrderStatus>(
+          EnumOrderStatus.values, map['status']),
     );
   }
 }

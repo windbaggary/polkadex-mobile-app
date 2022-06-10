@@ -19,7 +19,7 @@ void main() {
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late DateTime timestamp;
-  late String status;
+  late EnumOrderStatus status;
   late String amount;
   late String price;
   late String address;
@@ -34,7 +34,7 @@ void main() {
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
-    status = 'Filled';
+    status = EnumOrderStatus.filled;
     amount = "100.0";
     price = "50.0";
     address = 'test';

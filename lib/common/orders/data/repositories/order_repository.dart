@@ -50,8 +50,7 @@ class OrderRepository implements IOrderRepository {
           timestamp: DateTime.now(),
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
-          status:
-              orderType == EnumOrderTypes.market ? 'Filled' : 'PartiallyFilled',
+          status: EnumOrderStatus.accepted,
         );
 
         return Right(newOrder);

@@ -72,6 +72,8 @@ enum EnumOrderTypes {
   stop,
 }
 
+enum EnumOrderStatus { accepted, partiallyFilled, filled }
+
 enum EnumAppChartTimestampTypes {
   oneMinute,
   fiveMinutes,

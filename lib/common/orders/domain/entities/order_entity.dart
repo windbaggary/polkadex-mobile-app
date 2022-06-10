@@ -23,7 +23,7 @@ abstract class OrderEntity extends Equatable {
   final DateTime timestamp;
   final String baseAsset;
   final String quoteAsset;
-  final String status;
+  final EnumOrderStatus? status;
 
   String get iFormattedDate {
     return DateFormat("MMM dd, yyyy HH:mm:ss").format(timestamp);

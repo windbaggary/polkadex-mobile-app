@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:polkadex/common/utils/enums.dart';
+
 import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
 import 'package:polkadex/common/orders/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/common/orders/domain/usecases/get_orders_usecase.dart';
@@ -45,7 +47,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
                   order.baseAsset == asset || order.quoteAsset == asset)
               .toList();
           _allOrders.sort((a, b) {
-            if (b.status == 'PartiallyFilled') {
+            if (b.status == EnumOrderStatus.partiallyFilled) {
               return 1;
             }
             return -1;
