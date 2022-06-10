@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'package:dart_amqp/dart_amqp.dart';
 import 'package:http/http.dart';
 import 'package:mysql_client/mysql_client.dart';
+import 'package:polkadex/common/utils/string_utils.dart';
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/common/network/mysql_client.dart';
+import 'package:polkadex/common/network/rabbit_mq_client.dart';
 
 class OrderRemoteDatasource {
   final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
@@ -66,5 +69,14 @@ class OrderRemoteDatasource {
     final dbClient = dependency<MysqlClient>();
 
     return dbClient.getOrderHistory(address);
+  }
+
+  Future<Consumer?> fetchOrdersConsumer(String address) async {
+    final Consumer? consumer = await dependency<RabbitMqClient>()
+        .tryBindQueueToConsumer(
+            '${StringUtils.generateCryptoRandomString()}-order-update-events',
+            '$address-order-update-events');
+
+    return consumer;
   }
 }

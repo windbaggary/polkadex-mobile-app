@@ -49,7 +49,7 @@ class BalanceRepository implements IBalanceRepository {
       return Right(null);
     } else {
       return Left(ApiError(
-          message: 'Connection error while trying to fetch orderbook data.'));
+          message: 'Connection error while trying to fetch balance data.'));
     }
   }
 

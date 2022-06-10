@@ -22,4 +22,9 @@ abstract class IOrderRepository {
     String signature,
   );
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(String address);
+  Future<Either<ApiError, void>> fetcOrdersLiveData(
+    String address,
+    Function() onMsgReceived,
+    Function(Object) onMsgError,
+  );
 }
