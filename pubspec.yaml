@@ -58,6 +58,7 @@ dependencies:
   chart_sparkline: ^1.0.10
   mysql_client: ^0.0.15
   json_rpc_2: ^3.0.1
+  firebase_core: ^1.17.1
 
 dev_dependencies:
   flutter_test:

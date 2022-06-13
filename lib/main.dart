@@ -15,6 +15,8 @@ import 'package:polkadex/generated/l10n.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'common/navigation/coordinator.dart';
 import 'common/navigation/routes.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   // Load the secret keys from .env file
@@ -22,6 +24,9 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await injection.init();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // A 2 seconds delay to show the splash screen
   await Future.delayed(const Duration(seconds: 2));
