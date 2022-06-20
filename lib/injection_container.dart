@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
 import 'package:polkadex/common/market_asset/data/repositories/market_repository.dart';
@@ -94,6 +95,8 @@ Future<void> init() async {
   dependency.registerSingleton<RabbitMqClient>(rabbitMqClient);
 
   dependency.registerSingleton<MysqlClient>(mysqlClient);
+
+  dependency.registerSingleton<FirebaseAnalytics>(FirebaseAnalytics.instance);
 
   dependency.registerFactory(
     () => MnemonicRemoteDatasource(),
