@@ -5,6 +5,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 
 /// The callback listener for the Order type item selection
 typedef OnItemSelected = void Function(int index);
@@ -78,25 +79,29 @@ class _OrderTypeDialogWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14),
-          ...EnumOrderTypes.values
-              .map((e) => InkWell(
-                    onTap: () {
-                      if (onItemSelected != null) {
-                        onItemSelected!(e);
-                      }
-                      selectedTypeNotifier.value = e;
-                      Navigator.pop(context);
-                    },
-                    child: ValueListenableBuilder<EnumOrderTypes?>(
-                      valueListenable: selectedTypeNotifier,
-                      builder: (context, selectedItem, child) =>
-                          _ThisOrderTypeItemWidget(
-                        orderTypeModel: e,
-                        isSelected: e == selectedItem,
-                      ),
-                    ),
-                  ))
-              .toList(),
+          ...EnumOrderTypes.values.map((e) {
+            final itemWidget = InkWell(
+              onTap: () {
+                if (onItemSelected != null) {
+                  onItemSelected!(e);
+                }
+                selectedTypeNotifier.value = e;
+                Navigator.pop(context);
+              },
+              child: ValueListenableBuilder<EnumOrderTypes?>(
+                valueListenable: selectedTypeNotifier,
+                builder: (context, selectedItem, child) =>
+                    _ThisOrderTypeItemWidget(
+                  orderTypeModel: e,
+                  isSelected: e == selectedItem,
+                ),
+              ),
+            );
+
+            return e == EnumOrderTypes.stop
+                ? SoonWidget(child: itemWidget)
+                : itemWidget;
+          }).toList(),
         ],
       ),
     );
