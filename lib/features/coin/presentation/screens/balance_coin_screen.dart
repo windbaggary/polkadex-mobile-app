@@ -9,7 +9,8 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -18,9 +19,9 @@ import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
-import 'package:polkadex/common/orders/presentation/cubits/order_history_cubit.dart';
 import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_pair_widget.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
@@ -60,12 +61,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => dependency<OrderHistoryCubit>()
-        ..getOrders(
+      create: (_) => dependency<TradeHistoryCubit>()
+        ..getTrades(
           widget.asset.assetId,
           context.read<AccountCubit>().accountAddress,
-          context.read<AccountCubit>().accountSignature,
-          false,
         ),
       child: MultiProvider(
         providers: [
@@ -258,12 +257,12 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                               style: tsS20W600CFF,
                             ),
                             Spacer(),
-                            BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+                            BlocBuilder<TradeHistoryCubit, TradeHistoryState>(
                               builder: (context, state) => Opacity(
                                 opacity:
-                                    state is! OrderHistoryLoaded ? 0.3 : 1.0,
+                                    state is! TradeHistoryLoaded ? 0.3 : 1.0,
                                 child: IgnorePointer(
-                                  ignoring: state is! OrderHistoryLoaded,
+                                  ignoring: state is! TradeHistoryLoaded,
                                   child: Row(
                                     children: [
                                       Padding(
@@ -382,10 +381,10 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child:
-                            BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+                            BlocBuilder<TradeHistoryCubit, TradeHistoryState>(
                           builder: (context, state) {
-                            if (state is OrderHistoryLoaded) {
-                              return state.orders.isEmpty
+                            if (state is TradeHistoryLoaded) {
+                              return state.trades.isEmpty
                                   ? Padding(
                                       padding:
                                           EdgeInsets.fromLTRB(18, 26.0, 18, 10),
@@ -408,15 +407,15 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                   : ListView.builder(
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemCount: state.orders.length,
+                                      itemCount: state.trades.length,
                                       padding: const EdgeInsets.only(top: 13),
                                       itemBuilder: (context, index) {
                                         return _ThisItemWidget(
-                                          order: state.orders[index],
+                                          tradeItem: state.trades[index],
                                           dateTitle: _getDateTitle(
-                                              state.orders[index].timestamp,
+                                              state.trades[index].timestamp,
                                               index > 0
-                                                  ? state.orders[index - 1]
+                                                  ? state.trades[index - 1]
                                                       .timestamp
                                                   : null),
                                         );
@@ -424,21 +423,17 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                     );
                             }
 
-                            if (state is OrderHistoryError) {
+                            if (state is TradeHistoryError) {
                               return Container(
                                 height: 50,
                                 child: PolkadexErrorRefreshWidget(
                                   onRefresh: () => context
-                                      .read<OrderHistoryCubit>()
-                                      .getOrders(
+                                      .read<TradeHistoryCubit>()
+                                      .getTrades(
                                         widget.asset.assetId,
                                         context
                                             .read<AccountCubit>()
                                             .accountAddress,
-                                        context
-                                            .read<AccountCubit>()
-                                            .accountSignature,
-                                        false,
                                       ),
                                 ),
                               );
@@ -464,7 +459,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
         ? _typeFilters.remove(EnumBuySell.buy)
         : _typeFilters.add(EnumBuySell.buy));
 
-    context.read<OrderHistoryCubit>().updateOrderHistoryFilter(
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
           filters: _typeFilters,
           dateFilter: _dateRange,
         );
@@ -475,7 +470,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
         ? _typeFilters.remove(EnumBuySell.sell)
         : _typeFilters.add(EnumBuySell.sell));
 
-    context.read<OrderHistoryCubit>().updateOrderHistoryFilter(
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
           filters: _typeFilters,
           dateFilter: _dateRange,
         );
@@ -488,7 +483,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
         context: context);
     setState(() => _dateRange = _tempDate);
 
-    context.read<OrderHistoryCubit>().updateOrderHistoryFilter(
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
           filters: _typeFilters,
           dateFilter: _dateRange,
         );
@@ -520,26 +515,36 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
 
 /// The base class for the list item
 class _ThisItemWidget extends StatelessWidget {
-  final OrderEntity order;
+  final TradeEntity tradeItem;
   final String? dateTitle;
 
   const _ThisItemWidget({
-    required this.order,
+    required this.tradeItem,
     required this.dateTitle,
   });
 
   @override
   Widget build(BuildContext context) {
     Widget child = Container();
-    switch (order.orderSide) {
-      case EnumBuySell.buy:
-        child = _buildBuyWidget(context, order);
-        break;
-      case EnumBuySell.sell:
-        child = _buildSellWidget(context, order);
-        break;
-      default:
-        child = Container();
+    if (tradeItem is OrderEntity) {
+      switch (tradeItem.event) {
+        case EnumTradeTypes.bid:
+        case EnumTradeTypes.ask:
+          child =
+              _buildHistoryOrderItemWidget(context, tradeItem as OrderEntity);
+          break;
+        default:
+          child = Container();
+      }
+    } else {
+      switch (tradeItem.event) {
+        case EnumTradeTypes.deposit:
+        case EnumTradeTypes.withdraw:
+          child = _buildHistoryTradeItemWidget(context, tradeItem);
+          break;
+        default:
+          child = Container();
+      }
     }
 
     final cardWidget = Padding(
@@ -576,8 +581,24 @@ class _ThisItemWidget extends StatelessWidget {
     return cardWidget;
   }
 
-  Widget _buildBuyWidget(BuildContext context, OrderEntity order) {
+  Widget _buildHistoryTradeItemWidget(BuildContext context, TradeEntity trade) {
     final cubit = context.read<MarketAssetCubit>();
+    Widget mainIcon;
+
+    switch (trade.event) {
+      case EnumTradeTypes.deposit:
+        mainIcon = SvgPicture.asset(
+          'Deposit'.asAssetSvg(),
+        );
+        break;
+      case EnumTradeTypes.withdraw:
+        mainIcon = SvgPicture.asset(
+          'Withdraw'.asAssetSvg(),
+        );
+        break;
+      default:
+        mainIcon = Container();
+    }
 
     return Row(
       children: [
@@ -589,21 +610,19 @@ class _ThisItemWidget extends StatelessWidget {
           decoration: BoxDecoration(
               color: AppColors.color8BA1BE.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)),
-          child: SvgPicture.asset(
-            'buy'.asAssetSvg(),
-          ),
+          child: mainIcon,
         ),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
+                cubit.getAssetDetailsById(trade.baseAsset).symbol,
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(order.timestamp).toUpperCase(),
+                DateFormat("hh:mm:ss aa").format(trade.timestamp).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
@@ -615,25 +634,13 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${order.amount} ${cubit.getAssetDetailsById(order.baseAsset).symbol}',
+                  '${trade.amount} ${cubit.getAssetDetailsById(trade.baseAsset).symbol}',
                   style: tsS14W500CFF.copyWith(
-                    color: AppColors.color0CA564,
+                    color: trade.event == EnumTradeTypes.bid ||
+                            trade.event == EnumTradeTypes.deposit
+                        ? AppColors.color0CA564
+                        : AppColors.colorE6007A,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 8.0,
-                    right: 4.0,
-                  ),
-                  child: SvgPicture.asset(
-                    'Arrow-Green'.asAssetSvg(),
-                    width: 10,
-                    height: 6.0,
-                  ),
-                ),
-                Text(
-                  '${double.parse(order.amount) * double.parse(order.price)} ${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
-                  style: tsS14W500CFF,
                 ),
               ],
             ),
@@ -643,8 +650,43 @@ class _ThisItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSellWidget(BuildContext context, OrderEntity order) {
+  Widget _buildHistoryOrderItemWidget(BuildContext context, OrderEntity order) {
     final cubit = context.read<MarketAssetCubit>();
+    Widget mainIcon, arrowIcon;
+
+    switch (order.event) {
+      case EnumTradeTypes.bid:
+        mainIcon = SvgPicture.asset(
+          'buy'.asAssetSvg(),
+        );
+        break;
+      case EnumTradeTypes.ask:
+        mainIcon = SvgPicture.asset(
+          'sell'.asAssetSvg(),
+        );
+        break;
+      default:
+        mainIcon = Container();
+    }
+
+    switch (order.event) {
+      case EnumTradeTypes.bid:
+        arrowIcon = SvgPicture.asset(
+          'Arrow-Green'.asAssetSvg(),
+          width: 10,
+          height: 6.0,
+        );
+        break;
+      case EnumTradeTypes.ask:
+        arrowIcon = SvgPicture.asset(
+          'Arrow-Red'.asAssetSvg(),
+          width: 10,
+          height: 6.0,
+        );
+        break;
+      default:
+        arrowIcon = Container();
+    }
 
     return Row(
       children: [
@@ -656,9 +698,7 @@ class _ThisItemWidget extends StatelessWidget {
           decoration: BoxDecoration(
               color: AppColors.color8BA1BE.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12)),
-          child: SvgPicture.asset(
-            'sell'.asAssetSvg(),
-          ),
+          child: mainIcon,
         ),
         Expanded(
           child: Column(
@@ -684,7 +724,10 @@ class _ThisItemWidget extends StatelessWidget {
                 Text(
                   '${order.amount} ${cubit.getAssetDetailsById(order.baseAsset).symbol}',
                   style: tsS14W500CFF.copyWith(
-                    color: AppColors.colorE6007A,
+                    color: order.event == EnumTradeTypes.bid ||
+                            order.event == EnumTradeTypes.deposit
+                        ? AppColors.color0CA564
+                        : AppColors.colorE6007A,
                   ),
                 ),
                 Padding(
@@ -692,11 +735,7 @@ class _ThisItemWidget extends StatelessWidget {
                     left: 8.0,
                     right: 4.0,
                   ),
-                  child: SvgPicture.asset(
-                    'Arrow-Red'.asAssetSvg(),
-                    width: 10,
-                    height: 6.0,
-                  ),
+                  child: arrowIcon,
                 ),
                 Text(
                   '${double.parse(order.amount) * double.parse(order.price)} ${cubit.getAssetDetailsById(order.quoteAsset).symbol}',

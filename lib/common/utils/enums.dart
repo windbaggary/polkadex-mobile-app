@@ -72,6 +72,14 @@ enum EnumOrderTypes {
   stop,
 }
 
+/// Enum for market limit drop down popups
+enum EnumTradeTypes {
+  bid,
+  ask,
+  withdraw,
+  deposit,
+}
+
 enum EnumAppChartTimestampTypes {
   oneMinute,
   fiveMinutes,

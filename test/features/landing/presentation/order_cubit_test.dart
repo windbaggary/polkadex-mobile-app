@@ -3,9 +3,9 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/orders/data/models/order_model.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
-import 'package:polkadex/common/orders/domain/usecases/place_order_usecase.dart';
+import 'package:polkadex/common/trades/data/models/order_model.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/usecases/place_order_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:test/test.dart';
 
@@ -17,6 +17,7 @@ void main() {
   late int nonce;
   late String baseAsset;
   late String quoteAsset;
+  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late String amount;
@@ -35,6 +36,7 @@ void main() {
     nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";
+    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     amount = '100.0';
@@ -42,15 +44,17 @@ void main() {
     address = 'test';
     signature = 'test';
     order = OrderModel(
-      orderId: '0',
+      tradeId: '0',
       amount: amount,
       price: price,
+      event: event,
       orderSide: orderSide,
       orderType: orderType,
       timestamp: DateTime.now(),
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
       status: 'PartiallyFilled',
+      market: '$baseAsset/$quoteAsset',
     );
   });
 

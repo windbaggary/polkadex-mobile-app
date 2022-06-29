@@ -6,7 +6,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/common/orders/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 
 class OrderItemWidget extends StatelessWidget {
   const OrderItemWidget({
@@ -24,7 +24,7 @@ class OrderItemWidget extends StatelessWidget {
     final cubit = context.read<MarketAssetCubit>();
 
     Color colorBuySell = AppColors.color0CA564;
-    if (order.iEnumType == EnumBuySell.sell) {
+    if (order.orderSide == EnumBuySell.sell) {
       colorBuySell = AppColors.colorE6007A;
     }
     return IgnorePointer(
