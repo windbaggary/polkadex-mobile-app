@@ -20,18 +20,15 @@ void main() {
       when(() => dataSource.getMarkets()).thenAnswer(
         (_) async => [
           {
-            'assetId': 'POLKADEX',
+            'assetId': 'asset',
             'baseAsset': {'polkadex': null},
-            'quoteAsset': {'asset': 1},
-            'minimumTradeAmount': 1000000000000,
-            'maximumTradeAmount': 1000000000000000,
-            'minimumWithdrawalAmount': 1000000000000,
-            'minimumDepositAmount': 1000000000000,
-            'maximumWithdrawalAmount': 1000000000000000,
-            'maximumDepositAmount': 1000000000000000,
-            'baseWithdrawalFee': 1,
-            'quoteWithdrawalFee': 1,
-            'enclaveId': 'esm9HVPQhFDaBtpe5LsV25bDfron3sNkfgHecRRoDShvJUxcF'
+            'quoteAsset': {'assetId': 0},
+            'minTradeAmount': 1,
+            'maxTradeAmount': '0x32874672354',
+            'minOrderQty': 1,
+            'maxOrderQty': '0x32874672354',
+            'minDepth': 1,
+            'maxSpread': 9001,
           }
         ],
       );

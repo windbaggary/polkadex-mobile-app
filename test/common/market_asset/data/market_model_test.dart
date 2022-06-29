@@ -10,15 +10,12 @@ void main() {
       assetId: 'asset',
       baseAsset: {'polkadex': null},
       quoteAsset: {'assetId': 0},
-      minimumTradeAmount: 1,
-      maximumTradeAmount: 22000000,
-      minimumWithdrawalAmount: 1,
-      minimumDepositAmount: 1,
-      maximumWithdrawalAmount: 22000000,
-      maximumDepositAmount: 22000000,
-      baseWithdrawalFee: 1,
-      quoteWithdrawalFee: 1,
-      enclaveId: 'eOUFHjkh239ifjnfFDASk',
+      minTradeAmount: 1,
+      maxTradeAmount: '0x32874672354',
+      minOrderQty: 1,
+      maxOrderQty: '0x32874672354',
+      minDepth: 1,
+      maxSpread: 9001,
     );
   });
 
