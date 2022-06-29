@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:graphql/client.dart';
 import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
 import 'package:polkadex/common/market_asset/data/repositories/market_repository.dart';
@@ -10,8 +11,6 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
-import 'package:polkadex/common/network/mysql_client.dart';
-import 'package:polkadex/common/network/rabbit_mq_client.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
 import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
@@ -70,6 +69,8 @@ import 'features/setup/domain/usecases/get_password_usecase.dart';
 import 'features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'common/web_view_runner/web_view_runner.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'graphql/utils/auth_iam_link.dart';
 import 'package:get_it/get_it.dart';
 
 final dependency = GetIt.instance;
@@ -79,24 +80,29 @@ Future<void> init() async {
       (await BiometricStorage().canAuthenticate()) ==
           CanAuthenticateResponse.success;
 
-  final RabbitMqClient rabbitMqClient = RabbitMqClient();
-  await rabbitMqClient.init();
-
-  final MysqlClient mysqlClient = MysqlClient();
-  await mysqlClient.init();
-
   dependency.registerLazySingleton(
     () => isBiometricAvailable,
     instanceName: 'isBiometricAvailable',
   );
 
+  dependency.registerSingleton<GraphQLClient>(
+    GraphQLClient(
+      cache: GraphQLCache(store: HiveStore()),
+      link: AuthIAMLink().split(
+        (request) => request.isSubscription,
+        HttpLink(
+          dotenv.get('GRAPHQL_ENDPOINT'),
+        ),
+        WebSocketLink(
+          dotenv.get('GRAPHQL_ENDPOINT'),
+        ),
+      ),
+    ),
+  );
+
   dependency.registerSingleton<WebViewRunner>(
     WebViewRunner()..launch(jsCode: 'assets/js/main.js'),
   );
-
-  dependency.registerSingleton<RabbitMqClient>(rabbitMqClient);
-
-  dependency.registerSingleton<MysqlClient>(mysqlClient);
 
   dependency.registerSingleton<FirebaseAnalytics>(FirebaseAnalytics.instance);
 
