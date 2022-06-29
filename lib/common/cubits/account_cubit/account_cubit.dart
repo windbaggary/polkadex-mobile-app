@@ -46,22 +46,26 @@ class AccountCubit extends Cubit<AccountState> {
   final GetPasswordUseCase _getPasswordUseCase;
   final ConfirmPasswordUseCase _confirmPasswordUseCase;
 
-  String get accountAddress {
-    final currentState = state;
-
-    return currentState is AccountLoaded ? currentState.account.address : '';
-  }
-
   String get accountName {
     final currentState = state;
 
     return currentState is AccountLoaded ? currentState.account.name : '';
   }
 
-  String get accountSignature {
+  String get mainAccountAddress {
     final currentState = state;
 
-    return currentState is AccountLoaded ? currentState.account.signature : '';
+    return currentState is AccountLoaded
+        ? currentState.account.mainAddress
+        : '';
+  }
+
+  String get proxyAccountAddress {
+    final currentState = state;
+
+    return currentState is AccountLoaded
+        ? currentState.account.proxyAddress
+        : '';
   }
 
   bool get biometricAccess {

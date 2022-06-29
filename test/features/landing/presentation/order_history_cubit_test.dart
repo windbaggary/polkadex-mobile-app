@@ -28,7 +28,6 @@ void main() {
   late String amount;
   late String price;
   late String address;
-  late String signature;
   late OrderModel order;
 
   setUp(() {
@@ -51,7 +50,6 @@ void main() {
     amount = "100.0";
     price = "50.0";
     address = 'test';
-    signature = 'test';
     order = OrderModel(
       tradeId: orderId,
       amount: amount,
@@ -88,7 +86,6 @@ void main() {
           await cubit.getOrders(
             '0',
             address,
-            signature,
             false,
           );
         },
@@ -115,7 +112,6 @@ void main() {
           await cubit.getOrders(
             '0',
             address,
-            signature,
             false,
           );
         },

@@ -19,7 +19,6 @@ class TradeRemoteDatasource {
     String price,
     String amount,
     String address,
-    String signature,
   ) async {
     try {
       final dbClient = dependency<MysqlClient>();
@@ -45,7 +44,6 @@ class TradeRemoteDatasource {
     int nonce,
     String address,
     int orderUuid,
-    String signature,
   ) async {
     return await post(
       Uri.parse('$_baseUrl/cancel_order'),
@@ -53,7 +51,7 @@ class TradeRemoteDatasource {
         'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, dynamic>{
-        'signature': {'Sr25519': signature},
+        'signature': {'Sr25519': ''},
         'payload': {
           'account': address,
           'order_id': orderUuid,

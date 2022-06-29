@@ -13,13 +13,11 @@ class WithdrawUseCase {
     required String asset,
     required double amount,
     required String address,
-    required String signature,
   }) async {
     return await _coinRepository.withdraw(
       asset,
       amount,
       address,
-      signature,
     );
   }
 }

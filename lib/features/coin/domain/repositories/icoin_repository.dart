@@ -6,6 +6,5 @@ abstract class ICoinRepository {
     String asset,
     double amount,
     String address,
-    String signature,
   );
 }

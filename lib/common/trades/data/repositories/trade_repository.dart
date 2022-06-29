@@ -26,7 +26,6 @@ class TradeRepository implements ITradeRepository {
     String price,
     String amount,
     String address,
-    String signature,
   ) async {
     try {
       final result = await _tradeRemoteDatasource.placeOrder(
@@ -38,7 +37,6 @@ class TradeRepository implements ITradeRepository {
         price,
         amount,
         address,
-        signature,
       );
 
       if (result != null) {
@@ -74,14 +72,12 @@ class TradeRepository implements ITradeRepository {
     int nonce,
     String address,
     String orderId,
-    String signature,
   ) async {
     try {
       final result = await _tradeRemoteDatasource.cancelOrder(
         nonce,
         address,
         int.parse(orderId),
-        signature,
       );
       final Map<String, dynamic> body = jsonDecode(result.body);
 

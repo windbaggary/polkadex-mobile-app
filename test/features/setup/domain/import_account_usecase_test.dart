@@ -33,12 +33,12 @@ void main() {
     tImportedAccount = ImportedAccountModel(
       encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
       encoding: tEncoding,
-      address: "k9o1dxJxQE8Zwm5Fy",
+      mainAddress: "k9o1dxJxQE8Zwm5Fy",
+      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
-      name: "test",
+      name: "",
       biometricOnly: false,
       biometricAccess: false,
-      signature: '',
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
   });

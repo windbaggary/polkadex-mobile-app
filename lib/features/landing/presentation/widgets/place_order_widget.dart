@@ -322,8 +322,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       orderSide: type,
       amount: amount,
       price: price,
-      address: context.read<AccountCubit>().accountAddress,
-      signature: context.read<AccountCubit>().accountSignature,
+      address: context.read<AccountCubit>().mainAccountAddress,
     );
 
     if (price.isEmpty) {

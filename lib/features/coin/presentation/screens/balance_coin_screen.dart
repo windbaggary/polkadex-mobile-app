@@ -64,7 +64,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
       create: (_) => dependency<TradeHistoryCubit>()
         ..getTrades(
           widget.asset.assetId,
-          context.read<AccountCubit>().accountAddress,
+          context.read<AccountCubit>().mainAccountAddress,
         ),
       child: MultiProvider(
         providers: [
@@ -433,7 +433,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                         widget.asset.assetId,
                                         context
                                             .read<AccountCubit>()
-                                            .accountAddress,
+                                            .mainAccountAddress,
                                       ),
                                 ),
                               );

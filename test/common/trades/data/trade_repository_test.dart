@@ -21,7 +21,6 @@ void main() {
   late String amount;
   late String price;
   late String address;
-  late String signature;
 
   setUp(() {
     dataSource = _MockTradeRemoteDatasource();
@@ -34,7 +33,6 @@ void main() {
     amount = "100.0";
     price = "50.0";
     address = 'test';
-    signature = 'test';
   });
 
   setUpAll(() {
@@ -45,8 +43,7 @@ void main() {
   group('Trade repository tests ', () {
     test('Must return a success orders submit response', () async {
       when(() => dataSource.placeOrder(
-              any(), any(), any(), any(), any(), any(), any(), any(), any()))
-          .thenAnswer(
+          any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
         (_) async => '123456789',
       );
 
@@ -59,19 +56,17 @@ void main() {
         price,
         amount,
         address,
-        signature,
       );
 
       expect(result.isRight(), true);
       verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset, 'Market',
-          'Bid', price, amount, address, signature)).called(1);
+          'Bid', price, amount, address)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
     test('Must return a failed orders submit response', () async {
       when(() => dataSource.placeOrder(
-              any(), any(), any(), any(), any(), any(), any(), any(), any()))
-          .thenAnswer(
+          any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
         (_) async => null,
       );
 
@@ -84,12 +79,11 @@ void main() {
         price,
         amount,
         address,
-        signature,
       );
 
       expect(result.isLeft(), true);
       verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset, 'Market',
-          'Bid', price, amount, address, signature)).called(1);
+          'Bid', price, amount, address)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });

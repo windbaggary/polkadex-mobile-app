@@ -55,7 +55,6 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     required String price,
     required String amount,
     required String address,
-    required String signature,
   }) async {
     final previousState = state;
     OrderEntity? newOrder;
@@ -66,15 +65,15 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     ));
 
     final result = await _placeOrderUseCase(
-        nonce: nonce,
-        baseAsset: baseAsset,
-        quoteAsset: quoteAsset,
-        orderType: orderType,
-        orderSide: orderSide,
-        price: price,
-        amount: amount,
-        address: address,
-        signature: signature);
+      nonce: nonce,
+      baseAsset: baseAsset,
+      quoteAsset: quoteAsset,
+      orderType: orderType,
+      orderSide: orderSide,
+      price: price,
+      amount: amount,
+      address: address,
+    );
 
     result.fold(
       (_) => emit(PlaceOrderNotAccepted(

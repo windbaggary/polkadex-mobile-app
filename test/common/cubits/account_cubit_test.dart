@@ -88,23 +88,23 @@ void main() {
     tImportedAccountBioOff = ImportedAccountModel(
       encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
       encoding: tEncoding,
-      address: "k9o1dxJxQE8Zwm5Fy",
+      mainAddress: "k9o1dxJxQE8Zwm5Fy",
+      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
+      name: 'test',
       biometricOnly: false,
       biometricAccess: false,
-      name: 'test',
-      signature: 'test',
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
     tImportedAccountBioOn = ImportedAccountModel(
       encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
       encoding: tEncoding,
-      address: "k9o1dxJxQE8Zwm5Fy",
+      mainAddress: "k9o1dxJxQE8Zwm5Fy",
+      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
+      name: 'test',
       biometricOnly: false,
       biometricAccess: true,
-      name: 'test',
-      signature: 'test',
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
     tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];

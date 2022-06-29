@@ -20,7 +20,6 @@ class PlaceOrderUseCase {
     required String price,
     required String amount,
     required String address,
-    required String signature,
   }) async {
     return await _tradeRepository.placeOrder(
       nonce,
@@ -31,7 +30,6 @@ class PlaceOrderUseCase {
       price,
       amount,
       address,
-      signature,
     );
   }
 }

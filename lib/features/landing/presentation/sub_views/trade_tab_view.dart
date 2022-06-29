@@ -72,8 +72,7 @@ class _TradeTabViewState extends State<TradeTabView>
                         .read<MarketAssetCubit>()
                         .currentBaseAssetDetails
                         .assetId,
-                    context.read<AccountCubit>().accountAddress,
-                    context.read<AccountCubit>().accountSignature,
+                    context.read<AccountCubit>().mainAccountAddress,
                     true,
                   ),
               ),

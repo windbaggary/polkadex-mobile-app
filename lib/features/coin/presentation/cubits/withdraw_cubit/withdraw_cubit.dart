@@ -65,7 +65,6 @@ class WithdrawCubit extends Cubit<WithdrawState> {
     required double amountFree,
     required double amountToBeWithdrawn,
     required String address,
-    required String signature,
   }) async {
     final previousState = state;
 
@@ -80,7 +79,6 @@ class WithdrawCubit extends Cubit<WithdrawState> {
       asset: asset,
       amount: amountToBeWithdrawn,
       address: address,
-      signature: signature,
     );
 
     result.fold(

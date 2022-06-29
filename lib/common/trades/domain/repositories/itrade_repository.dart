@@ -14,13 +14,11 @@ abstract class ITradeRepository {
     String price,
     String amount,
     String address,
-    String signature,
   );
   Future<Either<ApiError, String>> cancelOrder(
     int nonce,
     String address,
     String orderId,
-    String signature,
   );
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(String address);
 

@@ -23,7 +23,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   Future<void> getOrders(
     String asset,
     String address,
-    String signature,
     bool isOpenOrdersPriority,
   ) async {
     emit(OrderHistoryLoading());
@@ -94,7 +93,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   Future<bool> cancelOrder(
     OrderEntity order,
     String address,
-    String signature,
   ) async {
     final firstPreviousState = state;
 
@@ -112,7 +110,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
         nonce: 0,
         address: address,
         orderId: order.tradeId,
-        signature: signature,
       );
 
       final secondPreviousState = state;

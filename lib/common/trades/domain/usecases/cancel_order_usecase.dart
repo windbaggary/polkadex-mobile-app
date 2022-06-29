@@ -9,16 +9,15 @@ class CancelOrderUseCase {
 
   final ITradeRepository _tradeRepository;
 
-  Future<Either<ApiError, String>> call(
-      {required int nonce,
-      required String address,
-      required String orderId,
-      required String signature}) async {
+  Future<Either<ApiError, String>> call({
+    required int nonce,
+    required String address,
+    required String orderId,
+  }) async {
     return await _tradeRepository.cancelOrder(
       nonce,
       address,
       orderId,
-      signature,
     );
   }
 }

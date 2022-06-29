@@ -24,7 +24,6 @@ void main() {
   late String price;
   late OrderEntity order;
   late String address;
-  late String signature;
 
   setUp(() {
     _mockPlaceOrderUsecase = _MockPlaceOrderUsecase();
@@ -42,7 +41,6 @@ void main() {
     amount = '100.0';
     price = '50.0';
     address = 'test';
-    signature = 'test';
     order = OrderModel(
       tradeId: '0',
       amount: amount,
@@ -83,7 +81,6 @@ void main() {
               price: any(named: 'price'),
               amount: any(named: 'amount'),
               address: any(named: 'address'),
-              signature: any(named: 'signature'),
             ),
           ).thenAnswer(
             (_) async => Right(order),
@@ -100,7 +97,6 @@ void main() {
             price: price,
             amount: amount,
             address: address,
-            signature: signature,
           );
         },
         expect: () => [
@@ -122,7 +118,6 @@ void main() {
               price: any(named: 'price'),
               amount: any(named: 'amount'),
               address: any(named: 'address'),
-              signature: any(named: 'signature'),
             ),
           ).thenAnswer(
             (_) async => Left(ApiError(message: '')),
@@ -139,7 +134,6 @@ void main() {
             price: price,
             amount: amount,
             address: address,
-            signature: signature,
           );
         },
         expect: () => [

@@ -102,7 +102,7 @@ class _LandingScreenState extends State<LandingScreen>
         providers: [
           BlocProvider<BalanceCubit>(
             create: (_) => dependency<BalanceCubit>()
-              ..getBalance(context.read<AccountCubit>().accountAddress),
+              ..getBalance(context.read<AccountCubit>().mainAccountAddress),
           ),
           BlocProvider<OrderbookCubit>(
             create: (_) => dependency<OrderbookCubit>()

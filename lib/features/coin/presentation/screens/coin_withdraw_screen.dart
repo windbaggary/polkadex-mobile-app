@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -598,7 +597,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
       amountFree: currentState.amountFree,
       amountToBeWithdrawn: currentState.amountToBeWithdrawn,
       address: currentState.address,
-      signature: context.read<AccountCubit>().accountSignature,
     );
 
     _onAmountSlideUpdate(0.0, cubit, provider);

@@ -10,22 +10,22 @@ class ImportedAccountModel extends ImportedAccountEntity {
   const ImportedAccountModel({
     required String encoded,
     required EncodingEntity encoding,
-    required String address,
+    required String mainAddress,
+    required String proxyAddress,
     required MetaEntity meta,
     required String name,
     required bool biometricOnly,
     required bool biometricAccess,
-    required String signature,
     required EnumTimerIntervalTypes timerInterval,
   }) : super(
           encoded: encoded,
           encoding: encoding,
-          address: address,
+          mainAddress: mainAddress,
+          proxyAddress: proxyAddress,
           meta: meta,
           name: name,
           biometricOnly: biometricOnly,
           biometricAccess: biometricAccess,
-          signature: signature,
           timerInterval: timerInterval,
         );
 
@@ -33,12 +33,12 @@ class ImportedAccountModel extends ImportedAccountEntity {
     return ImportedAccountModel(
       encoded: map['encoded'],
       encoding: EncodingModel.fromJson(map['encoding']),
-      address: map['address'],
+      mainAddress: map['address'] ?? '',
+      proxyAddress: map['proxyAddress'] ?? '',
       meta: MetaModel.fromJson(map['meta']),
       name: map['name'] ?? '',
       biometricOnly: map['biometricOnly'] ?? false,
       biometricAccess: map['biometricAccess'] ?? false,
-      signature: map['signature'] ?? '',
       timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
           EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
     );
@@ -48,12 +48,12 @@ class ImportedAccountModel extends ImportedAccountEntity {
     return <String, dynamic>{
       'encoded': encoded,
       'encoding': (encoding as EncodingModel).toJson(),
-      'address': address,
+      'mainAddress': mainAddress,
+      'proxyAddress': proxyAddress,
       'meta': (meta as MetaModel).toJson(),
       'name': name,
       'biometricOnly': biometricOnly,
       'biometricAccess': biometricAccess,
-      'signature': signature,
       'timerInterval': timerInterval.toString(),
     };
   }
@@ -61,7 +61,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
   ImportedAccountModel copyWith({
     String? encoded,
     EncodingEntity? encoding,
-    String? address,
+    String? mainAddress,
+    String? proxyAddress,
     MetaEntity? meta,
     String? name,
     bool? biometricOnly,
@@ -72,12 +73,12 @@ class ImportedAccountModel extends ImportedAccountEntity {
     return ImportedAccountModel(
       encoded: encoded ?? this.encoded,
       encoding: encoding ?? this.encoding,
-      address: address ?? this.address,
+      mainAddress: mainAddress ?? this.mainAddress,
+      proxyAddress: proxyAddress ?? this.proxyAddress,
       meta: meta ?? this.meta,
       name: name ?? this.name,
       biometricOnly: biometricOnly ?? this.biometricOnly,
       biometricAccess: biometricAccess ?? this.biometricAccess,
-      signature: signature ?? this.signature,
       timerInterval: timerInterval ?? this.timerInterval,
     );
   }

@@ -7,34 +7,34 @@ class ImportedAccountEntity extends Equatable {
   const ImportedAccountEntity({
     required this.encoded,
     required this.encoding,
-    required this.address,
+    required this.mainAddress,
+    required this.proxyAddress,
     required this.meta,
     required this.name,
     required this.biometricOnly,
     required this.biometricAccess,
-    required this.signature,
     required this.timerInterval,
   });
 
   final String encoded;
   final EncodingEntity encoding;
-  final String address;
+  final String mainAddress;
+  final String proxyAddress;
   final MetaEntity meta;
   final String name;
   final bool biometricOnly;
   final bool biometricAccess;
-  final String signature;
   final EnumTimerIntervalTypes timerInterval;
 
   @override
   List<Object?> get props => [
         encoded,
         encoding,
-        address,
+        mainAddress,
+        proxyAddress,
         meta,
         name,
         biometricAccess,
-        signature,
         timerInterval,
       ];
 }
