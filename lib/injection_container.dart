@@ -39,15 +39,19 @@ import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.da
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
+import 'package:polkadex/features/setup/data/datasources/address_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/repositories/account_repository.dart';
+import 'package:polkadex/features/setup/data/repositories/address_repository.dart';
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
+import 'package:polkadex/features/setup/domain/repositories/iadress_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
@@ -90,10 +94,10 @@ Future<void> init() async {
       cache: GraphQLCache(store: HiveStore()),
       link: AuthIAMLink().split(
         (request) => request.isSubscription,
-        HttpLink(
-          dotenv.get('GRAPHQL_ENDPOINT'),
-        ),
         WebSocketLink(
+          dotenv.get('GRAPHQL_ENDPOINT_WEBSOCKET'),
+        ),
+        HttpLink(
           dotenv.get('GRAPHQL_ENDPOINT'),
         ),
       ),
@@ -114,6 +118,10 @@ Future<void> init() async {
     () => AccountLocalDatasource(),
   );
 
+  dependency.registerFactory(
+    () => AddressRemoteDatasource(),
+  );
+
   dependency.registerFactory<IMnemonicRepository>(
     () => MnemonicRepository(
       mnemonicRemoteDatasource: dependency(),
@@ -123,6 +131,12 @@ Future<void> init() async {
   dependency.registerFactory<IAccountRepository>(
     () => AccountRepository(
       accountLocalDatasource: dependency(),
+    ),
+  );
+
+  dependency.registerFactory<IAdressRepository>(
+    () => AddressRepository(
+      addressRemoteDatasource: dependency(),
     ),
   );
 
@@ -147,6 +161,12 @@ Future<void> init() async {
   dependency.registerFactory(
     () => GetAccountUseCase(
       accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => GetMainAccountAddressUsecase(
+      addressRepository: dependency(),
     ),
   );
 
@@ -204,6 +224,7 @@ Future<void> init() async {
       getAccountStorageUseCase: dependency(),
       confirmPasswordUseCase: dependency(),
       registerUserUseCase: dependency(),
+      getMainAccountAddressUsecase: dependency(),
     ),
   );
 

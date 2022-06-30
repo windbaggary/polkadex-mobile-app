@@ -53,8 +53,8 @@ void main() {
     tImportedAccount = ImportedAccountModel(
       encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
       encoding: tEncoding,
-      mainAddress: "k9o1dxJxQE8Zwm5Fy",
-      proxyAddress: "",
+      mainAddress: "",
+      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
       name: "",
       biometricOnly: false,

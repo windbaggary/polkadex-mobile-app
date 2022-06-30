@@ -15,6 +15,7 @@ import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.d
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:test/test.dart';
 
 class _MockGetAccountUseCase extends Mock implements GetAccountUseCase {}
@@ -37,6 +38,9 @@ class _MockConfirmPasswordUseCase extends Mock
 
 class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
 
+class _MockGetMainAccountAddressUseCase extends Mock
+    implements GetMainAccountAddressUsecase {}
+
 void main() {
   late _MockGetAccountUseCase _mockGetAccountUseCase;
   late _MockDeleteAccountUsecase _mockDeleteAccountUsecase;
@@ -47,6 +51,7 @@ void main() {
   late _MockGetPasswordUseCase _mockGetPasswordUseCase;
   late _MockConfirmPasswordUseCase _mockConfirmPasswordUseCase;
   late _MockRegisterUserUseCase _mockRegisterUserUseCase;
+  late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
   late MetaModel tMeta;
@@ -66,6 +71,7 @@ void main() {
     _mockGetPasswordUseCase = _MockGetPasswordUseCase();
     _mockConfirmPasswordUseCase = _MockConfirmPasswordUseCase();
     _mockRegisterUserUseCase = _MockRegisterUserUseCase();
+    _mockGetMainAccountAddressUseCase = _MockGetMainAccountAddressUseCase();
 
     cubit = AccountCubit(
       getAccountStorageUseCase: _mockGetAccountUseCase,
@@ -77,6 +83,7 @@ void main() {
       getPasswordUseCase: _mockGetPasswordUseCase,
       confirmPasswordUseCase: _mockConfirmPasswordUseCase,
       registerUserUseCase: _mockRegisterUserUseCase,
+      getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
 
     tMeta = MetaModel(name: 'userName');
@@ -306,6 +313,12 @@ void main() {
             (_) async => 'test',
           );
           when(
+            () => _mockGetMainAccountAddressUseCase(
+                proxyAdrress: any(named: 'proxyAdrress')),
+          ).thenAnswer(
+            (_) async => Right('k9o1dxJxQE8Zwm5Fy'),
+          );
+          when(
             () => _mockSaveAccountUseCase(
               keypairJson: any(named: 'keypairJson'),
             ),
@@ -399,6 +412,12 @@ void main() {
             (_) async => 'test',
           );
           when(
+            () => _mockGetMainAccountAddressUseCase(
+                proxyAdrress: any(named: 'proxyAdrress')),
+          ).thenAnswer(
+            (_) async => Right('k9o1dxJxQE8Zwm5Fy'),
+          );
+          when(
             () => _mockSaveAccountUseCase(
               keypairJson: any(named: 'keypairJson'),
             ),
@@ -441,6 +460,12 @@ void main() {
             ),
           ).thenAnswer(
             (_) async => 'test',
+          );
+          when(
+            () => _mockGetMainAccountAddressUseCase(
+                proxyAdrress: any(named: 'proxyAdrress')),
+          ).thenAnswer(
+            (_) async => Right('k9o1dxJxQE8Zwm5Fy'),
           );
           when(
             () => _mockSaveAccountUseCase(
