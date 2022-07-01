@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
 import 'package:polkadex/features/landing/domain/repositories/ibalance_repository.dart';
 

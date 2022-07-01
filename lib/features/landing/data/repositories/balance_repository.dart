@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dart_amqp/dart_amqp.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';

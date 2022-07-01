@@ -6,9 +6,9 @@ class MarketModel extends MarketEntity {
     required Map<String, dynamic> baseAsset,
     required Map<String, dynamic> quoteAsset,
     required int minTradeAmount,
-    required String maxTradeAmount,
+    required int maxTradeAmount,
     required int minOrderQty,
-    required String maxOrderQty,
+    required int maxOrderQty,
     required int minDepth,
     required int maxSpread,
   }) : super(

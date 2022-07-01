@@ -1,10 +1,6 @@
-import 'dart:typed_data';
-import 'package:dart_amqp/dart_amqp.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mysql_client/mysql_client.dart';
-import 'package:mysql_client/mysql_protocol.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
 import 'package:polkadex/features/landing/data/repositories/balance_repository.dart';
 

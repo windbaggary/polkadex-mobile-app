@@ -17,9 +17,9 @@ abstract class MarketEntity extends Equatable {
   final Map<String, dynamic> baseAsset;
   final Map<String, dynamic> quoteAsset;
   final int minTradeAmount;
-  final String maxTradeAmount;
+  final int maxTradeAmount;
   final int minOrderQty;
-  final String maxOrderQty;
+  final int maxOrderQty;
   final int minDepth;
   final int maxSpread;
 
