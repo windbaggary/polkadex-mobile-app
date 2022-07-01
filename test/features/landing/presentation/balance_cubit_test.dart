@@ -105,34 +105,6 @@ void main() {
           isA<BalanceError>(),
         ],
       );
-
-      blocTest<BalanceCubit, BalanceState>(
-        'Balance fetch failed',
-        build: () {
-          when(
-            () => _mockGetBalanceUsecase(address: any(named: 'address')),
-          ).thenAnswer(
-            (_) async => Right(balance),
-          );
-          when(
-            () => _mockGetBalanceLiveDataUsecase(
-              address: any(named: 'address'),
-              onMsgReceived: any(named: 'onMsgReceived'),
-              onMsgError: any(named: 'onMsgError'),
-            ),
-          ).thenAnswer(
-            (_) async => Left(ApiError(message: '')),
-          );
-          return cubit;
-        },
-        act: (cubit) async {
-          await cubit.getBalance(address);
-        },
-        expect: () => [
-          isA<BalanceLoading>(),
-          isA<BalanceError>(),
-        ],
-      );
     },
   );
 }

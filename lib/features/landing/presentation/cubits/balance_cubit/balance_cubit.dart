@@ -27,7 +27,7 @@ class BalanceCubit extends Cubit<BalanceState> {
 
     final result = await _getBalanceUseCase(address: address);
 
-    final resultLiveData = await _getBalanceLiveDataUseCase(
+    await _getBalanceLiveDataUseCase(
       address: address,
       onMsgReceived: (balanceUpdate) {
         _baseFree.addAll(balanceUpdate.free);
@@ -44,12 +44,6 @@ class BalanceCubit extends Cubit<BalanceState> {
         ),
       ),
     );
-
-    resultLiveData.fold(
-        (error) => emit(
-              BalanceError(message: error.message),
-            ),
-        (_) => null);
 
     final currentState = state;
 

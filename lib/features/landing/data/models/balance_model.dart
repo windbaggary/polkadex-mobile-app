@@ -1,4 +1,3 @@
-import 'package:mysql_client/mysql_client.dart';
 import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
 
 class BalanceModel extends BalanceEntity {
@@ -10,15 +9,13 @@ class BalanceModel extends BalanceEntity {
           reserved: reserved,
         );
 
-  factory BalanceModel.fromResultSet(IResultSet resultSet) {
-    final listBalance = resultSet.rows.map((row) => row.assoc()).toList();
-
+  factory BalanceModel.fromJson(List<dynamic> listMap) {
     final mapFree = {};
     final mapReserved = {};
 
-    for (var assetMap in listBalance) {
-      mapFree[assetMap['asset_type']] = assetMap['free_balance'];
-      mapReserved[assetMap['asset_type']] = assetMap['reserved_balance'];
+    for (var assetItem in listMap) {
+      mapFree[assetItem['asset']] = assetItem['free'];
+      mapReserved[assetItem['asset']] = assetItem['reserved'];
     }
 
     return BalanceModel(

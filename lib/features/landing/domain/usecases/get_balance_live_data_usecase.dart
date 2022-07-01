@@ -10,7 +10,7 @@ class GetBalanceLiveDataUseCase {
 
   final IBalanceRepository _balanceRepository;
 
-  Future<Either<ApiError, void>> call({
+  Future<void> call({
     required String address,
     required Function(BalanceEntity) onMsgReceived,
     required Function(Object) onMsgError,
