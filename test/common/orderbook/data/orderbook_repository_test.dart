@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:dart_amqp/dart_amqp.dart';
-import 'package:http/http.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
@@ -18,6 +16,8 @@ void main() {
   late OrderbookRepository repository;
   late String leftTokenId;
   late String rightTokenId;
+  late Map<String, dynamic> tDataSuccess;
+  late Map<String, dynamic> tDataError;
 
   setUp(() {
     dataSource = _MockOrderbookRemoteDatasource();
@@ -25,16 +25,23 @@ void main() {
     repository = OrderbookRepository(orderbookRemoteDatasource: dataSource);
     leftTokenId = '0';
     rightTokenId = '1';
+    tDataSuccess = {
+      "getOrderbook": {"items": [], "nextToken": null},
+    };
+    tDataError = {
+      "getAllBalancesByMainAccount": {"items": [], "nextToken": null},
+    };
   });
 
   group('Orderbook repository tests', () {
     test('Must return a successful fetch orderbook data response', () async {
       when(() => dataSource.getOrderbookData(any(), any())).thenAnswer(
-        (_) async => Response(
-            jsonEncode({
-              "Fine": {"asks": [], "bids": []}
-            }),
-            200),
+        (_) async => QueryResult.optimistic(
+          options: QueryOptions(
+            document: gql(''), // this is the query string you just created
+          ),
+          data: tDataSuccess,
+        ),
       );
 
       final result = await repository.getOrderbookData(
@@ -55,7 +62,12 @@ void main() {
             any(),
             any(),
           )).thenAnswer(
-        (_) async => Response('', 400),
+        (_) async => QueryResult.optimistic(
+          options: QueryOptions(
+            document: gql(''), // this is the query string you just created
+          ),
+          data: tDataError,
+        ),
       );
 
       final result = await repository.getOrderbookData(

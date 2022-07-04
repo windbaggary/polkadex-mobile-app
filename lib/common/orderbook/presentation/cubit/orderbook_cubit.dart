@@ -11,11 +11,9 @@ class OrderbookCubit extends Cubit<OrderbookState> {
     required FetchOrderbookDataUseCase fetchOrderbookDataUseCase,
     required FetchOrderbookLiveDataUseCase fetchOrderbookLiveDataUseCase,
   })  : _fetchOrderbookDataUseCase = fetchOrderbookDataUseCase,
-        _fetchOrderbookLiveDataUseCase = fetchOrderbookLiveDataUseCase,
         super(OrderbookInitial());
 
   final FetchOrderbookDataUseCase _fetchOrderbookDataUseCase;
-  final FetchOrderbookLiveDataUseCase _fetchOrderbookLiveDataUseCase;
 
   Future<void> fetchOrderbookData({
     required String leftTokenId,
@@ -28,24 +26,24 @@ class OrderbookCubit extends Cubit<OrderbookState> {
       rightTokenId: rightTokenId,
     );
 
-    final resultLiveData = await _fetchOrderbookLiveDataUseCase(
-      leftTokenId: leftTokenId,
-      rightTokenId: rightTokenId,
-      onMsgReceived: (orderbookMsg) {
-        emit(OrderbookLoaded(orderbook: orderbookMsg));
-      },
-      onMsgError: (error) => emit(
-        OrderbookError(
-          errorMessage: error.toString(),
-        ),
-      ),
-    );
+    //final resultLiveData = await _fetchOrderbookLiveDataUseCase(
+    //  leftTokenId: leftTokenId,
+    //  rightTokenId: rightTokenId,
+    //  onMsgReceived: (orderbookMsg) {
+    //    emit(OrderbookLoaded(orderbook: orderbookMsg));
+    //  },
+    //  onMsgError: (error) => emit(
+    //    OrderbookError(
+    //      errorMessage: error.toString(),
+    //    ),
+    //  ),
+    //);
 
-    resultLiveData.fold(
-        (error) => emit(
-              OrderbookError(errorMessage: error.message),
-            ),
-        (_) => null);
+    //resultLiveData.fold(
+    //    (error) => emit(
+    //          OrderbookError(errorMessage: error.message),
+    //        ),
+    //    (_) => null);
 
     final currentState = state;
 

@@ -845,7 +845,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          double.parse(state.free[tokenId] ?? '0')
+                          double.parse(state.free.getBalance(tokenId))
                               .toStringAsFixed(2),
                           style: tsS25W500CFF,
                         ),

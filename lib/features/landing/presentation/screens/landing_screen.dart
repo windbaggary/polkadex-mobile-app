@@ -13,6 +13,7 @@ import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_vi
 import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/trade_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_bottom_navigation_bar.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_drawer_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -107,8 +108,14 @@ class _LandingScreenState extends State<LandingScreen>
           BlocProvider<OrderbookCubit>(
             create: (_) => dependency<OrderbookCubit>()
               ..fetchOrderbookData(
-                leftTokenId: '0',
-                rightTokenId: '1',
+                leftTokenId: context
+                    .read<MarketAssetCubit>()
+                    .currentBaseAssetDetails
+                    .assetId,
+                rightTokenId: context
+                    .read<MarketAssetCubit>()
+                    .currentQuoteAssetDetails
+                    .assetId,
               ),
           ),
         ],

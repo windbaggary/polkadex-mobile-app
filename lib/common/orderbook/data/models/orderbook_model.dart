@@ -11,14 +11,11 @@ class OrderbookModel extends OrderbookEntity {
           bid: bid,
         );
 
-  factory OrderbookModel.fromJson(Map<String, dynamic> map) {
-    final listAskData = (map['asks'] as List);
-    final listBidData = (map['bids'] as List);
+  factory OrderbookModel.fromJson(List<dynamic> listMap) {
+    final listAskData = listMap.where((item) => item['side'] == 'Ask').toList();
+    final listBidData = listMap.where((item) => item['side'] == 'Bid').toList();
     double? askCumulativeAmount;
     double? bidCumulativeAmount;
-
-    listAskData.sort((a, b) => a[0].compareTo(b[0]));
-    listBidData.sort((a, b) => b[0].compareTo(a[0]));
 
     final List<OrderbookItemEntity> dataAsk =
         List<OrderbookItemEntity>.generate(
@@ -43,6 +40,9 @@ class OrderbookModel extends OrderbookEntity {
         return newItem;
       },
     ).toList();
+
+    dataAsk.sort((a, b) => a.price.compareTo(b.price));
+    dataBid.sort((a, b) => a.price.compareTo(b.price));
 
     return OrderbookModel(
       ask: dataAsk,

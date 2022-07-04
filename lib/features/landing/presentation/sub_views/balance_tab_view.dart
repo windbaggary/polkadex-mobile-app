@@ -332,7 +332,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                   tokenFullName: asset.name,
                                   assetImg: TokenUtils.tokenIdToAssetImg(
                                       asset.assetId),
-                                  amount: state.free[key],
+                                  amount: state.free.getBalance(key),
                                 ),
                               );
                             },
