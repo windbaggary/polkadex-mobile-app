@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:polkadex/app_lifecycle_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
@@ -22,8 +21,6 @@ import 'firebase_options.dart';
 void main() async {
   // Load the secret keys from .env file
   await dotenv.load(fileName: ".env");
-
-  await initHiveForFlutter();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

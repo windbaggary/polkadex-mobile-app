@@ -1,33 +1,30 @@
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
-abstract class OrderEntity extends TradeEntity {
+abstract class OrderEntity extends Equatable {
   const OrderEntity({
-    required String tradeId,
-    required String baseAsset,
-    required String amount,
-    required DateTime timestamp,
-    required String status,
-    required EnumTradeTypes event,
-    required String market,
+    required this.tradeId,
+    required this.baseAsset,
+    required this.amount,
+    required this.timestamp,
+    required this.status,
+    required this.market,
     required this.price,
     required this.orderSide,
     required this.orderType,
     required this.quoteAsset,
-  }) : super(
-          tradeId: tradeId,
-          baseAsset: baseAsset,
-          amount: amount,
-          timestamp: timestamp,
-          status: status,
-          event: event,
-          market: market,
-        );
+  });
 
+  final String tradeId;
+  final String baseAsset;
+  final String amount;
+  final DateTime timestamp;
+  final String status;
+  final String market;
   final String price;
   final EnumBuySell orderSide;
-  final EnumOrderTypes? orderType;
+  final EnumOrderTypes orderType;
   final String quoteAsset;
 
   String get iFormattedDate {
@@ -35,10 +32,10 @@ abstract class OrderEntity extends TradeEntity {
   }
 
   String get iType {
-    switch (event) {
-      case EnumTradeTypes.bid:
+    switch (orderSide) {
+      case EnumBuySell.buy:
         return "Buy";
-      case EnumTradeTypes.ask:
+      case EnumBuySell.sell:
         return "Sell";
       default:
         return "";
@@ -65,7 +62,6 @@ abstract class OrderEntity extends TradeEntity {
         tradeId,
         amount,
         price,
-        event,
         orderType,
         timestamp,
         baseAsset,

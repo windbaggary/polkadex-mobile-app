@@ -93,7 +93,7 @@ Future<void> init() async {
 
   dependency.registerSingleton<GraphQLClient>(
     GraphQLClient(
-      cache: GraphQLCache(store: HiveStore()),
+      cache: GraphQLCache(),
       alwaysRebroadcast: true,
       link: Link.split(
         (request) {

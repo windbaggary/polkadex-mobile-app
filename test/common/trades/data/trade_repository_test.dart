@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mysql_client/mysql_client.dart';
@@ -13,26 +14,43 @@ class _MockTradeRemoteDatasource extends Mock implements TradeRemoteDatasource {
 void main() {
   late _MockTradeRemoteDatasource dataSource;
   late TradeRepository repository;
-  late int nonce;
   late String baseAsset;
   late String quoteAsset;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late String amount;
   late String price;
-  late String address;
+  late String mainAddress;
+  late String proxyAddress;
+  late Map<String, dynamic> tDataSuccess;
 
   setUp(() {
     dataSource = _MockTradeRemoteDatasource();
     repository = TradeRepository(tradeRemoteDatasource: dataSource);
-    nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     amount = "100.0";
     price = "50.0";
-    address = 'test';
+    mainAddress = 'test';
+    proxyAddress = 'tset';
+    tDataSuccess = {
+      "listTransactionsByMainAccount": {
+        "items": [
+          {
+            'main_account': 'asdfghj',
+            'txn_type': 'DEPOSIT',
+            'asset': 'PDEX',
+            'amount': '20',
+            'fee': '0.000000',
+            'status': 'CONFIRMED',
+            'time': '2022-07-05T14:07:31.060470763+00:00'
+          },
+        ],
+        "nextToken": null
+      },
+    };
   });
 
   setUpAll(() {
@@ -48,19 +66,19 @@ void main() {
       );
 
       final result = await repository.placeOrder(
-        nonce,
+        mainAddress,
+        proxyAddress,
         baseAsset,
         quoteAsset,
         orderType,
         orderSide,
         price,
         amount,
-        address,
       );
 
       expect(result.isRight(), true);
-      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset, 'Market',
-          'Bid', price, amount, address)).called(1);
+      verify(() => dataSource.placeOrder(mainAddress, proxyAddress, baseAsset,
+          quoteAsset, 'Market', 'Bid', price, amount)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
@@ -71,19 +89,19 @@ void main() {
       );
 
       final result = await repository.placeOrder(
-        nonce,
+        mainAddress,
+        proxyAddress,
         baseAsset,
         quoteAsset,
         orderType,
         orderSide,
         price,
         amount,
-        address,
       );
 
       expect(result.isLeft(), true);
-      verify(() => dataSource.placeOrder(nonce, baseAsset, quoteAsset, 'Market',
-          'Bid', price, amount, address)).called(1);
+      verify(() => dataSource.placeOrder(mainAddress, proxyAddress, baseAsset,
+          quoteAsset, 'Market', 'Bid', price, amount)).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });
@@ -113,66 +131,27 @@ void main() {
       ),
     );
 
-    final result = await repository.fetchOrders(address);
+    final result = await repository.fetchOrders(mainAddress);
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchOrders(address)).called(1);
+    verify(() => dataSource.fetchOrders(mainAddress)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 
   test('Must return a success trades fetch response', () async {
-    when(() => dataSource.fetchOrders(any())).thenAnswer(
-      (_) async => EmptyResultSet(
-        okPacket: MySQLPacketOK.decode(
-          Uint8List.fromList(
-            [
-              0x62,
-              0x6c,
-              0xc3,
-              0xa5,
-              0x62,
-              0xc3,
-              0xa6,
-              0x72,
-              0x67,
-              0x72,
-              0xc3,
-              0xb8,
-              0x64
-            ],
-          ),
-        ),
-      ),
-    );
     when(() => dataSource.fetchTrades(any())).thenAnswer(
-      (_) async => EmptyResultSet(
-        okPacket: MySQLPacketOK.decode(
-          Uint8List.fromList(
-            [
-              0x62,
-              0x6c,
-              0xc3,
-              0xa5,
-              0x62,
-              0xc3,
-              0xa6,
-              0x72,
-              0x67,
-              0x72,
-              0xc3,
-              0xb8,
-              0x64
-            ],
-          ),
+      (_) async => QueryResult.optimistic(
+        options: QueryOptions(
+          document: gql(''), // this is the query string you just created
         ),
+        data: tDataSuccess,
       ),
     );
 
-    final result = await repository.fetchTrades(address);
+    final result = await repository.fetchTrades(mainAddress);
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchOrders(address)).called(1);
-    verify(() => dataSource.fetchTrades(address)).called(1);
+    verify(() => dataSource.fetchTrades(mainAddress)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 
@@ -181,10 +160,10 @@ void main() {
       (_) async => throw Exception('Some arbitrary error'),
     );
 
-    final result = await repository.fetchOrders(address);
+    final result = await repository.fetchOrders(mainAddress);
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchOrders(address)).called(1);
+    verify(() => dataSource.fetchOrders(mainAddress)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 
@@ -193,10 +172,10 @@ void main() {
       (_) async => throw Exception('Some arbitrary error'),
     );
 
-    final result = await repository.fetchTrades(address);
+    final result = await repository.fetchTrades(mainAddress);
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchTrades(address)).called(1);
+    verify(() => dataSource.fetchTrades(mainAddress)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 }

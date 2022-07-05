@@ -6,14 +6,14 @@ import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 
 abstract class ITradeRepository {
   Future<Either<ApiError, OrderEntity>> placeOrder(
-    int nonce,
+    String mainAddress,
+    String proxyAddress,
     String baseAsset,
     String quoteAsset,
     EnumOrderTypes orderType,
     EnumBuySell orderSide,
     String price,
     String amount,
-    String address,
   );
   Future<Either<ApiError, String>> cancelOrder(
     int nonce,

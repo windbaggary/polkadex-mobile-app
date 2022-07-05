@@ -318,14 +318,14 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     final resultPlaceOrder = await placeOrderCubit.placeOrder(
-      nonce: 0,
+      mainAddress: context.read<AccountCubit>().mainAccountAddress,
+      proxyAddress: context.read<AccountCubit>().proxyAccountAddress,
       baseAsset: leftAsset,
       quoteAsset: rightAsset,
       orderType: side,
       orderSide: type,
       amount: amount,
       price: price,
-      address: context.read<AccountCubit>().mainAccountAddress,
     );
 
     if (price.isEmpty) {

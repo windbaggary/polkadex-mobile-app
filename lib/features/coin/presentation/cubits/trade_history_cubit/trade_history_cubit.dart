@@ -30,12 +30,12 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
       (trades) {
         _allTrades = trades.where((trade) {
           if (trade is OrderEntity) {
-            return trade.baseAsset == asset || trade.quoteAsset == asset;
+            return trade.asset == asset || trade.asset == asset;
           } else {
-            return trade.baseAsset == asset;
+            return trade.asset == asset;
           }
         }).toList();
-        _allTrades.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        _allTrades.sort((a, b) => b.time.compareTo(a.time));
 
         emit(TradeHistoryLoaded(
           trades: _allTrades,
@@ -52,12 +52,12 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
 
     if (dateFilter != null) {
       _tradesFiltered.removeWhere((trade) =>
-          trade.timestamp.isBefore(dateFilter.start) ||
-          trade.timestamp.isAfter(dateFilter.end));
+          trade.time.isBefore(dateFilter.start) ||
+          trade.time.isAfter(dateFilter.end));
     }
 
     if (filters.isNotEmpty) {
-      _tradesFiltered.removeWhere((trade) => !filters.contains(trade.event));
+      _tradesFiltered.removeWhere((trade) => !filters.contains(trade.txnType));
     }
 
     emit(

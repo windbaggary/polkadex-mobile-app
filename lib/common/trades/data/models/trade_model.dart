@@ -4,33 +4,33 @@ import 'package:polkadex/common/utils/string_utils.dart';
 
 class TradeModel extends TradeEntity {
   const TradeModel({
-    required String tradeId,
-    required String baseAsset,
+    required String mainAccount,
+    required EnumTradeTypes txnType,
+    required String asset,
     required String amount,
-    required DateTime timestamp,
+    required String fee,
     required String status,
-    required EnumTradeTypes event,
-    required String market,
+    required DateTime time,
   }) : super(
-          tradeId: tradeId,
-          baseAsset: baseAsset,
+          mainAccount: mainAccount,
+          txnType: txnType,
+          asset: asset,
           amount: amount,
-          timestamp: timestamp,
+          fee: fee,
           status: status,
-          event: event,
-          market: market,
+          time: time,
         );
 
-  factory TradeModel.fromDepWithJson(Map<String, dynamic> map) {
+  factory TradeModel.fromJson(Map<String, dynamic> map) {
     return TradeModel(
-      tradeId: map['id'],
-      baseAsset: map['asset_type'],
+      mainAccount: map['main_account'],
+      txnType: StringUtils.enumFromString<EnumTradeTypes>(
+          EnumTradeTypes.values, map['txn_type'])!,
+      asset: map['asset'],
       amount: map['amount'],
-      timestamp: DateTime.parse(map['timestamp']),
+      fee: map['fee'],
       status: map['status'],
-      event: StringUtils.enumFromString<EnumTradeTypes>(
-          EnumTradeTypes.values, map['event'])!,
-      market: map['market'],
+      time: DateTime.parse(map['time']),
     );
   }
 }

@@ -14,13 +14,12 @@ class _MockGetTradesUsecase extends Mock implements GetTradesUseCase {}
 void main() {
   late _MockGetTradesUsecase _mockGetTradesUsecase;
   late TradeHistoryCubit cubit;
-  late String tradeId;
-  late String baseAsset;
-  late String quoteAsset;
-  late EnumTradeTypes event;
-  late DateTime timestamp;
+  late String mainAccount;
+  late String asset;
+  late DateTime time;
   late String status;
   late String amount;
+  late String fee;
   late String address;
   late TradeEntity trade;
 
@@ -31,22 +30,21 @@ void main() {
       getTradesUseCase: _mockGetTradesUsecase,
     );
 
-    tradeId = '786653432';
-    baseAsset = "0";
-    quoteAsset = "1";
-    event = EnumTradeTypes.bid;
-    timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
+    mainAccount = '786653432';
+    asset = "0";
+    time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
     status = 'PartiallyFilled';
     amount = "100.0";
+    fee = "1.0";
     address = 'test';
     trade = TradeModel(
-      tradeId: tradeId,
+      mainAccount: mainAccount,
+      txnType: EnumTradeTypes.deposit,
+      asset: asset,
       amount: amount,
-      event: event,
-      timestamp: timestamp,
-      baseAsset: baseAsset,
+      fee: fee,
       status: status,
-      market: '$baseAsset/$quoteAsset',
+      time: time,
     );
   });
 

@@ -3,31 +3,31 @@ import 'package:polkadex/common/utils/enums.dart';
 
 abstract class TradeEntity extends Equatable {
   const TradeEntity({
-    required this.tradeId,
-    required this.baseAsset,
+    required this.mainAccount,
+    required this.txnType,
+    required this.asset,
     required this.amount,
-    required this.timestamp,
+    required this.fee,
     required this.status,
-    required this.event,
-    required this.market,
+    required this.time,
   });
 
-  final String tradeId;
-  final String baseAsset;
+  final String mainAccount;
+  final EnumTradeTypes txnType;
+  final String asset;
   final String amount;
-  final DateTime timestamp;
+  final String fee;
   final String status;
-  final EnumTradeTypes event;
-  final String market;
+  final DateTime time;
 
   @override
   List<Object?> get props => [
-        tradeId,
-        baseAsset,
+        mainAccount,
+        txnType,
+        asset,
         amount,
-        timestamp,
+        fee,
         status,
-        event,
-        market,
+        time,
       ];
 }

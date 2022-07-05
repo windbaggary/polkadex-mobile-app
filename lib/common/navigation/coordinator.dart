@@ -83,8 +83,6 @@ abstract class Coordinator {
     required AssetEntity quoteToken,
     EnumCardFlipState? enumCardFlipState,
   }) {
-    print(baseToken);
-    print(quoteToken);
     _navigationKey.currentState?.pushNamed(
       Routes.coinTradeScreen,
       arguments: {

@@ -13,34 +13,31 @@ class _OrderRepositoryMock extends Mock implements ITradeRepository {}
 void main() {
   late PlaceOrderUseCase _usecase;
   late _OrderRepositoryMock _repository;
-  late int nonce;
   late String baseAsset;
   late String quoteAsset;
-  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late String amount;
   late String price;
   late OrderEntity order;
-  late String address;
+  late String mainAddress;
+  late String proxyAddress;
 
   setUp(() {
     _repository = _OrderRepositoryMock();
     _usecase = PlaceOrderUseCase(tradeRepository: _repository);
-    nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";
-    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     amount = "100.0";
     price = "50.0";
-    address = 'test';
+    mainAddress = 'test';
+    proxyAddress = 'tset';
     order = order = OrderModel(
         tradeId: '0',
         amount: amount,
         price: price,
-        event: event,
         orderSide: orderSide,
         orderType: orderType,
         timestamp: DateTime.now(),
@@ -67,14 +64,14 @@ void main() {
         OrderEntity? orderResult;
         // act
         final result = await _usecase(
-          nonce: nonce,
+          mainAddress: mainAddress,
+          proxyAddress: proxyAddress,
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
           orderType: orderType,
           orderSide: orderSide,
           price: price,
           amount: amount,
-          address: address,
         );
         // assert
 
@@ -100,14 +97,14 @@ void main() {
         );
         // act
         final result = await _usecase(
-          nonce: nonce,
+          mainAddress: mainAddress,
+          proxyAddress: proxyAddress,
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
           orderType: orderType,
           orderSide: orderSide,
           price: price,
           amount: amount,
-          address: address,
         );
         // assert
 

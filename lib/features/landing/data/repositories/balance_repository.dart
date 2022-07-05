@@ -20,7 +20,6 @@ class BalanceRepository implements IBalanceRepository {
       return Right(BalanceModel.fromJson(
           result.data?['getAllBalancesByMainAccount']['items']));
     } catch (_) {
-      print(_);
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }

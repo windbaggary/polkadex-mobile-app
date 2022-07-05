@@ -14,16 +14,15 @@ class _MockPlaceOrderUsecase extends Mock implements PlaceOrderUseCase {}
 void main() {
   late _MockPlaceOrderUsecase _mockPlaceOrderUsecase;
   late PlaceOrderCubit cubit;
-  late int nonce;
   late String baseAsset;
   late String quoteAsset;
-  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
   late String amount;
   late String price;
   late OrderEntity order;
-  late String address;
+  late String mainAddress;
+  late String proxyAddress;
 
   setUp(() {
     _mockPlaceOrderUsecase = _MockPlaceOrderUsecase();
@@ -32,20 +31,18 @@ void main() {
       placeOrderUseCase: _mockPlaceOrderUsecase,
     );
 
-    nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";
-    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     amount = '100.0';
     price = '50.0';
-    address = 'test';
+    mainAddress = 'test';
+    proxyAddress = 'tset';
     order = OrderModel(
       tradeId: '0',
       amount: amount,
       price: price,
-      event: event,
       orderSide: orderSide,
       orderType: orderType,
       timestamp: DateTime.now(),
@@ -73,14 +70,14 @@ void main() {
         build: () {
           when(
             () => _mockPlaceOrderUsecase(
-              nonce: any(named: 'nonce'),
+              mainAddress: any(named: 'mainAddress'),
+              proxyAddress: any(named: 'proxyAddress'),
               baseAsset: any(named: 'baseAsset'),
               quoteAsset: any(named: 'quoteAsset'),
               orderType: any(named: 'orderType'),
               orderSide: any(named: 'orderSide'),
               price: any(named: 'price'),
               amount: any(named: 'amount'),
-              address: any(named: 'address'),
             ),
           ).thenAnswer(
             (_) async => Right(order),
@@ -89,14 +86,14 @@ void main() {
         },
         act: (cubit) async {
           await cubit.placeOrder(
-            nonce: nonce,
+            mainAddress: mainAddress,
+            proxyAddress: proxyAddress,
             baseAsset: baseAsset,
             quoteAsset: quoteAsset,
             orderType: orderType,
             orderSide: orderSide,
             price: price,
             amount: amount,
-            address: address,
           );
         },
         expect: () => [
@@ -110,14 +107,14 @@ void main() {
         build: () {
           when(
             () => _mockPlaceOrderUsecase(
-              nonce: any(named: 'nonce'),
+              mainAddress: any(named: 'mainAddress'),
+              proxyAddress: any(named: 'proxyAddress'),
               baseAsset: any(named: 'baseAsset'),
               quoteAsset: any(named: 'quoteAsset'),
               orderType: any(named: 'orderType'),
               orderSide: any(named: 'orderSide'),
               price: any(named: 'price'),
               amount: any(named: 'amount'),
-              address: any(named: 'address'),
             ),
           ).thenAnswer(
             (_) async => Left(ApiError(message: '')),
@@ -126,14 +123,14 @@ void main() {
         },
         act: (cubit) async {
           await cubit.placeOrder(
-            nonce: nonce,
+            mainAddress: mainAddress,
+            proxyAddress: proxyAddress,
             baseAsset: baseAsset,
             quoteAsset: quoteAsset,
             orderType: orderType,
             orderSide: orderSide,
             price: price,
             amount: amount,
-            address: address,
           );
         },
         expect: () => [

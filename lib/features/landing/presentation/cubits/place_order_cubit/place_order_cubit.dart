@@ -47,14 +47,14 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
   }
 
   Future<OrderEntity?> placeOrder({
-    required int nonce,
+    required String mainAddress,
+    required String proxyAddress,
     required String baseAsset,
     required String quoteAsset,
     required EnumOrderTypes orderType,
     required EnumBuySell orderSide,
     required String price,
     required String amount,
-    required String address,
   }) async {
     final previousState = state;
     OrderEntity? newOrder;
@@ -65,14 +65,14 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     ));
 
     final result = await _placeOrderUseCase(
-      nonce: nonce,
+      mainAddress: mainAddress,
+      proxyAddress: proxyAddress,
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
       orderType: orderType,
       orderSide: orderSide,
       price: price,
       amount: amount,
-      address: address,
     );
 
     result.fold(

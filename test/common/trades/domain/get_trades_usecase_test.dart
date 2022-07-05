@@ -13,33 +13,35 @@ class _TradeRepositoryMock extends Mock implements ITradeRepository {}
 void main() {
   late GetTradesUseCase _usecase;
   late _TradeRepositoryMock _repository;
-  late String tradeId;
-  late String baseAsset;
-  late EnumTradeTypes event;
-  late DateTime timestamp;
+  late String mainAccount;
+  late String asset;
+  late EnumTradeTypes txnType;
+  late DateTime time;
   late String status;
   late String amount;
+  late String fee;
   late String address;
   late TradeEntity trade;
 
   setUp(() {
     _repository = _TradeRepositoryMock();
     _usecase = GetTradesUseCase(tradeRepository: _repository);
-    tradeId = '786653432';
-    baseAsset = "0";
-    event = EnumTradeTypes.bid;
-    timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
+    mainAccount = '786653432';
+    asset = "0";
+    txnType = EnumTradeTypes.deposit;
+    time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
     status = 'Filled';
     amount = "100.0";
+    fee = "1.0";
     address = 'test';
     trade = TradeModel(
-      tradeId: tradeId,
+      mainAccount: mainAccount,
+      txnType: txnType,
+      asset: asset,
       amount: amount,
-      event: event,
-      timestamp: timestamp,
-      baseAsset: baseAsset,
+      fee: fee,
       status: status,
-      market: '$baseAsset/1',
+      time: time,
     );
   });
 

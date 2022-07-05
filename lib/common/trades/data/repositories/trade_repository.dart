@@ -18,25 +18,25 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<Either<ApiError, OrderEntity>> placeOrder(
-    int nonce,
+    String mainAddress,
+    String proxyAddress,
     String baseAsset,
     String quoteAsset,
     EnumOrderTypes orderType,
     EnumBuySell orderSide,
     String price,
     String amount,
-    String address,
   ) async {
     try {
       final result = await _tradeRemoteDatasource.placeOrder(
-        nonce,
+        mainAddress,
+        proxyAddress,
         baseAsset == 'PDEX' ? '' : baseAsset,
         quoteAsset == 'PDEX' ? '' : quoteAsset,
         orderType.toString().split('.')[1].capitalize(),
         orderSide == EnumBuySell.buy ? 'Bid' : 'Ask',
         price,
         amount,
-        address,
       );
 
       if (result != null) {
@@ -44,9 +44,6 @@ class TradeRepository implements ITradeRepository {
           tradeId: result,
           amount: amount,
           price: price,
-          event: orderSide == EnumBuySell.buy
-              ? EnumTradeTypes.bid
-              : EnumTradeTypes.ask,
           orderSide: orderSide,
           orderType: orderType,
           timestamp: DateTime.now(),
@@ -113,21 +110,16 @@ class TradeRepository implements ITradeRepository {
   Future<Either<ApiError, List<TradeEntity>>> fetchTrades(
       String address) async {
     try {
-      final resultDepWith = await _tradeRemoteDatasource.fetchTrades(address);
-      final resultOrders = await _tradeRemoteDatasource.fetchOrders(address);
-      final listDepWith = resultDepWith.rows.map((row) => row.assoc()).toList();
-      final listOrders = resultOrders.rows.map((row) => row.assoc()).toList();
-      List<TradeEntity> listTrades = [];
+      final result = await _tradeRemoteDatasource.fetchTrades(address);
 
-      for (var transaction in listDepWith) {
-        listTrades.add(TradeModel.fromDepWithJson(transaction));
+      final List<TradeEntity> listTransactions = [];
+
+      for (var transaction in result.data?['listTransactionsByMainAccount']
+          ['items']) {
+        listTransactions.add(TradeModel.fromJson(transaction));
       }
 
-      for (var transaction in listOrders) {
-        listTrades.add(OrderModel.fromJson(transaction));
-      }
-
-      return Right(listTrades);
+      return Right(listTransactions);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

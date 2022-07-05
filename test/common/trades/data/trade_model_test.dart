@@ -8,13 +8,13 @@ void main() {
 
   setUp(() {
     tTrade = TradeModel(
-      tradeId: '0',
-      amount: "1",
-      event: EnumTradeTypes.bid,
-      timestamp: DateTime.now(),
-      baseAsset: '0',
+      mainAccount: "k9o1dxJxQE8Zwm5Fy",
+      txnType: EnumTradeTypes.deposit,
+      asset: '1',
+      amount: '10',
+      fee: '10.0',
       status: 'PartiallyFilled',
-      market: '0/1',
+      time: DateTime.now(),
     );
   });
 

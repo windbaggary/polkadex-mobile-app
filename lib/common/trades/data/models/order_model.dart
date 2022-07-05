@@ -7,7 +7,6 @@ class OrderModel extends OrderEntity {
     required String tradeId,
     required String amount,
     required String price,
-    required EnumTradeTypes event,
     required EnumBuySell orderSide,
     required EnumOrderTypes orderType,
     required DateTime timestamp,
@@ -19,7 +18,6 @@ class OrderModel extends OrderEntity {
           tradeId: tradeId,
           amount: amount,
           price: price,
-          event: event,
           orderSide: orderSide,
           orderType: orderType,
           timestamp: timestamp,
@@ -34,8 +32,6 @@ class OrderModel extends OrderEntity {
       tradeId: map['id'],
       amount: map['qty'],
       price: map['price'],
-      event: StringUtils.enumFromString<EnumTradeTypes>(
-          EnumTradeTypes.values, map['order_side'])!,
       orderSide: StringUtils.enumFromString<EnumBuySell>(
           EnumBuySell.values, map['order_side'] == 'Bid' ? 'Buy' : 'Sell')!,
       orderType: StringUtils.enumFromString<EnumOrderTypes>(

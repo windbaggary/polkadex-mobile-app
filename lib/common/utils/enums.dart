@@ -74,8 +74,6 @@ enum EnumOrderTypes {
 
 /// Enum for market limit drop down popups
 enum EnumTradeTypes {
-  bid,
-  ask,
   withdraw,
   deposit,
 }
