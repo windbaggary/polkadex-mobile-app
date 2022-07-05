@@ -89,7 +89,7 @@ class TradeRemoteDatasource {
             listTransactionsByMainAccount), // this is the query string you just created
         variables: {
           'main_account': address,
-          'from': '2010-01-01T00:00:00Z',
+          'from': '1970-01-01T00:00:00Z',
           'to': DateTime.now().toUtc().toIso8601String(),
         },
       ),

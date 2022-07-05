@@ -1,23 +1,24 @@
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/graphql/queries.dart';
 
 class GraphRemoteDatasource {
-  Future<Response> getCoinGraphData(
+  Future<QueryResult> getCoinGraphData(
     String leftTokenId,
     String rightTokenId,
     String timestamp,
   ) async {
-    return await post(
-      Uri.parse('${dotenv.get('INFLUX_DB_URL')}/api/fetchohlcv'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'symbol': '$leftTokenId/$rightTokenId',
-        'timeframe': timestamp,
-        'timestamp_start': -1296000
-      }),
+    return await dependency<GraphQLClient>().query(
+      QueryOptions(
+        document: gql(
+            getKlinesbyMarketInterval), // this is the query string you just created
+        variables: {
+          'market': '$leftTokenId-$rightTokenId',
+          'interval': timestamp,
+          'from': '1970-01-01T00:00:00Z',
+          'to': DateTime.now().toUtc().toIso8601String(),
+        },
+      ),
     );
   }
 }
