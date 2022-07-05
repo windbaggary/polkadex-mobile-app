@@ -17,7 +17,7 @@ void main() {
   late String quoteAsset;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
-  late String amount;
+  late String qty;
   late String price;
   late OrderEntity order;
   late String mainAddress;
@@ -30,21 +30,22 @@ void main() {
     quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
-    amount = "100.0";
+    qty = "100.0";
     price = "50.0";
     mainAddress = 'test';
     proxyAddress = 'tset';
     order = order = OrderModel(
-        tradeId: '0',
-        amount: amount,
-        price: price,
-        orderSide: orderSide,
-        orderType: orderType,
-        timestamp: DateTime.now(),
-        baseAsset: baseAsset,
-        quoteAsset: quoteAsset,
-        status: 'Open',
-        market: '$baseAsset/$quoteAsset');
+      mainAccount: mainAddress,
+      tradeId: '0',
+      qty: qty,
+      price: price,
+      orderSide: orderSide,
+      orderType: orderType,
+      time: DateTime.now(),
+      baseAsset: baseAsset,
+      quoteAsset: quoteAsset,
+      status: 'Open',
+    );
   });
 
   setUpAll(() {
@@ -71,7 +72,7 @@ void main() {
           orderType: orderType,
           orderSide: orderSide,
           price: price,
-          amount: amount,
+          amount: qty,
         );
         // assert
 
@@ -104,7 +105,7 @@ void main() {
           orderType: orderType,
           orderSide: orderSide,
           price: price,
-          amount: amount,
+          amount: qty,
         );
         // assert
 

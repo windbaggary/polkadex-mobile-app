@@ -54,7 +54,7 @@ class OrderItemWidget extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              order.amount,
+                              order.qty,
                               style: tsS16W500CFF,
                             )
                           ],

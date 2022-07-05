@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:mysql_client/mysql_client.dart';
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
-import 'package:polkadex/common/network/mysql_client.dart';
 import 'package:polkadex/graphql/queries.dart';
 
 class TradeRemoteDatasource {
@@ -58,10 +56,30 @@ class TradeRemoteDatasource {
     );
   }
 
-  Future<IResultSet> fetchOrders(String address) async {
-    final dbClient = dependency<MysqlClient>();
+  Future<QueryResult> fetchOpenOrders(String address) async {
+    return await dependency<GraphQLClient>().query(
+      QueryOptions(
+        document: gql(
+            listOpenOrdersByMainAccount), // this is the query string you just created
+        variables: {
+          'main_account': address,
+        },
+      ),
+    );
+  }
 
-    return dbClient.getOrderHistory(address);
+  Future<QueryResult> fetchOrders(String address) async {
+    return await dependency<GraphQLClient>().query(
+      QueryOptions(
+        document: gql(
+            listOrderHistorybyMainAccount), // this is the query string you just created
+        variables: {
+          'main_account': address,
+          'from': '2010-01-01T00:00:00Z',
+          'to': DateTime.now().toUtc().toIso8601String(),
+        },
+      ),
+    );
   }
 
   Future<QueryResult> fetchTrades(String address) async {

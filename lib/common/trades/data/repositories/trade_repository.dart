@@ -41,17 +41,17 @@ class TradeRepository implements ITradeRepository {
 
       if (result != null) {
         final newOrder = OrderModel(
+          mainAccount: mainAddress,
           tradeId: result,
-          amount: amount,
+          qty: amount,
           price: price,
           orderSide: orderSide,
           orderType: orderType,
-          timestamp: DateTime.now(),
+          time: DateTime.now(),
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
           status:
               orderType == EnumOrderTypes.market ? 'Filled' : 'PartiallyFilled',
-          market: '$baseAsset/$quoteAsset',
         );
 
         return Right(newOrder);
@@ -93,14 +93,15 @@ class TradeRepository implements ITradeRepository {
       String address) async {
     try {
       final result = await _tradeRemoteDatasource.fetchOrders(address);
-      final listTransaction = result.rows.map((row) => row.assoc()).toList();
-      List<OrderEntity> listOrder = [];
 
-      for (var transaction in listTransaction) {
-        listOrder.add(OrderModel.fromJson(transaction));
+      final List<OrderEntity> listOrders = [];
+
+      for (var transaction in result.data?['listOrderHistorybyMainAccount']
+          ['items']) {
+        listOrders.add(OrderModel.fromJson(transaction));
       }
 
-      return Right(listOrder);
+      return Right(listOrders);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

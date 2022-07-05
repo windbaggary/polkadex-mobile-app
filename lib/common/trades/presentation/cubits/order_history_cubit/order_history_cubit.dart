@@ -36,7 +36,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             .where((order) =>
                 order.baseAsset == asset || order.quoteAsset == asset)
             .toList();
-        _allOrders.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        _allOrders.sort((a, b) => b.time.compareTo(a.time));
 
         if (isOpenOrdersPriority) {
           _allOrders = orders
@@ -69,8 +69,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
     if (dateFilter != null) {
       _ordersFiltered.removeWhere((order) =>
-          order.timestamp.isBefore(dateFilter.start) ||
-          order.timestamp.isAfter(dateFilter.end));
+          order.time.isBefore(dateFilter.start) ||
+          order.time.isAfter(dateFilter.end));
     }
 
     if (filters.isNotEmpty) {

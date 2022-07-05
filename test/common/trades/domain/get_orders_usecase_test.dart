@@ -13,14 +13,15 @@ class _TradeRepositoryMock extends Mock implements ITradeRepository {}
 void main() {
   late GetOrdersUseCase _usecase;
   late _TradeRepositoryMock _repository;
+  late String mainAccount;
   late String orderId;
   late String baseAsset;
   late String quoteAsset;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
-  late DateTime timestamp;
+  late DateTime time;
   late String status;
-  late String amount;
+  late String qty;
   late String price;
   late String address;
   late OrderModel order;
@@ -28,27 +29,28 @@ void main() {
   setUp(() {
     _repository = _TradeRepositoryMock();
     _usecase = GetOrdersUseCase(tradeRepository: _repository);
+    mainAccount = 'asdfghj';
     orderId = '786653432';
     baseAsset = "0";
     quoteAsset = "1";
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
-    timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
+    time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
     status = 'Filled';
-    amount = "100.0";
+    qty = "100.0";
     price = "50.0";
     address = 'test';
     order = OrderModel(
+      mainAccount: mainAccount,
       tradeId: orderId,
-      amount: amount,
+      qty: qty,
       price: price,
       orderSide: orderSide,
       orderType: orderType,
-      timestamp: timestamp,
+      time: time,
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
       status: status,
-      market: '$baseAsset/$quoteAsset',
     );
   });
 

@@ -8,16 +8,16 @@ void main() {
 
   setUp(() {
     tOrder = OrderModel(
+      mainAccount: 'asdfghj',
       tradeId: '0',
-      amount: "1",
+      qty: "1",
       price: "50.0",
       orderSide: EnumBuySell.buy,
       orderType: EnumOrderTypes.market,
-      timestamp: DateTime.now(),
+      time: DateTime.now(),
       baseAsset: '0',
       quoteAsset: '1',
       status: 'PartiallyFilled',
-      market: '0/1',
     );
   });
 
