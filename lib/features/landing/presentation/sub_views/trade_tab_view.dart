@@ -7,6 +7,7 @@ import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
@@ -55,6 +56,8 @@ class _TradeTabViewState extends State<TradeTabView>
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<MarketAssetCubit>();
+
     return _ThisInheritedWidget(
       buySellTabController: _buySellDotController,
       child: ChangeNotifierProvider<OrderBookWidgetFilterProvider>(
@@ -68,25 +71,9 @@ class _TradeTabViewState extends State<TradeTabView>
               BlocProvider<OrderHistoryCubit>(
                 create: (_) => dependency<OrderHistoryCubit>()
                   ..getOrders(
-                    context
-                        .read<MarketAssetCubit>()
-                        .currentBaseAssetDetails
-                        .assetId,
+                    cubit.currentBaseAssetDetails.assetId,
                     context.read<AccountCubit>().proxyAccountAddress,
                     true,
-                  ),
-              ),
-              BlocProvider<TickerCubit>(
-                create: (_) => dependency<TickerCubit>()
-                  ..getLastTicker(
-                    leftTokenId: context
-                        .read<MarketAssetCubit>()
-                        .currentBaseAssetDetails
-                        .assetId,
-                    rightTokenId: context
-                        .read<MarketAssetCubit>()
-                        .currentBaseAssetDetails
-                        .assetId,
                   ),
               ),
             ],
@@ -97,7 +84,17 @@ class _TradeTabViewState extends State<TradeTabView>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _ThisTopRowSelectWidget(),
+                  BlocBuilder<MarketAssetCubit, MarketAssetState>(
+                      builder: (context, marketAssetState) =>
+                          BlocBuilder<TickerCubit, TickerState>(
+                            builder: (context, tickerState) {
+                              return _ThisTopRowSelectWidget(
+                                ticker: tickerState is TickerLoaded
+                                    ? tickerState.ticker[cubit.currentMarketId]
+                                    : null,
+                              );
+                            },
+                          )),
                   Container(
                     color: AppColors.color2E303C,
                     padding: EdgeInsets.symmetric(vertical: 8),
@@ -109,12 +106,8 @@ class _TradeTabViewState extends State<TradeTabView>
                           child:
                               BlocBuilder<MarketAssetCubit, MarketAssetState>(
                             builder: (context, state) => OrderBookWidget(
-                              amountToken: context
-                                  .read<MarketAssetCubit>()
-                                  .currentBaseAssetDetails,
-                              priceToken: context
-                                  .read<MarketAssetCubit>()
-                                  .currentQuoteAssetDetails,
+                              amountToken: cubit.currentBaseAssetDetails,
+                              priceToken: cubit.currentQuoteAssetDetails,
                             ),
                           ),
                         ),
@@ -147,6 +140,10 @@ class _TradeTabViewState extends State<TradeTabView>
 /// The top widget of the screen
 /// The widget include the selection and percentage
 class _ThisTopRowSelectWidget extends StatelessWidget {
+  _ThisTopRowSelectWidget({required this.ticker});
+
+  final TickerEntity? ticker;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -160,11 +157,11 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
           children: [
             Expanded(
                 child: _ThisTopSelectableWidget(
-                    graphColor: AppColors.color0CA564,
+                    graphColor: mainTrendColor(),
                     onTap: () => _onMarketSelection(context))),
             Container(
               decoration: BoxDecoration(
-                color: AppColors.color0CA564.withOpacity(0.3),
+                color: mainTrendColor().withOpacity(0.3),
                 borderRadius: BorderRadius.circular(5),
               ),
               alignment: Alignment.center,
@@ -176,13 +173,15 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.arrow_drop_down,
-                    color: AppColors.color0CA564,
+                    isPriceTrendDown()
+                        ? Icons.arrow_drop_down
+                        : Icons.arrow_drop_up,
+                    color: mainTrendColor(),
                     size: 18,
                   ),
                   Text(
-                    "${36.5}%",
-                    style: tsS14W600CFF.copyWith(color: AppColors.color0CA564),
+                    "${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%",
+                    style: tsS14W600CFF.copyWith(color: mainTrendColor()),
                   )
                 ],
               ),
@@ -193,17 +192,17 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
     );
   }
 
+  bool isPriceTrendDown() => (ticker?.priceChangePercent24Hr ?? 0.0) < 0;
+
+  Color mainTrendColor() =>
+      isPriceTrendDown() ? AppColors.colorE6007A : AppColors.color0CA564;
+
   void _onMarketSelection(BuildContext context) {
     Coordinator.goToMarketTokenSelectionScreen().then(
       (model) {
         if (model != null) {
           context.read<MarketAssetCubit>().changeSelectedMarket(
               model.selectedBaseAsset, model.selectedQuoteAsset);
-
-          context.read<TickerCubit>().getLastTicker(
-                leftTokenId: model.selectedBaseAsset.assetId,
-                rightTokenId: model.selectedQuoteAsset.assetId,
-              );
         }
       },
     );

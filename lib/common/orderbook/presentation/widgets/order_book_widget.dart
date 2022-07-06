@@ -272,10 +272,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                 ),
               ],
             ),
-            Text(
-              '\$24.00',
-              style: tsS14W400C93949A,
-            )
           ],
         ),
       ),

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
+import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/rank_list_provider.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_slider_widget.dart';
@@ -152,13 +155,22 @@ class _HomeTabViewState extends State<HomeTabView>
               ),
             ),
             _ThisRankingListFilterWidget(),
-            Consumer<HomeRankListProvider>(
-              builder: (context, rankProvider, child) => ListView.builder(
+            BlocBuilder<TickerCubit, TickerState>(
+              builder: (context, state) => ListView.builder(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
-                itemBuilder: (context, index) => _ThisRankingListItemWidget(
-                  baseAsset: cubit.listAvailableMarkets[index][0],
-                  quoteAsset: cubit.listAvailableMarkets[index][1],
-                ),
+                itemBuilder: (context, index) {
+                  final baseAsset = cubit.listAvailableMarkets[index][0];
+                  final quoteAsset = cubit.listAvailableMarkets[index][1];
+
+                  return _ThisRankingListItemWidget(
+                    baseAsset: baseAsset,
+                    quoteAsset: quoteAsset,
+                    ticker: state is TickerLoaded
+                        ? state.ticker[
+                            '${baseAsset.assetId}-${quoteAsset.assetId}']
+                        : null,
+                  );
+                },
                 itemCount: cubit.listAvailableMarkets.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -367,10 +379,12 @@ class _ThisRankingListItemWidget extends StatelessWidget {
   const _ThisRankingListItemWidget({
     required this.baseAsset,
     required this.quoteAsset,
+    required this.ticker,
   });
 
   final AssetEntity baseAsset;
   final AssetEntity quoteAsset;
+  final TickerEntity? ticker;
 
   @override
   Widget build(BuildContext context) {
@@ -421,7 +435,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                     ),
                   ]),
                   Text(
-                    'VOL 7.82 BTC',
+                    'Vol: ${ticker?.volumeBase24hr.toStringAsFixed(4)}',
                     style: tsS12W400CFF.copyWith(
                       color: AppColors.colorABB2BC.withOpacity(0.70),
                     ),
@@ -429,21 +443,6 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$31,56',
-                    style: tsS15W500CFF,
-                  ),
-                  Text(
-                    '1 BTC',
-                    style: tsS12W400CFF.copyWith(
-                      color: AppColors.colorABB2BC.withOpacity(0.70),
-                    ),
-                  ),
-                ],
-              ),
               Spacer(
                 flex: 2,
               ),
@@ -456,7 +455,8 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 child: RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                    text: '10.00',
+                    text:
+                        '${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}',
                     style: tsS15W500CFF,
                   ),
                   TextSpan(

@@ -16,7 +16,7 @@ class TickerLoaded extends TickerState {
     required this.ticker,
   });
 
-  final TickerEntity ticker;
+  final Map<String, TickerEntity> ticker;
 
   @override
   List<Object> get props => [

@@ -21,6 +21,7 @@ import 'common/navigation/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_api/amplify_api.dart';
+import 'features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -103,6 +104,9 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<MarketAssetCubit>(
             create: (_) => injection.dependency<MarketAssetCubit>(),
+          ),
+          BlocProvider<TickerCubit>(
+            create: (_) => injection.dependency<TickerCubit>()..getAllTickers(),
           ),
         ],
         child: AppLifecycleWidget(

@@ -5,32 +5,34 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/data/models/ticker_model.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
-import 'package:polkadex/features/landing/domain/usecases/fetch_last_ticker_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_all_tickers_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:test/test.dart';
 
-class _MockFetchLastTickerUseCaseUsecase extends Mock
-    implements FetchLastTickerUseCase {}
+class _MockGetAllTickersUseCase extends Mock implements GetAllTickersUseCase {}
 
 void main() {
-  late _MockFetchLastTickerUseCaseUsecase _mockFetchLastTickerUsecase;
+  late _MockGetAllTickersUseCase _mockGetAllTickersUseCase;
   late TickerCubit cubit;
   late TickerEntity tTicker;
 
   setUp(() {
-    _mockFetchLastTickerUsecase = _MockFetchLastTickerUseCaseUsecase();
+    _mockGetAllTickersUseCase = _MockGetAllTickersUseCase();
 
     cubit = TickerCubit(
-      fetchLastTickerUseCase: _mockFetchLastTickerUsecase,
+      getAllTickersUseCase: _mockGetAllTickersUseCase,
     );
 
     tTicker = TickerModel(
-      timestamp: DateTime.now(),
-      high: '0',
-      low: '0',
-      last: '0',
-      previousClose: '0',
-      average: '0',
+      m: 'PDEX-1',
+      priceChange24Hr: 1.0,
+      priceChangePercent24Hr: 1.0,
+      open: 1.0,
+      close: 1.0,
+      high: 1.0,
+      low: 1.0,
+      volumeBase24hr: 1.0,
+      volumeQuote24Hr: 1.0,
     );
   });
 
@@ -50,24 +52,18 @@ void main() {
         'Order placed successfully',
         build: () {
           when(
-            () => _mockFetchLastTickerUsecase(
-              leftTokenId: '0',
-              rightTokenId: '1',
-            ),
+            () => _mockGetAllTickersUseCase(),
           ).thenAnswer(
-            (_) async => Right(tTicker),
+            (_) async => Right({tTicker.m: tTicker}),
           );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getLastTicker(
-            leftTokenId: '0',
-            rightTokenId: '1',
-          );
+          await cubit.getAllTickers();
         },
         expect: () => [
           TickerLoading(),
-          TickerLoaded(ticker: tTicker),
+          TickerLoaded(ticker: {tTicker.m: tTicker}),
         ],
       );
 
@@ -75,20 +71,14 @@ void main() {
         'Order placement failed',
         build: () {
           when(
-            () => _mockFetchLastTickerUsecase(
-              leftTokenId: '0',
-              rightTokenId: '1',
-            ),
+            () => _mockGetAllTickersUseCase(),
           ).thenAnswer(
             (_) async => Left(ApiError(message: '')),
           );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getLastTicker(
-            leftTokenId: '0',
-            rightTokenId: '1',
-          );
+          await cubit.getAllTickers();
         },
         expect: () => [
           TickerLoading(),

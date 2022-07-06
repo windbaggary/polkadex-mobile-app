@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_loading_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_tab_view_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -180,22 +183,32 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
                       ),
                     );
                   } else {
-                    return Consumer<ExchangeTabViewProvider>(
-                      builder: (context, provider, child) => ListView.builder(
-                        itemBuilder: (context, index) =>
-                            AppHeightFactorAnimatedWidget(
-                          index: index,
-                          child: _ThisListItemWidget(
-                            baseAsset: cubit.listAvailableMarkets[index][0],
-                            quoteAsset: cubit.listAvailableMarkets[index][1],
-                          ),
-                          animationController: _animationController,
-                          interval: Interval(
-                            0.35,
-                            1.00,
-                            curve: Curves.decelerate,
-                          ),
-                        ),
+                    return BlocBuilder<TickerCubit, TickerState>(
+                      builder: (context, state) => ListView.builder(
+                        itemBuilder: (context, index) {
+                          final baseAsset =
+                              cubit.listAvailableMarkets[index][0];
+                          final quoteAsset =
+                              cubit.listAvailableMarkets[index][1];
+
+                          return AppHeightFactorAnimatedWidget(
+                            index: index,
+                            child: _ThisListItemWidget(
+                              baseAsset: baseAsset,
+                              quoteAsset: quoteAsset,
+                              ticker: state is TickerLoaded
+                                  ? state.ticker[
+                                      '${baseAsset.assetId}-${quoteAsset.assetId}']
+                                  : null,
+                            ),
+                            animationController: _animationController,
+                            interval: Interval(
+                              0.35,
+                              1.00,
+                              curve: Curves.decelerate,
+                            ),
+                          );
+                        },
                         padding: EdgeInsets.symmetric(horizontal: 12),
                         itemCount: cubit.listAvailableMarkets.length,
                         shrinkWrap: true,
@@ -466,10 +479,6 @@ class _ThisHeaderWidget extends StatelessWidget {
             ),
           ),
           Spacer(),
-          Text(
-            "Price",
-            style: tsS13W500CFFOP40,
-          ),
           SizedBox(width: MediaQuery.of(context).size.width * 0.07),
           Padding(
             padding: const EdgeInsets.only(right: 56, left: 30),
@@ -486,13 +495,14 @@ class _ThisHeaderWidget extends StatelessWidget {
 
 /// The item widget which will be displayed in list view
 class _ThisListItemWidget extends StatelessWidget {
-  const _ThisListItemWidget({
-    required this.baseAsset,
-    required this.quoteAsset,
-  });
+  const _ThisListItemWidget(
+      {required this.baseAsset,
+      required this.quoteAsset,
+      required this.ticker});
 
   final AssetEntity baseAsset;
   final AssetEntity quoteAsset;
+  final TickerEntity? ticker;
 
   @override
   Widget build(BuildContext context) {
@@ -558,17 +568,10 @@ class _ThisListItemWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'VOL \$${5} BTC',
+                            'Vol: ${ticker?.volumeBase24hr.toStringAsFixed(4)}',
                             style: tsS12W400CFF.copyWith(
                               color: AppColors.colorABB2BC.withOpacity(0.70),
                             ),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          '1 BTC',
-                          style: tsS12W400CFF.copyWith(
-                            color: AppColors.colorABB2BC.withOpacity(0.70),
                           ),
                         ),
                       ],
@@ -576,15 +579,6 @@ class _ThisListItemWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              // Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [],
-              // ),
-              // Spacer(),
-              // Column(
-              //   crossAxisAlignment: CrossAxisAlignment.end,
-              //   children: [],
-              // ),
               SizedBox(width: 16),
               Container(
                 decoration: BoxDecoration(
@@ -595,7 +589,7 @@ class _ThisListItemWidget extends StatelessWidget {
                 child: RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                    text: '+10.00',
+                    text: ticker?.priceChangePercent24Hr.toStringAsFixed(4),
                     style: tsS15W500CFF,
                   ),
                   TextSpan(

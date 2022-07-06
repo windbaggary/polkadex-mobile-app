@@ -33,7 +33,7 @@ import 'package:polkadex/features/landing/domain/repositories/iticker_repository
 import 'package:polkadex/common/trades/domain/usecases/cancel_order_usecase.dart';
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/features/landing/domain/usecases/fetch_last_ticker_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_all_tickers_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
@@ -385,14 +385,14 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => FetchLastTickerUseCase(
+    () => GetAllTickersUseCase(
       tickerRepository: dependency(),
     ),
   );
 
   dependency.registerFactory(
     () => TickerCubit(
-      fetchLastTickerUseCase: dependency(),
+      getAllTickersUseCase: dependency(),
     ),
   );
 
