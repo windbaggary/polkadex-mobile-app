@@ -27,7 +27,10 @@ class OrderbookRepository implements IOrderbookRepository {
       );
 
       return Right(
-          OrderbookModel.fromJson(result.data?['getOrderbook']['items']));
+        OrderbookModel.fromJson(
+          jsonDecode(result.data)['getOrderbook']['items'],
+        ),
+      );
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

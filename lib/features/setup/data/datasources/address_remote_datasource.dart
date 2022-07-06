@@ -1,17 +1,17 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:polkadex/graphql/queries.dart';
-import 'package:polkadex/injection_container.dart';
 
 class AddressRemoteDatasource {
-  Future<QueryResult> fetchMainAddress(String proxyAddress) async {
-    return await dependency<GraphQLClient>().query(
-      QueryOptions(
-        document: gql(
-            findUserByProxyAccount), // this is the query string you just created
-        variables: {
-          'proxy_account': proxyAddress,
-        },
-      ),
-    );
+  Future<GraphQLResponse> fetchMainAddress(String proxyAddress) async {
+    return await Amplify.API
+        .query(
+          request: GraphQLRequest(
+            document: findUserByProxyAccount,
+            variables: {
+              'proxy_account': proxyAddress,
+            },
+          ),
+        )
+        .response;
   }
 }

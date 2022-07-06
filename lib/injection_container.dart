@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:graphql/client.dart';
 import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
@@ -75,9 +73,8 @@ import 'features/setup/domain/usecases/get_password_usecase.dart';
 import 'features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'common/web_view_runner/web_view_runner.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:polkadex/common/utils/extensions.dart';
 import 'package:get_it/get_it.dart';
+import 'graphql/utils/custom_iam.dart';
 
 final dependency = GetIt.instance;
 
@@ -92,32 +89,7 @@ Future<void> init() async {
   );
 
   dependency.registerSingleton<GraphQLClient>(
-    GraphQLClient(
-      cache: GraphQLCache(),
-      alwaysRebroadcast: true,
-      link: Link.split(
-        (request) {
-          return request.isSubscription;
-        },
-        WebSocketLink(
-          dotenv.get('GRAPHQL_ENDPOINT_WEBSOCKET'),
-          config: SocketClientConfig(
-              initialPayload: () => {
-                    'headers': jsonEncode({
-                      'host': dotenv.get('IAM_API_KEY'),
-                      'x-api-key': dotenv.get('IAM_API_KEY'),
-                    }).toBase64(),
-                    'payload': 'e30='
-                  }),
-        ),
-        HttpLink(
-          dotenv.get('GRAPHQL_ENDPOINT'),
-          defaultHeaders: {
-            'x-api-key': dotenv.get('IAM_API_KEY'),
-          },
-        ),
-      ),
-    ),
+    CustomIAM.customGraphQLClient(),
   );
 
   dependency.registerSingleton<WebViewRunner>(

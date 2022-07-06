@@ -96,8 +96,9 @@ class TradeRepository implements ITradeRepository {
 
       final List<OrderEntity> listOrders = [];
 
-      for (var transaction in result.data?['listOrderHistorybyMainAccount']
-          ['items']) {
+      for (var transaction
+          in jsonDecode(result.data)['listOrderHistorybyMainAccount']
+              ['items']) {
         listOrders.add(OrderModel.fromJson(transaction));
       }
 
@@ -115,8 +116,9 @@ class TradeRepository implements ITradeRepository {
 
       final List<TradeEntity> listTransactions = [];
 
-      for (var transaction in result.data?['listTransactionsByMainAccount']
-          ['items']) {
+      for (var transaction
+          in jsonDecode(result.data)['listTransactionsByMainAccount']
+              ['items']) {
         listTransactions.add(TradeModel.fromJson(transaction));
       }
 

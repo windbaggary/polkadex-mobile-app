@@ -1,4 +1,4 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
@@ -14,32 +14,27 @@ void main() {
   late _MockStream stream;
   late BalanceRepository repository;
   late String address;
-  late Map<String, dynamic> tDataSuccess;
+  late String tDataSuccess;
 
   setUp(() {
     dataSource = _MockBalanceRemoteDatasource();
     stream = _MockStream();
     repository = BalanceRepository(balanceRemoteDatasource: dataSource);
     address = 'addressTest';
-    tDataSuccess = {
+    tDataSuccess = '''{
       "getAllBalancesByMainAccount": {
         "items": [
-          {'asset': 'PDEX', 'free': '100.0', 'reversed': '0.0'}
+          {"asset": "PDEX", "free": "100.0", "reversed": "0.0"}
         ],
         "nextToken": null
-      },
-    };
+      }
+    }''';
   });
 
   group('Balance repository tests ', () {
     test('Must return a fetch balance response', () async {
       when(() => dataSource.fetchBalance(any())).thenAnswer(
-        (_) async => QueryResult.optimistic(
-          options: QueryOptions(
-            document: gql(''), // this is the query string you just created
-          ),
-          data: tDataSuccess,
-        ),
+        (_) async => GraphQLResponse(data: tDataSuccess, errors: []),
       );
 
       final result = await repository.fetchBalance(address);

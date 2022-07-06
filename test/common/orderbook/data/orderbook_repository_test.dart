@@ -1,5 +1,5 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:dart_amqp/dart_amqp.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
@@ -16,8 +16,8 @@ void main() {
   late OrderbookRepository repository;
   late String leftTokenId;
   late String rightTokenId;
-  late Map<String, dynamic> tDataSuccess;
-  late Map<String, dynamic> tDataError;
+  late String tDataSuccess;
+  late String tDataError;
 
   setUp(() {
     dataSource = _MockOrderbookRemoteDatasource();
@@ -25,23 +25,15 @@ void main() {
     repository = OrderbookRepository(orderbookRemoteDatasource: dataSource);
     leftTokenId = '0';
     rightTokenId = '1';
-    tDataSuccess = {
-      "getOrderbook": {"items": [], "nextToken": null},
-    };
-    tDataError = {
-      "getAllBalancesByMainAccount": {"items": [], "nextToken": null},
-    };
+    tDataSuccess = '{"getOrderbook": {"items": [], "nextToken": null}}';
+    tDataError =
+        '{"getAllBalancesByMainAccount": {"items": [], "nextToken": null}}';
   });
 
   group('Orderbook repository tests', () {
     test('Must return a successful fetch orderbook data response', () async {
       when(() => dataSource.getOrderbookData(any(), any())).thenAnswer(
-        (_) async => QueryResult.optimistic(
-          options: QueryOptions(
-            document: gql(''), // this is the query string you just created
-          ),
-          data: tDataSuccess,
-        ),
+        (_) async => GraphQLResponse(data: tDataSuccess, errors: []),
       );
 
       final result = await repository.getOrderbookData(
@@ -62,12 +54,7 @@ void main() {
             any(),
             any(),
           )).thenAnswer(
-        (_) async => QueryResult.optimistic(
-          options: QueryOptions(
-            document: gql(''), // this is the query string you just created
-          ),
-          data: tDataError,
-        ),
+        (_) async => GraphQLResponse(data: tDataError, errors: []),
       );
 
       final result = await repository.getOrderbookData(

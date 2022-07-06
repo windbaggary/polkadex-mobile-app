@@ -1,4 +1,4 @@
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/features/setup/data/datasources/address_remote_datasource.dart';
@@ -12,36 +12,29 @@ void main() {
   late AddressRepository repository;
   late String tProxyAddress;
   late String tMainAddress;
-  late Map<String, dynamic> tDataSuccess;
-  late Map<String, dynamic> tDataError;
+  late String tDataSuccess;
+  late String tDataError;
 
   setUp(() {
     dataSource = _MockAddressRemoteDatasource();
     repository = AddressRepository(addressRemoteDatasource: dataSource);
     tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
     tMainAddress = "abcdefg123456789";
-    tDataSuccess = {
+    tDataSuccess = '''{
       "findUserByProxyAccount": {
         "items": [
-          '{main_account=proxy-abcdefg123456789, item_type=abcdefg123456789}'
+          "{main_account=proxy-abcdefg123456789, item_type=abcdefg123456789}"
         ],
         "nextToken": null
-      },
-    };
-    tDataError = {
-      "findUserByProxyAccount": {"items": [], "nextToken": null},
-    };
+      }
+    }''';
+    tDataError = '{"findUserByProxyAccount": {"items": [], "nextToken": null}}';
   });
 
   group('Address repository tests ', () {
     test('Must return the main address related to the proxy address', () async {
       when(() => dataSource.fetchMainAddress(any())).thenAnswer(
-        (_) async => QueryResult.optimistic(
-          options: QueryOptions(
-            document: gql(''), // this is the query string you just created
-          ),
-          data: tDataSuccess,
-        ),
+        (_) async => GraphQLResponse(data: tDataSuccess, errors: []),
       );
 
       final result = await repository.fetchMainAddress(tProxyAddress);
@@ -61,12 +54,7 @@ void main() {
         'Must return error related to the main address fetching using proxy address',
         () async {
       when(() => dataSource.fetchMainAddress(any())).thenAnswer(
-        (_) async => QueryResult.optimistic(
-          options: QueryOptions(
-            document: gql(''), // this is the query string you just created
-          ),
-          data: tDataError,
-        ),
+        (_) async => GraphQLResponse(data: tDataError, errors: []),
       );
 
       final result = await repository.fetchMainAddress(tProxyAddress);

@@ -1,23 +1,25 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dart_amqp/dart_amqp.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:polkadex/common/network/rabbit_mq_client.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
 import 'package:polkadex/graphql/queries.dart';
 import 'package:polkadex/injection_container.dart';
 
 class OrderbookRemoteDatasource {
-  Future<QueryResult> getOrderbookData(
+  Future<GraphQLResponse> getOrderbookData(
     String leftTokenId,
     String rightTokenId,
   ) async {
-    return await dependency<GraphQLClient>().query(
-      QueryOptions(
-        document: gql(getOrderbook),
-        variables: {
-          'market': '$leftTokenId-$rightTokenId',
-        },
-      ),
-    );
+    return await Amplify.API
+        .query(
+          request: GraphQLRequest(
+            document: getOrderbook,
+            variables: {
+              'market': '$leftTokenId-$rightTokenId',
+            },
+          ),
+        )
+        .response;
   }
 
   Future<Consumer?> getOrderbookConsumer(

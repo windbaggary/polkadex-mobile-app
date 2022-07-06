@@ -17,8 +17,11 @@ class BalanceRepository implements IBalanceRepository {
     try {
       final result = await _balanceRemoteDatasource.fetchBalance(address);
 
-      return Right(BalanceModel.fromJson(
-          result.data?['getAllBalancesByMainAccount']['items']));
+      return Right(
+        BalanceModel.fromJson(
+          jsonDecode(result.data)['getAllBalancesByMainAccount']['items'],
+        ),
+      );
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

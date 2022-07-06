@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/setup/data/datasources/address_remote_datasource.dart';
@@ -15,7 +17,8 @@ class AddressRepository implements IAdressRepository {
         await _addressRemoteDatasource.fetchMainAddress(proxyAddress);
 
     try {
-      String item = result.data?['findUserByProxyAccount']['items'][0];
+      String item =
+          jsonDecode(result.data)['findUserByProxyAccount']['items'][0];
       item = item.substring(1, item.length - 1);
 
       final addresses = item.split(',');

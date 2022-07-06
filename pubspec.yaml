@@ -61,6 +61,10 @@ dependencies:
   firebase_core: ^1.17.1
   firebase_analytics: ^9.1.10
   graphql_flutter: ^5.1.0
+  amplify_api: ^0.6.1
+  amplify_flutter: ^0.6.1
+  amplify_auth_cognito: ^0.6.1
+  amplify_analytics_pinpoint: ^0.6.1
 
 dev_dependencies:
   flutter_test:

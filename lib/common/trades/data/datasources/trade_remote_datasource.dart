@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -56,43 +56,46 @@ class TradeRemoteDatasource {
     );
   }
 
-  Future<QueryResult> fetchOpenOrders(String address) async {
-    return await dependency<GraphQLClient>().query(
-      QueryOptions(
-        document: gql(
-            listOpenOrdersByMainAccount), // this is the query string you just created
-        variables: {
-          'main_account': address,
-        },
-      ),
-    );
+  Future<GraphQLResponse> fetchOpenOrders(String address) async {
+    return await Amplify.API
+        .query(
+          request: GraphQLRequest(
+            document: listOpenOrdersByMainAccount,
+            variables: {
+              'main_account': address,
+            },
+          ),
+        )
+        .response;
   }
 
-  Future<QueryResult> fetchOrders(String address) async {
-    return await dependency<GraphQLClient>().query(
-      QueryOptions(
-        document: gql(
-            listOrderHistorybyMainAccount), // this is the query string you just created
-        variables: {
-          'main_account': address,
-          'from': '2010-01-01T00:00:00Z',
-          'to': DateTime.now().toUtc().toIso8601String(),
-        },
-      ),
-    );
+  Future<GraphQLResponse> fetchOrders(String address) async {
+    return await Amplify.API
+        .query(
+          request: GraphQLRequest(
+            document: listOrderHistorybyMainAccount,
+            variables: {
+              'main_account': address,
+              'from': '1970-01-01T00:00:00Z',
+              'to': DateTime.now().toUtc().toIso8601String(),
+            },
+          ),
+        )
+        .response;
   }
 
-  Future<QueryResult> fetchTrades(String address) async {
-    return await dependency<GraphQLClient>().query(
-      QueryOptions(
-        document: gql(
-            listTransactionsByMainAccount), // this is the query string you just created
-        variables: {
-          'main_account': address,
-          'from': '1970-01-01T00:00:00Z',
-          'to': DateTime.now().toUtc().toIso8601String(),
-        },
-      ),
-    );
+  Future<GraphQLResponse> fetchTrades(String address) async {
+    return await Amplify.API
+        .query(
+          request: GraphQLRequest(
+            document: listTransactionsByMainAccount,
+            variables: {
+              'main_account': address,
+              'from': '1970-01-01T00:00:00Z',
+              'to': DateTime.now().toUtc().toIso8601String(),
+            },
+          ),
+        )
+        .response;
   }
 }
