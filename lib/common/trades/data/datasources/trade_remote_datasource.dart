@@ -2,14 +2,11 @@ import 'dart:convert';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/graphql/queries.dart';
 
 class TradeRemoteDatasource {
-  final _baseUrl = dotenv.env['POLKADEX_HOST_URL']!;
-
   Future<String?> placeOrder(
     String mainAddress,
     String proxyAddress,
@@ -42,7 +39,7 @@ class TradeRemoteDatasource {
     int orderUuid,
   ) async {
     return await http.post(
-      Uri.parse('$_baseUrl/cancel_order'),
+      Uri.parse('/cancel_order'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
