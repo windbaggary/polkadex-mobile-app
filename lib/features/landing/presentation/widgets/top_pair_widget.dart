@@ -3,17 +3,20 @@ import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 
 class TopPairWidget extends StatelessWidget {
   const TopPairWidget({
     required this.leftAsset,
     required this.rightAsset,
     required this.onTap,
+    this.ticker,
   });
 
   final AssetEntity leftAsset;
   final AssetEntity rightAsset;
   final VoidCallback onTap;
+  final TickerEntity? ticker;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class TopPairWidget extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    '12.47%',
+                    '${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%',
                     style: tsS17W600C0CA564,
                   ),
                 ],
@@ -61,7 +64,7 @@ class TopPairWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '\$42.50',
+                        ticker?.volumeBase24hr.toStringAsFixed(2) ?? '',
                         style: tsS16W600CFF,
                       ),
                     ],
@@ -77,7 +80,7 @@ class TopPairWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '\$824.1mi',
+                        ticker?.volumeBase24hr.toStringAsFixed(4) ?? '',
                         style: tsS16W600CFF,
                       ),
                     ],

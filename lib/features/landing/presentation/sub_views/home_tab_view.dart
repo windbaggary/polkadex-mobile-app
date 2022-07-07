@@ -117,29 +117,36 @@ class _HomeTabViewState extends State<HomeTabView>
             ),
             SizedBox(
               height: 108,
-              child: ListView.builder(
-                itemBuilder: (context, index) => TopPairWidget(
-                  leftAsset: context
+              child: BlocBuilder<TickerCubit, TickerState>(
+                builder: (context, state) => ListView.builder(
+                  itemBuilder: (context, index) {
+                    final baseAsset = cubit.listAvailableMarkets[index][0];
+                    final quoteAsset = cubit.listAvailableMarkets[index][1];
+
+                    return TopPairWidget(
+                      leftAsset: baseAsset,
+                      rightAsset: quoteAsset,
+                      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+                        asset: context
+                            .read<MarketAssetCubit>()
+                            .listAvailableMarkets[index][0],
+                        balanceCubit: context.read<BalanceCubit>(),
+                        orderbookCubit: context.read<OrderbookCubit>(),
+                      ),
+                      ticker: state is TickerLoaded
+                          ? state.ticker[
+                              '${baseAsset.assetId}-${quoteAsset.assetId}']
+                          : null,
+                    );
+                  },
+                  itemCount: context
                       .read<MarketAssetCubit>()
-                      .listAvailableMarkets[index][0],
-                  rightAsset: context
-                      .read<MarketAssetCubit>()
-                      .listAvailableMarkets[index][1],
-                  onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
-                    asset: context
-                        .read<MarketAssetCubit>()
-                        .listAvailableMarkets[index][0],
-                    balanceCubit: context.read<BalanceCubit>(),
-                    orderbookCubit: context.read<OrderbookCubit>(),
-                  ),
+                      .listAvailableMarkets
+                      .length,
+                  scrollDirection: Axis.horizontal,
+                  physics: BouncingScrollPhysics(),
+                  padding: const EdgeInsets.only(left: 21),
                 ),
-                itemCount: context
-                    .read<MarketAssetCubit>()
-                    .listAvailableMarkets
-                    .length,
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                padding: const EdgeInsets.only(left: 21),
               ),
             ),
             Padding(
