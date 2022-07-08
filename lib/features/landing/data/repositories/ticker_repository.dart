@@ -26,7 +26,6 @@ class TickerRepository implements ITickerRepository {
 
       return (Right(listTickers));
     } catch (_) {
-      print(_);
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }

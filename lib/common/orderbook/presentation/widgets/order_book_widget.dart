@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_item_entity.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_heading_widget.dart';
@@ -11,6 +12,9 @@ import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_shimmer
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
+import 'package:polkadex/features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
+import 'package:shimmer/shimmer.dart';
 
 /// The order book widget
 class OrderBookWidget extends StatelessWidget {
@@ -236,45 +240,109 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLatestTransactionWidget({bool isDownTendency = true}) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 8.0,
-        bottom: 8.0,
-      ),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: 18,
-          horizontal: 8,
+  Widget _buildLatestTransactionShimmerWidget({bool isDownTendency = true}) {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 8.0,
         ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(15),
-            bottomRight: Radius.circular(15),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            vertical: 18,
+            horizontal: 8,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(15),
+              bottomRight: Radius.circular(15),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    isDownTendency ? Icons.arrow_downward : Icons.arrow_upward,
+                    color: isDownTendency
+                        ? AppColors.colorE6007A
+                        : AppColors.color0CA564,
+                    size: 18,
+                  ),
+                  Text(
+                    '0.218580',
+                    style: isDownTendency ? tsS18W600CE6007A : tsS18W600C0CA564,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  isDownTendency ? Icons.arrow_downward : Icons.arrow_upward,
-                  color: isDownTendency
-                      ? AppColors.colorE6007A
-                      : AppColors.color0CA564,
-                  size: 18,
-                ),
-                Text(
-                  '0.218580',
-                  style: isDownTendency ? tsS18W600CE6007A : tsS18W600C0CA564,
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
+    );
+  }
+
+  Widget _buildLatestTransactionWidget({bool isDownTendency = true}) {
+    return BlocBuilder<RecentTradesCubit, RecentTradesState>(
+      builder: (context, state) {
+        if (state is RecentTradesLoaded) {
+          return Padding(
+            padding: EdgeInsets.only(
+              top: 8.0,
+              bottom: 8.0,
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 18,
+                horizontal: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        isDownTendency
+                            ? Icons.arrow_downward
+                            : Icons.arrow_upward,
+                        color: isDownTendency
+                            ? AppColors.colorE6007A
+                            : AppColors.color0CA564,
+                        size: 18,
+                      ),
+                      Text(
+                        state.trades.first.price.toStringAsFixed(4),
+                        style: isDownTendency
+                            ? tsS18W600CE6007A
+                            : tsS18W600C0CA564,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (state is RecentTradesError) {
+          return PolkadexErrorRefreshWidget(
+            onRefresh: () => context.read<RecentTradesCubit>().getRecentTrades(
+                  context.read<MarketAssetCubit>().currentMarketId,
+                ),
+          );
+        } else {
+          return _buildLatestTransactionShimmerWidget();
+        }
+      },
     );
   }
 }

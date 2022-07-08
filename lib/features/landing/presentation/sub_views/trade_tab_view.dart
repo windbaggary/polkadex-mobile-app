@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
 import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
@@ -18,6 +19,7 @@ import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/injection_container.dart';
+
 import 'package:provider/provider.dart';
 
 /// The tab view of trade for Homescreen
@@ -75,6 +77,11 @@ class _TradeTabViewState extends State<TradeTabView>
                     context.read<AccountCubit>().proxyAccountAddress,
                     true,
                   ),
+              ),
+              BlocProvider<RecentTradesCubit>(
+                create: (_) => dependency<RecentTradesCubit>()
+                  ..getRecentTrades(
+                      context.read<MarketAssetCubit>().currentMarketId),
               ),
             ],
             child: SingleChildScrollView(

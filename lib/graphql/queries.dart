@@ -52,6 +52,20 @@ t
 }
 ''';
 
+String get getRecentTrades => /* GraphQL */ '''
+query GetRecentTrades(\$m: String!, \$limit: Int, \$nextToken: String) {
+    getRecentTrades(m: \$m, limit: \$limit, nextToken: \$nextToken) {
+      items {
+        m
+        t
+        p
+        q
+      }
+      nextToken
+    }
+  }
+''';
+
 String get getAllMarketTickers => /* GraphQL */ '''
 query GetAllMarketTickers {
 getAllMarketTickers {

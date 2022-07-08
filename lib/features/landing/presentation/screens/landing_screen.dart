@@ -20,6 +20,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/injection_container.dart';
+
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34

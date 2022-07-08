@@ -142,7 +142,7 @@ void main() {
       (_) async => GraphQLResponse(data: tTransactionSuccess, errors: []),
     );
 
-    final result = await repository.fetchTrades(mainAddress);
+    final result = await repository.fetchAccountTrades(mainAddress);
 
     expect(result.isRight(), true);
     verify(() => dataSource.fetchTrades(mainAddress)).called(1);
@@ -166,7 +166,7 @@ void main() {
       (_) async => throw Exception('Some arbitrary error'),
     );
 
-    final result = await repository.fetchTrades(mainAddress);
+    final result = await repository.fetchAccountTrades(mainAddress);
 
     expect(result.isLeft(), true);
     verify(() => dataSource.fetchTrades(mainAddress)).called(1);

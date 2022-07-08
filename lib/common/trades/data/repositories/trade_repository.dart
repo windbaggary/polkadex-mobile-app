@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/trades/data/models/trade_model.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
+import 'package:polkadex/common/trades/data/models/recent_trade_model.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/recent_trade_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
 import 'package:polkadex/common/trades/data/models/order_model.dart';
@@ -109,17 +111,38 @@ class TradeRepository implements ITradeRepository {
   }
 
   @override
-  Future<Either<ApiError, List<TradeEntity>>> fetchTrades(
+  Future<Either<ApiError, List<RecentTradeEntity>>> fetchRecentTrades(
+      String market) async {
+    try {
+      final result = await _tradeRemoteDatasource.fetchRecentTrades(market);
+
+      final List<RecentTradeEntity> listRecentTrades = [];
+
+      for (var transaction in jsonDecode(result.data)['getRecentTrades']
+          ['items']) {
+        listRecentTrades.add(RecentTradeModel.fromJson(transaction));
+      }
+
+      listRecentTrades.sort((a, b) => b.time.compareTo(a.time));
+
+      return Right(listRecentTrades);
+    } catch (_) {
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
+
+  @override
+  Future<Either<ApiError, List<AccountTradeEntity>>> fetchAccountTrades(
       String address) async {
     try {
       final result = await _tradeRemoteDatasource.fetchTrades(address);
 
-      final List<TradeEntity> listTransactions = [];
+      final List<AccountTradeEntity> listTransactions = [];
 
       for (var transaction
           in jsonDecode(result.data)['listTransactionsByMainAccount']
               ['items']) {
-        listTransactions.add(TradeModel.fromJson(transaction));
+        listTransactions.add(AccountTradeModel.fromJson(transaction));
       }
 
       return Right(listTransactions);

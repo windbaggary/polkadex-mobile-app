@@ -2,16 +2,16 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/trades/data/models/trade_model.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
-import 'package:polkadex/common/trades/domain/usecases/get_trades_usecase.dart';
+import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
 import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
 class _TradeRepositoryMock extends Mock implements ITradeRepository {}
 
 void main() {
-  late GetTradesUseCase _usecase;
+  late GetAccountTradesUseCase _usecase;
   late _TradeRepositoryMock _repository;
   late String mainAccount;
   late String asset;
@@ -21,11 +21,11 @@ void main() {
   late String amount;
   late String fee;
   late String address;
-  late TradeEntity trade;
+  late AccountTradeEntity trade;
 
   setUp(() {
     _repository = _TradeRepositoryMock();
-    _usecase = GetTradesUseCase(tradeRepository: _repository);
+    _usecase = GetAccountTradesUseCase(tradeRepository: _repository);
     mainAccount = '786653432';
     asset = "0";
     txnType = EnumTradeTypes.deposit;
@@ -34,7 +34,7 @@ void main() {
     amount = "100.0";
     fee = "1.0";
     address = 'test';
-    trade = TradeModel(
+    trade = AccountTradeModel(
       mainAccount: mainAccount,
       txnType: txnType,
       asset: asset,
@@ -55,10 +55,10 @@ void main() {
       'must get open trades successfully',
       () async {
         // arrange
-        when(() => _repository.fetchTrades(any())).thenAnswer(
+        when(() => _repository.fetchAccountTrades(any())).thenAnswer(
           (_) async => Right([trade]),
         );
-        List<TradeEntity> tradesResult = [];
+        List<AccountTradeEntity> tradesResult = [];
         // act
         final result = await _usecase(address: address);
         // assert
@@ -69,7 +69,7 @@ void main() {
         );
 
         expect(tradesResult.contains(trade), true);
-        verify(() => _repository.fetchTrades(any())).called(1);
+        verify(() => _repository.fetchAccountTrades(any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -78,7 +78,7 @@ void main() {
       'must fail to get open orders',
       () async {
         // arrange
-        when(() => _repository.fetchTrades(any())).thenAnswer(
+        when(() => _repository.fetchAccountTrades(any())).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
@@ -86,7 +86,7 @@ void main() {
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.fetchTrades(any())).called(1);
+        verify(() => _repository.fetchAccountTrades(any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

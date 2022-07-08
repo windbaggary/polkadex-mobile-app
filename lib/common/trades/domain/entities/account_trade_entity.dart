@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
-abstract class TradeEntity extends Equatable {
-  const TradeEntity({
+abstract class AccountTradeEntity extends Equatable {
+  const AccountTradeEntity({
     required this.mainAccount,
     required this.txnType,
     required this.asset,

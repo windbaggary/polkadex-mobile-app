@@ -2,22 +2,22 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
-import 'package:polkadex/common/trades/domain/usecases/get_trades_usecase.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
 
 part 'trade_history_state.dart';
 
 class TradeHistoryCubit extends Cubit<TradeHistoryState> {
   TradeHistoryCubit({
-    required GetTradesUseCase getTradesUseCase,
+    required GetAccountTradesUseCase getTradesUseCase,
   })  : _getTradesUseCase = getTradesUseCase,
         super(TradeHistoryInitial());
 
-  final GetTradesUseCase _getTradesUseCase;
+  final GetAccountTradesUseCase _getTradesUseCase;
 
-  List<TradeEntity> _allTrades = [];
+  List<AccountTradeEntity> _allTrades = [];
 
-  Future<void> getTrades(
+  Future<void> getAccountTrades(
     String asset,
     String address,
   ) async {
@@ -48,7 +48,7 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     required List<Enum> filters,
     DateTimeRange? dateFilter,
   }) async {
-    List<TradeEntity> _tradesFiltered = [..._allTrades];
+    List<AccountTradeEntity> _tradesFiltered = [..._allTrades];
 
     if (dateFilter != null) {
       _tradesFiltered.removeWhere((trade) =>

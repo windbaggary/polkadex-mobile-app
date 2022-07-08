@@ -16,7 +16,7 @@ class TradeHistoryError extends TradeHistoryState {}
 class TradeHistoryLoaded extends TradeHistoryState {
   const TradeHistoryLoaded({required this.trades});
 
-  final List<TradeEntity> trades;
+  final List<AccountTradeEntity> trades;
 
   @override
   List<Object> get props => [trades];

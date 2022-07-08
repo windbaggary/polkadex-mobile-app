@@ -1,8 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:polkadex/graphql/queries.dart';
 import 'package:polkadex/graphql/subscriptions.dart';
-import 'package:polkadex/injection_container.dart';
 
 class BalanceRemoteDatasource {
   Future<GraphQLResponse> fetchBalance(String address) async {
@@ -19,14 +17,14 @@ class BalanceRemoteDatasource {
   }
 
   Future<Stream> fetchBalanceStream(String address) async {
-    return dependency<GraphQLClient>().subscribe(
-      SubscriptionOptions(
-        document:
-            gql(onBalanceUpdate), // this is the query string you just created
-        variables: {
+    return Amplify.API.subscribe(
+      GraphQLRequest(
+        document: onBalanceUpdate,
+        variables: <String, dynamic>{
           'main_account': address,
         },
       ),
+      onEstablished: () => print('onBalanceUpdate subscription established'),
     );
   }
 }

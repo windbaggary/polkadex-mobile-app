@@ -2,17 +2,18 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/trades/data/models/trade_model.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
-import 'package:polkadex/common/trades/domain/usecases/get_trades_usecase.dart';
+import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:test/test.dart';
 
-class _MockGetTradesUsecase extends Mock implements GetTradesUseCase {}
+class _MockGetAccountTradesUsecase extends Mock
+    implements GetAccountTradesUseCase {}
 
 void main() {
-  late _MockGetTradesUsecase _mockGetTradesUsecase;
+  late _MockGetAccountTradesUsecase _mockGetAccountTradesUsecase;
   late TradeHistoryCubit cubit;
   late String mainAccount;
   late String asset;
@@ -21,13 +22,13 @@ void main() {
   late String amount;
   late String fee;
   late String address;
-  late TradeEntity trade;
+  late AccountTradeEntity trade;
 
   setUp(() {
-    _mockGetTradesUsecase = _MockGetTradesUsecase();
+    _mockGetAccountTradesUsecase = _MockGetAccountTradesUsecase();
 
     cubit = TradeHistoryCubit(
-      getTradesUseCase: _mockGetTradesUsecase,
+      getTradesUseCase: _mockGetAccountTradesUsecase,
     );
 
     mainAccount = '786653432';
@@ -37,7 +38,7 @@ void main() {
     amount = "100.0";
     fee = "1.0";
     address = 'test';
-    trade = TradeModel(
+    trade = AccountTradeModel(
       mainAccount: mainAccount,
       txnType: EnumTradeTypes.deposit,
       asset: asset,
@@ -59,14 +60,14 @@ void main() {
         'Trades fetched successfully',
         build: () {
           when(
-            () => _mockGetTradesUsecase(address: any(named: 'address')),
+            () => _mockGetAccountTradesUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Right([trade]),
           );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getTrades(
+          await cubit.getAccountTrades(
             '0',
             address,
           );
@@ -81,14 +82,14 @@ void main() {
         'Trades fetch fail',
         build: () {
           when(
-            () => _mockGetTradesUsecase(address: any(named: 'address')),
+            () => _mockGetAccountTradesUsecase(address: any(named: 'address')),
           ).thenAnswer(
             (_) async => Left(ApiError(message: 'error')),
           );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.getTrades(
+          await cubit.getAccountTrades(
             '0',
             address,
           );

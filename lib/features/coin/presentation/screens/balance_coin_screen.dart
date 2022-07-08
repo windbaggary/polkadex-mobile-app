@@ -9,7 +9,7 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -61,7 +61,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => dependency<TradeHistoryCubit>()
-        ..getTrades(
+        ..getAccountTrades(
           widget.asset.assetId,
           context.read<AccountCubit>().mainAccountAddress,
         ),
@@ -427,7 +427,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                 child: PolkadexErrorRefreshWidget(
                                   onRefresh: () => context
                                       .read<TradeHistoryCubit>()
-                                      .getTrades(
+                                      .getAccountTrades(
                                         widget.asset.assetId,
                                         context
                                             .read<AccountCubit>()
@@ -513,7 +513,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
 
 /// The base class for the list item
 class _ThisItemWidget extends StatelessWidget {
-  final TradeEntity tradeItem;
+  final AccountTradeEntity tradeItem;
   final String? dateTitle;
 
   const _ThisItemWidget({
@@ -568,7 +568,8 @@ class _ThisItemWidget extends StatelessWidget {
     return cardWidget;
   }
 
-  Widget _buildHistoryTradeItemWidget(BuildContext context, TradeEntity trade) {
+  Widget _buildHistoryTradeItemWidget(
+      BuildContext context, AccountTradeEntity trade) {
     final cubit = context.read<MarketAssetCubit>();
     Widget mainIcon;
 
