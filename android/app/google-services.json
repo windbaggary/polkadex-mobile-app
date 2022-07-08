@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "320332521651",
+    "project_id": "polkadex-mobile-app",
+    "storage_bucket": "polkadex-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320332521651:android:e4a9f93c01849cc95050c6",
+        "android_client_info": {
+          "package_name": "com.trade.polkadex.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320332521651-a9n2926co6aa9jjslj60o6pakr2oa8aa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGy3ABbMlIgYOr05LwOW0l6RLte46IXs4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320332521651-a9n2926co6aa9jjslj60o6pakr2oa8aa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "320332521651-bmj8mfqd8m5pbaeddv2gnfjj8gpm2urh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.trade.polkadex.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
