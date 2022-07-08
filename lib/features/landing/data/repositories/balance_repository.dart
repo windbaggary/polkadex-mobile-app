@@ -36,11 +36,13 @@ class BalanceRepository implements IBalanceRepository {
     final Stream balanceStream =
         await _balanceRemoteDatasource.fetchBalanceStream(address);
     try {
-      balanceStream.listen((event) {
-        final data = event.data;
-        final liveData = jsonDecode(data)['onBalanceUpdate'];
+      balanceStream.listen((message) {
+        final payload = message.payloadAsString;
+        message.ack();
 
-        onMsgReceived(BalanceModel.fromJson([liveData]));
+        final liveDataJson = json.decode(payload);
+
+        onMsgReceived(BalanceModel.fromLiveJson(liveDataJson));
       });
     } catch (error) {
       onMsgError(error);

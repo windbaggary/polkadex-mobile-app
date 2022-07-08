@@ -23,4 +23,22 @@ class BalanceModel extends BalanceEntity {
       reserved: mapReserved,
     );
   }
+
+  factory BalanceModel.fromLiveJson(Map<String, dynamic> map) {
+    final tradingPair = (map['trading_pair'] as String).split('/');
+    final baseAsset = tradingPair[0];
+    final quoteAsset = tradingPair[1];
+    final mapFree = {};
+    final mapReserved = {};
+
+    mapFree[baseAsset] = map['update']['BalanceUpdate']['base_free'];
+    mapReserved[baseAsset] = map['update']['BalanceUpdate']['base_reserved'];
+    mapFree[quoteAsset] = map['update']['BalanceUpdate']['quote_free'];
+    mapReserved[quoteAsset] = map['update']['BalanceUpdate']['quote_reserved'];
+
+    return BalanceModel(
+      free: mapFree,
+      reserved: mapReserved,
+    );
+  }
 }
