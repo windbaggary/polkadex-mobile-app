@@ -50,9 +50,9 @@ void main() {
     registerFallbackValue<EnumBuySell>(EnumBuySell.buy);
   });
 
-  group('GetTradesUsecase tests', () {
+  group('GetAccountTradesUsecase tests', () {
     test(
-      'must get open trades successfully',
+      'must get account trades successfully',
       () async {
         // arrange
         when(() => _repository.fetchAccountTrades(any())).thenAnswer(
@@ -75,7 +75,7 @@ void main() {
     );
 
     test(
-      'must fail to get open orders',
+      'must fail to get account trades',
       () async {
         // arrange
         when(() => _repository.fetchAccountTrades(any())).thenAnswer(

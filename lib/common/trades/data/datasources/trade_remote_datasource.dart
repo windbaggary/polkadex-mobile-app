@@ -94,7 +94,7 @@ class TradeRemoteDatasource {
         .response;
   }
 
-  Future<GraphQLResponse> fetchTrades(String address) async {
+  Future<GraphQLResponse> fetchAccountTrades(String address) async {
     return await Amplify.API
         .query(
           request: GraphQLRequest(

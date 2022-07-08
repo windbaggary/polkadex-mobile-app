@@ -4,10 +4,10 @@ import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart
 import 'package:polkadex/common/utils/enums.dart';
 
 void main() {
-  late AccountTradeModel tTrade;
+  late AccountTradeModel tAccountTrade;
 
   setUp(() {
-    tTrade = AccountTradeModel(
+    tAccountTrade = AccountTradeModel(
       mainAccount: "k9o1dxJxQE8Zwm5Fy",
       txnType: EnumTradeTypes.deposit,
       asset: '1',
@@ -18,7 +18,7 @@ void main() {
     );
   });
 
-  test('TradeModel must be a TradeEntity', () {
-    expect(tTrade, isA<AccountTradeEntity>());
+  test('AccountTradeModel must be a AccountTradeEntity', () {
+    expect(tAccountTrade, isA<AccountTradeEntity>());
   });
 }

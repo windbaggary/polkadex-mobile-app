@@ -135,7 +135,7 @@ class TradeRepository implements ITradeRepository {
   Future<Either<ApiError, List<AccountTradeEntity>>> fetchAccountTrades(
       String address) async {
     try {
-      final result = await _tradeRemoteDatasource.fetchTrades(address);
+      final result = await _tradeRemoteDatasource.fetchAccountTrades(address);
 
       final List<AccountTradeEntity> listTransactions = [];
 
