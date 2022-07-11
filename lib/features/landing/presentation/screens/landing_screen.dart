@@ -8,6 +8,7 @@ import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dar
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
+import 'package:polkadex/features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/balance_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.dart';
@@ -20,7 +21,6 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/injection_container.dart';
-
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 34
@@ -98,6 +98,10 @@ class _LandingScreenState extends State<LandingScreen>
 
   @override
   Widget build(BuildContext context) {
+    context
+        .read<RecentTradesCubit>()
+        .getRecentTrades(context.read<MarketAssetCubit>().currentMarketId);
+
     return WillPopScope(
       onWillPop: () async => false,
       child: MultiBlocProvider(
