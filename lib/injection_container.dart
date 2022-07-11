@@ -287,7 +287,7 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => GetBalanceLiveDataUseCase(
+    () => GetBalanceUpdatesUseCase(
       balanceRepository: dependency(),
     ),
   );
@@ -295,7 +295,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
-      getBalanceLiveDataUseCase: dependency(),
+      getBalanceUpdatesUseCase: dependency(),
       registerUserUseCase: dependency(),
     ),
   );

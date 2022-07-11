@@ -13,7 +13,7 @@ import 'package:test/test.dart';
 class _MockGetBalanceUsecase extends Mock implements GetBalanceUseCase {}
 
 class _MockGetBalanceLiveDataUsecase extends Mock
-    implements GetBalanceLiveDataUseCase {}
+    implements GetBalanceUpdatesUseCase {}
 
 class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
 
@@ -32,7 +32,7 @@ void main() {
 
     cubit = BalanceCubit(
       getBalanceUseCase: _mockGetBalanceUsecase,
-      getBalanceLiveDataUseCase: _mockGetBalanceLiveDataUsecase,
+      getBalanceUpdatesUseCase: _mockGetBalanceLiveDataUsecase,
       registerUserUseCase: _mockRegisterUserUseCase,
     );
 
