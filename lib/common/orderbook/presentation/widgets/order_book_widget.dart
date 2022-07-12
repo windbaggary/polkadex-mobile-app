@@ -175,6 +175,8 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   }
 
   Widget _buildSellWidget(List<OrderbookItemEntity> sellItems) {
+    List<double> cumulativeAmount = _buildCumulativeAmountList(sellItems);
+
     return Padding(
       padding: EdgeInsets.only(left: 8),
       child: Column(
@@ -183,8 +185,8 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
             sellItems.length,
             (index) => OrderSellItemWidget(
                   orderbookItem: sellItems[index],
-                  percentageFilled: sellItems[index].cumulativeAmount /
-                      sellItems.last.cumulativeAmount,
+                  percentageFilled:
+                      cumulativeAmount[index] / cumulativeAmount.last,
                   marketDropDownNotifier: marketDropDownNotifier,
                   priceLengthNotifier: priceLengthNotifier,
                 )),
@@ -193,6 +195,8 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   }
 
   Widget _buildBuyWidget(List<OrderbookItemEntity> buyItems) {
+    List<double> cumulativeAmount = _buildCumulativeAmountList(buyItems);
+
     return Padding(
       padding: EdgeInsets.only(left: 8),
       child: Column(
@@ -201,13 +205,27 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
             buyItems.length,
             (index) => OrderBuyItemWidget(
                   orderbookItem: buyItems[index],
-                  percentageFilled: buyItems[index].cumulativeAmount /
-                      buyItems.last.cumulativeAmount,
+                  percentageFilled:
+                      cumulativeAmount[index] / cumulativeAmount.last,
                   marketDropDownNotifier: marketDropDownNotifier,
                   priceLengthNotifier: priceLengthNotifier,
                 )),
       ),
     );
+  }
+
+  List<double> _buildCumulativeAmountList(List<OrderbookItemEntity> items) {
+    final List<double> cumulativeAmount = [];
+
+    for (var i = 0; i < items.length; i++) {
+      if (i == 0) {
+        cumulativeAmount.add(items[i].amount);
+      } else {
+        cumulativeAmount.add(cumulativeAmount[i - 1] + items[i].amount);
+      }
+    }
+
+    return cumulativeAmount;
   }
 
   Widget _buildHeadingWidget() {

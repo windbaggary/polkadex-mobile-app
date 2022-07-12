@@ -14,16 +14,12 @@ class OrderbookModel extends OrderbookEntity {
   factory OrderbookModel.fromJson(List<dynamic> listMap) {
     final listAskData = listMap.where((item) => item['side'] == 'Ask').toList();
     final listBidData = listMap.where((item) => item['side'] == 'Bid').toList();
-    double? askCumulativeAmount;
-    double? bidCumulativeAmount;
 
     final List<OrderbookItemEntity> dataAsk =
         List<OrderbookItemEntity>.generate(
       listAskData.length,
       (index) {
-        final newItem = OrderbookItemModel.fromJson(
-            listAskData[index], askCumulativeAmount);
-        askCumulativeAmount = newItem.cumulativeAmount;
+        final newItem = OrderbookItemModel.fromJson(listAskData[index]);
 
         return newItem;
       },
@@ -33,9 +29,7 @@ class OrderbookModel extends OrderbookEntity {
         List<OrderbookItemEntity>.generate(
       listBidData.length,
       (index) {
-        final newItem = OrderbookItemModel.fromJson(
-            listBidData[index], bidCumulativeAmount);
-        bidCumulativeAmount = newItem.cumulativeAmount;
+        final newItem = OrderbookItemModel.fromJson(listBidData[index]);
 
         return newItem;
       },
@@ -47,6 +41,42 @@ class OrderbookModel extends OrderbookEntity {
     return OrderbookModel(
       ask: dataAsk,
       bid: dataBid,
+    );
+  }
+
+  OrderbookModel update(List<dynamic> listPuts, List<dynamic> listDels) {
+    final tempBid = [...bid];
+    final tempAsk = [...ask];
+
+    for (var itemDel in listDels) {
+      (itemDel['side'] == 'Bid' ? tempBid : tempAsk).removeWhere(
+        (item) =>
+            item.price ==
+            double.parse(
+              itemDel['price'],
+            ),
+      );
+    }
+
+    for (var itemPuts in listPuts) {
+      final list = itemPuts['side'] == 'Bid' ? tempBid : tempAsk;
+
+      final index = list
+          .indexWhere((item) => item.price == double.parse(itemPuts['price']));
+
+      if (index >= 0) {
+        list[index] = OrderbookItemModel.fromJson(itemPuts);
+      } else {
+        list.add(OrderbookItemModel.fromJson(itemPuts));
+      }
+    }
+
+    tempAsk.sort((a, b) => a.price.compareTo(b.price));
+    tempBid.sort((a, b) => a.price.compareTo(b.price));
+
+    return OrderbookModel(
+      ask: tempAsk,
+      bid: tempBid,
     );
   }
 }

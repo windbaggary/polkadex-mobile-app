@@ -36,10 +36,7 @@ class OrderBuyItemWidget extends StatelessWidget {
               ),
             ),
             Text(
-              (marketDropDownNotifier.value ==
-                          EnumMarketDropdownTypes.depthmarket
-                      ? orderbookItem.cumulativeAmount
-                      : orderbookItem.amount)
+              orderbookItem.amount
                   .toStringAsFixed(priceLengthNotifier.value + 1),
               style: tsS14W500CFF,
             ),

@@ -13,7 +13,7 @@ class _MockFetchOrderbookDataUseCase extends Mock
     implements FetchOrderbookDataUseCase {}
 
 class _MockFetchOrderbookLiveDataUseCase extends Mock
-    implements FetchOrderbookLiveDataUseCase {}
+    implements FetchOrderbookUpdatesUseCase {}
 
 void main() {
   late _MockFetchOrderbookDataUseCase _mockFetchOrderbookDataUseCase;
@@ -27,7 +27,7 @@ void main() {
 
     cubit = OrderbookCubit(
       fetchOrderbookDataUseCase: _mockFetchOrderbookDataUseCase,
-      fetchOrderbookLiveDataUseCase: _mockFetchOrderbookLiveDataUseCase,
+      fetchOrderbookUpdatesUseCase: _mockFetchOrderbookLiveDataUseCase,
     );
 
     tOrderbook = OrderbookModel(

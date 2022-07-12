@@ -339,7 +339,7 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => FetchOrderbookLiveDataUseCase(
+    () => FetchOrderbookUpdatesUseCase(
       orderbookRepository: dependency(),
     ),
   );
@@ -347,7 +347,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => OrderbookCubit(
       fetchOrderbookDataUseCase: dependency(),
-      fetchOrderbookLiveDataUseCase: dependency(),
+      fetchOrderbookUpdatesUseCase: dependency(),
     ),
   );
 

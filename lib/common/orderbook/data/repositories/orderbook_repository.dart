@@ -1,6 +1,5 @@
+import 'dart:async';
 import 'dart:convert';
-
-import 'package:dart_amqp/dart_amqp.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
@@ -14,6 +13,7 @@ class OrderbookRepository implements IOrderbookRepository {
       : _orderbookRemoteDatasource = orderbookRemoteDatasource;
 
   final OrderbookRemoteDatasource _orderbookRemoteDatasource;
+  StreamSubscription? orderbookSubscription;
 
   @override
   Future<Either<ApiError, OrderbookEntity>> getOrderbookData(
@@ -37,33 +37,36 @@ class OrderbookRepository implements IOrderbookRepository {
   }
 
   @override
-  Future<Either<ApiError, void>> getOrderbookLiveData(
+  Future<void> getOrderbookUpdates(
     String leftTokenId,
     String rightTokenId,
-    Function(OrderbookEntity) onMsgReceived,
+    Function(List<dynamic>, List<dynamic>) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
-    final Consumer? consumer =
-        await _orderbookRemoteDatasource.getOrderbookConsumer(
+    final Stream orderbookStream =
+        await _orderbookRemoteDatasource.getOrderbookStream(
       leftTokenId,
       rightTokenId,
     );
-    try {
-      consumer?.listen((message) {
-        final payload = message.payloadAsString;
-        message.ack();
 
-        onMsgReceived(OrderbookModel.fromJson(json.decode(payload)));
+    await orderbookSubscription?.cancel();
+
+    try {
+      orderbookSubscription = orderbookStream.listen((message) {
+        final data = message.data;
+
+        if (message.data != null) {
+          final liveData =
+              jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+
+          final listPuts = liveData['puts'].toList();
+          final listDels = liveData['dels'].toList();
+
+          onMsgReceived(listPuts, listDels);
+        }
       });
     } catch (error) {
       onMsgError(error);
-    }
-
-    if (consumer != null) {
-      return Right(null);
-    } else {
-      return Left(ApiError(
-          message: 'Connection error while trying to fetch orderbook data.'));
     }
   }
 }
