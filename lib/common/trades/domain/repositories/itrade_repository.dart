@@ -26,4 +26,9 @@ abstract class ITradeRepository {
       String address);
   Future<Either<ApiError, List<RecentTradeEntity>>> fetchRecentTrades(
       String market);
+  Future<void> fetchAccountTradesUpdates(
+    String address,
+    Function(AccountTradeEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  );
 }

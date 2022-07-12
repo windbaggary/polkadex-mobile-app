@@ -8,6 +8,8 @@ import 'package:polkadex/common/trades/data/repositories/trade_repository.dart';
 class _MockTradeRemoteDatasource extends Mock implements TradeRemoteDatasource {
 }
 
+class _MockStream extends Mock implements Stream {}
+
 void main() {
   late _MockTradeRemoteDatasource dataSource;
   late TradeRepository repository;
@@ -22,6 +24,7 @@ void main() {
   late String tOrdersSuccess;
   late String tAccountTradeSuccess;
   late String tRecentTradeSuccess;
+  late Stream tStream;
 
   setUp(() {
     dataSource = _MockTradeRemoteDatasource();
@@ -84,6 +87,7 @@ void main() {
         "nextToken": null
       }
     }''';
+    tStream = _MockStream();
   });
 
   setUpAll(() {
@@ -184,6 +188,23 @@ void main() {
 
     expect(result.isLeft(), true);
     verify(() => dataSource.fetchAccountTrades(mainAddress)).called(1);
+    verifyNoMoreInteractions(dataSource);
+  });
+
+  test('Must return a successful fetch orderbook live data response', () async {
+    when(() => dataSource.fetchAccountTradesUpdates(
+          any(),
+        )).thenAnswer(
+      (_) async => tStream,
+    );
+
+    await repository.fetchAccountTradesUpdates(
+      mainAddress,
+      (_) {},
+      (_) {},
+    );
+
+    verify(() => dataSource.fetchAccountTradesUpdates(mainAddress)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
@@ -17,6 +18,7 @@ class TradeRepository implements ITradeRepository {
       : _tradeRemoteDatasource = tradeRemoteDatasource;
 
   final TradeRemoteDatasource _tradeRemoteDatasource;
+  StreamSubscription? accountTradeSubscription;
 
   @override
   Future<Either<ApiError, OrderEntity>> placeOrder(
@@ -148,6 +150,35 @@ class TradeRepository implements ITradeRepository {
       return Right(listTransactions);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
+
+  @override
+  Future<void> fetchAccountTradesUpdates(
+    String address,
+    Function(AccountTradeEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  ) async {
+    final accountTradesStream =
+        await _tradeRemoteDatasource.fetchAccountTradesUpdates(address);
+
+    await accountTradeSubscription?.cancel();
+
+    try {
+      accountTradeSubscription = accountTradesStream.listen((message) {
+        final data = message.data;
+        print(data);
+
+        if (message.data != null) {
+          final liveData = jsonDecode(data)['onUpdateTransaction'];
+          onMsgReceived(
+            AccountTradeModel.fromJson(liveData),
+          );
+        }
+      });
+    } catch (error) {
+      print(error);
+      onMsgError(error);
     }
   }
 }

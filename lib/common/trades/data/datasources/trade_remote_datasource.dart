@@ -3,6 +3,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
+import 'package:polkadex/graphql/subscriptions.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/graphql/queries.dart';
 
@@ -107,5 +108,18 @@ class TradeRemoteDatasource {
           ),
         )
         .response;
+  }
+
+  Future<Stream> fetchAccountTradesUpdates(String address) async {
+    return Amplify.API.subscribe(
+      GraphQLRequest(
+        document: onUpdateTransaction,
+        variables: {
+          'main_account': address,
+        },
+      ),
+      onEstablished: () =>
+          print('onUpdateTransaction subscription established'),
+    );
   }
 }

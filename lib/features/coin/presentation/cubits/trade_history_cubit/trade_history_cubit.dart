@@ -4,16 +4,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_account_trades_updates_usecase.dart';
 
 part 'trade_history_state.dart';
 
 class TradeHistoryCubit extends Cubit<TradeHistoryState> {
   TradeHistoryCubit({
     required GetAccountTradesUseCase getTradesUseCase,
+    required GetAccountTradesUpdatesUseCase getAccountTradesUpdatesUseCase,
   })  : _getTradesUseCase = getTradesUseCase,
+        _getAccountTradesUpdatesUseCase = getAccountTradesUpdatesUseCase,
         super(TradeHistoryInitial());
 
   final GetAccountTradesUseCase _getTradesUseCase;
+  final GetAccountTradesUpdatesUseCase _getAccountTradesUpdatesUseCase;
 
   List<AccountTradeEntity> _allTrades = [];
 
@@ -24,6 +28,20 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     emit(TradeHistoryLoading());
 
     final result = await _getTradesUseCase(address: address);
+
+    await _getAccountTradesUpdatesUseCase(
+      address: address,
+      onMsgReceived: (newTrade) {
+        final currentState = state;
+
+        if (currentState is TradeHistoryLoaded) {
+          final newList = [newTrade, ...currentState.trades];
+
+          emit(TradeHistoryLoaded(trades: newList));
+        }
+      },
+      onMsgError: (_) {},
+    );
 
     result.fold(
       (_) => emit(TradeHistoryError()),

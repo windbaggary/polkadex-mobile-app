@@ -72,7 +72,6 @@ class GraphRepository implements IGraphRepository {
 
         if (message.data != null) {
           final liveData = jsonDecode(data)['onCandleStickEvents'];
-          print(liveData);
           onMsgReceived(
             KLineEntity.fromCustom(
               open: double.parse(liveData['o']),
