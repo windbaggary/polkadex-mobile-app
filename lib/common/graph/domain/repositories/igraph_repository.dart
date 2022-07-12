@@ -6,4 +6,11 @@ import 'package:k_chart/entity/k_line_entity.dart';
 abstract class IGraphRepository {
   Future<Either<ApiError, List<KLineEntity>>> getGraphData(String leftTokenId,
       String rightTokenId, EnumAppChartTimestampTypes timestampType);
+  Future<void> getGraphUpdates(
+    String leftTokenId,
+    String rightTokenId,
+    EnumAppChartTimestampTypes timestampType,
+    Function(KLineEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  );
 }

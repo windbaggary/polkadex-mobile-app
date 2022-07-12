@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:graphql/client.dart';
+import 'package:polkadex/common/graph/domain/usecases/get_graph_updates_usecase.dart';
 import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
 import 'package:polkadex/common/market_asset/data/repositories/market_repository.dart';
@@ -265,8 +266,15 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => GetGraphUpdatesUseCase(
+      graphRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => CoinGraphCubit(
       getGraphDataUseCase: dependency(),
+      getGraphUpdatesUseCase: dependency(),
     ),
   );
 

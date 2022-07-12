@@ -1,16 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
+import 'package:polkadex/common/graph/domain/usecases/get_graph_updates_usecase.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'coin_graph_state.dart';
 
 class CoinGraphCubit extends Cubit<CoinGraphState> {
   CoinGraphCubit({
     required GetCoinGraphDataUseCase getGraphDataUseCase,
+    required GetGraphUpdatesUseCase getGraphUpdatesUseCase,
   })  : _getGraphDataUseCase = getGraphDataUseCase,
+        _getGraphUpdatesUseCase = getGraphUpdatesUseCase,
         super(CoinGraphInitial(
             timestampSelected: EnumAppChartTimestampTypes.oneHour));
 
   final GetCoinGraphDataUseCase _getGraphDataUseCase;
+  final GetGraphUpdatesUseCase _getGraphUpdatesUseCase;
 
   Future<void> loadGraph(String leftTokenId, String rightTokenId,
       {EnumAppChartTimestampTypes? timestampSelected}) async {
@@ -21,6 +25,28 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
       leftTokenId,
       rightTokenId,
       newTimestampChart,
+    );
+
+    await _getGraphUpdatesUseCase(
+      leftTokenId: leftTokenId,
+      rightTokenId: rightTokenId,
+      timestampType: newTimestampChart,
+      onMsgReceived: (newKline) {
+        final currentState = state;
+
+        if (currentState is CoinGraphLoaded) {
+          final newGraphList = [...currentState.dataList, newKline];
+
+          emit(
+            CoinGraphLoaded(
+              timestampSelected: newTimestampChart,
+              dataList: newGraphList,
+              indexPointSelected: null,
+            ),
+          );
+        }
+      },
+      onMsgError: (_) {},
     );
 
     result.fold(
@@ -34,14 +60,5 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
         indexPointSelected: null,
       )),
     );
-  }
-
-  Future<void> updatePointValues({required int? indexPointSelected}) async {
-    final previousState = state;
-
-    if (previousState is CoinGraphLoaded &&
-        previousState.indexPointSelected != indexPointSelected) {
-      emit(previousState.copyWith(indexPointSelected: indexPointSelected));
-    }
   }
 }

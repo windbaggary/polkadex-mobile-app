@@ -1,4 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:polkadex/graphql/subscriptions.dart';
 import 'package:polkadex/graphql/queries.dart';
 
 class GraphRemoteDatasource {
@@ -20,5 +21,23 @@ class GraphRemoteDatasource {
           ),
         )
         .response;
+  }
+
+  Future<Stream> getCoinGraphStream(
+    String leftTokenId,
+    String rightTokenId,
+    String timestamp,
+  ) async {
+    return Amplify.API.subscribe(
+      GraphQLRequest(
+        document: onCandleStickEvents,
+        variables: <String, dynamic>{
+          'm': '$leftTokenId-$rightTokenId',
+          'interval': timestamp,
+        },
+      ),
+      onEstablished: () =>
+          print('onCandleStickEvents subscription established'),
+    );
   }
 }
