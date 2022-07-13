@@ -73,7 +73,11 @@ void main() {
         'Orders fetched successfully',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(address: any(named: 'address')),
+            () => _mockGetOrdersUsecase(
+              address: any(named: 'address'),
+              from: any(named: 'from'),
+              to: any(named: 'to'),
+            ),
           ).thenAnswer(
             (_) async => Right([order]),
           );
@@ -99,7 +103,11 @@ void main() {
         'Orders fetch fail',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(address: any(named: 'address')),
+            () => _mockGetOrdersUsecase(
+              address: any(named: 'address'),
+              from: any(named: 'from'),
+              to: any(named: 'to'),
+            ),
           ).thenAnswer(
             (_) async => Left(ApiError(message: 'error')),
           );

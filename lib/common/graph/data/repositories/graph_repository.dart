@@ -19,12 +19,16 @@ class GraphRepository implements IGraphRepository {
     String leftTokenId,
     String rightTokenId,
     EnumAppChartTimestampTypes timestampType,
+    DateTime from,
+    DateTime to,
   ) async {
     try {
       final result = await _graphLocalDatasource.getCoinGraphData(
         leftTokenId,
         rightTokenId,
         TimeUtils.timestampTypeToString(timestampType),
+        from,
+        to,
       );
 
       final listData =

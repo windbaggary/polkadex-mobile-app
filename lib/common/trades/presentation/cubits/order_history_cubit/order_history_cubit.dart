@@ -27,7 +27,11 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   ) async {
     emit(OrderHistoryLoading());
 
-    final result = await _getOrdersUseCase(address: address);
+    final result = await _getOrdersUseCase(
+      address: address,
+      from: DateTime.fromMicrosecondsSinceEpoch(0),
+      to: DateTime.now(),
+    );
 
     result.fold(
       (_) => emit(OrderHistoryError()),

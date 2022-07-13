@@ -66,15 +66,19 @@ class TradeRemoteDatasource {
         .response;
   }
 
-  Future<GraphQLResponse> fetchOrders(String address) async {
+  Future<GraphQLResponse> fetchOrders(
+    String address,
+    DateTime from,
+    DateTime to,
+  ) async {
     return await Amplify.API
         .query(
           request: GraphQLRequest(
             document: listOrderHistorybyMainAccount,
             variables: {
               'main_account': address,
-              'from': '1970-01-01T00:00:00Z',
-              'to': DateTime.now().toUtc().toIso8601String(),
+              'from': from.toUtc().toIso8601String(),
+              'to': to.toUtc().toIso8601String(),
             },
           ),
         )
@@ -94,15 +98,19 @@ class TradeRemoteDatasource {
         .response;
   }
 
-  Future<GraphQLResponse> fetchAccountTrades(String address) async {
+  Future<GraphQLResponse> fetchAccountTrades(
+    String address,
+    DateTime from,
+    DateTime to,
+  ) async {
     return await Amplify.API
         .query(
           request: GraphQLRequest(
             document: listTransactionsByMainAccount,
             variables: {
               'main_account': address,
-              'from': '1970-01-01T00:00:00Z',
-              'to': DateTime.now().toUtc().toIso8601String(),
+              'from': from.toUtc().toIso8601String(),
+              'to': to.toUtc().toIso8601String(),
             },
           ),
         )

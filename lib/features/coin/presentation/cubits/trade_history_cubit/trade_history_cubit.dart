@@ -23,7 +23,11 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
   ) async {
     emit(TradeHistoryLoading());
 
-    final result = await _getTradesUseCase(address: address);
+    final result = await _getTradesUseCase(
+      address: address,
+      from: DateTime.fromMicrosecondsSinceEpoch(0),
+      to: DateTime.now(),
+    );
 
     result.fold(
       (_) => emit(TradeHistoryError()),

@@ -10,8 +10,15 @@ class GetOrdersUseCase {
 
   final ITradeRepository _tradeRepository;
 
-  Future<Either<ApiError, List<OrderEntity>>> call(
-      {required String address}) async {
-    return await _tradeRepository.fetchOrders(address);
+  Future<Either<ApiError, List<OrderEntity>>> call({
+    required String address,
+    required DateTime from,
+    required DateTime to,
+  }) async {
+    return await _tradeRepository.fetchOrders(
+      address,
+      from,
+      to,
+    );
   }
 }

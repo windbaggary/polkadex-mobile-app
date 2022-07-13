@@ -6,6 +6,8 @@ class GraphRemoteDatasource {
     String leftTokenId,
     String rightTokenId,
     String timestamp,
+    DateTime from,
+    DateTime to,
   ) async {
     return await Amplify.API
         .query(
@@ -14,8 +16,8 @@ class GraphRemoteDatasource {
             variables: {
               'market': '$leftTokenId-$rightTokenId',
               'interval': timestamp,
-              'from': '1970-01-01T00:00:00Z',
-              'to': DateTime.now().toUtc().toIso8601String(),
+              'from': from.toUtc().toIso8601String(),
+              'to': to.toUtc().toIso8601String(),
             },
           ),
         )

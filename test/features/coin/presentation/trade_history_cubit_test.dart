@@ -60,7 +60,11 @@ void main() {
         'Trades fetched successfully',
         build: () {
           when(
-            () => _mockGetAccountTradesUsecase(address: any(named: 'address')),
+            () => _mockGetAccountTradesUsecase(
+              address: any(named: 'address'),
+              from: any(named: 'from'),
+              to: any(named: 'to'),
+            ),
           ).thenAnswer(
             (_) async => Right([trade]),
           );
@@ -82,7 +86,11 @@ void main() {
         'Trades fetch fail',
         build: () {
           when(
-            () => _mockGetAccountTradesUsecase(address: any(named: 'address')),
+            () => _mockGetAccountTradesUsecase(
+              address: any(named: 'address'),
+              from: any(named: 'from'),
+              to: any(named: 'to'),
+            ),
           ).thenAnswer(
             (_) async => Left(ApiError(message: 'error')),
           );
