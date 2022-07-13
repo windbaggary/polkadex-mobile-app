@@ -10,8 +10,11 @@ class GetAccountTradesUseCase {
 
   final ITradeRepository _tradeRepository;
 
-  Future<Either<ApiError, List<AccountTradeEntity>>> call(
-      {required String address}) async {
-    return await _tradeRepository.fetchAccountTrades(address);
+  Future<Either<ApiError, List<AccountTradeEntity>>> call({
+    required String address,
+    required DateTime from,
+    required DateTime to,
+  }) async {
+    return await _tradeRepository.fetchAccountTrades(address, from, to);
   }
 }

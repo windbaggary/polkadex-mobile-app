@@ -25,6 +25,8 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
       leftTokenId,
       rightTokenId,
       newTimestampChart,
+      DateTime.fromMicrosecondsSinceEpoch(0),
+      DateTime.now(),
     );
 
     await _getGraphUpdatesUseCase(

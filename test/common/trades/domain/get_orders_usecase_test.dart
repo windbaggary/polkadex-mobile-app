@@ -25,6 +25,8 @@ void main() {
   late String price;
   late String address;
   late OrderModel order;
+  late DateTime tFrom;
+  late DateTime tTo;
 
   setUp(() {
     _repository = _TradeRepositoryMock();
@@ -52,6 +54,8 @@ void main() {
       quoteAsset: quoteAsset,
       status: status,
     );
+    tFrom = DateTime.fromMicrosecondsSinceEpoch(0);
+    tTo = DateTime.now();
   });
 
   setUpAll(() {
@@ -64,12 +68,12 @@ void main() {
       'must get open orders successfully',
       () async {
         // arrange
-        when(() => _repository.fetchOrders(any())).thenAnswer(
+        when(() => _repository.fetchOrders(any(), any(), any())).thenAnswer(
           (_) async => Right([order]),
         );
         List<OrderEntity> ordersResult = [];
         // act
-        final result = await _usecase(address: address);
+        final result = await _usecase(address: address, from: tFrom, to: tTo);
         // assert
 
         result.fold(
@@ -78,7 +82,7 @@ void main() {
         );
 
         expect(ordersResult.contains(order), true);
-        verify(() => _repository.fetchOrders(any())).called(1);
+        verify(() => _repository.fetchOrders(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -87,15 +91,15 @@ void main() {
       'must fail to get open orders',
       () async {
         // arrange
-        when(() => _repository.fetchOrders(any())).thenAnswer(
+        when(() => _repository.fetchOrders(any(), any(), any())).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
-        final result = await _usecase(address: address);
+        final result = await _usecase(address: address, from: tFrom, to: tTo);
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.fetchOrders(any())).called(1);
+        verify(() => _repository.fetchOrders(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

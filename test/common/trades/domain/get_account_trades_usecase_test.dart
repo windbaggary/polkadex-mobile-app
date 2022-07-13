@@ -22,6 +22,8 @@ void main() {
   late String fee;
   late String address;
   late AccountTradeEntity trade;
+  late DateTime tFrom;
+  late DateTime tTo;
 
   setUp(() {
     _repository = _TradeRepositoryMock();
@@ -43,6 +45,8 @@ void main() {
       status: status,
       time: time,
     );
+    tFrom = DateTime.fromMicrosecondsSinceEpoch(0);
+    tTo = DateTime.now();
   });
 
   setUpAll(() {
@@ -55,12 +59,13 @@ void main() {
       'must get account trades successfully',
       () async {
         // arrange
-        when(() => _repository.fetchAccountTrades(any())).thenAnswer(
+        when(() => _repository.fetchAccountTrades(any(), any(), any()))
+            .thenAnswer(
           (_) async => Right([trade]),
         );
         List<AccountTradeEntity> tradesResult = [];
         // act
-        final result = await _usecase(address: address);
+        final result = await _usecase(address: address, from: tFrom, to: tTo);
         // assert
 
         result.fold(
@@ -69,7 +74,8 @@ void main() {
         );
 
         expect(tradesResult.contains(trade), true);
-        verify(() => _repository.fetchAccountTrades(any())).called(1);
+        verify(() => _repository.fetchAccountTrades(any(), any(), any()))
+            .called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -78,15 +84,17 @@ void main() {
       'must fail to get account trades',
       () async {
         // arrange
-        when(() => _repository.fetchAccountTrades(any())).thenAnswer(
+        when(() => _repository.fetchAccountTrades(any(), any(), any()))
+            .thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
-        final result = await _usecase(address: address);
+        final result = await _usecase(address: address, from: tFrom, to: tTo);
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.fetchAccountTrades(any())).called(1);
+        verify(() => _repository.fetchAccountTrades(any(), any(), any()))
+            .called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

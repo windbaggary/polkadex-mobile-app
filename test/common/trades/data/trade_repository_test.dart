@@ -25,6 +25,8 @@ void main() {
   late String tAccountTradeSuccess;
   late String tRecentTradeSuccess;
   late Stream tStream;
+  late DateTime tFrom;
+  late DateTime tTo;
 
   setUp(() {
     dataSource = _MockTradeRemoteDatasource();
@@ -37,6 +39,8 @@ void main() {
     price = "50.0";
     mainAddress = 'test';
     proxyAddress = 'tset';
+    tFrom = DateTime.fromMicrosecondsSinceEpoch(0);
+    tTo = DateTime.now();
     tAccountTradeSuccess = '''{
       "listTransactionsByMainAccount": {
         "items": [
@@ -144,50 +148,82 @@ void main() {
   });
 
   test('Must return a success orders fetch response', () async {
-    when(() => dataSource.fetchOrders(any())).thenAnswer(
+    when(() => dataSource.fetchOrders(any(), any(), any())).thenAnswer(
       (_) async => GraphQLResponse(data: tOrdersSuccess, errors: []),
     );
 
-    final result = await repository.fetchOrders(mainAddress);
+    final result = await repository.fetchOrders(
+      mainAddress,
+      tFrom,
+      tTo,
+    );
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchOrders(mainAddress)).called(1);
+    verify(() => dataSource.fetchOrders(
+          mainAddress,
+          tFrom,
+          tTo,
+        )).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 
   test('Must return a failed orders fetch response', () async {
-    when(() => dataSource.fetchOrders(any())).thenAnswer(
+    when(() => dataSource.fetchOrders(any(), any(), any())).thenAnswer(
       (_) async => throw Exception('Some arbitrary error'),
     );
 
-    final result = await repository.fetchOrders(mainAddress);
+    final result = await repository.fetchOrders(
+      mainAddress,
+      tFrom,
+      tTo,
+    );
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchOrders(mainAddress)).called(1);
+    verify(() => dataSource.fetchOrders(
+          mainAddress,
+          tFrom,
+          tTo,
+        )).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 
   test('Must return a success account trades fetch response', () async {
-    when(() => dataSource.fetchAccountTrades(any())).thenAnswer(
+    when(() => dataSource.fetchAccountTrades(any(), any(), any())).thenAnswer(
       (_) async => GraphQLResponse(data: tAccountTradeSuccess, errors: []),
     );
 
-    final result = await repository.fetchAccountTrades(mainAddress);
+    final result = await repository.fetchAccountTrades(
+      mainAddress,
+      tFrom,
+      tTo,
+    );
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchAccountTrades(mainAddress)).called(1);
+    verify(() => dataSource.fetchAccountTrades(
+          mainAddress,
+          tFrom,
+          tTo,
+        )).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 
   test('Must return a failed account trades fetch response', () async {
-    when(() => dataSource.fetchAccountTrades(any())).thenAnswer(
+    when(() => dataSource.fetchAccountTrades(any(), any(), any())).thenAnswer(
       (_) async => throw Exception('Some arbitrary error'),
     );
 
-    final result = await repository.fetchAccountTrades(mainAddress);
+    final result = await repository.fetchAccountTrades(
+      mainAddress,
+      tFrom,
+      tTo,
+    );
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchAccountTrades(mainAddress)).called(1);
+    verify(() => dataSource.fetchAccountTrades(
+          mainAddress,
+          tFrom,
+          tTo,
+        )).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 

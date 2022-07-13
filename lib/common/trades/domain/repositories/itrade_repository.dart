@@ -21,9 +21,16 @@ abstract class ITradeRepository {
     String address,
     String orderId,
   );
-  Future<Either<ApiError, List<OrderEntity>>> fetchOrders(String address);
+  Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
+    String address,
+    DateTime from,
+    DateTime to,
+  );
   Future<Either<ApiError, List<AccountTradeEntity>>> fetchAccountTrades(
-      String address);
+    String address,
+    DateTime from,
+    DateTime to,
+  );
   Future<Either<ApiError, List<RecentTradeEntity>>> fetchRecentTrades(
       String market);
   Future<void> fetchAccountTradesUpdates(

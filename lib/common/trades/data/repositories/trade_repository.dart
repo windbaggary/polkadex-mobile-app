@@ -94,9 +94,16 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
-      String address) async {
+    String address,
+    DateTime from,
+    DateTime to,
+  ) async {
     try {
-      final result = await _tradeRemoteDatasource.fetchOrders(address);
+      final result = await _tradeRemoteDatasource.fetchOrders(
+        address,
+        from,
+        to,
+      );
 
       final List<OrderEntity> listOrders = [];
 
@@ -135,9 +142,16 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<Either<ApiError, List<AccountTradeEntity>>> fetchAccountTrades(
-      String address) async {
+    String address,
+    DateTime from,
+    DateTime to,
+  ) async {
     try {
-      final result = await _tradeRemoteDatasource.fetchAccountTrades(address);
+      final result = await _tradeRemoteDatasource.fetchAccountTrades(
+        address,
+        from,
+        to,
+      );
 
       final List<AccountTradeEntity> listTransactions = [];
 
