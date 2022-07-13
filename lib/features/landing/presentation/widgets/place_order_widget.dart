@@ -161,9 +161,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     double balance;
 
     if (balanceState is BalanceLoaded) {
-      balance = double.parse(balanceState.free[enumBuySell == EnumBuySell.buy
-          ? marketAssetCubit.currentQuoteAssetDetails.assetId
-          : marketAssetCubit.currentBaseAssetDetails.assetId]);
+      balance = double.parse(balanceState.free.getBalance(
+          enumBuySell == EnumBuySell.buy
+              ? marketAssetCubit.currentQuoteAssetDetails.assetId
+              : marketAssetCubit.currentBaseAssetDetails.assetId));
     } else {
       balance = 0.0;
     }
@@ -192,16 +193,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           _priceController.text = '';
           WidgetsBinding.instance
               ?.addPostFrameCallback((_) => _onPriceAmountChanged(
-                    context,
-                    context.read<PlaceOrderCubit>().state.balance,
-                    '',
+                    context.read<PlaceOrderCubit>(),
+                    0.0,
                     false,
                   ));
-
-          context.read<TickerCubit>().getLastTicker(
-                leftTokenId: marketAssetCubit.currentBaseAssetDetails.assetId,
-                rightTokenId: marketAssetCubit.currentQuoteAssetDetails.assetId,
-              );
         }
       },
     );
@@ -219,11 +214,13 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
     if (balanceState is BalanceLoaded) {
       context.read<PlaceOrderCubit>().updateOrderParams(
-          orderside: newOrderSide,
-          balance: double.parse(balanceState.free[
-              newOrderSide == EnumBuySell.buy
+            orderside: newOrderSide,
+            balance: double.parse(
+              balanceState.free.getBalance(newOrderSide == EnumBuySell.buy
                   ? pairToken.assetId
-                  : baseToken.assetId]));
+                  : baseToken.assetId),
+            ),
+          );
       return;
     }
 
@@ -267,21 +264,21 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }
 
   void _onPriceAmountChanged(
-    BuildContext context,
-    double walletBalance,
-    String val,
+    PlaceOrderCubit placeOrderCubit,
+    double val,
     bool isAmount,
   ) {
     double amount;
     double price;
+    final walletBalance = placeOrderCubit.state.balance;
 
     try {
       if (isAmount) {
-        amount = double.tryParse(val) ?? 0.0;
+        amount = val;
         price = double.tryParse(_priceController.text) ?? 0.0;
       } else {
         amount = double.tryParse(_amountController.text) ?? 0.0;
-        price = double.tryParse(val) ?? 0.0;
+        price = val;
       }
 
       if (walletBalance > 0.0) {
@@ -290,11 +287,11 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
         _progressNotifier.value = 0.0;
       }
 
-      context.read<PlaceOrderCubit>().updateOrderParams(
-            balance: walletBalance,
-            amount: amount,
-            price: price,
-          );
+      placeOrderCubit.updateOrderParams(
+        balance: walletBalance,
+        amount: amount,
+        price: price,
+      );
     } catch (ex) {
       print(ex);
     }
@@ -315,15 +312,14 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     final resultPlaceOrder = await placeOrderCubit.placeOrder(
-      nonce: 0,
+      mainAddress: context.read<AccountCubit>().mainAccountAddress,
+      proxyAddress: context.read<AccountCubit>().proxyAccountAddress,
       baseAsset: leftAsset,
       quoteAsset: rightAsset,
       orderType: side,
       orderSide: type,
       amount: amount,
       price: price,
-      address: context.read<AccountCubit>().accountAddress,
-      signature: context.read<AccountCubit>().accountSignature,
     );
 
     if (price.isEmpty) {
@@ -468,15 +464,16 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           if (state is TickerLoaded &&
               placeOrderState is! PlaceOrderLoading &&
               orderType == EnumOrderTypes.market) {
-            final newPrice = state.ticker.last.isNotEmpty
-                ? state.ticker.last
-                : state.ticker.previousClose;
+            final placeOrderCubit = context.read<PlaceOrderCubit>();
+            final newPrice = state
+                    .ticker[context.read<MarketAssetCubit>().currentMarketId]
+                    ?.close ??
+                0.0;
 
-            _priceController.text = newPrice;
+            _priceController.text = newPrice.toString();
             WidgetsBinding.instance
                 ?.addPostFrameCallback((_) => _onPriceAmountChanged(
-                      context,
-                      context.read<PlaceOrderCubit>().state.balance,
+                      placeOrderCubit,
                       newPrice,
                       false,
                     ));
@@ -499,21 +496,15 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                     'Price (${marketAssetCubit.currentQuoteAssetDetails.symbol})',
                 controller: _priceController,
                 onChanged: (price) => _onPriceAmountChanged(
-                  context,
-                  context.read<PlaceOrderCubit>().state.balance,
-                  price,
+                  context.read<PlaceOrderCubit>(),
+                  double.parse(price),
                   false,
                 ),
                 isLoading: _orderTypeNotifier.value == EnumOrderTypes.market &&
                     state is TickerLoading,
                 onError: _orderTypeNotifier.value == EnumOrderTypes.market &&
                         state is TickerError
-                    ? () => context.read<TickerCubit>().getLastTicker(
-                          leftTokenId:
-                              marketAssetCubit.currentBaseAssetDetails.assetId,
-                          rightTokenId:
-                              marketAssetCubit.currentQuoteAssetDetails.assetId,
-                        )
+                    ? () => context.read<TickerCubit>().getAllTickers()
                     : null,
               ),
             ),
@@ -543,9 +534,8 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             hintText: 'Amount (${asset.symbol})',
             controller: _amountController,
             onChanged: (amount) => _onPriceAmountChanged(
-              context,
-              context.read<PlaceOrderCubit>().state.balance,
-              amount,
+              context.read<PlaceOrderCubit>(),
+              double.parse(amount),
               true,
             ),
           ),

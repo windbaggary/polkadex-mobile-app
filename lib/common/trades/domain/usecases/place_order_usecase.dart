@@ -12,26 +12,24 @@ class PlaceOrderUseCase {
   final ITradeRepository _tradeRepository;
 
   Future<Either<ApiError, OrderEntity>> call({
-    required int nonce,
+    required String mainAddress,
+    required String proxyAddress,
     required String baseAsset,
     required String quoteAsset,
     required EnumOrderTypes orderType,
     required EnumBuySell orderSide,
     required String price,
     required String amount,
-    required String address,
-    required String signature,
   }) async {
     return await _tradeRepository.placeOrder(
-      nonce,
+      mainAddress,
+      proxyAddress,
       baseAsset,
       quoteAsset,
       orderType,
       orderSide,
       price,
       amount,
-      address,
-      signature,
     );
   }
 }

@@ -8,11 +8,13 @@ import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dar
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
+import 'package:polkadex/features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/balance_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/trade_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_bottom_navigation_bar.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_drawer_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -96,19 +98,29 @@ class _LandingScreenState extends State<LandingScreen>
 
   @override
   Widget build(BuildContext context) {
+    context
+        .read<RecentTradesCubit>()
+        .getRecentTrades(context.read<MarketAssetCubit>().currentMarketId);
+
     return WillPopScope(
       onWillPop: () async => false,
       child: MultiBlocProvider(
         providers: [
           BlocProvider<BalanceCubit>(
             create: (_) => dependency<BalanceCubit>()
-              ..getBalance(context.read<AccountCubit>().accountAddress),
+              ..getBalance(context.read<AccountCubit>().mainAccountAddress),
           ),
           BlocProvider<OrderbookCubit>(
             create: (_) => dependency<OrderbookCubit>()
               ..fetchOrderbookData(
-                leftTokenId: '0',
-                rightTokenId: '1',
+                leftTokenId: context
+                    .read<MarketAssetCubit>()
+                    .currentBaseAssetDetails
+                    .assetId,
+                rightTokenId: context
+                    .read<MarketAssetCubit>()
+                    .currentQuoteAssetDetails
+                    .assetId,
               ),
           ),
         ],

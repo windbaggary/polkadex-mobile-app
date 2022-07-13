@@ -15,7 +15,6 @@ void main() {
   late double amountFree;
   late double amountToBeWithdrawn;
   late String address;
-  late String signature;
 
   setUp(() {
     _mockWithdrawUsecase = _MockWithdrawUsecase();
@@ -28,7 +27,6 @@ void main() {
     amountFree = 10.0;
     amountToBeWithdrawn = 1.0;
     address = 'addressTest';
-    signature = 'signatureTest';
   });
 
   group(
@@ -104,7 +102,6 @@ void main() {
               asset: any(named: 'asset'),
               amount: any(named: 'amount'),
               address: any(named: 'address'),
-              signature: any(named: 'signature'),
             ),
           ).thenAnswer(
             (_) async => Right('test'),
@@ -117,7 +114,6 @@ void main() {
             amountToBeWithdrawn: amountToBeWithdrawn,
             amountFree: amountFree,
             address: address,
-            signature: signature,
           );
         },
         expect: () => [
@@ -134,7 +130,6 @@ void main() {
               asset: any(named: 'asset'),
               amount: any(named: 'amount'),
               address: any(named: 'address'),
-              signature: any(named: 'signature'),
             ),
           ).thenAnswer(
             (_) async => Left(ApiError(message: '')),
@@ -147,7 +142,6 @@ void main() {
             amountToBeWithdrawn: amountToBeWithdrawn,
             amountFree: amountFree,
             address: address,
-            signature: signature,
           );
         },
         expect: () => [

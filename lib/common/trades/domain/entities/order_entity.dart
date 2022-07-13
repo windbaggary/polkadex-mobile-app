@@ -1,44 +1,47 @@
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
-abstract class OrderEntity extends TradeEntity {
+abstract class OrderEntity extends Equatable {
   const OrderEntity({
-    required String tradeId,
-    required String baseAsset,
-    required String amount,
-    required DateTime timestamp,
-    required String status,
-    required EnumTradeTypes event,
-    required String market,
-    required this.price,
+    required this.mainAccount,
+    required this.tradeId,
+    required this.time,
+    required this.baseAsset,
+    required this.quoteAsset,
     required this.orderSide,
     required this.orderType,
-    required this.quoteAsset,
-  }) : super(
-          tradeId: tradeId,
-          baseAsset: baseAsset,
-          amount: amount,
-          timestamp: timestamp,
-          status: status,
-          event: event,
-          market: market,
-        );
+    required this.status,
+    required this.price,
+    required this.qty,
+    this.avgFilledPrice,
+    this.filledQuantity,
+    this.fee,
+  });
 
-  final String price;
-  final EnumBuySell orderSide;
-  final EnumOrderTypes? orderType;
+  final String mainAccount;
+  final String tradeId;
+  final DateTime time;
+  final String baseAsset;
   final String quoteAsset;
+  final EnumBuySell orderSide;
+  final EnumOrderTypes orderType;
+  final String status;
+  final String price;
+  final String qty;
+  final String? avgFilledPrice;
+  final String? filledQuantity;
+  final String? fee;
 
   String get iFormattedDate {
-    return DateFormat("MMM dd, yyyy HH:mm:ss").format(timestamp);
+    return DateFormat("MMM dd, yyyy HH:mm:ss").format(time);
   }
 
   String get iType {
-    switch (event) {
-      case EnumTradeTypes.bid:
+    switch (orderSide) {
+      case EnumBuySell.buy:
         return "Buy";
-      case EnumTradeTypes.ask:
+      case EnumBuySell.sell:
         return "Sell";
       default:
         return "";
@@ -62,14 +65,18 @@ abstract class OrderEntity extends TradeEntity {
 
   @override
   List<Object?> get props => [
+        mainAccount,
         tradeId,
-        amount,
-        price,
-        event,
-        orderType,
-        timestamp,
+        time,
         baseAsset,
         quoteAsset,
+        orderSide,
+        orderType,
         status,
+        price,
+        qty,
+        avgFilledPrice,
+        filledQuantity,
+        fee,
       ];
 }

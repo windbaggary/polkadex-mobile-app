@@ -91,10 +91,9 @@ class TradeBottomWidget extends StatelessWidget {
                                   .read<OrderHistoryCubit>()
                                   .cancelOrder(
                                     order,
-                                    context.read<AccountCubit>().accountAddress,
                                     context
                                         .read<AccountCubit>()
-                                        .accountSignature,
+                                        .mainAccountAddress,
                                   );
 //
                               buildAppToast(
@@ -126,8 +125,7 @@ class TradeBottomWidget extends StatelessWidget {
                           .read<MarketAssetCubit>()
                           .currentBaseAssetDetails
                           .assetId,
-                      context.read<AccountCubit>().accountAddress,
-                      context.read<AccountCubit>().accountSignature,
+                      context.read<AccountCubit>().mainAccountAddress,
                       false,
                     ),
               );

@@ -25,13 +25,12 @@ class OrderbookRepository implements IOrderbookRepository {
         leftTokenId,
         rightTokenId,
       );
-      final Map<String, dynamic> body = jsonDecode(result.body);
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        return Right(OrderbookModel.fromJson(body['Fine']));
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
-      }
+      return Right(
+        OrderbookModel.fromJson(
+          jsonDecode(result.data)['getOrderbook']['items'],
+        ),
+      );
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

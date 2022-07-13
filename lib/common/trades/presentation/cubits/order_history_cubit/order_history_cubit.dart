@@ -23,12 +23,15 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   Future<void> getOrders(
     String asset,
     String address,
-    String signature,
     bool isOpenOrdersPriority,
   ) async {
     emit(OrderHistoryLoading());
 
-    final result = await _getOrdersUseCase(address: address);
+    final result = await _getOrdersUseCase(
+      address: address,
+      from: DateTime.fromMicrosecondsSinceEpoch(0),
+      to: DateTime.now(),
+    );
 
     result.fold(
       (_) => emit(OrderHistoryError()),
@@ -37,7 +40,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             .where((order) =>
                 order.baseAsset == asset || order.quoteAsset == asset)
             .toList();
-        _allOrders.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        _allOrders.sort((a, b) => b.time.compareTo(a.time));
 
         if (isOpenOrdersPriority) {
           _allOrders = orders
@@ -70,8 +73,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
     if (dateFilter != null) {
       _ordersFiltered.removeWhere((order) =>
-          order.timestamp.isBefore(dateFilter.start) ||
-          order.timestamp.isAfter(dateFilter.end));
+          order.time.isBefore(dateFilter.start) ||
+          order.time.isAfter(dateFilter.end));
     }
 
     if (filters.isNotEmpty) {
@@ -94,7 +97,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   Future<bool> cancelOrder(
     OrderEntity order,
     String address,
-    String signature,
   ) async {
     final firstPreviousState = state;
 
@@ -112,7 +114,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
         nonce: 0,
         address: address,
         orderId: order.tradeId,
-        signature: signature,
       );
 
       final secondPreviousState = state;

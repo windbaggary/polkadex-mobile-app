@@ -11,12 +11,19 @@ class GetCoinGraphDataUseCase {
 
   final IGraphRepository _graphRepository;
 
-  Future<Either<ApiError, List<KLineEntity>>> call(String leftTokenId,
-      String rightTokenId, EnumAppChartTimestampTypes timestampType) async {
+  Future<Either<ApiError, List<KLineEntity>>> call(
+    String leftTokenId,
+    String rightTokenId,
+    EnumAppChartTimestampTypes timestampType,
+    DateTime from,
+    DateTime to,
+  ) async {
     return await _graphRepository.getGraphData(
       leftTokenId,
       rightTokenId,
       timestampType,
+      from,
+      to,
     );
   }
 }

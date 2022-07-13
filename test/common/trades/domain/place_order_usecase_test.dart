@@ -13,43 +13,39 @@ class _OrderRepositoryMock extends Mock implements ITradeRepository {}
 void main() {
   late PlaceOrderUseCase _usecase;
   late _OrderRepositoryMock _repository;
-  late int nonce;
   late String baseAsset;
   late String quoteAsset;
-  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
-  late String amount;
+  late String qty;
   late String price;
   late OrderEntity order;
-  late String address;
-  late String signature;
+  late String mainAddress;
+  late String proxyAddress;
 
   setUp(() {
     _repository = _OrderRepositoryMock();
     _usecase = PlaceOrderUseCase(tradeRepository: _repository);
-    nonce = 0;
     baseAsset = "0";
     quoteAsset = "1";
-    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
-    amount = "100.0";
+    qty = "100.0";
     price = "50.0";
-    address = 'test';
-    signature = 'test';
+    mainAddress = 'test';
+    proxyAddress = 'tset';
     order = order = OrderModel(
-        tradeId: '0',
-        amount: amount,
-        price: price,
-        event: event,
-        orderSide: orderSide,
-        orderType: orderType,
-        timestamp: DateTime.now(),
-        baseAsset: baseAsset,
-        quoteAsset: quoteAsset,
-        status: 'Open',
-        market: '$baseAsset/$quoteAsset');
+      mainAccount: mainAddress,
+      tradeId: '0',
+      qty: qty,
+      price: price,
+      orderSide: orderSide,
+      orderType: orderType,
+      time: DateTime.now(),
+      baseAsset: baseAsset,
+      quoteAsset: quoteAsset,
+      status: 'Open',
+    );
   });
 
   setUpAll(() {
@@ -63,22 +59,20 @@ void main() {
       () async {
         // arrange
         when(() => _repository.placeOrder(
-                any(), any(), any(), any(), any(), any(), any(), any(), any()))
-            .thenAnswer(
+            any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
           (_) async => Right(order),
         );
         OrderEntity? orderResult;
         // act
         final result = await _usecase(
-          nonce: nonce,
+          mainAddress: mainAddress,
+          proxyAddress: proxyAddress,
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
           orderType: orderType,
           orderSide: orderSide,
           price: price,
-          amount: amount,
-          address: address,
-          signature: signature,
+          amount: qty,
         );
         // assert
 
@@ -89,8 +83,7 @@ void main() {
 
         expect(orderResult, order);
         verify(() => _repository.placeOrder(
-                any(), any(), any(), any(), any(), any(), any(), any(), any()))
-            .called(1);
+            any(), any(), any(), any(), any(), any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -100,28 +93,25 @@ void main() {
       () async {
         // arrange
         when(() => _repository.placeOrder(
-                any(), any(), any(), any(), any(), any(), any(), any(), any()))
-            .thenAnswer(
+            any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
         final result = await _usecase(
-          nonce: nonce,
+          mainAddress: mainAddress,
+          proxyAddress: proxyAddress,
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
           orderType: orderType,
           orderSide: orderSide,
           price: price,
-          amount: amount,
-          address: address,
-          signature: signature,
+          amount: qty,
         );
         // assert
 
         expect(result.isLeft(), true);
         verify(() => _repository.placeOrder(
-                any(), any(), any(), any(), any(), any(), any(), any(), any()))
-            .called(1);
+            any(), any(), any(), any(), any(), any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/common/trades/data/models/trade_model.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
+import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
+import 'package:polkadex/common/trades/data/models/recent_trade_model.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/recent_trade_entity.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
 import 'package:polkadex/common/trades/data/models/order_model.dart';
@@ -18,45 +20,40 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<Either<ApiError, OrderEntity>> placeOrder(
-    int nonce,
+    String mainAddress,
+    String proxyAddress,
     String baseAsset,
     String quoteAsset,
     EnumOrderTypes orderType,
     EnumBuySell orderSide,
     String price,
     String amount,
-    String address,
-    String signature,
   ) async {
     try {
       final result = await _tradeRemoteDatasource.placeOrder(
-        nonce,
+        mainAddress,
+        proxyAddress,
         baseAsset == 'PDEX' ? '' : baseAsset,
         quoteAsset == 'PDEX' ? '' : quoteAsset,
         orderType.toString().split('.')[1].capitalize(),
         orderSide == EnumBuySell.buy ? 'Bid' : 'Ask',
         price,
         amount,
-        address,
-        signature,
       );
 
       if (result != null) {
         final newOrder = OrderModel(
+          mainAccount: mainAddress,
           tradeId: result,
-          amount: amount,
+          qty: amount,
           price: price,
-          event: orderSide == EnumBuySell.buy
-              ? EnumTradeTypes.bid
-              : EnumTradeTypes.ask,
           orderSide: orderSide,
           orderType: orderType,
-          timestamp: DateTime.now(),
+          time: DateTime.now(),
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
           status:
               orderType == EnumOrderTypes.market ? 'Filled' : 'PartiallyFilled',
-          market: '$baseAsset/$quoteAsset',
         );
 
         return Right(newOrder);
@@ -74,14 +71,12 @@ class TradeRepository implements ITradeRepository {
     int nonce,
     String address,
     String orderId,
-    String signature,
   ) async {
     try {
       final result = await _tradeRemoteDatasource.cancelOrder(
         nonce,
         address,
         int.parse(orderId),
-        signature,
       );
       final Map<String, dynamic> body = jsonDecode(result.body);
 
@@ -97,41 +92,74 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(
-      String address) async {
+    String address,
+    DateTime from,
+    DateTime to,
+  ) async {
     try {
-      final result = await _tradeRemoteDatasource.fetchOrders(address);
-      final listTransaction = result.rows.map((row) => row.assoc()).toList();
-      List<OrderEntity> listOrder = [];
+      final result = await _tradeRemoteDatasource.fetchOrders(
+        address,
+        from,
+        to,
+      );
 
-      for (var transaction in listTransaction) {
-        listOrder.add(OrderModel.fromJson(transaction));
+      final List<OrderEntity> listOrders = [];
+
+      for (var transaction
+          in jsonDecode(result.data)['listOrderHistorybyMainAccount']
+              ['items']) {
+        listOrders.add(OrderModel.fromJson(transaction));
       }
 
-      return Right(listOrder);
+      return Right(listOrders);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
 
   @override
-  Future<Either<ApiError, List<TradeEntity>>> fetchTrades(
-      String address) async {
+  Future<Either<ApiError, List<RecentTradeEntity>>> fetchRecentTrades(
+      String market) async {
     try {
-      final resultDepWith = await _tradeRemoteDatasource.fetchTrades(address);
-      final resultOrders = await _tradeRemoteDatasource.fetchOrders(address);
-      final listDepWith = resultDepWith.rows.map((row) => row.assoc()).toList();
-      final listOrders = resultOrders.rows.map((row) => row.assoc()).toList();
-      List<TradeEntity> listTrades = [];
+      final result = await _tradeRemoteDatasource.fetchRecentTrades(market);
 
-      for (var transaction in listDepWith) {
-        listTrades.add(TradeModel.fromDepWithJson(transaction));
+      final List<RecentTradeEntity> listRecentTrades = [];
+
+      for (var transaction in jsonDecode(result.data)['getRecentTrades']
+          ['items']) {
+        listRecentTrades.add(RecentTradeModel.fromJson(transaction));
       }
 
-      for (var transaction in listOrders) {
-        listTrades.add(OrderModel.fromJson(transaction));
+      listRecentTrades.sort((a, b) => b.time.compareTo(a.time));
+
+      return Right(listRecentTrades);
+    } catch (_) {
+      return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
+
+  @override
+  Future<Either<ApiError, List<AccountTradeEntity>>> fetchAccountTrades(
+    String address,
+    DateTime from,
+    DateTime to,
+  ) async {
+    try {
+      final result = await _tradeRemoteDatasource.fetchAccountTrades(
+        address,
+        from,
+        to,
+      );
+
+      final List<AccountTradeEntity> listTransactions = [];
+
+      for (var transaction
+          in jsonDecode(result.data)['listTransactionsByMainAccount']
+              ['items']) {
+        listTransactions.add(AccountTradeModel.fromJson(transaction));
       }
 
-      return Right(listTrades);
+      return Right(listTransactions);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

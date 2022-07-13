@@ -2,7 +2,6 @@ import 'dart:convert';
 
 /// The String extension class for the app
 ///
-///
 extension StringExtension on String {
   /// Append the svg location to the string
   String asAssetSvg() => 'assets/svgs/$this.svg';
@@ -15,5 +14,11 @@ extension StringExtension on String {
   String toBase64() {
     final passwordUtf8 = utf8.encode(this);
     return base64.encode(passwordUtf8);
+  }
+}
+
+extension DefaultMap<K, V> on Map<K, V> {
+  V getBalance(K key) {
+    return this[key] ?? ('0.0' as V);
   }
 }

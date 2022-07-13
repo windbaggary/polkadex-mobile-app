@@ -24,9 +24,9 @@ void main() {
             'baseAsset': {'polkadex': null},
             'quoteAsset': {'assetId': 0},
             'minTradeAmount': 1,
-            'maxTradeAmount': '0x32874672354',
+            'maxTradeAmount': 10000000,
             'minOrderQty': 1,
-            'maxOrderQty': '0x32874672354',
+            'maxOrderQty': 10000000,
             'minDepth': 1,
             'maxSpread': 9001,
           }

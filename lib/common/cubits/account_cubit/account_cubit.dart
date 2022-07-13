@@ -8,6 +8,7 @@ import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
@@ -27,6 +28,7 @@ class AccountCubit extends Cubit<AccountState> {
     required GetPasswordUseCase getPasswordUseCase,
     required ConfirmPasswordUseCase confirmPasswordUseCase,
     required RegisterUserUseCase registerUserUseCase,
+    required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
   })  : _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountUseCase = deleteAccountUseCase,
         _deletePasswordUseCase = deletePasswordUseCase,
@@ -35,6 +37,7 @@ class AccountCubit extends Cubit<AccountState> {
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
         _confirmPasswordUseCase = confirmPasswordUseCase,
+        _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
   final GetAccountUseCase _getAccountStorageUseCase;
@@ -45,12 +48,7 @@ class AccountCubit extends Cubit<AccountState> {
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
   final ConfirmPasswordUseCase _confirmPasswordUseCase;
-
-  String get accountAddress {
-    final currentState = state;
-
-    return currentState is AccountLoaded ? currentState.account.address : '';
-  }
+  final GetMainAccountAddressUsecase _getMainAccountAddressUsecase;
 
   String get accountName {
     final currentState = state;
@@ -58,10 +56,20 @@ class AccountCubit extends Cubit<AccountState> {
     return currentState is AccountLoaded ? currentState.account.name : '';
   }
 
-  String get accountSignature {
+  String get mainAccountAddress {
     final currentState = state;
 
-    return currentState is AccountLoaded ? currentState.account.signature : '';
+    return currentState is AccountLoaded
+        ? currentState.account.mainAddress
+        : '';
+  }
+
+  String get proxyAccountAddress {
+    final currentState = state;
+
+    return currentState is AccountLoaded
+        ? currentState.account.proxyAddress
+        : '';
   }
 
   bool get biometricAccess {
@@ -131,15 +139,25 @@ class AccountCubit extends Cubit<AccountState> {
     await resultImport.fold(
       (_) {},
       (importedAcc) async {
-        ImportedAccountEntity acc =
-            (importedAcc as ImportedAccountModel).copyWith(
-          name: name,
-          biometricOnly: biometricOnly,
-          biometricAccess: useBiometric,
+        final resultMainAddress = await _getMainAccountAddressUsecase(
+          proxyAdrress: importedAcc.proxyAddress,
         );
 
-        emit(AccountLoaded(account: acc, password: password));
-        await _saveAccountUseCase(keypairJson: json.encode(acc));
+        resultMainAddress.fold(
+          (_) {},
+          (mainAddress) async {
+            ImportedAccountEntity acc =
+                (importedAcc as ImportedAccountModel).copyWith(
+              name: name,
+              mainAddress: mainAddress,
+              biometricOnly: biometricOnly,
+              biometricAccess: useBiometric,
+            );
+
+            emit(AccountLoaded(account: acc, password: password));
+            await _saveAccountUseCase(keypairJson: json.encode(acc));
+          },
+        );
       },
     );
   }

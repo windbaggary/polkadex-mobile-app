@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dart_amqp/dart_amqp.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/landing/data/datasources/balance_remote_datasource.dart';
@@ -18,22 +17,26 @@ class BalanceRepository implements IBalanceRepository {
     try {
       final result = await _balanceRemoteDatasource.fetchBalance(address);
 
-      return Right(BalanceModel.fromResultSet(result));
+      return Right(
+        BalanceModel.fromJson(
+          jsonDecode(result.data)['getAllBalancesByMainAccount']['items'],
+        ),
+      );
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
 
   @override
-  Future<Either<ApiError, void>> fetchBalanceLiveData(
+  Future<void> fetchBalanceLiveData(
     String address,
     Function(BalanceEntity) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
-    final Consumer? consumer =
-        await _balanceRemoteDatasource.fetchBalanceConsumer(address);
+    final Stream balanceStream =
+        await _balanceRemoteDatasource.fetchBalanceStream(address);
     try {
-      consumer?.listen((message) {
+      balanceStream.listen((message) {
         final payload = message.payloadAsString;
         message.ack();
 
@@ -43,37 +46,6 @@ class BalanceRepository implements IBalanceRepository {
       });
     } catch (error) {
       onMsgError(error);
-    }
-
-    if (consumer != null) {
-      return Right(null);
-    } else {
-      return Left(ApiError(
-          message: 'Connection error while trying to fetch orderbook data.'));
-    }
-  }
-
-  @override
-  Future<Either<ApiError, String>> testDeposit(
-    int asset,
-    String address,
-    String signature,
-  ) async {
-    try {
-      final result = await _balanceRemoteDatasource.testDeposit(
-        asset,
-        address,
-        signature,
-      );
-      final Map<String, dynamic> body = jsonDecode(result.body);
-
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        return Right(body['Fine']);
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
-      }
-    } catch (_) {
-      return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
 }

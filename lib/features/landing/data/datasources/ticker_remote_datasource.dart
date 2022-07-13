@@ -1,20 +1,14 @@
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:polkadex/graphql/queries.dart';
 
 class TickerRemoteDatasource {
-  Future<Response> getLastTickerData(
-    String leftTokenId,
-    String rightTokenId,
-  ) async {
-    return await post(
-      Uri.parse('${dotenv.get('INFLUX_DB_URL')}/api/fetch_ticker'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'symbol': '$leftTokenId-$rightTokenId',
-      }),
-    );
+  Future<GraphQLResponse> getAllTickers() async {
+    return await Amplify.API
+        .query(
+          request: GraphQLRequest(
+            document: getAllMarketTickers,
+          ),
+        )
+        .response;
   }
 }

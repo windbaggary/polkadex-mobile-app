@@ -9,8 +9,7 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
-import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -62,9 +61,9 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => dependency<TradeHistoryCubit>()
-        ..getTrades(
+        ..getAccountTrades(
           widget.asset.assetId,
-          context.read<AccountCubit>().accountAddress,
+          context.read<AccountCubit>().mainAccountAddress,
         ),
       child: MultiProvider(
         providers: [
@@ -413,10 +412,9 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                         return _ThisItemWidget(
                                           tradeItem: state.trades[index],
                                           dateTitle: _getDateTitle(
-                                              state.trades[index].timestamp,
+                                              state.trades[index].time,
                                               index > 0
-                                                  ? state.trades[index - 1]
-                                                      .timestamp
+                                                  ? state.trades[index - 1].time
                                                   : null),
                                         );
                                       },
@@ -429,11 +427,11 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                 child: PolkadexErrorRefreshWidget(
                                   onRefresh: () => context
                                       .read<TradeHistoryCubit>()
-                                      .getTrades(
+                                      .getAccountTrades(
                                         widget.asset.assetId,
                                         context
                                             .read<AccountCubit>()
-                                            .accountAddress,
+                                            .mainAccountAddress,
                                       ),
                                 ),
                               );
@@ -515,7 +513,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
 
 /// The base class for the list item
 class _ThisItemWidget extends StatelessWidget {
-  final TradeEntity tradeItem;
+  final AccountTradeEntity tradeItem;
   final String? dateTitle;
 
   const _ThisItemWidget({
@@ -526,25 +524,14 @@ class _ThisItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget child = Container();
-    if (tradeItem is OrderEntity) {
-      switch (tradeItem.event) {
-        case EnumTradeTypes.bid:
-        case EnumTradeTypes.ask:
-          child =
-              _buildHistoryOrderItemWidget(context, tradeItem as OrderEntity);
-          break;
-        default:
-          child = Container();
-      }
-    } else {
-      switch (tradeItem.event) {
-        case EnumTradeTypes.deposit:
-        case EnumTradeTypes.withdraw:
-          child = _buildHistoryTradeItemWidget(context, tradeItem);
-          break;
-        default:
-          child = Container();
-      }
+
+    switch (tradeItem.txnType) {
+      case EnumTradeTypes.deposit:
+      case EnumTradeTypes.withdraw:
+        child = _buildHistoryTradeItemWidget(context, tradeItem);
+        break;
+      default:
+        child = Container();
     }
 
     final cardWidget = Padding(
@@ -581,11 +568,12 @@ class _ThisItemWidget extends StatelessWidget {
     return cardWidget;
   }
 
-  Widget _buildHistoryTradeItemWidget(BuildContext context, TradeEntity trade) {
+  Widget _buildHistoryTradeItemWidget(
+      BuildContext context, AccountTradeEntity trade) {
     final cubit = context.read<MarketAssetCubit>();
     Widget mainIcon;
 
-    switch (trade.event) {
+    switch (trade.txnType) {
       case EnumTradeTypes.deposit:
         mainIcon = SvgPicture.asset(
           'Deposit'.asAssetSvg(),
@@ -617,12 +605,12 @@ class _ThisItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                cubit.getAssetDetailsById(trade.baseAsset).symbol,
+                cubit.getAssetDetailsById(trade.asset).symbol,
                 style: tsS15W500CFF,
               ),
               SizedBox(height: 1),
               Text(
-                DateFormat("hh:mm:ss aa").format(trade.timestamp).toUpperCase(),
+                DateFormat("hh:mm:ss aa").format(trade.time).toUpperCase(),
                 style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
               ),
             ],
@@ -634,10 +622,9 @@ class _ThisItemWidget extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${trade.amount} ${cubit.getAssetDetailsById(trade.baseAsset).symbol}',
+                  '${trade.amount} ${cubit.getAssetDetailsById(trade.asset).symbol}',
                   style: tsS14W500CFF.copyWith(
-                    color: trade.event == EnumTradeTypes.bid ||
-                            trade.event == EnumTradeTypes.deposit
+                    color: trade.txnType == EnumTradeTypes.deposit
                         ? AppColors.color0CA564
                         : AppColors.colorE6007A,
                   ),
@@ -650,104 +637,103 @@ class _ThisItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildHistoryOrderItemWidget(BuildContext context, OrderEntity order) {
-    final cubit = context.read<MarketAssetCubit>();
-    Widget mainIcon, arrowIcon;
-
-    switch (order.event) {
-      case EnumTradeTypes.bid:
-        mainIcon = SvgPicture.asset(
-          'buy'.asAssetSvg(),
-        );
-        break;
-      case EnumTradeTypes.ask:
-        mainIcon = SvgPicture.asset(
-          'sell'.asAssetSvg(),
-        );
-        break;
-      default:
-        mainIcon = Container();
-    }
-
-    switch (order.event) {
-      case EnumTradeTypes.bid:
-        arrowIcon = SvgPicture.asset(
-          'Arrow-Green'.asAssetSvg(),
-          width: 10,
-          height: 6.0,
-        );
-        break;
-      case EnumTradeTypes.ask:
-        arrowIcon = SvgPicture.asset(
-          'Arrow-Red'.asAssetSvg(),
-          width: 10,
-          height: 6.0,
-        );
-        break;
-      default:
-        arrowIcon = Container();
-    }
-
-    return Row(
-      children: [
-        Container(
-          width: 47,
-          height: 47,
-          margin: const EdgeInsets.only(right: 4.2),
-          padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 13),
-          decoration: BoxDecoration(
-              color: AppColors.color8BA1BE.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12)),
-          child: mainIcon,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
-                style: tsS15W500CFF,
-              ),
-              SizedBox(height: 1),
-              Text(
-                DateFormat("hh:mm:ss aa").format(order.timestamp).toUpperCase(),
-                style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
-              ),
-            ],
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              children: [
-                Text(
-                  '${order.amount} ${cubit.getAssetDetailsById(order.baseAsset).symbol}',
-                  style: tsS14W500CFF.copyWith(
-                    color: order.event == EnumTradeTypes.bid ||
-                            order.event == EnumTradeTypes.deposit
-                        ? AppColors.color0CA564
-                        : AppColors.colorE6007A,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 8.0,
-                    right: 4.0,
-                  ),
-                  child: arrowIcon,
-                ),
-                Text(
-                  '${double.parse(order.amount) * double.parse(order.price)} ${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
-                  style: tsS14W500CFF,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  //Widget _buildHistoryOrderItemWidget(BuildContext context, OrderEntity order) {
+  //  final cubit = context.read<MarketAssetCubit>();
+  //  Widget mainIcon, arrowIcon;
+//
+  //  switch (order.orderSide) {
+  //    case EnumBuySell.buy:
+  //      mainIcon = SvgPicture.asset(
+  //        'buy'.asAssetSvg(),
+  //      );
+  //      break;
+  //    case EnumBuySell.sell:
+  //      mainIcon = SvgPicture.asset(
+  //        'sell'.asAssetSvg(),
+  //      );
+  //      break;
+  //    default:
+  //      mainIcon = Container();
+  //  }
+//
+  //  switch (order.orderSide) {
+  //    case EnumBuySell.buy:
+  //      arrowIcon = SvgPicture.asset(
+  //        'Arrow-Green'.asAssetSvg(),
+  //        width: 10,
+  //        height: 6.0,
+  //      );
+  //      break;
+  //    case EnumBuySell.sell:
+  //      arrowIcon = SvgPicture.asset(
+  //        'Arrow-Red'.asAssetSvg(),
+  //        width: 10,
+  //        height: 6.0,
+  //      );
+  //      break;
+  //    default:
+  //      arrowIcon = Container();
+  //  }
+//
+  //  return Row(
+  //    children: [
+  //      Container(
+  //        width: 47,
+  //        height: 47,
+  //        margin: const EdgeInsets.only(right: 4.2),
+  //        padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 13),
+  //        decoration: BoxDecoration(
+  //            color: AppColors.color8BA1BE.withOpacity(0.2),
+  //            borderRadius: BorderRadius.circular(12)),
+  //        child: mainIcon,
+  //      ),
+  //      Expanded(
+  //        child: Column(
+  //          crossAxisAlignment: CrossAxisAlignment.stretch,
+  //          children: [
+  //            Text(
+  //              '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
+  //              style: tsS15W500CFF,
+  //            ),
+  //            SizedBox(height: 1),
+  //            Text(
+  //              DateFormat("hh:mm:ss aa").format(order.timestamp).toUpperCase(),
+  //              style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
+  //            ),
+  //          ],
+  //        ),
+  //      ),
+  //      Column(
+  //        crossAxisAlignment: CrossAxisAlignment.end,
+  //        children: [
+  //          Row(
+  //            children: [
+  //              Text(
+  //                '${order.amount} ${cubit.getAssetDetailsById(order.baseAsset).symbol}',
+  //                style: tsS14W500CFF.copyWith(
+  //                  color: order.orderSide == EnumBuySell.buy
+  //                      ? AppColors.color0CA564
+  //                      : AppColors.colorE6007A,
+  //                ),
+  //              ),
+  //              Padding(
+  //                padding: const EdgeInsets.only(
+  //                  left: 8.0,
+  //                  right: 4.0,
+  //                ),
+  //                child: arrowIcon,
+  //              ),
+  //              Text(
+  //                '${double.parse(order.amount) * double.parse(order.price)} ${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
+  //                style: tsS14W500CFF,
+  //              ),
+  //            ],
+  //          ),
+  //        ],
+  //      ),
+  //    ],
+  //  );
+  //}
 }
 
 /// The item widget for the top menu
@@ -845,7 +831,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          double.parse(state.free[tokenId] ?? '0')
+                          double.parse(state.free.getBalance(tokenId))
                               .toStringAsFixed(2),
                           style: tsS25W500CFF,
                         ),

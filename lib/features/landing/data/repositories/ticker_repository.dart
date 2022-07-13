@@ -13,23 +13,18 @@ class TickerRepository implements ITickerRepository {
   final TickerRemoteDatasource _tickerRemoteDatasource;
 
   @override
-  Future<Either<ApiError, TickerEntity>> getLastTicker(
-    String leftTokenId,
-    String rightTokenId,
-  ) async {
+  Future<Either<ApiError, Map<String, TickerEntity>>> getAllTickers() async {
     try {
-      final result = await _tickerRemoteDatasource.getLastTickerData(
-        leftTokenId,
-        rightTokenId,
-      );
-      final Map<String, dynamic> body = jsonDecode(result.body);
-      final Map<String, dynamic> fineBody = jsonDecode(body['Fine']);
+      final result = await _tickerRemoteDatasource.getAllTickers();
+      final Map<String, TickerEntity> listTickers = {};
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        return Right(TickerModel.fromJson(fineBody));
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+      for (var tickerData in jsonDecode(result.data)['getAllMarketTickers']
+          ['items']) {
+        final ticker = TickerModel.fromJson(tickerData);
+        listTickers[ticker.m] = ticker;
       }
+
+      return (Right(listTickers));
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

@@ -12,14 +12,14 @@ class OrderbookItemModel extends OrderbookItemEntity {
         );
 
   factory OrderbookItemModel.fromJson(
-    List listValues,
+    Map<String, dynamic> map,
     double? previousCumulativeAmount,
   ) {
     return OrderbookItemModel(
-      price: double.parse(listValues[0]),
-      amount: double.parse(listValues[1]),
+      price: double.parse(map['price']),
+      amount: double.parse(map['qty']),
       cumulativeAmount:
-          (previousCumulativeAmount ?? 0.0) + double.parse(listValues[1]),
+          (previousCumulativeAmount ?? 0.0) + double.parse(map['qty']),
     );
   }
 }

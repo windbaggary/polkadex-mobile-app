@@ -14,7 +14,6 @@ void main() {
   late String asset;
   late double amount;
   late String address;
-  late String signature;
 
   setUp(() {
     dataSource = _MockCoinRemoteDatasource();
@@ -22,12 +21,11 @@ void main() {
     asset = 'PDEX';
     amount = 10.0;
     address = 'addressTest';
-    signature = 'signatureTest';
   });
 
   group('Balance repository tests ', () {
     test('Must return a withdraw response', () async {
-      when(() => dataSource.withdraw(any(), any(), any(), any())).thenAnswer(
+      when(() => dataSource.withdraw(any(), any(), any())).thenAnswer(
         (_) async => Response(jsonEncode({"Fine": "Test success"}), 200),
       );
 
@@ -35,7 +33,6 @@ void main() {
         asset,
         amount,
         address,
-        signature,
       );
 
       expect(result.isRight(), true);
@@ -43,13 +40,12 @@ void main() {
             asset,
             amount,
             address,
-            signature,
           )).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
     test('Must return a failed withdraw response', () async {
-      when(() => dataSource.withdraw(any(), any(), any(), any())).thenAnswer(
+      when(() => dataSource.withdraw(any(), any(), any())).thenAnswer(
         (_) async => Response('', 400),
       );
 
@@ -57,7 +53,6 @@ void main() {
         asset,
         amount,
         address,
-        signature,
       );
 
       expect(result.isLeft(), true);
@@ -65,7 +60,6 @@ void main() {
             asset,
             amount,
             address,
-            signature,
           )).called(1);
       verifyNoMoreInteractions(dataSource);
     });

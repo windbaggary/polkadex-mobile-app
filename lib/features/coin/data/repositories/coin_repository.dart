@@ -15,14 +15,12 @@ class CoinRepository implements ICoinRepository {
     String asset,
     double amount,
     String address,
-    String signature,
   ) async {
     try {
       final result = await _coinRemoteDatasource.withdraw(
         asset,
         amount,
         address,
-        signature,
       );
       final Map<String, dynamic> body = jsonDecode(result.body);
 

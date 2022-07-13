@@ -20,15 +20,13 @@ void main() {
   late String orderId;
   late String baseAsset;
   late String quoteAsset;
-  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
-  late DateTime timestamp;
+  late DateTime time;
   late String status;
-  late String amount;
+  late String qty;
   late String price;
   late String address;
-  late String signature;
   late OrderModel order;
 
   setUp(() {
@@ -43,27 +41,24 @@ void main() {
     orderId = '786653432';
     baseAsset = "0";
     quoteAsset = "1";
-    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
-    timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
+    time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
     status = 'PartiallyFilled';
-    amount = "100.0";
+    qty = "100.0";
     price = "50.0";
     address = 'test';
-    signature = 'test';
     order = OrderModel(
+      mainAccount: address,
       tradeId: orderId,
-      amount: amount,
+      qty: qty,
       price: price,
-      event: event,
       orderSide: orderSide,
       orderType: orderType,
-      timestamp: timestamp,
+      time: time,
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
       status: status,
-      market: '$baseAsset/$quoteAsset',
     );
   });
 
@@ -78,7 +73,11 @@ void main() {
         'Orders fetched successfully',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(address: any(named: 'address')),
+            () => _mockGetOrdersUsecase(
+              address: any(named: 'address'),
+              from: any(named: 'from'),
+              to: any(named: 'to'),
+            ),
           ).thenAnswer(
             (_) async => Right([order]),
           );
@@ -88,7 +87,6 @@ void main() {
           await cubit.getOrders(
             '0',
             address,
-            signature,
             false,
           );
         },
@@ -105,7 +103,11 @@ void main() {
         'Orders fetch fail',
         build: () {
           when(
-            () => _mockGetOrdersUsecase(address: any(named: 'address')),
+            () => _mockGetOrdersUsecase(
+              address: any(named: 'address'),
+              from: any(named: 'from'),
+              to: any(named: 'to'),
+            ),
           ).thenAnswer(
             (_) async => Left(ApiError(message: 'error')),
           );
@@ -115,7 +117,6 @@ void main() {
           await cubit.getOrders(
             '0',
             address,
-            signature,
             false,
           );
         },

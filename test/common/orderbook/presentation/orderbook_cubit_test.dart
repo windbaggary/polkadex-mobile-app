@@ -113,40 +113,40 @@ void main() {
         ],
       );
 
-      blocTest<OrderbookCubit, OrderbookState>(
-        'Orderbook live data fetch fail',
-        build: () {
-          when(
-            () => _mockFetchOrderbookDataUseCase(
-              leftTokenId: any(named: 'leftTokenId'),
-              rightTokenId: any(named: 'rightTokenId'),
-            ),
-          ).thenAnswer(
-            (_) async => Right(tOrderbook),
-          );
-          when(
-            () => _mockFetchOrderbookLiveDataUseCase(
-              leftTokenId: any(named: 'leftTokenId'),
-              rightTokenId: any(named: 'rightTokenId'),
-              onMsgReceived: any(named: 'onMsgReceived'),
-              onMsgError: any(named: 'onMsgError'),
-            ),
-          ).thenAnswer(
-            (_) async => Left(ApiError(message: '')),
-          );
-          return cubit;
-        },
-        act: (cubit) async {
-          await cubit.fetchOrderbookData(
-            leftTokenId: '0',
-            rightTokenId: '1',
-          );
-        },
-        expect: () => [
-          OrderbookLoading(),
-          OrderbookError(errorMessage: ''),
-        ],
-      );
+      //blocTest<OrderbookCubit, OrderbookState>(
+      //  'Orderbook live data fetch fail',
+      //  build: () {
+      //    when(
+      //      () => _mockFetchOrderbookDataUseCase(
+      //        leftTokenId: any(named: 'leftTokenId'),
+      //        rightTokenId: any(named: 'rightTokenId'),
+      //      ),
+      //    ).thenAnswer(
+      //      (_) async => Right(tOrderbook),
+      //    );
+      //    when(
+      //      () => _mockFetchOrderbookLiveDataUseCase(
+      //        leftTokenId: any(named: 'leftTokenId'),
+      //        rightTokenId: any(named: 'rightTokenId'),
+      //        onMsgReceived: any(named: 'onMsgReceived'),
+      //        onMsgError: any(named: 'onMsgError'),
+      //      ),
+      //    ).thenAnswer(
+      //      (_) async => Left(ApiError(message: '')),
+      //    );
+      //    return cubit;
+      //  },
+      //  act: (cubit) async {
+      //    await cubit.fetchOrderbookData(
+      //      leftTokenId: '0',
+      //      rightTokenId: '1',
+      //    );
+      //  },
+      //  expect: () => [
+      //    OrderbookLoading(),
+      //    OrderbookError(errorMessage: ''),
+      //  ],
+      //);
     },
   );
 }

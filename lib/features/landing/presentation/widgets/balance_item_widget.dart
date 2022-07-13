@@ -61,10 +61,6 @@ class BalanceItemWidget extends StatelessWidget {
                 amount,
                 style: tsS16W500CFF,
               ),
-              Text(
-                '~\$100.00',
-                style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
-              ),
             ],
           ),
         ],

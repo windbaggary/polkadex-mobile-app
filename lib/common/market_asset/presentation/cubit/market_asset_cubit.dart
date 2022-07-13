@@ -40,6 +40,14 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
         : _assets['PDEX']!;
   }
 
+  String get currentMarketId {
+    final currentState = state;
+
+    return currentState is MarketAssetLoaded
+        ? '${currentState.baseToken.assetId}-${currentState.quoteToken.assetId}'
+        : '-';
+  }
+
   AssetEntity getAssetDetailsById(String tokenId) {
     return _assets[tokenId] ?? _assets['PDEX']!;
   }

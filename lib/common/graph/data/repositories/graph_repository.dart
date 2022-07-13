@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:k_chart/entity/k_line_entity.dart';
 import 'package:polkadex/common/graph/data/datasources/graph_remote_datasource.dart';
@@ -18,35 +19,34 @@ class GraphRepository implements IGraphRepository {
     String leftTokenId,
     String rightTokenId,
     EnumAppChartTimestampTypes timestampType,
+    DateTime from,
+    DateTime to,
   ) async {
     try {
       final result = await _graphLocalDatasource.getCoinGraphData(
         leftTokenId,
         rightTokenId,
         TimeUtils.timestampTypeToString(timestampType),
+        from,
+        to,
       );
-      final Map<String, dynamic> body = jsonDecode(result.body);
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        final listRawData = (body['Fine'] as List);
+      final listData =
+          jsonDecode(result.data)['getKlinesbyMarketInterval']['items'];
 
-        final List<KLineEntity> dataKcharts = List<KLineEntity>.generate(
-          listRawData.length,
-          (index) => KLineEntity.fromCustom(
-            open: listRawData[index]['open'],
-            close: listRawData[index]['close'],
-            time: DateTime.parse(listRawData[index]['time'])
-                .millisecondsSinceEpoch,
-            high: listRawData[index]['high'],
-            low: listRawData[index]['low'],
-            vol: listRawData[index]['volume'],
-          ),
-        ).toList();
+      final List<KLineEntity> dataKcharts = List<KLineEntity>.generate(
+        listData.length,
+        (index) => KLineEntity.fromCustom(
+          open: double.parse(listData[index]['o']),
+          close: double.parse(listData[index]['c']),
+          time: DateTime.parse(listData[index]['t']).millisecondsSinceEpoch,
+          high: double.parse(listData[index]['h']),
+          low: double.parse(listData[index]['l']),
+          vol: double.parse(listData[index]['v_base']),
+        ),
+      ).toList();
 
-        return Right(dataKcharts);
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
-      }
+      return Right(dataKcharts);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }

@@ -13,46 +13,49 @@ class _TradeRepositoryMock extends Mock implements ITradeRepository {}
 void main() {
   late GetOrdersUseCase _usecase;
   late _TradeRepositoryMock _repository;
+  late String mainAccount;
   late String orderId;
   late String baseAsset;
   late String quoteAsset;
-  late EnumTradeTypes event;
   late EnumOrderTypes orderType;
   late EnumBuySell orderSide;
-  late DateTime timestamp;
+  late DateTime time;
   late String status;
-  late String amount;
+  late String qty;
   late String price;
   late String address;
   late OrderModel order;
+  late DateTime tFrom;
+  late DateTime tTo;
 
   setUp(() {
     _repository = _TradeRepositoryMock();
     _usecase = GetOrdersUseCase(tradeRepository: _repository);
+    mainAccount = 'asdfghj';
     orderId = '786653432';
     baseAsset = "0";
     quoteAsset = "1";
-    event = EnumTradeTypes.bid;
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
-    timestamp = DateTime.fromMillisecondsSinceEpoch(1644853305519);
+    time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
     status = 'Filled';
-    amount = "100.0";
+    qty = "100.0";
     price = "50.0";
     address = 'test';
     order = OrderModel(
+      mainAccount: mainAccount,
       tradeId: orderId,
-      amount: amount,
+      qty: qty,
       price: price,
-      event: event,
       orderSide: orderSide,
       orderType: orderType,
-      timestamp: timestamp,
+      time: time,
       baseAsset: baseAsset,
       quoteAsset: quoteAsset,
       status: status,
-      market: '$baseAsset/$quoteAsset',
     );
+    tFrom = DateTime.fromMicrosecondsSinceEpoch(0);
+    tTo = DateTime.now();
   });
 
   setUpAll(() {
@@ -65,12 +68,12 @@ void main() {
       'must get open orders successfully',
       () async {
         // arrange
-        when(() => _repository.fetchOrders(any())).thenAnswer(
+        when(() => _repository.fetchOrders(any(), any(), any())).thenAnswer(
           (_) async => Right([order]),
         );
         List<OrderEntity> ordersResult = [];
         // act
-        final result = await _usecase(address: address);
+        final result = await _usecase(address: address, from: tFrom, to: tTo);
         // assert
 
         result.fold(
@@ -79,7 +82,7 @@ void main() {
         );
 
         expect(ordersResult.contains(order), true);
-        verify(() => _repository.fetchOrders(any())).called(1);
+        verify(() => _repository.fetchOrders(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -88,15 +91,15 @@ void main() {
       'must fail to get open orders',
       () async {
         // arrange
-        when(() => _repository.fetchOrders(any())).thenAnswer(
+        when(() => _repository.fetchOrders(any(), any(), any())).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
-        final result = await _usecase(address: address);
+        final result = await _usecase(address: address, from: tFrom, to: tTo);
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.fetchOrders(any())).called(1);
+        verify(() => _repository.fetchOrders(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

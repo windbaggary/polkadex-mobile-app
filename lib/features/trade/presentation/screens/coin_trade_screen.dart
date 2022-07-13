@@ -9,7 +9,9 @@ import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/utils/time_utils.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
+import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dart';
@@ -422,9 +424,17 @@ class _ThisGraphCard extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 25, right: 22),
-                  child: _TopCoinWidget(
-                    leftToken: leftToken,
-                    rightToken: rightToken,
+                  child: BlocBuilder<TickerCubit, TickerState>(
+                    builder: (context, state) {
+                      return _TopCoinWidget(
+                        leftToken: leftToken,
+                        rightToken: rightToken,
+                        ticker: state is TickerLoaded
+                            ? state.ticker[
+                                '${leftToken.assetId}-${rightToken.assetId}']
+                            : null,
+                      );
+                    },
                   ),
                 ),
                 Padding(
@@ -844,10 +854,12 @@ class _TopCoinWidget extends StatelessWidget {
   const _TopCoinWidget({
     required this.leftToken,
     required this.rightToken,
+    this.ticker,
   });
 
   final AssetEntity leftToken;
   final AssetEntity rightToken;
+  final TickerEntity? ticker;
 
   @override
   Widget build(BuildContext context) {
@@ -876,7 +888,7 @@ class _TopCoinWidget extends StatelessWidget {
                     builder: (context, state) {
                       return state is BalanceLoaded
                           ? Text(
-                              '${double.parse(state.free[leftToken.assetId] ?? '0')}',
+                              '${double.parse(state.free.getBalance(leftToken.assetId))}',
                               style: tsS26W500CFF,
                             )
                           : _amountCoinTradeShimmer();
@@ -900,7 +912,7 @@ class _TopCoinWidget extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                          text: '\$34.31',
+                          text: ticker?.high.toStringAsFixed(2),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: AppColors.color0CA564,
@@ -926,7 +938,7 @@ class _TopCoinWidget extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                          text: '\$27.31',
+                          text: ticker?.low.toStringAsFixed(2),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: AppColors.colorE6007A,
@@ -944,7 +956,7 @@ class _TopCoinWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              "\$0.0451",
+              ticker?.priceChange24Hr.toStringAsFixed(2) ?? '',
               style: tsS20W500CFF,
             ),
             Container(
@@ -958,7 +970,7 @@ class _TopCoinWidget extends StatelessWidget {
                   style: tsS10W600CFF,
                   children: [
                     TextSpan(
-                      text: '+53.47',
+                      text: ticker?.priceChangePercent24Hr.toStringAsFixed(2),
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                       ),
@@ -987,7 +999,7 @@ class _TopCoinWidget extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                      text: '\$71,459.80',
+                      text: ticker?.volumeBase24hr.toStringAsFixed(4),
                       style: TextStyle(
                         fontFamily: 'WorkSans',
                       )),

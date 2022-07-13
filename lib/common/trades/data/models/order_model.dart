@@ -4,49 +4,54 @@ import 'package:polkadex/common/utils/string_utils.dart';
 
 class OrderModel extends OrderEntity {
   const OrderModel({
+    required String mainAccount,
     required String tradeId,
-    required String amount,
-    required String price,
-    required EnumTradeTypes event,
-    required EnumBuySell orderSide,
-    required EnumOrderTypes orderType,
-    required DateTime timestamp,
+    required DateTime time,
     required String baseAsset,
     required String quoteAsset,
+    required EnumBuySell orderSide,
+    required EnumOrderTypes orderType,
     required String status,
-    required String market,
+    required String price,
+    required String qty,
+    String? avgFilledPrice,
+    String? filledQuantity,
+    String? fee,
   }) : super(
+          mainAccount: mainAccount,
           tradeId: tradeId,
-          amount: amount,
-          price: price,
-          event: event,
-          orderSide: orderSide,
-          orderType: orderType,
-          timestamp: timestamp,
+          time: time,
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
+          orderSide: orderSide,
+          orderType: orderType,
           status: status,
-          market: market,
+          price: price,
+          qty: qty,
+          avgFilledPrice: avgFilledPrice,
+          filledQuantity: filledQuantity,
+          fee: fee,
         );
 
   factory OrderModel.fromJson(Map<String, dynamic> map) {
+    final assets = map['m'].split('-');
+
     return OrderModel(
+      mainAccount: map['main_account'],
       tradeId: map['id'],
-      amount: map['qty'],
-      price: map['price'],
-      event: StringUtils.enumFromString<EnumTradeTypes>(
-          EnumTradeTypes.values, map['order_side'])!,
+      time: DateTime.parse(map['time']),
+      baseAsset: assets[0],
+      quoteAsset: assets[1],
       orderSide: StringUtils.enumFromString<EnumBuySell>(
           EnumBuySell.values, map['order_side'] == 'Bid' ? 'Buy' : 'Sell')!,
       orderType: StringUtils.enumFromString<EnumOrderTypes>(
           EnumOrderTypes.values, map['order_type'])!,
-      timestamp: DateTime.fromMillisecondsSinceEpoch(int.parse(
-              (map['timestamp'] as String).replaceAll('s', '').split('.')[0]) *
-          1000),
-      baseAsset: map['base_asset_type'],
-      quoteAsset: map['quote_asset_type'],
       status: map['status'],
-      market: '${map['base_asset_type']}/${map['quote_asset_type']}',
+      price: map['price'],
+      qty: map['qty'],
+      avgFilledPrice: map['avg_filled_price'],
+      filledQuantity: map['filled_quantity'],
+      fee: map['fee'],
     );
   }
 }

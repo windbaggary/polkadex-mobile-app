@@ -2,40 +2,44 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
-import 'package:polkadex/common/trades/domain/entities/trade_entity.dart';
-import 'package:polkadex/common/trades/domain/usecases/get_trades_usecase.dart';
+import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
 
 part 'trade_history_state.dart';
 
 class TradeHistoryCubit extends Cubit<TradeHistoryState> {
   TradeHistoryCubit({
-    required GetTradesUseCase getTradesUseCase,
+    required GetAccountTradesUseCase getTradesUseCase,
   })  : _getTradesUseCase = getTradesUseCase,
         super(TradeHistoryInitial());
 
-  final GetTradesUseCase _getTradesUseCase;
+  final GetAccountTradesUseCase _getTradesUseCase;
 
-  List<TradeEntity> _allTrades = [];
+  List<AccountTradeEntity> _allTrades = [];
 
-  Future<void> getTrades(
+  Future<void> getAccountTrades(
     String asset,
     String address,
   ) async {
     emit(TradeHistoryLoading());
 
-    final result = await _getTradesUseCase(address: address);
+    final result = await _getTradesUseCase(
+      address: address,
+      from: DateTime.fromMicrosecondsSinceEpoch(0),
+      to: DateTime.now(),
+    );
 
     result.fold(
       (_) => emit(TradeHistoryError()),
       (trades) {
         _allTrades = trades.where((trade) {
           if (trade is OrderEntity) {
-            return trade.baseAsset == asset || trade.quoteAsset == asset;
+            return trade.asset == asset || trade.asset == asset;
           } else {
-            return trade.baseAsset == asset;
+            return trade.asset == asset;
           }
         }).toList();
-        _allTrades.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        _allTrades.sort((a, b) => b.time.compareTo(a.time));
 
         emit(TradeHistoryLoaded(
           trades: _allTrades,
@@ -48,16 +52,16 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     required List<Enum> filters,
     DateTimeRange? dateFilter,
   }) async {
-    List<TradeEntity> _tradesFiltered = [..._allTrades];
+    List<AccountTradeEntity> _tradesFiltered = [..._allTrades];
 
     if (dateFilter != null) {
       _tradesFiltered.removeWhere((trade) =>
-          trade.timestamp.isBefore(dateFilter.start) ||
-          trade.timestamp.isAfter(dateFilter.end));
+          trade.time.isBefore(dateFilter.start) ||
+          trade.time.isAfter(dateFilter.end));
     }
 
     if (filters.isNotEmpty) {
-      _tradesFiltered.removeWhere((trade) => !filters.contains(trade.event));
+      _tradesFiltered.removeWhere((trade) => !filters.contains(trade.txnType));
     }
 
     emit(

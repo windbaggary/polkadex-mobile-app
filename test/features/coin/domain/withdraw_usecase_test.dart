@@ -13,7 +13,6 @@ void main() {
   late String asset;
   late double amount;
   late String address;
-  late String signature;
 
   setUp(() {
     _repository = _CoinRepositoryMock();
@@ -21,7 +20,6 @@ void main() {
     asset = 'PDEX';
     amount = 10.0;
     address = 'addressTest';
-    signature = 'signatureTest';
   });
 
   group('WithdrawUseCase tests', () {
@@ -33,7 +31,6 @@ void main() {
               any(),
               any(),
               any(),
-              any(),
             )).thenAnswer(
           (_) async => Right('success'),
         );
@@ -42,12 +39,10 @@ void main() {
           amount: amount,
           asset: asset,
           address: address,
-          signature: signature,
         );
         // assert
         expect(result.isRight(), true);
-        verify(() => _repository.withdraw(any(), any(), any(), any()))
-            .called(1);
+        verify(() => _repository.withdraw(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -56,7 +51,7 @@ void main() {
       "must fail to withdraw an amount of a given asset",
       () async {
         // arrange
-        when(() => _repository.withdraw(any(), any(), any(), any())).thenAnswer(
+        when(() => _repository.withdraw(any(), any(), any())).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
@@ -64,13 +59,11 @@ void main() {
           amount: amount,
           asset: asset,
           address: address,
-          signature: signature,
         );
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.withdraw(any(), any(), any(), any()))
-            .called(1);
+        verify(() => _repository.withdraw(any(), any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
