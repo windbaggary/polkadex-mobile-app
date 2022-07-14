@@ -1,7 +1,7 @@
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
 
-class FetchOrderbookUpdatesUseCase {
-  FetchOrderbookUpdatesUseCase({
+class GetOrderbookUpdatesUseCase {
+  GetOrderbookUpdatesUseCase({
     required IOrderbookRepository orderbookRepository,
   }) : _orderbookRepository = orderbookRepository;
 

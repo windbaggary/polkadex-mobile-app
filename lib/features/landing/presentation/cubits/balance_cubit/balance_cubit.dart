@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 
 part 'balance_state.dart';
 

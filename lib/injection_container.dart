@@ -14,7 +14,7 @@ import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_data_usecase.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
@@ -37,7 +37,7 @@ import 'package:polkadex/common/trades/domain/usecases/cancel_order_usecase.dart
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_all_tickers_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
@@ -64,7 +64,7 @@ import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dar
 import 'package:polkadex/common/graph/data/datasources/graph_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/datasources/asset_remote_datasource.dart';
 import 'package:polkadex/common/orderbook/data/repositories/orderbook_repository.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_recent_trades_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/place_order_usecase.dart';
@@ -343,13 +343,13 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => FetchOrderbookDataUseCase(
+    () => GetOrderbookDataUseCase(
       orderbookRepository: dependency(),
     ),
   );
 
   dependency.registerFactory(
-    () => FetchOrderbookUpdatesUseCase(
+    () => GetOrderbookUpdatesUseCase(
       orderbookRepository: dependency(),
     ),
   );
