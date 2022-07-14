@@ -18,6 +18,7 @@ import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_u
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_orders_updates_usecase.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
@@ -367,6 +368,12 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => GetOrdersUpdatesUseCase(
+      tradeRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => GetAccountTradesUseCase(
       tradeRepository: dependency(),
     ),
@@ -392,9 +399,9 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => OrderHistoryCubit(
-      getOrdersUseCase: dependency(),
-      cancelOrderUseCase: dependency(),
-    ),
+        getOrdersUseCase: dependency(),
+        cancelOrderUseCase: dependency(),
+        getOrdersUpdatesUseCase: dependency()),
   );
 
   dependency.registerFactory(

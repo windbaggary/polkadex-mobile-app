@@ -38,4 +38,9 @@ abstract class ITradeRepository {
     Function(AccountTradeEntity) onMsgReceived,
     Function(Object) onMsgError,
   );
+  Future<void> fetchOrdersUpdates(
+    String address,
+    Function(OrderEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  );
 }

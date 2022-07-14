@@ -187,6 +187,23 @@ void main() {
     verifyNoMoreInteractions(dataSource);
   });
 
+  test('Must return a successful orders fetch live data response', () async {
+    when(() => dataSource.fetchOrdersUpdates(
+          any(),
+        )).thenAnswer(
+      (_) async => tStream,
+    );
+
+    await repository.fetchOrdersUpdates(
+      mainAddress,
+      (_) {},
+      (_) {},
+    );
+
+    verify(() => dataSource.fetchOrdersUpdates(mainAddress)).called(1);
+    verifyNoMoreInteractions(dataSource);
+  });
+
   test('Must return a success account trades fetch response', () async {
     when(() => dataSource.fetchAccountTrades(any(), any(), any())).thenAnswer(
       (_) async => GraphQLResponse(data: tAccountTradeSuccess, errors: []),

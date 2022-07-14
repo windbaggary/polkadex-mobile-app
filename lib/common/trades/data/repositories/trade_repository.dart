@@ -19,6 +19,7 @@ class TradeRepository implements ITradeRepository {
 
   final TradeRemoteDatasource _tradeRemoteDatasource;
   StreamSubscription? accountTradeSubscription;
+  StreamSubscription? orderSubscription;
 
   @override
   Future<Either<ApiError, OrderEntity>> placeOrder(
@@ -120,6 +121,33 @@ class TradeRepository implements ITradeRepository {
   }
 
   @override
+  Future<void> fetchOrdersUpdates(
+    String address,
+    Function(OrderEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  ) async {
+    final orderStream =
+        await _tradeRemoteDatasource.fetchOrdersUpdates(address);
+
+    await orderSubscription?.cancel();
+
+    try {
+      orderSubscription = orderStream.listen((message) {
+        final data = message.data;
+
+        if (message.data != null) {
+          final liveData = jsonDecode(data)['onOrderUpdate'];
+          onMsgReceived(
+            OrderModel.fromJson(liveData),
+          );
+        }
+      });
+    } catch (error) {
+      onMsgError(error);
+    }
+  }
+
+  @override
   Future<Either<ApiError, List<RecentTradeEntity>>> fetchRecentTrades(
       String market) async {
     try {
@@ -181,7 +209,6 @@ class TradeRepository implements ITradeRepository {
     try {
       accountTradeSubscription = accountTradesStream.listen((message) {
         final data = message.data;
-        print(data);
 
         if (message.data != null) {
           final liveData = jsonDecode(data)['onUpdateTransaction'];
@@ -191,7 +218,6 @@ class TradeRepository implements ITradeRepository {
         }
       });
     } catch (error) {
-      print(error);
       onMsgError(error);
     }
   }
