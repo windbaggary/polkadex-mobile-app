@@ -1,5 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:graphql/client.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_updates_usecase.dart';
 import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
@@ -80,7 +79,6 @@ import 'features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'common/web_view_runner/web_view_runner.dart';
 import 'package:get_it/get_it.dart';
-import 'graphql/utils/custom_iam.dart';
 
 final dependency = GetIt.instance;
 
@@ -92,10 +90,6 @@ Future<void> init() async {
   dependency.registerLazySingleton(
     () => isBiometricAvailable,
     instanceName: 'isBiometricAvailable',
-  );
-
-  dependency.registerSingleton<GraphQLClient>(
-    CustomIAM.customGraphQLClient(),
   );
 
   dependency.registerSingleton<WebViewRunner>(
