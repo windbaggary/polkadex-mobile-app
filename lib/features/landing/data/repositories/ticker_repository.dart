@@ -29,4 +29,32 @@ class TickerRepository implements ITickerRepository {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
     }
   }
+
+  @override
+  Future<void> getTickerUpdates(
+    String leftTokenId,
+    String rightTokenId,
+    Function(TickerEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  ) async {
+    final tickerStream = await _tickerRemoteDatasource.getTickerStream(
+      leftTokenId,
+      rightTokenId,
+    );
+
+    try {
+      tickerStream.listen((message) {
+        final data = message.data;
+
+        if (message.data != null) {
+          final liveData = jsonDecode(data)['onNewTicker'];
+          onMsgReceived(
+            TickerModel.fromJson(liveData),
+          );
+        }
+      });
+    } catch (error) {
+      onMsgError(error);
+    }
+  }
 }

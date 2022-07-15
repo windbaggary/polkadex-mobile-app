@@ -39,6 +39,7 @@ import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_all_tickers_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_ticker_updates_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
@@ -428,8 +429,15 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => GetTickerUpdatesUseCase(
+      tickerRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => TickerCubit(
       getAllTickersUseCase: dependency(),
+      getTickerUpdatesUseCase: dependency(),
     ),
   );
 
