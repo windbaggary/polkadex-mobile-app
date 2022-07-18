@@ -130,7 +130,7 @@ void main() {
         },
         expect: () => [
           TradeHistoryLoading(),
-          TradeHistoryError(message: ''),
+          TradeHistoryError(message: 'error'),
         ],
       );
     },

@@ -54,7 +54,7 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     result.fold(
       (error) => emit(
         TradeHistoryError(
-          message: error.toString(),
+          message: error.message,
         ),
       ),
       (trades) {
