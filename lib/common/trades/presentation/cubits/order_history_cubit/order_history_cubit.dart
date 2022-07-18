@@ -111,8 +111,9 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ));
 
       final result = await _cancelOrderUseCase(
-        nonce: 0,
         address: address,
+        baseAsset: order.baseAsset,
+        quoteAsset: order.quoteAsset,
         orderId: order.tradeId,
       );
 

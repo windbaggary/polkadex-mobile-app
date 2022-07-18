@@ -16,9 +16,10 @@ abstract class ITradeRepository {
     String price,
     String amount,
   );
-  Future<Either<ApiError, String>> cancelOrder(
-    int nonce,
+  Future<Either<ApiError, void>> cancelOrder(
     String address,
+    String baseAsset,
+    String quoteAsset,
     String orderId,
   );
   Future<Either<ApiError, List<OrderEntity>>> fetchOrders(

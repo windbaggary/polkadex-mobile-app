@@ -93,7 +93,7 @@ class TradeBottomWidget extends StatelessWidget {
                                     order,
                                     context
                                         .read<AccountCubit>()
-                                        .mainAccountAddress,
+                                        .proxyAccountAddress,
                                   );
 //
                               buildAppToast(

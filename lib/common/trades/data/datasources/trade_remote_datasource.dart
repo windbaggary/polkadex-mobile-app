@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
@@ -33,24 +31,32 @@ class TradeRemoteDatasource {
     }
   }
 
-  Future<http.Response> cancelOrder(
-    int nonce,
+  Future<String?> cancelOrder(
     String address,
-    int orderUuid,
+    String baseAsset,
+    String quoteAsset,
+    String orderId,
   ) async {
-    return await http.post(
-      Uri.parse('/cancel_order'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'signature': {'Sr25519': ''},
-        'payload': {
-          'account': address,
-          'order_id': orderUuid,
-        },
-      }),
-    );
+    try {
+      final String _callCancelOrderJSON =
+          "polkadexWorker.cancelOrderJSON(keyring.getPair('$address'), '$baseAsset', '$quoteAsset', '$orderId')";
+
+      final Map<String, dynamic> payloadResult =
+          await dependency<WebViewRunner>()
+              .evalJavascript(_callCancelOrderJSON, isSynchronous: true);
+
+      return (await BlockchainRpcHelper.sendRpcRequest(
+        'enclave_cancelOrder',
+        [
+          payloadResult['order_id'],
+          payloadResult['account'],
+          payloadResult['pair'],
+          payloadResult['signature'],
+        ],
+      )) as String?;
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<GraphQLResponse> fetchOpenOrders(String address) async {
