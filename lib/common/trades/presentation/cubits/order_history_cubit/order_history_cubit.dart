@@ -64,11 +64,17 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
           }
         }
       },
-      onMsgError: (_) {},
+      onMsgError: (error) => emit(
+        OrderHistoryError(
+          message: error.toString(),
+        ),
+      ),
     );
 
     result.fold(
-      (_) => emit(OrderHistoryError()),
+      (error) => emit(OrderHistoryError(
+        message: error.message,
+      )),
       (orders) {
         _allOrders = orders
             .where((order) =>

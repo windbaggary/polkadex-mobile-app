@@ -11,7 +11,14 @@ class TradeHistoryInitial extends TradeHistoryState {}
 
 class TradeHistoryLoading extends TradeHistoryState {}
 
-class TradeHistoryError extends TradeHistoryState {}
+class TradeHistoryError extends TradeHistoryState {
+  TradeHistoryError({required this.message});
+
+  final String message;
+
+  @override
+  List<Object> get props => [message];
+}
 
 class TradeHistoryLoaded extends TradeHistoryState {
   const TradeHistoryLoaded({required this.trades});

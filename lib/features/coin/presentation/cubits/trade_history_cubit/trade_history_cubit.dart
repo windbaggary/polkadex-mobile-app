@@ -44,11 +44,19 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
           emit(TradeHistoryLoaded(trades: newList));
         }
       },
-      onMsgError: (_) {},
+      onMsgError: (error) => emit(
+        TradeHistoryError(
+          message: error.toString(),
+        ),
+      ),
     );
 
     result.fold(
-      (_) => emit(TradeHistoryError()),
+      (error) => emit(
+        TradeHistoryError(
+          message: error.toString(),
+        ),
+      ),
       (trades) {
         _allTrades = trades.where((trade) {
           if (trade is OrderEntity) {

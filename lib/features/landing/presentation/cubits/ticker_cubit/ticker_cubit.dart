@@ -45,7 +45,9 @@ class TickerCubit extends Cubit<TickerState> {
                 emit(TickerLoaded(ticker: newMap));
               }
             },
-            onMsgError: (_) {},
+            onMsgError: (error) => TickerError(
+              message: error.toString(),
+            ),
           );
         }
       },

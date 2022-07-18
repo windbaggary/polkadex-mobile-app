@@ -147,7 +147,7 @@ void main() {
         },
         expect: () => [
           OrderHistoryLoading(),
-          OrderHistoryError(),
+          OrderHistoryError(message: ''),
         ],
       );
     },

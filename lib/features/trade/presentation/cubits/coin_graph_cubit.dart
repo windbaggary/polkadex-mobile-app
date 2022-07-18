@@ -48,7 +48,10 @@ class CoinGraphCubit extends Cubit<CoinGraphState> {
           );
         }
       },
-      onMsgError: (_) {},
+      onMsgError: (error) => CoinGraphError(
+        timestampSelected: newTimestampChart,
+        errorMessage: error.toString(),
+      ),
     );
 
     result.fold(

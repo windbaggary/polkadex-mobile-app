@@ -44,7 +44,9 @@ class OrderbookCubit extends Cubit<OrderbookState> {
           );
         }
       },
-      onMsgError: (_) {},
+      onMsgError: (error) => emit(OrderbookError(
+        errorMessage: error.toString(),
+      )),
     );
 
     final currentState = state;
