@@ -13,7 +13,7 @@ void main() {
       asset: '1',
       amount: '10',
       fee: '10.0',
-      status: 'PartiallyFilled',
+      status: 'OPEN',
       time: DateTime.now(),
     );
   });

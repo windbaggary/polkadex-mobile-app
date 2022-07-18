@@ -17,7 +17,7 @@ void main() {
       time: DateTime.now(),
       baseAsset: '0',
       quoteAsset: '1',
-      status: 'PartiallyFilled',
+      status: 'OPEN',
     );
   });
 
