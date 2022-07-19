@@ -565,34 +565,34 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                       builder: (context, state) {
                         return Row(
                           children: [
-                            ...EnumAppChartTimestampTypes.values
-                                .map<Widget>((item) => InkWell(
-                                      onTap: () => context
-                                          .read<CoinGraphCubit>()
-                                          .loadGraph(
+                            ...EnumAppChartTimestampTypes.values.map<Widget>(
+                              (item) {
+                                return InkWell(
+                                  onTap: () =>
+                                      context.read<CoinGraphCubit>().loadGraph(
                                             leftToken.assetId,
                                             rightToken.assetId,
                                             timestampSelected: item,
                                           ),
-                                      child: AnimatedContainer(
-                                        duration: AppConfigs.animDurationSmall,
-                                        width: containerWidth,
-                                        height: containerWidth,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: state.timestampSelected == item
-                                              ? AppColors.colorE6007A
-                                              : null,
-                                        ),
-                                        child: Text(
-                                          TimeUtils.timestampTypeToString(item),
-                                          style: tsS13W600CFF,
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
+                                  child: AnimatedContainer(
+                                    duration: AppConfigs.animDurationSmall,
+                                    width: containerWidth,
+                                    height: containerWidth,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: state.timestampSelected == item
+                                          ? AppColors.colorE6007A
+                                          : null,
+                                    ),
+                                    child: Text(
+                                      _timestampToUiString(item),
+                                      style: tsS13W600CFF,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ).toList(),
                           ],
                         );
                       },
@@ -605,6 +605,16 @@ class _ThisGraphOptionWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _timestampToUiString(EnumAppChartTimestampTypes timestamp) {
+    String timestampString = TimeUtils.timestampTypeToString(timestamp);
+
+    if (timestamp != EnumAppChartTimestampTypes.oneMonth) {
+      timestampString = timestampString.toLowerCase();
+    }
+
+    return timestampString;
   }
 }
 

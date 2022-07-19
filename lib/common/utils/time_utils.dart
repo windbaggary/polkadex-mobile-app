@@ -11,15 +11,15 @@ abstract class TimeUtils {
       case EnumAppChartTimestampTypes.thirtyMinutes:
         return "30m";
       case EnumAppChartTimestampTypes.oneHour:
-        return "1h";
+        return "1H";
       case EnumAppChartTimestampTypes.fourHours:
-        return "4h";
+        return "4H";
       case EnumAppChartTimestampTypes.twelveHours:
-        return "12h";
+        return "12H";
       case EnumAppChartTimestampTypes.oneDay:
         return "1D";
       case EnumAppChartTimestampTypes.oneWeek:
-        return "1w";
+        return "1W";
       case EnumAppChartTimestampTypes.oneMonth:
         return "1M";
     }
