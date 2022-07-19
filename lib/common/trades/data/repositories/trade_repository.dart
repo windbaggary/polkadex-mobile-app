@@ -55,8 +55,7 @@ class TradeRepository implements ITradeRepository {
           time: DateTime.now(),
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
-          status:
-              orderType == EnumOrderTypes.market ? 'Filled' : 'PartiallyFilled',
+          status: orderType == EnumOrderTypes.market ? 'CLOSED' : 'OPEN',
         );
 
         return Right(newOrder);
@@ -70,23 +69,25 @@ class TradeRepository implements ITradeRepository {
   }
 
   @override
-  Future<Either<ApiError, String>> cancelOrder(
-    int nonce,
+  Future<Either<ApiError, void>> cancelOrder(
     String address,
+    String baseAsset,
+    String quoteAsset,
     String orderId,
   ) async {
     try {
       final result = await _tradeRemoteDatasource.cancelOrder(
-        nonce,
         address,
-        int.parse(orderId),
+        baseAsset == 'PDEX' ? '' : baseAsset,
+        quoteAsset == 'PDEX' ? '' : quoteAsset,
+        orderId,
       );
-      final Map<String, dynamic> body = jsonDecode(result.body);
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        return Right(body['Fine']);
+      if (result == null) {
+        return Right(null);
       } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
+        return Left(
+            ApiError(message: 'Error on JSON RPC request. Please try again.'));
       }
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));

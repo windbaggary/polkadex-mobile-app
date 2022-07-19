@@ -40,7 +40,7 @@ void main() {
     mainAccount = '786653432';
     asset = "0";
     time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
-    status = 'PartiallyFilled';
+    status = 'OPEN';
     amount = "100.0";
     fee = "1.0";
     address = 'test';

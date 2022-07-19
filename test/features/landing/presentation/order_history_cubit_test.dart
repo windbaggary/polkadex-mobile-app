@@ -51,7 +51,7 @@ void main() {
     orderType = EnumOrderTypes.market;
     orderSide = EnumBuySell.buy;
     time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
-    status = 'PartiallyFilled';
+    status = 'OPEN';
     qty = "100.0";
     price = "50.0";
     address = 'test';

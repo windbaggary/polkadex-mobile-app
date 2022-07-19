@@ -54,4 +54,36 @@ class OrderModel extends OrderEntity {
       fee: map['fee'],
     );
   }
+
+  OrderModel copyWith({
+    String? mainAccount,
+    String? tradeId,
+    DateTime? time,
+    String? baseAsset,
+    String? quoteAsset,
+    EnumBuySell? orderSide,
+    EnumOrderTypes? orderType,
+    String? status,
+    String? price,
+    String? qty,
+    String? avgFilledPrice,
+    String? filledQuantity,
+    String? fee,
+  }) {
+    return OrderModel(
+      mainAccount: mainAccount ?? this.mainAccount,
+      tradeId: tradeId ?? this.tradeId,
+      time: time ?? this.time,
+      baseAsset: baseAsset ?? this.baseAsset,
+      quoteAsset: quoteAsset ?? this.quoteAsset,
+      orderSide: orderSide ?? this.orderSide,
+      orderType: orderType ?? this.orderType,
+      status: status ?? this.status,
+      price: price ?? this.price,
+      qty: qty ?? this.qty,
+      avgFilledPrice: avgFilledPrice ?? this.avgFilledPrice,
+      filledQuantity: filledQuantity ?? this.filledQuantity,
+      fee: fee ?? this.fee,
+    );
+  }
 }
