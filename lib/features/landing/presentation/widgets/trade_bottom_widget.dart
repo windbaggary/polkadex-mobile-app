@@ -126,7 +126,7 @@ class TradeBottomWidget extends StatelessWidget {
                           .currentBaseAssetDetails
                           .assetId,
                       context.read<AccountCubit>().mainAccountAddress,
-                      false,
+                      true,
                     ),
               );
             }

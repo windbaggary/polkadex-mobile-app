@@ -1,19 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:polkadex/common/orderbook/data/models/orderbook_model.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_entity.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_updates_usecase.dart';
 
 part 'orderbook_state.dart';
 
 class OrderbookCubit extends Cubit<OrderbookState> {
   OrderbookCubit({
-    required FetchOrderbookDataUseCase fetchOrderbookDataUseCase,
-    required FetchOrderbookLiveDataUseCase fetchOrderbookLiveDataUseCase,
+    required GetOrderbookDataUseCase fetchOrderbookDataUseCase,
+    required GetOrderbookUpdatesUseCase fetchOrderbookUpdatesUseCase,
   })  : _fetchOrderbookDataUseCase = fetchOrderbookDataUseCase,
+        _fetchOrderbookUpdatesUseCase = fetchOrderbookUpdatesUseCase,
         super(OrderbookInitial());
 
-  final FetchOrderbookDataUseCase _fetchOrderbookDataUseCase;
+  final GetOrderbookDataUseCase _fetchOrderbookDataUseCase;
+  final GetOrderbookUpdatesUseCase _fetchOrderbookUpdatesUseCase;
 
   Future<void> fetchOrderbookData({
     required String leftTokenId,
@@ -26,24 +29,25 @@ class OrderbookCubit extends Cubit<OrderbookState> {
       rightTokenId: rightTokenId,
     );
 
-    //final resultLiveData = await _fetchOrderbookLiveDataUseCase(
-    //  leftTokenId: leftTokenId,
-    //  rightTokenId: rightTokenId,
-    //  onMsgReceived: (orderbookMsg) {
-    //    emit(OrderbookLoaded(orderbook: orderbookMsg));
-    //  },
-    //  onMsgError: (error) => emit(
-    //    OrderbookError(
-    //      errorMessage: error.toString(),
-    //    ),
-    //  ),
-    //);
+    await _fetchOrderbookUpdatesUseCase(
+      leftTokenId: leftTokenId,
+      rightTokenId: rightTokenId,
+      onMsgReceived: (putsList, delsList) {
+        final currentState = state;
 
-    //resultLiveData.fold(
-    //    (error) => emit(
-    //          OrderbookError(errorMessage: error.message),
-    //        ),
-    //    (_) => null);
+        if (currentState is OrderbookLoaded) {
+          final currentOrderbook = currentState.orderbook as OrderbookModel;
+          emit(
+            OrderbookLoaded(
+              orderbook: currentOrderbook.update(putsList, delsList),
+            ),
+          );
+        }
+      },
+      onMsgError: (error) => emit(OrderbookError(
+        errorMessage: error.toString(),
+      )),
+    );
 
     final currentState = state;
 

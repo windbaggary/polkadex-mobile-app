@@ -4,21 +4,21 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 
 part 'balance_state.dart';
 
 class BalanceCubit extends Cubit<BalanceState> {
   BalanceCubit({
     required GetBalanceUseCase getBalanceUseCase,
-    required GetBalanceLiveDataUseCase getBalanceLiveDataUseCase,
+    required GetBalanceUpdatesUseCase getBalanceUpdatesUseCase,
     required RegisterUserUseCase registerUserUseCase,
   })  : _getBalanceUseCase = getBalanceUseCase,
-        _getBalanceLiveDataUseCase = getBalanceLiveDataUseCase,
+        _getBalanceUpdatesUseCase = getBalanceUpdatesUseCase,
         super(BalanceInitial());
 
   final GetBalanceUseCase _getBalanceUseCase;
-  final GetBalanceLiveDataUseCase _getBalanceLiveDataUseCase;
+  final GetBalanceUpdatesUseCase _getBalanceUpdatesUseCase;
   Map _baseFree = {};
   Map _baseReserved = {};
 
@@ -27,7 +27,7 @@ class BalanceCubit extends Cubit<BalanceState> {
 
     final result = await _getBalanceUseCase(address: address);
 
-    await _getBalanceLiveDataUseCase(
+    await _getBalanceUpdatesUseCase(
       address: address,
       onMsgReceived: (balanceUpdate) {
         _baseFree.addAll(balanceUpdate.free);

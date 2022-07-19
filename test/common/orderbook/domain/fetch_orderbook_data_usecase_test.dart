@@ -5,18 +5,18 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/orderbook/data/models/orderbook_model.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_entity.dart';
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_data_usecase.dart';
 
 class _OrderbookRepositoryMock extends Mock implements IOrderbookRepository {}
 
 void main() {
-  late FetchOrderbookDataUseCase _usecase;
+  late GetOrderbookDataUseCase _usecase;
   late _OrderbookRepositoryMock _repository;
   late OrderbookEntity tOrderbook;
 
   setUp(() {
     _repository = _OrderbookRepositoryMock();
-    _usecase = FetchOrderbookDataUseCase(orderbookRepository: _repository);
+    _usecase = GetOrderbookDataUseCase(orderbookRepository: _repository);
     tOrderbook = OrderbookModel(
       ask: [],
       bid: [],

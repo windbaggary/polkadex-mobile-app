@@ -1,5 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:graphql/client.dart';
+import 'package:polkadex/common/graph/domain/usecases/get_graph_updates_usecase.dart';
 import 'package:polkadex/common/market_asset/data/datasources/market_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/repositories/asset_repository.dart';
 import 'package:polkadex/common/market_asset/data/repositories/market_repository.dart';
@@ -13,9 +13,11 @@ import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_data_usecase.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_account_trades_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_orders_updates_usecase.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
@@ -34,8 +36,9 @@ import 'package:polkadex/common/trades/domain/usecases/cancel_order_usecase.dart
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_all_tickers_usecase.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_ticker_updates_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
@@ -61,7 +64,7 @@ import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dar
 import 'package:polkadex/common/graph/data/datasources/graph_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/datasources/asset_remote_datasource.dart';
 import 'package:polkadex/common/orderbook/data/repositories/orderbook_repository.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_orders_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_recent_trades_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/place_order_usecase.dart';
@@ -76,7 +79,6 @@ import 'features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'common/web_view_runner/web_view_runner.dart';
 import 'package:get_it/get_it.dart';
-import 'graphql/utils/custom_iam.dart';
 
 final dependency = GetIt.instance;
 
@@ -88,10 +90,6 @@ Future<void> init() async {
   dependency.registerLazySingleton(
     () => isBiometricAvailable,
     instanceName: 'isBiometricAvailable',
-  );
-
-  dependency.registerSingleton<GraphQLClient>(
-    CustomIAM.customGraphQLClient(),
   );
 
   dependency.registerSingleton<WebViewRunner>(
@@ -265,8 +263,15 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => GetGraphUpdatesUseCase(
+      graphRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => CoinGraphCubit(
       getGraphDataUseCase: dependency(),
+      getGraphUpdatesUseCase: dependency(),
     ),
   );
 
@@ -287,7 +292,7 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => GetBalanceLiveDataUseCase(
+    () => GetBalanceUpdatesUseCase(
       balanceRepository: dependency(),
     ),
   );
@@ -295,7 +300,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
-      getBalanceLiveDataUseCase: dependency(),
+      getBalanceUpdatesUseCase: dependency(),
       registerUserUseCase: dependency(),
     ),
   );
@@ -333,13 +338,13 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => FetchOrderbookDataUseCase(
+    () => GetOrderbookDataUseCase(
       orderbookRepository: dependency(),
     ),
   );
 
   dependency.registerFactory(
-    () => FetchOrderbookLiveDataUseCase(
+    () => GetOrderbookUpdatesUseCase(
       orderbookRepository: dependency(),
     ),
   );
@@ -347,7 +352,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => OrderbookCubit(
       fetchOrderbookDataUseCase: dependency(),
-      fetchOrderbookLiveDataUseCase: dependency(),
+      fetchOrderbookUpdatesUseCase: dependency(),
     ),
   );
 
@@ -358,7 +363,19 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => GetOrdersUpdatesUseCase(
+      tradeRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => GetAccountTradesUseCase(
+      tradeRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => GetAccountTradesUpdatesUseCase(
       tradeRepository: dependency(),
     ),
   );
@@ -377,14 +394,15 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => OrderHistoryCubit(
-      getOrdersUseCase: dependency(),
-      cancelOrderUseCase: dependency(),
-    ),
+        getOrdersUseCase: dependency(),
+        cancelOrderUseCase: dependency(),
+        getOrdersUpdatesUseCase: dependency()),
   );
 
   dependency.registerFactory(
     () => TradeHistoryCubit(
       getTradesUseCase: dependency(),
+      getAccountTradesUpdatesUseCase: dependency(),
     ),
   );
 
@@ -405,8 +423,15 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => GetTickerUpdatesUseCase(
+      tickerRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => TickerCubit(
       getAllTickersUseCase: dependency(),
+      getTickerUpdatesUseCase: dependency(),
     ),
   );
 

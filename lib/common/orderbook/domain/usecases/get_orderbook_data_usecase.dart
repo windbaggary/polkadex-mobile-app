@@ -3,8 +3,8 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_entity.dart';
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
 
-class FetchOrderbookDataUseCase {
-  FetchOrderbookDataUseCase({
+class GetOrderbookDataUseCase {
+  GetOrderbookDataUseCase({
     required IOrderbookRepository orderbookRepository,
   }) : _orderbookRepository = orderbookRepository;
 
