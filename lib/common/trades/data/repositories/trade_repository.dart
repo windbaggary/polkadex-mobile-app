@@ -83,7 +83,7 @@ class TradeRepository implements ITradeRepository {
         orderId,
       );
 
-      if (result != null) {
+      if (result == null) {
         return Right(null);
       } else {
         return Left(

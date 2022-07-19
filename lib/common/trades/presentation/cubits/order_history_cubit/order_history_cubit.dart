@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:polkadex/common/trades/data/models/order_model.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/trades/domain/usecases/cancel_order_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_orders_updates_usecase.dart';
@@ -160,9 +161,13 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       final secondPreviousState = state;
 
       if (secondPreviousState is OrderHistoryLoaded) {
+        final orderCancelled =
+            (order as OrderModel).copyWith(status: 'CANCELLED');
+        final index = secondPreviousState.orders.indexOf(order);
+
         emit(OrderHistoryLoaded(
           orders: result.isRight()
-              ? ([...secondPreviousState.orders]..remove(order))
+              ? ([...secondPreviousState.orders]..[index] = orderCancelled)
               : [...secondPreviousState.orders],
           orderIdsLoading: [...secondPreviousState.orderIdsLoading]
             ..remove(order.tradeId),
