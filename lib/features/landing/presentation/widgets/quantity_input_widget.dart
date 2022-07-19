@@ -74,7 +74,7 @@ class QuantityInputWidget extends StatelessWidget {
                       ),
                       keyboardType: TextInputType.numberWithOptions(
                         decimal: true,
-                        signed: false,
+                        signed: true,
                       ),
                       onChanged: onChanged,
                       inputFormatters: [
