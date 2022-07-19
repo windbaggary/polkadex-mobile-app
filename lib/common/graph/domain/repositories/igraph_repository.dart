@@ -11,4 +11,11 @@ abstract class IGraphRepository {
     DateTime from,
     DateTime to,
   );
+  Future<void> getGraphUpdates(
+    String leftTokenId,
+    String rightTokenId,
+    EnumAppChartTimestampTypes timestampType,
+    Function(KLineEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  );
 }

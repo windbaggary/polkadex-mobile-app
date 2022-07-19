@@ -5,29 +5,29 @@ import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/orderbook/data/models/orderbook_model.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_entity.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_data_usecase.dart';
-import 'package:polkadex/common/orderbook/domain/usecases/fetch_orderbook_live_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_data_usecase.dart';
+import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_updates_usecase.dart';
 import 'package:test/test.dart';
 
 class _MockFetchOrderbookDataUseCase extends Mock
-    implements FetchOrderbookDataUseCase {}
+    implements GetOrderbookDataUseCase {}
 
-class _MockFetchOrderbookLiveDataUseCase extends Mock
-    implements FetchOrderbookLiveDataUseCase {}
+class _MockGetOrderbookLiveDataUseCase extends Mock
+    implements GetOrderbookUpdatesUseCase {}
 
 void main() {
   late _MockFetchOrderbookDataUseCase _mockFetchOrderbookDataUseCase;
-  late _MockFetchOrderbookLiveDataUseCase _mockFetchOrderbookLiveDataUseCase;
+  late _MockGetOrderbookLiveDataUseCase _mockFetchOrderbookLiveDataUseCase;
   late OrderbookCubit cubit;
   late OrderbookEntity tOrderbook;
 
   setUp(() {
     _mockFetchOrderbookDataUseCase = _MockFetchOrderbookDataUseCase();
-    _mockFetchOrderbookLiveDataUseCase = _MockFetchOrderbookLiveDataUseCase();
+    _mockFetchOrderbookLiveDataUseCase = _MockGetOrderbookLiveDataUseCase();
 
     cubit = OrderbookCubit(
       fetchOrderbookDataUseCase: _mockFetchOrderbookDataUseCase,
-      fetchOrderbookLiveDataUseCase: _mockFetchOrderbookLiveDataUseCase,
+      fetchOrderbookUpdatesUseCase: _mockFetchOrderbookLiveDataUseCase,
     );
 
     tOrderbook = OrderbookModel(

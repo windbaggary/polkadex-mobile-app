@@ -9,7 +9,6 @@ void main() {
     tOrderbookItem = OrderbookItemModel(
       price: 1.0,
       amount: 1.0,
-      cumulativeAmount: 1.0,
     );
   });
 

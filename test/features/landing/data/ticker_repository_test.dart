@@ -7,15 +7,19 @@ import 'package:polkadex/features/landing/data/repositories/ticker_repository.da
 class _MockTickerRemoteDatasource extends Mock
     implements TickerRemoteDatasource {}
 
+class _MockStream extends Mock implements Stream {}
+
 void main() {
   late _MockTickerRemoteDatasource dataSource;
   late TickerRepository repository;
+  late _MockStream stream;
   late String tDataSuccess;
   late String tDataError;
 
   setUp(() {
     dataSource = _MockTickerRemoteDatasource();
     repository = TickerRepository(tickerRemoteDatasource: dataSource);
+    stream = _MockStream();
     tDataSuccess = '''{
       "getAllMarketTickers": {
         "items": [{
@@ -64,6 +68,25 @@ void main() {
 
       expect(result.isLeft(), true);
       verify(() => dataSource.getAllTickers()).called(1);
+      verifyNoMoreInteractions(dataSource);
+    });
+
+    test('Must return a successful fetch ticker live data response', () async {
+      when(() => dataSource.getTickerStream(
+            any(),
+            any(),
+          )).thenAnswer(
+        (_) async => stream,
+      );
+
+      await repository.getTickerUpdates(
+        '',
+        '',
+        (_) {},
+        (_) {},
+      );
+
+      verify(() => dataSource.getTickerStream('', '')).called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });

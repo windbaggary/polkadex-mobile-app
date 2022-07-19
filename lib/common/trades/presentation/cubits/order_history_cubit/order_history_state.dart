@@ -11,7 +11,18 @@ class OrderHistoryInitial extends OrderHistoryState {}
 
 class OrderHistoryLoading extends OrderHistoryState {}
 
-class OrderHistoryError extends OrderHistoryState {}
+class OrderHistoryError extends OrderHistoryState {
+  const OrderHistoryError({
+    required this.message,
+  });
+
+  final String message;
+
+  @override
+  List<Object> get props => [
+        message,
+      ];
+}
 
 class OrderHistoryLoaded extends OrderHistoryState {
   const OrderHistoryLoaded({

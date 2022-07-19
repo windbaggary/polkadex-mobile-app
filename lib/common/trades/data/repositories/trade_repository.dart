@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
@@ -17,6 +18,8 @@ class TradeRepository implements ITradeRepository {
       : _tradeRemoteDatasource = tradeRemoteDatasource;
 
   final TradeRemoteDatasource _tradeRemoteDatasource;
+  StreamSubscription? accountTradeSubscription;
+  StreamSubscription? orderSubscription;
 
   @override
   Future<Either<ApiError, OrderEntity>> placeOrder(
@@ -119,6 +122,33 @@ class TradeRepository implements ITradeRepository {
   }
 
   @override
+  Future<void> fetchOrdersUpdates(
+    String address,
+    Function(OrderEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  ) async {
+    final orderStream =
+        await _tradeRemoteDatasource.fetchOrdersUpdates(address);
+
+    await orderSubscription?.cancel();
+
+    try {
+      orderSubscription = orderStream.listen((message) {
+        final data = message.data;
+
+        if (message.data != null) {
+          final liveData = jsonDecode(data)['onOrderUpdate'];
+          onMsgReceived(
+            OrderModel.fromJson(liveData),
+          );
+        }
+      });
+    } catch (error) {
+      onMsgError(error);
+    }
+  }
+
+  @override
   Future<Either<ApiError, List<RecentTradeEntity>>> fetchRecentTrades(
       String market) async {
     try {
@@ -163,6 +193,33 @@ class TradeRepository implements ITradeRepository {
       return Right(listTransactions);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
+
+  @override
+  Future<void> fetchAccountTradesUpdates(
+    String address,
+    Function(AccountTradeEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  ) async {
+    final accountTradesStream =
+        await _tradeRemoteDatasource.fetchAccountTradesUpdates(address);
+
+    await accountTradeSubscription?.cancel();
+
+    try {
+      accountTradeSubscription = accountTradesStream.listen((message) {
+        final data = message.data;
+
+        if (message.data != null) {
+          final liveData = jsonDecode(data)['onUpdateTransaction'];
+          onMsgReceived(
+            AccountTradeModel.fromJson(liveData),
+          );
+        }
+      });
+    } catch (error) {
+      onMsgError(error);
     }
   }
 }

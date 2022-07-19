@@ -6,7 +6,6 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
@@ -307,11 +306,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     BuildContext context,
   ) async {
     final placeOrderCubit = context.read<PlaceOrderCubit>();
-    final orderHistoryCubit = context.read<OrderHistoryCubit>();
 
     FocusManager.instance.primaryFocus?.unfocus();
 
-    final resultPlaceOrder = await placeOrderCubit.placeOrder(
+    await placeOrderCubit.placeOrder(
       mainAddress: context.read<AccountCubit>().mainAccountAddress,
       proxyAddress: context.read<AccountCubit>().proxyAccountAddress,
       baseAsset: leftAsset,
@@ -324,11 +322,6 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
 
     if (price.isEmpty) {
       price = amount;
-    }
-
-    if (resultPlaceOrder != null &&
-        resultPlaceOrder.orderType != EnumOrderTypes.market) {
-      orderHistoryCubit.addToOpenOrders(resultPlaceOrder);
     }
 
     final orderType = type == EnumBuySell.buy ? 'Purchase' : 'Sale';

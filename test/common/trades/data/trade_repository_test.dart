@@ -8,6 +8,8 @@ import 'package:polkadex/common/trades/data/repositories/trade_repository.dart';
 class _MockTradeRemoteDatasource extends Mock implements TradeRemoteDatasource {
 }
 
+class _MockStream extends Mock implements Stream {}
+
 void main() {
   late _MockTradeRemoteDatasource dataSource;
   late TradeRepository repository;
@@ -22,6 +24,7 @@ void main() {
   late String tOrdersSuccess;
   late String tAccountTradeSuccess;
   late String tRecentTradeSuccess;
+  late Stream tStream;
   late DateTime tFrom;
   late DateTime tTo;
 
@@ -88,6 +91,7 @@ void main() {
         "nextToken": null
       }
     }''';
+    tStream = _MockStream();
   });
 
   setUpAll(() {
@@ -183,6 +187,23 @@ void main() {
     verifyNoMoreInteractions(dataSource);
   });
 
+  test('Must return a successful orders fetch live data response', () async {
+    when(() => dataSource.fetchOrdersUpdates(
+          any(),
+        )).thenAnswer(
+      (_) async => tStream,
+    );
+
+    await repository.fetchOrdersUpdates(
+      mainAddress,
+      (_) {},
+      (_) {},
+    );
+
+    verify(() => dataSource.fetchOrdersUpdates(mainAddress)).called(1);
+    verifyNoMoreInteractions(dataSource);
+  });
+
   test('Must return a success account trades fetch response', () async {
     when(() => dataSource.fetchAccountTrades(any(), any(), any())).thenAnswer(
       (_) async => GraphQLResponse(data: tAccountTradeSuccess, errors: []),
@@ -220,6 +241,23 @@ void main() {
           tFrom,
           tTo,
         )).called(1);
+    verifyNoMoreInteractions(dataSource);
+  });
+
+  test('Must return a successful fetch orderbook live data response', () async {
+    when(() => dataSource.fetchAccountTradesUpdates(
+          any(),
+        )).thenAnswer(
+      (_) async => tStream,
+    );
+
+    await repository.fetchAccountTradesUpdates(
+      mainAddress,
+      (_) {},
+      (_) {},
+    );
+
+    verify(() => dataSource.fetchAccountTradesUpdates(mainAddress)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 

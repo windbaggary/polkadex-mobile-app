@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/landing/data/models/balance_model.dart';
 import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
@@ -13,7 +13,7 @@ import 'package:test/test.dart';
 class _MockGetBalanceUsecase extends Mock implements GetBalanceUseCase {}
 
 class _MockGetBalanceLiveDataUsecase extends Mock
-    implements GetBalanceLiveDataUseCase {}
+    implements GetBalanceUpdatesUseCase {}
 
 class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
 
@@ -32,7 +32,7 @@ void main() {
 
     cubit = BalanceCubit(
       getBalanceUseCase: _mockGetBalanceUsecase,
-      getBalanceLiveDataUseCase: _mockGetBalanceLiveDataUsecase,
+      getBalanceUpdatesUseCase: _mockGetBalanceLiveDataUsecase,
       registerUserUseCase: _mockRegisterUserUseCase,
     );
 

@@ -1,5 +1,4 @@
 import 'package:amplify_api/amplify_api.dart';
-import 'package:dart_amqp/dart_amqp.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
@@ -8,7 +7,7 @@ import 'package:polkadex/common/orderbook/data/repositories/orderbook_repository
 class _MockOrderbookRemoteDatasource extends Mock
     implements OrderbookRemoteDatasource {}
 
-class _MockConsumer extends Mock implements Consumer {}
+class _MockConsumer extends Mock implements Stream {}
 
 void main() {
   late _MockOrderbookRemoteDatasource dataSource;
@@ -72,45 +71,21 @@ void main() {
 
     test('Must return a successful fetch orderbook live data response',
         () async {
-      when(() => dataSource.getOrderbookConsumer(
+      when(() => dataSource.getOrderbookStream(
             any(),
             any(),
           )).thenAnswer(
         (_) async => consumer,
       );
 
-      final result = await repository.getOrderbookLiveData(
+      await repository.getOrderbookUpdates(
         leftTokenId,
         rightTokenId,
-        (_) {},
-        (_) {},
-      );
-
-      expect(result.isRight(), true);
-      verify(() => dataSource.getOrderbookConsumer(
-            leftTokenId,
-            rightTokenId,
-          )).called(1);
-      verifyNoMoreInteractions(dataSource);
-    });
-
-    test('Must return a failed fetch orderbook live data response', () async {
-      when(() => dataSource.getOrderbookConsumer(
-            any(),
-            any(),
-          )).thenAnswer(
-        (_) async => null,
-      );
-
-      final result = await repository.getOrderbookLiveData(
-        leftTokenId,
-        rightTokenId,
-        (_) {},
+        (_, __) {},
         (_) {},
       );
 
-      expect(result.isLeft(), true);
-      verify(() => dataSource.getOrderbookConsumer(
+      verify(() => dataSource.getOrderbookStream(
             leftTokenId,
             rightTokenId,
           )).called(1);

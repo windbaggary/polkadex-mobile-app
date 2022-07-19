@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/trades/domain/usecases/cancel_order_usecase.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_orders_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_orders_usecase.dart';
 
 part 'order_history_state.dart';
@@ -10,12 +11,15 @@ part 'order_history_state.dart';
 class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   OrderHistoryCubit({
     required GetOrdersUseCase getOrdersUseCase,
+    required GetOrdersUpdatesUseCase getOrdersUpdatesUseCase,
     required CancelOrderUseCase cancelOrderUseCase,
   })  : _getOrdersUseCase = getOrdersUseCase,
+        _getOrdersUpdatesUseCase = getOrdersUpdatesUseCase,
         _cancelOrderUseCase = cancelOrderUseCase,
         super(OrderHistoryInitial());
 
   final GetOrdersUseCase _getOrdersUseCase;
+  final GetOrdersUpdatesUseCase _getOrdersUpdatesUseCase;
   final CancelOrderUseCase _cancelOrderUseCase;
 
   List<OrderEntity> _allOrders = [];
@@ -33,8 +37,44 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       to: DateTime.now(),
     );
 
+    await _getOrdersUpdatesUseCase(
+      address: address,
+      onMsgReceived: (newOrder) {
+        final currentState = state;
+
+        if (currentState is OrderHistoryLoaded) {
+          final index = currentState.orders
+              .indexWhere((order) => newOrder.tradeId == order.tradeId);
+
+          if (index >= 0) {
+            final newList = [...currentState.orders];
+            newList[index] = newOrder;
+
+            emit(
+              OrderHistoryLoaded(
+                  orders: newList,
+                  orderIdsLoading: currentState.orderIdsLoading),
+            );
+          } else {
+            emit(
+              OrderHistoryLoaded(
+                  orders: [newOrder, ...currentState.orders],
+                  orderIdsLoading: currentState.orderIdsLoading),
+            );
+          }
+        }
+      },
+      onMsgError: (error) => emit(
+        OrderHistoryError(
+          message: error.toString(),
+        ),
+      ),
+    );
+
     result.fold(
-      (_) => emit(OrderHistoryError()),
+      (error) => emit(OrderHistoryError(
+        message: error.message,
+      )),
       (orders) {
         _allOrders = orders
             .where((order) =>
@@ -132,19 +172,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       return result.isRight();
     } else {
       return false;
-    }
-  }
-
-  Future<void> addToOpenOrders(OrderEntity newOrder) async {
-    final previousState = state;
-
-    if (previousState is OrderHistoryLoaded) {
-      emit(
-        OrderHistoryLoaded(
-          orders: [newOrder, ...previousState.orders],
-          orderIdsLoading: [...previousState.orderIdsLoading],
-        ),
-      );
     }
   }
 }

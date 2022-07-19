@@ -1,18 +1,18 @@
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polkadex/features/landing/domain/usecases/get_balance_live_data_usecase.dart';
+import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 import 'package:polkadex/features/landing/domain/repositories/ibalance_repository.dart';
 
 class _BalanceRepositoryMock extends Mock implements IBalanceRepository {}
 
 void main() {
-  late GetBalanceLiveDataUseCase _usecase;
+  late GetBalanceUpdatesUseCase _usecase;
   late _BalanceRepositoryMock _repository;
 
   setUp(() {
     _repository = _BalanceRepositoryMock();
-    _usecase = GetBalanceLiveDataUseCase(balanceRepository: _repository);
+    _usecase = GetBalanceUpdatesUseCase(balanceRepository: _repository);
   });
 
   group('GetBalanceLiveDataUseCase tests', () {
@@ -20,7 +20,7 @@ void main() {
       "must fetch balance live data",
       () async {
         // arrange
-        when(() => _repository.fetchBalanceLiveData(
+        when(() => _repository.fetchBalanceUpdates(
               any(),
               any(),
               any(),
@@ -34,7 +34,7 @@ void main() {
           onMsgError: (_) {},
         );
 
-        verify(() => _repository.fetchBalanceLiveData(
+        verify(() => _repository.fetchBalanceUpdates(
               any(),
               any(),
               any(),

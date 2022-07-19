@@ -51,7 +51,7 @@ void main() {
         (_) async => stream,
       );
 
-      await repository.fetchBalanceLiveData(
+      await repository.fetchBalanceUpdates(
         '',
         (_) {},
         (_) {},

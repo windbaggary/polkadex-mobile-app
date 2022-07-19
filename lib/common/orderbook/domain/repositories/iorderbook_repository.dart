@@ -7,10 +7,10 @@ abstract class IOrderbookRepository {
     String leftTokenId,
     String rightTokenId,
   );
-  Future<Either<ApiError, void>> getOrderbookLiveData(
+  Future<void> getOrderbookUpdates(
     String leftTokenId,
     String rightTokenId,
-    Function(OrderbookEntity) onMsgReceived,
+    Function(List<dynamic>, List<dynamic>) onMsgReceived,
     Function(Object) onMsgError,
   );
 }

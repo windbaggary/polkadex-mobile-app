@@ -28,7 +28,7 @@ class BalanceRepository implements IBalanceRepository {
   }
 
   @override
-  Future<void> fetchBalanceLiveData(
+  Future<void> fetchBalanceUpdates(
     String address,
     Function(BalanceEntity) onMsgReceived,
     Function(Object) onMsgError,
@@ -37,12 +37,10 @@ class BalanceRepository implements IBalanceRepository {
         await _balanceRemoteDatasource.fetchBalanceStream(address);
     try {
       balanceStream.listen((message) {
-        final payload = message.payloadAsString;
-        message.ack();
+        final data = message.data;
+        final liveData = jsonDecode(data)['onBalanceUpdate'];
 
-        final liveDataJson = json.decode(payload);
-
-        onMsgReceived(BalanceModel.fromLiveJson(liveDataJson));
+        onMsgReceived(BalanceModel.fromJson([liveData]));
       });
     } catch (error) {
       onMsgError(error);
