@@ -16,8 +16,8 @@ abstract class BlockchainRpcHelper {
       client.close();
 
       return result;
-    } on RpcException catch (e) {
-      print(e);
+    } on RpcException {
+      rethrow;
     }
   }
 }
