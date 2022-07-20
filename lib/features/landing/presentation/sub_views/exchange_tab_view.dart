@@ -6,7 +6,6 @@ import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/exchange_loading_provider.dart';
@@ -513,7 +512,6 @@ class _ThisListItemWidget extends StatelessWidget {
           baseToken: baseAsset,
           quoteToken: quoteAsset,
           balanceCubit: context.read<BalanceCubit>(),
-          orderbookCubit: context.read<OrderbookCubit>(),
         ),
         borderRadius: BorderRadius.circular(20),
         child: Container(

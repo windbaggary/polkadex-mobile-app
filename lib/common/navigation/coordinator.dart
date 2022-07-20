@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/navigation/routes.dart';
-import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
@@ -78,7 +77,6 @@ abstract class Coordinator {
 
   static void goToCoinTradeScreen({
     required BalanceCubit balanceCubit,
-    required OrderbookCubit orderbookCubit,
     required AssetEntity baseToken,
     required AssetEntity quoteToken,
     EnumCardFlipState? enumCardFlipState,
@@ -86,7 +84,6 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(
       Routes.coinTradeScreen,
       arguments: {
-        'orderbookCubit': orderbookCubit,
         'balanceCubit': balanceCubit,
         'enumCardFlipState': enumCardFlipState ?? EnumCardFlipState.showFirst,
         'baseToken': baseToken,
@@ -119,14 +116,12 @@ abstract class Coordinator {
   static void goToBalanceCoinPreviewScreen({
     required AssetEntity asset,
     required BalanceCubit balanceCubit,
-    required OrderbookCubit orderbookCubit,
   }) {
     _navigationKey.currentState?.pushNamed(
       Routes.balanceCoinPreviewScreen,
       arguments: {
         'asset': asset,
         'balanceCubit': balanceCubit,
-        'orderbookCubit': orderbookCubit,
       },
     );
   }

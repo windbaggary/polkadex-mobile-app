@@ -7,7 +7,6 @@ import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dar
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -192,8 +191,6 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                               child: buildInkWell(
                                 borderRadius: BorderRadius.circular(20),
                                 onTap: () => Coordinator.goToCoinTradeScreen(
-                                    orderbookCubit:
-                                        context.read<OrderbookCubit>(),
                                     balanceCubit: context.read<BalanceCubit>(),
                                     baseToken: widget.asset,
                                     quoteToken: context
@@ -229,7 +226,6 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                 .read<MarketAssetCubit>()
                                 .listAvailableMarkets[index][1],
                             onTap: () => Coordinator.goToCoinTradeScreen(
-                                orderbookCubit: context.read<OrderbookCubit>(),
                                 baseToken: context
                                     .read<MarketAssetCubit>()
                                     .listAvailableMarkets[index][0],

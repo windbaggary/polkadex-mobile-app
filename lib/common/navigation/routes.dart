@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
-import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/widgets/qr_code_screen.dart';
 import 'package:polkadex/features/app_settings_info/screens/app_settings_appearance.dart';
@@ -177,8 +176,6 @@ abstract class Routes {
             providers: [
               BlocProvider.value(
                   value: coinTradeArguments['balanceCubit'] as BalanceCubit),
-              BlocProvider.value(
-                  value: coinTradeArguments['orderbookCubit'] as OrderbookCubit)
             ],
             child: CoinTradeScreen(
               enumInitalCardFlipState:
@@ -220,9 +217,6 @@ abstract class Routes {
             providers: [
               BlocProvider.value(
                   value: balanceCoinArguments['balanceCubit'] as BalanceCubit),
-              BlocProvider.value(
-                  value:
-                      balanceCoinArguments['orderbookCubit'] as OrderbookCubit)
             ],
             child: BalanceCoinScreen(
               asset: balanceCoinArguments['asset'] as AssetEntity,
