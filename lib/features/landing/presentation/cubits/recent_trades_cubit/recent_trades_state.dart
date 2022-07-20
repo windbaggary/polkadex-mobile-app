@@ -16,10 +16,14 @@ class RecentTradesError extends RecentTradesState {}
 class RecentTradesLoaded extends RecentTradesState {
   const RecentTradesLoaded({
     required this.trades,
+    this.isUpTendency = true,
   });
 
   final List<RecentTradeEntity> trades;
-
+  final bool isUpTendency;
   @override
-  List<Object> get props => [trades];
+  List<Object> get props => [
+        trades,
+        isUpTendency,
+      ];
 }
