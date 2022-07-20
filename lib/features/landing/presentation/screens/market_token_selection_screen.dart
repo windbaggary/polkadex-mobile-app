@@ -627,9 +627,9 @@ class _ThisProvider extends ChangeNotifier {
                     ),
           )
           .toList();
-      return filteredMarkets.map((market) => market[0]).toList();
+      return filteredMarkets.map((market) => market[0]).toSet().toList();
     } else {
-      return _marketList.map((market) => market[0]).toList();
+      return _marketList.map((market) => market[0]).toSet().toList();
     }
   }
 
