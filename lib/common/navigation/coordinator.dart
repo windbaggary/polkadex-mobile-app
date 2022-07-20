@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/navigation/routes.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
@@ -126,10 +127,15 @@ abstract class Coordinator {
     );
   }
 
-  static Future<MarketSelectionResultModel?>
-      goToMarketTokenSelectionScreen() async {
-    return await _navigationKey.currentState
-        ?.pushNamed(Routes.marketTokenSelectionScreen);
+  static Future<MarketSelectionResultModel?> goToMarketTokenSelectionScreen({
+    required OrderbookCubit orderbookCubit,
+  }) async {
+    return await _navigationKey.currentState?.pushNamed(
+      Routes.marketTokenSelectionScreen,
+      arguments: {
+        'orderbookCubit': orderbookCubit,
+      },
+    );
   }
 
   static void goToAppSettingsHelpScreen() {
