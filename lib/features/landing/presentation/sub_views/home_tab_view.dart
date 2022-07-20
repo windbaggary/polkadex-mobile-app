@@ -125,7 +125,7 @@ class _HomeTabViewState extends State<HomeTabView>
                     return TopPairWidget(
                       leftAsset: baseAsset,
                       rightAsset: quoteAsset,
-                      onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+                      onTap: () => Coordinator.goToMarketDetailsScreen(
                         asset: context
                             .read<MarketAssetCubit>()
                             .listAvailableMarkets[index][0],

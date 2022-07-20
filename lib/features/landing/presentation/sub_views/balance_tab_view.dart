@@ -320,7 +320,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
 
                               return InkWell(
                                 onTap: () =>
-                                    Coordinator.goToBalanceCoinPreviewScreen(
+                                    Coordinator.goToMarketDetailsScreen(
                                   asset: asset,
                                   balanceCubit: context.read<BalanceCubit>(),
                                 ),

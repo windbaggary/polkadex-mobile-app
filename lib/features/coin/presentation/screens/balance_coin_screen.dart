@@ -40,17 +40,16 @@ enum _EnumMenus {
 
 /// XD_PAGE: 20
 /// XD_PAGE: 31
-class BalanceCoinScreen extends StatefulWidget {
-  BalanceCoinScreen({required this.asset});
+class MarketDetailsScreen extends StatefulWidget {
+  MarketDetailsScreen({required this.asset});
 
   final AssetEntity asset;
 
   @override
-  _BalanceCoinPreviewScreenState createState() =>
-      _BalanceCoinPreviewScreenState();
+  _MarketDetailsScreenState createState() => _MarketDetailsScreenState();
 }
 
-class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
+class _MarketDetailsScreenState extends State<MarketDetailsScreen>
     with TickerProviderStateMixin {
   final _isShowGraphNotifier = ValueNotifier<bool>(false);
   final List<Enum> _typeFilters = [];
