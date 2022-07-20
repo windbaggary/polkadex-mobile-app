@@ -114,12 +114,12 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.notifDetailsScreen);
   }
 
-  static void goToMarketDetailsScreen({
+  static void goToBalanceCoinPreviewScreen({
     required AssetEntity asset,
     required BalanceCubit balanceCubit,
   }) {
     _navigationKey.currentState?.pushNamed(
-      Routes.marketDetailsScreen,
+      Routes.balanceCoinPreviewScreen,
       arguments: {
         'asset': asset,
         'balanceCubit': balanceCubit,

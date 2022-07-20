@@ -51,7 +51,7 @@ abstract class Routes {
   static const balanceDepositScreenOne = '/balanceDepositOne';
   static const notifDepositScreen = '/notifDeposit';
   static const notifDetailsScreen = '/notifDetails';
-  static const marketDetailsScreen = '/marketDetailsScreen';
+  static const balanceCoinPreviewScreen = '/balanceCoinPreview';
   static const marketTokenSelectionScreen = '/marketTokenSelection';
   static const appSettingsHelpScreen = '/appSettingsHelp';
   static const balanceSummaryScreen = '/balanceSummary';
@@ -210,18 +210,17 @@ abstract class Routes {
           return NotifDetailsScreen();
         };
         break;
-      case marketDetailsScreen:
+      case balanceCoinPreviewScreen:
         builder = (_) {
-          final marketDetailsArguments = settings.arguments as Map;
+          final balanceCoinArguments = settings.arguments as Map;
 
           return MultiBlocProvider(
             providers: [
               BlocProvider.value(
-                  value:
-                      marketDetailsArguments['balanceCubit'] as BalanceCubit),
+                  value: balanceCoinArguments['balanceCubit'] as BalanceCubit),
             ],
-            child: MarketDetailsScreen(
-              asset: marketDetailsArguments['asset'] as AssetEntity,
+            child: BalanceCoinScreen(
+              asset: balanceCoinArguments['asset'] as AssetEntity,
             ),
           );
         };
