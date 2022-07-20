@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
+import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
 import 'package:polkadex/common/trades/data/models/recent_trade_model.dart';
@@ -44,27 +45,24 @@ class TradeRepository implements ITradeRepository {
         amount,
       );
 
-      if (result != null) {
-        final newOrder = OrderModel(
-          mainAccount: mainAddress,
-          tradeId: result,
-          qty: amount,
-          price: price,
-          orderSide: orderSide,
-          orderType: orderType,
-          time: DateTime.now(),
-          baseAsset: baseAsset,
-          quoteAsset: quoteAsset,
-          status: orderType == EnumOrderTypes.market ? 'CLOSED' : 'OPEN',
-        );
+      final newOrder = OrderModel(
+        mainAccount: mainAddress,
+        tradeId: result,
+        qty: amount,
+        price: price,
+        orderSide: orderSide,
+        orderType: orderType,
+        time: DateTime.now(),
+        baseAsset: baseAsset,
+        quoteAsset: quoteAsset,
+        status: orderType == EnumOrderTypes.market ? 'CLOSED' : 'OPEN',
+      );
 
-        return Right(newOrder);
-      } else {
-        return Left(
-            ApiError(message: 'Error on JSON RPC request. Please try again.'));
-      }
-    } catch (_) {
-      return Left(ApiError(message: 'Unexpected error. Please try again'));
+      return Right(newOrder);
+    } on RpcException catch (rpcError) {
+      return Left(ApiError(message: rpcError.message));
+    } catch (e) {
+      return Left(ApiError(message: e.toString()));
     }
   }
 
@@ -76,21 +74,18 @@ class TradeRepository implements ITradeRepository {
     String orderId,
   ) async {
     try {
-      final result = await _tradeRemoteDatasource.cancelOrder(
+      await _tradeRemoteDatasource.cancelOrder(
         address,
         baseAsset == 'PDEX' ? '' : baseAsset,
         quoteAsset == 'PDEX' ? '' : quoteAsset,
         orderId,
       );
 
-      if (result == null) {
-        return Right(null);
-      } else {
-        return Left(
-            ApiError(message: 'Error on JSON RPC request. Please try again.'));
-      }
-    } catch (_) {
-      return Left(ApiError(message: 'Unexpected error. Please try again'));
+      return Right(null);
+    } on RpcException catch (rpcError) {
+      return Left(ApiError(message: rpcError.message));
+    } catch (e) {
+      return Left(ApiError(message: e.toString()));
     }
   }
 

@@ -6,7 +6,7 @@ import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/graphql/queries.dart';
 
 class TradeRemoteDatasource {
-  Future<String?> placeOrder(
+  Future<String> placeOrder(
     String mainAddress,
     String proxyAddress,
     String baseAsset,
@@ -16,48 +16,39 @@ class TradeRemoteDatasource {
     String price,
     String amount,
   ) async {
-    try {
-      final nonce = await BlockchainRpcHelper.sendRpcRequest(
-          'enclave_getNonce', [mainAddress]);
+    final nonce = await BlockchainRpcHelper.sendRpcRequest(
+        'enclave_getNonce', [mainAddress]);
 
-      final String _callPlaceOrderJSON =
-          "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), ${nonce + 1}, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
-      final List<dynamic> payloadResult = await dependency<WebViewRunner>()
-          .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
+    final String _callPlaceOrderJSON =
+        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), ${nonce + 1}, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+    final List<dynamic> payloadResult = await dependency<WebViewRunner>()
+        .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
-      return (await BlockchainRpcHelper.sendRpcRequest(
-          'enclave_placeOrder', payloadResult)) as String?;
-    } catch (e) {
-      return null;
-    }
+    return await BlockchainRpcHelper.sendRpcRequest(
+        'enclave_placeOrder', payloadResult);
   }
 
-  Future<String?> cancelOrder(
+  Future<void> cancelOrder(
     String address,
     String baseAsset,
     String quoteAsset,
     String orderId,
   ) async {
-    try {
-      final String _callCancelOrderJSON =
-          "polkadexWorker.cancelOrderJSON(keyring.getPair('$address'), '$baseAsset', '$quoteAsset', '$orderId')";
+    final String _callCancelOrderJSON =
+        "polkadexWorker.cancelOrderJSON(keyring.getPair('$address'), '$baseAsset', '$quoteAsset', '$orderId')";
 
-      final Map<String, dynamic> payloadResult =
-          await dependency<WebViewRunner>()
-              .evalJavascript(_callCancelOrderJSON, isSynchronous: true);
+    final Map<String, dynamic> payloadResult = await dependency<WebViewRunner>()
+        .evalJavascript(_callCancelOrderJSON, isSynchronous: true);
 
-      return (await BlockchainRpcHelper.sendRpcRequest(
-        'enclave_cancelOrder',
-        [
-          payloadResult['order_id'],
-          payloadResult['account'],
-          payloadResult['pair'],
-          payloadResult['signature'],
-        ],
-      )) as String?;
-    } catch (e) {
-      return null;
-    }
+    return await BlockchainRpcHelper.sendRpcRequest(
+      'enclave_cancelOrder',
+      [
+        payloadResult['order_id'],
+        payloadResult['account'],
+        payloadResult['pair'],
+        payloadResult['signature'],
+      ],
+    );
   }
 
   Future<GraphQLResponse> fetchOpenOrders(String address) async {

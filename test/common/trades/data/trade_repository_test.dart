@@ -1,4 +1,5 @@
 import 'package:amplify_api/amplify_api.dart';
+import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -126,7 +127,7 @@ void main() {
     test('Must return a failed orders submit response', () async {
       when(() => dataSource.placeOrder(
           any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
-        (_) async => null,
+        (_) async => throw RpcException(-32000, 'error'),
       );
 
       final result = await repository.placeOrder(
