@@ -18,6 +18,7 @@ import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dar
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_orders_updates_usecase.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_recent_trades_updates_usecase.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
@@ -382,6 +383,12 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => GetRecentTradesUseCase(
+      tradeRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => GetRecentTradesUpdatesUseCase(
       tradeRepository: dependency(),
     ),
   );

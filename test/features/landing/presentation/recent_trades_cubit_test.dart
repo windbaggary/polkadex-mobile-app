@@ -60,6 +60,15 @@ void main() {
           ).thenAnswer(
             (_) async => Right([trade]),
           );
+          when(
+            () => _mockGetRecentTradesUpdatesUseCase(
+              market: any(named: 'market'),
+              onMsgReceived: any(named: 'onMsgReceived'),
+              onMsgError: any(named: 'onMsgError'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(null),
+          );
           return cubit;
         },
         act: (cubit) async {
@@ -72,12 +81,21 @@ void main() {
       );
 
       blocTest<RecentTradesCubit, RecentTradesState>(
-        'Market fetch successfull and Asset data fetch fail',
+        'Recent trades data fetch fail',
         build: () {
           when(
             () => _mockGetRecentTradesUseCase(market: m),
           ).thenAnswer(
             (_) async => Left(ApiError(message: '')),
+          );
+          when(
+            () => _mockGetRecentTradesUpdatesUseCase(
+              market: any(named: 'market'),
+              onMsgReceived: any(named: 'onMsgReceived'),
+              onMsgError: any(named: 'onMsgError'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(null),
           );
           return cubit;
         },

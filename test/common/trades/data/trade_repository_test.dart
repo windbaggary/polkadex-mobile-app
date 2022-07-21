@@ -25,6 +25,7 @@ void main() {
   late String tOrdersSuccess;
   late String tAccountTradeSuccess;
   late String tRecentTradeSuccess;
+  late String tMarket;
   late Stream tStream;
   late DateTime tFrom;
   late DateTime tTo;
@@ -40,6 +41,7 @@ void main() {
     price = "50.0";
     mainAddress = 'test';
     proxyAddress = 'tset';
+    tMarket = 'PDEX-1';
     tFrom = DateTime.fromMicrosecondsSinceEpoch(0);
     tTo = DateTime.now();
     tAccountTradeSuccess = '''{
@@ -283,6 +285,24 @@ void main() {
 
     expect(result.isLeft(), true);
     verify(() => dataSource.fetchRecentTrades(mainAddress)).called(1);
+    verifyNoMoreInteractions(dataSource);
+  });
+
+  test('Must return a successful fetch recent trades live data response',
+      () async {
+    when(() => dataSource.fetchRecentTradesStream(
+          any(),
+        )).thenAnswer(
+      (_) async => tStream,
+    );
+
+    await repository.fetchRecentTradesUpdates(
+      tMarket,
+      (_) {},
+      (_) {},
+    );
+
+    verify(() => dataSource.fetchRecentTradesStream(tMarket)).called(1);
     verifyNoMoreInteractions(dataSource);
   });
 }
