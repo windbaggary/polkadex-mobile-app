@@ -18,6 +18,7 @@ import 'package:polkadex/features/trade/presentation/cubits/coin_graph_state.dar
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
 import 'package:polkadex/features/trade/presentation/widgets/coin_graph_shimmer_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -31,11 +32,6 @@ import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:polkadex/injection_container.dart';
 
-/// XD_PAGE: 24
-/// XD_PAGE: 25
-/// XD_PAGE: 26
-/// XD_PAGE: 27
-/// XD_PAGE: 33
 class CoinTradeScreen extends StatefulWidget {
   const CoinTradeScreen({
     required this.leftToken,
@@ -84,12 +80,23 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
           create: (context) => AppChartDummyProvider(),
         ),
       ],
-      builder: (context, _) => BlocProvider<CoinGraphCubit>(
-        create: (_) => dependency<CoinGraphCubit>()
-          ..loadGraph(
-            widget.leftToken.assetId,
-            widget.rightToken.assetId,
+      builder: (context, _) => MultiBlocProvider(
+        providers: [
+          BlocProvider<CoinGraphCubit>(
+            create: (_) => dependency<CoinGraphCubit>()
+              ..loadGraph(
+                widget.leftToken.assetId,
+                widget.rightToken.assetId,
+              ),
           ),
+          BlocProvider<OrderbookCubit>(
+            create: (_) => dependency<OrderbookCubit>()
+              ..fetchOrderbookData(
+                leftTokenId: widget.leftToken.assetId,
+                rightTokenId: widget.rightToken.assetId,
+              ),
+          ),
+        ],
         child: Scaffold(
           backgroundColor: AppColors.color1C2023,
           body: SafeArea(
@@ -565,34 +572,34 @@ class _ThisGraphOptionWidget extends StatelessWidget {
                       builder: (context, state) {
                         return Row(
                           children: [
-                            ...EnumAppChartTimestampTypes.values
-                                .map<Widget>((item) => InkWell(
-                                      onTap: () => context
-                                          .read<CoinGraphCubit>()
-                                          .loadGraph(
+                            ...EnumAppChartTimestampTypes.values.map<Widget>(
+                              (item) {
+                                return InkWell(
+                                  onTap: () =>
+                                      context.read<CoinGraphCubit>().loadGraph(
                                             leftToken.assetId,
                                             rightToken.assetId,
                                             timestampSelected: item,
                                           ),
-                                      child: AnimatedContainer(
-                                        duration: AppConfigs.animDurationSmall,
-                                        width: containerWidth,
-                                        height: containerWidth,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: state.timestampSelected == item
-                                              ? AppColors.colorE6007A
-                                              : null,
-                                        ),
-                                        child: Text(
-                                          TimeUtils.timestampTypeToString(item),
-                                          style: tsS13W600CFF,
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
+                                  child: AnimatedContainer(
+                                    duration: AppConfigs.animDurationSmall,
+                                    width: containerWidth,
+                                    height: containerWidth,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: state.timestampSelected == item
+                                          ? AppColors.colorE6007A
+                                          : null,
+                                    ),
+                                    child: Text(
+                                      _timestampToUiString(item),
+                                      style: tsS13W600CFF,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ).toList(),
                           ],
                         );
                       },
@@ -605,6 +612,16 @@ class _ThisGraphOptionWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _timestampToUiString(EnumAppChartTimestampTypes timestamp) {
+    String timestampString = TimeUtils.timestampTypeToString(timestamp);
+
+    if (timestamp != EnumAppChartTimestampTypes.oneMonth) {
+      timestampString = timestampString.toLowerCase();
+    }
+
+    return timestampString;
   }
 }
 

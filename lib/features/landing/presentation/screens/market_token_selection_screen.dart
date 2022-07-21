@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/token_pair_expanded_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -234,13 +235,11 @@ class _ThisQuoteLayoutWidget extends AnimatedWidget {
               builder: (context, thisProvider, child) => ListView.builder(
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    thisProvider.selectedQuoteToken =
-                        thisProvider.quoteList[index];
-                    Navigator.of(context).pop(MarketSelectionResultModel(
-                        selectedBaseAsset: thisProvider.selectedBaseToken!,
-                        selectedQuoteAsset: thisProvider.selectedQuoteToken!));
-                  },
+                  onTap: () => _onMarketSelected(
+                    context,
+                    thisProvider,
+                    index,
+                  ),
                   child: _ThisQuoteItemWidget(
                     asset: thisProvider.quoteList[index],
                     isSelected: thisProvider.quoteList[index].assetId ==
@@ -254,6 +253,25 @@ class _ThisQuoteLayoutWidget extends AnimatedWidget {
           )
         ],
       ),
+    );
+  }
+
+  void _onMarketSelected(
+    BuildContext context,
+    _ThisProvider provider,
+    int index,
+  ) {
+    provider.selectedQuoteToken = provider.quoteList[index];
+
+    context.read<OrderbookCubit>().fetchOrderbookData(
+          leftTokenId: provider.selectedBaseToken!.assetId,
+          rightTokenId: provider.selectedQuoteToken!.assetId,
+        );
+
+    Navigator.of(context).pop(
+      MarketSelectionResultModel(
+          selectedBaseAsset: provider.selectedBaseToken!,
+          selectedQuoteAsset: provider.selectedQuoteToken!),
     );
   }
 }
@@ -627,9 +645,9 @@ class _ThisProvider extends ChangeNotifier {
                     ),
           )
           .toList();
-      return filteredMarkets.map((market) => market[0]).toList();
+      return filteredMarkets.map((market) => market[0]).toSet().toList();
     } else {
-      return _marketList.map((market) => market[0]).toList();
+      return _marketList.map((market) => market[0]).toSet().toList();
     }
   }
 

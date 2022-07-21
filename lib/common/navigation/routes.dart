@@ -177,8 +177,6 @@ abstract class Routes {
             providers: [
               BlocProvider.value(
                   value: coinTradeArguments['balanceCubit'] as BalanceCubit),
-              BlocProvider.value(
-                  value: coinTradeArguments['orderbookCubit'] as OrderbookCubit)
             ],
             child: CoinTradeScreen(
               enumInitalCardFlipState:
@@ -220,9 +218,6 @@ abstract class Routes {
             providers: [
               BlocProvider.value(
                   value: balanceCoinArguments['balanceCubit'] as BalanceCubit),
-              BlocProvider.value(
-                  value:
-                      balanceCoinArguments['orderbookCubit'] as OrderbookCubit)
             ],
             child: BalanceCoinScreen(
               asset: balanceCoinArguments['asset'] as AssetEntity,
@@ -233,7 +228,13 @@ abstract class Routes {
       case marketTokenSelectionScreen:
         return MaterialPageRoute<MarketSelectionResultModel>(
           builder: (_) {
-            return MarketTokenSelectionScreen();
+            final marketTokenSelectionArguments = settings.arguments as Map;
+
+            return BlocProvider.value(
+              value: marketTokenSelectionArguments['orderbookCubit']
+                  as OrderbookCubit,
+              child: MarketTokenSelectionScreen(),
+            );
           },
           settings: settings,
         );

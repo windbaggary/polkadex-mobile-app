@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
@@ -199,7 +200,9 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
       isPriceTrendDown() ? AppColors.colorE6007A : AppColors.color0CA564;
 
   void _onMarketSelection(BuildContext context) {
-    Coordinator.goToMarketTokenSelectionScreen().then(
+    Coordinator.goToMarketTokenSelectionScreen(
+            orderbookCubit: context.read<OrderbookCubit>())
+        .then(
       (model) {
         if (model != null) {
           context.read<MarketAssetCubit>().changeSelectedMarket(

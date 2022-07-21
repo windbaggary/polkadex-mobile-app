@@ -331,8 +331,8 @@ Future<void> init() async {
     () => OrderbookRemoteDatasource(),
   );
 
-  dependency.registerSingleton<IOrderbookRepository>(
-    OrderbookRepository(
+  dependency.registerFactory<IOrderbookRepository>(
+    () => OrderbookRepository(
       orderbookRemoteDatasource: dependency(),
     ),
   );

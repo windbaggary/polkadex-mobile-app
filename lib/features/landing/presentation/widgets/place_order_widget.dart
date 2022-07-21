@@ -490,7 +490,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                 controller: _priceController,
                 onChanged: (price) => _onPriceAmountChanged(
                   context.read<PlaceOrderCubit>(),
-                  double.parse(price),
+                  double.tryParse(price) ?? 0.0,
                   false,
                 ),
                 isLoading: _orderTypeNotifier.value == EnumOrderTypes.market &&
@@ -528,7 +528,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             controller: _amountController,
             onChanged: (amount) => _onPriceAmountChanged(
               context.read<PlaceOrderCubit>(),
-              double.parse(amount),
+              double.tryParse(amount) ?? 0.0,
               true,
             ),
           ),

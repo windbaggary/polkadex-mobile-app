@@ -4,7 +4,6 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
@@ -131,7 +130,6 @@ class _HomeTabViewState extends State<HomeTabView>
                             .read<MarketAssetCubit>()
                             .listAvailableMarkets[index][0],
                         balanceCubit: context.read<BalanceCubit>(),
-                        orderbookCubit: context.read<OrderbookCubit>(),
                       ),
                       ticker: state is TickerLoaded
                           ? state.ticker[
@@ -403,7 +401,6 @@ class _ThisRankingListItemWidget extends StatelessWidget {
           baseToken: baseAsset,
           quoteToken: quoteAsset,
           balanceCubit: context.read<BalanceCubit>(),
-          orderbookCubit: context.read<OrderbookCubit>(),
         ),
         child: Container(
           decoration: BoxDecoration(
