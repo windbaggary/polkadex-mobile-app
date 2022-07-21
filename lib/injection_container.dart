@@ -389,6 +389,7 @@ Future<void> init() async {
   dependency.registerFactory(
     () => RecentTradesCubit(
       getRecentTradesUseCase: dependency(),
+      getRecentTradesUpdatesUseCase: dependency(),
     ),
   );
 

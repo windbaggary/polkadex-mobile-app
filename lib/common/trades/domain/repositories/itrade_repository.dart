@@ -44,4 +44,9 @@ abstract class ITradeRepository {
     Function(OrderEntity) onMsgReceived,
     Function(Object) onMsgError,
   );
+  Future<void> fetchRecentTradesUpdates(
+    String market,
+    Function(RecentTradeEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  );
 }

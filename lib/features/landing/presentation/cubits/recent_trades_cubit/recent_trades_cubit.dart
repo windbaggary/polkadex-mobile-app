@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/trades/domain/entities/recent_trade_entity.dart';
+import 'package:polkadex/common/trades/domain/usecases/get_recent_trades_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_recent_trades_usecase.dart';
 
 part 'recent_trades_state.dart';
@@ -8,10 +9,13 @@ part 'recent_trades_state.dart';
 class RecentTradesCubit extends Cubit<RecentTradesState> {
   RecentTradesCubit({
     required GetRecentTradesUseCase getRecentTradesUseCase,
+    required GetRecentTradesUpdatesUseCase getRecentTradesUpdatesUseCase,
   })  : _getRecentTradesUseCase = getRecentTradesUseCase,
+        _getRecentTradesUpdatesUseCase = getRecentTradesUpdatesUseCase,
         super(RecentTradesInitial());
 
   final GetRecentTradesUseCase _getRecentTradesUseCase;
+  final GetRecentTradesUpdatesUseCase _getRecentTradesUpdatesUseCase;
 
   Future<void> getRecentTrades(
     String market,
@@ -20,8 +24,28 @@ class RecentTradesCubit extends Cubit<RecentTradesState> {
 
     final result = await _getRecentTradesUseCase(market: market);
 
+    await _getRecentTradesUpdatesUseCase(
+      market: market,
+      onMsgReceived: (newRecentTrade) {
+        final currentState = state;
+
+        if (currentState is RecentTradesLoaded) {
+          emit(
+            RecentTradesLoaded(
+              trades: [...currentState.trades]..insert(0, newRecentTrade),
+            ),
+          );
+        }
+      },
+      onMsgError: (error) => emit(
+        RecentTradesError(
+          message: error.toString(),
+        ),
+      ),
+    );
+
     result.fold(
-      (_) => emit(RecentTradesError()),
+      (error) => emit(RecentTradesError(message: error.message)),
       (recentTrades) => emit(RecentTradesLoaded(trades: recentTrades)),
     );
   }

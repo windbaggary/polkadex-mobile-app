@@ -11,7 +11,14 @@ class RecentTradesInitial extends RecentTradesState {}
 
 class RecentTradesLoading extends RecentTradesState {}
 
-class RecentTradesError extends RecentTradesState {}
+class RecentTradesError extends RecentTradesState {
+  RecentTradesError({required this.message});
+
+  final String message;
+
+  @override
+  List<Object> get props => [message];
+}
 
 class RecentTradesLoaded extends RecentTradesState {
   const RecentTradesLoaded({
