@@ -304,7 +304,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLatestTransactionWidget({bool isDownTendency = true}) {
+  Widget _buildLatestTransactionWidget({bool isUpTendency = true}) {
     return BlocBuilder<RecentTradesCubit, RecentTradesState>(
       builder: (context, state) {
         if (state is RecentTradesLoaded) {
@@ -331,19 +331,18 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                   Row(
                     children: [
                       Icon(
-                        isDownTendency
+                        isUpTendency
                             ? Icons.arrow_downward
                             : Icons.arrow_upward,
-                        color: isDownTendency
+                        color: isUpTendency
                             ? AppColors.colorE6007A
                             : AppColors.color0CA564,
                         size: 18,
                       ),
                       Text(
                         state.trades.first.price.toStringAsFixed(4),
-                        style: isDownTendency
-                            ? tsS18W600CE6007A
-                            : tsS18W600C0CA564,
+                        style:
+                            isUpTendency ? tsS18W600CE6007A : tsS18W600C0CA564,
                       ),
                     ],
                   ),

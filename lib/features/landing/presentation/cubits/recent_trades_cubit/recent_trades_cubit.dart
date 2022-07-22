@@ -30,9 +30,15 @@ class RecentTradesCubit extends Cubit<RecentTradesState> {
         final currentState = state;
 
         if (currentState is RecentTradesLoaded) {
+          final newIsUpTendency =
+              newRecentTrade.price >= currentState.trades.first.price
+                  ? true
+                  : false;
+
           emit(
             RecentTradesLoaded(
               trades: [...currentState.trades]..insert(0, newRecentTrade),
+              isUpTendency: newIsUpTendency,
             ),
           );
         }
