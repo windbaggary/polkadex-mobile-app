@@ -144,7 +144,11 @@ class AccountCubit extends Cubit<AccountState> {
         );
 
         resultMainAddress.fold(
-          (_) {},
+          (error) {
+            emit(
+              AccountNotLoaded(errorMessage: error.message),
+            );
+          },
           (mainAddress) async {
             ImportedAccountEntity acc =
                 (importedAcc as ImportedAccountModel).copyWith(

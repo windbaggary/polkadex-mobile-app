@@ -355,12 +355,12 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     if (accountState is AccountLoaded) {
       await context.read<MarketAssetCubit>().getMarkets();
       Coordinator.goToLandingScreen(accountState.account);
-    } else {
-      _onShowRegisterErrorModal();
+    } else if (accountState is AccountNotLoaded) {
+      _onShowRegisterErrorModal(accountState.errorMessage);
     }
   }
 
-  void _onShowRegisterErrorModal() {
+  void _onShowRegisterErrorModal(String? errorMessage) {
     Navigator.of(context).pop();
     showModalBottomSheet(
       context: context,
@@ -372,8 +372,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       ),
       builder: (_) => WarningModalWidget(
         title: 'Account register error',
-        subtitle:
-            'Something went on while registering the account. Please try again.',
+        subtitle: errorMessage,
       ),
     );
   }

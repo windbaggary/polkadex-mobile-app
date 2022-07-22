@@ -9,7 +9,18 @@ abstract class AccountState extends Equatable {
 
 class AccountInitial extends AccountState {}
 
-class AccountNotLoaded extends AccountState {}
+class AccountNotLoaded extends AccountState {
+  AccountNotLoaded({
+    this.errorMessage,
+  });
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        errorMessage,
+      ];
+}
 
 class AccountLoaded extends AccountState {
   AccountLoaded({
