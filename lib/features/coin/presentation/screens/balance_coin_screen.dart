@@ -25,11 +25,8 @@ import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shimmer/shimmer.dart';
 
-/// XD_PAGE: 20
-/// XD_PAGE: 31
 class BalanceCoinScreen extends StatefulWidget {
   BalanceCoinScreen({required this.asset});
 
@@ -612,19 +609,26 @@ class _TopCoinTitleWidget extends StatelessWidget {
                   : _orderBalanceShimmerWidget(),
             ),
             if (state is BalanceLoaded)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$42.50',
-                    style: tsS13W600CFF,
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.colorE6007A,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                alignment: Alignment.center,
+                child: buildInkWell(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 6,
+                      horizontal: 12,
+                    ),
+                    child: Text(
+                      "Withdraw",
+                      style: tsS14W600CFF,
+                    ),
                   ),
-                  SizedBox(height: 02),
-                  Text(
-                    'Market Price',
-                    style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
-                  ),
-                ],
+                  onTap: () {},
+                ),
               ),
           ],
         ),
