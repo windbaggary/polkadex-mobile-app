@@ -21,6 +21,7 @@ class TradeRepository implements ITradeRepository {
   final TradeRemoteDatasource _tradeRemoteDatasource;
   StreamSubscription? accountTradeSubscription;
   StreamSubscription? orderSubscription;
+  StreamSubscription? recentTradesSubscription;
 
   @override
   Future<Either<ApiError, OrderEntity>> placeOrder(
@@ -161,6 +162,35 @@ class TradeRepository implements ITradeRepository {
       return Right(listRecentTrades);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error. Please try again'));
+    }
+  }
+
+  @override
+  Future<void> fetchRecentTradesUpdates(
+    String market,
+    Function(RecentTradeEntity) onMsgReceived,
+    Function(Object) onMsgError,
+  ) async {
+    final recentTradesStream =
+        await _tradeRemoteDatasource.fetchRecentTradesStream(market);
+
+    await recentTradesSubscription?.cancel();
+
+    try {
+      recentTradesSubscription = recentTradesStream.listen((message) {
+        final data = message.data;
+
+        if (message.data != null) {
+          final liveData =
+              jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+
+          onMsgReceived(
+            RecentTradeModel.fromJson(liveData),
+          );
+        }
+      });
+    } catch (error) {
+      onMsgError(error);
     }
   }
 

@@ -11,15 +11,26 @@ class RecentTradesInitial extends RecentTradesState {}
 
 class RecentTradesLoading extends RecentTradesState {}
 
-class RecentTradesError extends RecentTradesState {}
+class RecentTradesError extends RecentTradesState {
+  RecentTradesError({required this.message});
+
+  final String message;
+
+  @override
+  List<Object> get props => [message];
+}
 
 class RecentTradesLoaded extends RecentTradesState {
   const RecentTradesLoaded({
     required this.trades,
+    this.isUpTendency = true,
   });
 
   final List<RecentTradeEntity> trades;
-
+  final bool isUpTendency;
   @override
-  List<Object> get props => [trades];
+  List<Object> get props => [
+        trades,
+        isUpTendency,
+      ];
 }

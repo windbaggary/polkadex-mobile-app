@@ -110,6 +110,18 @@ class TradeRemoteDatasource {
         .response;
   }
 
+  Future<Stream> fetchRecentTradesStream(String market) async {
+    return Amplify.API.subscribe(
+      GraphQLRequest(
+        document: websocketStreams,
+        variables: <String, dynamic>{
+          'name': '$market-raw-trade',
+        },
+      ),
+      onEstablished: () => print('recentTrades subscription established'),
+    );
+  }
+
   Future<GraphQLResponse> fetchAccountTrades(
     String address,
     DateTime from,
