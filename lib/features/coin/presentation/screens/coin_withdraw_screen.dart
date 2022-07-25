@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/math_utils.dart';
@@ -34,7 +34,6 @@ class CoinWithdrawScreen extends StatefulWidget {
 
 class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
-  final TextEditingController _addressController = TextEditingController();
   bool _areAmountUnitsSwapped = false;
 
   @override
@@ -148,205 +147,34 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 },
                                               ),
                                             ),
-                                            Container(
-                                              margin: const EdgeInsets.fromLTRB(
-                                                  22, 26, 22, 0.0),
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      27, 14, 13, 13),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.colorFFFFFF
-                                                    .withOpacity(0.05),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                boxShadow: <BoxShadow>[
-                                                  bsDefault
-                                                ],
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: TextField(
-                                                      controller:
-                                                          _addressController,
-                                                      style: tsS16W500CFF,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        isDense: true,
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        hintText:
-                                                            'Enter Dex address',
-                                                        hintStyle: tsS16W500CFF
-                                                            .copyWith(
-                                                          color: AppColors
-                                                              .colorFFFFFF
-                                                              .withOpacity(0.5),
-                                                        ),
-                                                        border:
-                                                            InputBorder.none,
-                                                        errorBorder:
-                                                            InputBorder.none,
-                                                        enabledBorder:
-                                                            InputBorder.none,
-                                                        focusedBorder:
-                                                            InputBorder.none,
-                                                        disabledBorder:
-                                                            InputBorder.none,
-                                                        focusedErrorBorder:
-                                                            InputBorder.none,
-                                                      ),
-                                                      onChanged: (address) => context
-                                                          .read<WithdrawCubit>()
-                                                          .updateWithdrawParams(
-                                                              address: address),
-                                                    ),
-                                                  ),
-                                                  buildInkWell(
-                                                    onTap: () async {
-                                                      final address =
-                                                          await Coordinator
-                                                              .goToQrCodeScanScreen();
-
-                                                      if (address != null) {
-                                                        _addressController
-                                                            .text = address;
-                                                        context
-                                                            .read<
-                                                                WithdrawCubit>()
-                                                            .updateWithdrawParams(
-                                                                address:
-                                                                    address);
-                                                      }
-                                                    },
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    child: Container(
-                                                      width: 43,
-                                                      height: 43,
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors
-                                                            .color8BA1BE
-                                                            .withOpacity(0.2),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              12),
-                                                      child: SvgPicture.asset(
-                                                          'scan'.asAssetSvg()),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      22, 18, 22, 20.0),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            right: 18),
-                                                    padding: const EdgeInsets
-                                                        .fromLTRB(
-                                                      27,
-                                                      9,
-                                                      22,
-                                                      9,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors
-                                                          .colorFFFFFF
-                                                          .withOpacity(0.05),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      boxShadow: <BoxShadow>[
-                                                        bsDefault
-                                                      ],
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 100,
-                                                          child: DropdownButton<
-                                                              String>(
-                                                            items: [
-                                                              'DOT Chain',
-                                                              'DOT 1',
-                                                              'DOT 2'
-                                                            ]
-                                                                .map((e) =>
-                                                                    DropdownMenuItem<
-                                                                        String>(
-                                                                      child:
-                                                                          Text(
-                                                                        e,
-                                                                        style:
-                                                                            tsS16W600CFF,
-                                                                      ),
-                                                                      value: e,
-                                                                    ))
-                                                                .toList(),
-                                                            value: 'DOT Chain',
-                                                            style: tsS16W600CFF,
-                                                            underline:
-                                                                Container(),
-                                                            onChanged: (val) {},
-                                                            isExpanded: true,
-                                                            icon: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          0.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .keyboard_arrow_down_rounded,
-                                                                color: AppColors
-                                                                    .colorFFFFFF,
-                                                                size: 16,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Align(
-                                                      alignment:
-                                                          Alignment.centerRight,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'Withdraw Fee',
-                                                            style: tsS13W400CFFOP60.copyWith(
-                                                                color: AppColors
-                                                                    .colorFFFFFF
-                                                                    .withOpacity(
-                                                                        0.5)),
-                                                          ),
-                                                          SizedBox(height: 4),
-                                                          Text(
-                                                            '0.012 DEX / \$0.02',
-                                                            style: tsS15W600CFF,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                            Column(
+                                              children: [
+                                                _simplifiedWalletDataWidget(
+                                                  title: context
+                                                      .read<AccountCubit>()
+                                                      .accountName,
+                                                  address: context
+                                                      .read<AccountCubit>()
+                                                      .proxyAccountAddress,
+                                                  margin:
+                                                      const EdgeInsets.fromLTRB(
+                                                          22, 26, 22, 0.0),
+                                                ),
+                                                Icon(
+                                                  Icons
+                                                      .keyboard_double_arrow_down,
+                                                  color: Colors.white,
+                                                ),
+                                                _simplifiedWalletDataWidget(
+                                                  title: 'Main Wallet',
+                                                  address: context
+                                                      .read<AccountCubit>()
+                                                      .mainAccountAddress,
+                                                  margin: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 22),
+                                                ),
+                                              ],
                                             ),
                                             Consumer<_ThisProvider>(
                                               builder: (context, provider, _) {
@@ -376,14 +204,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   AnimatedPadding(
                                                 duration: AppConfigs
                                                     .animDurationSmall,
-                                                padding: EdgeInsets.fromLTRB(
-                                                  21,
-                                                  0.0,
-                                                  21.0,
-                                                  provider.isKeyboardVisible
-                                                      ? 400.0
-                                                      : 0.0,
-                                                ),
+                                                padding: EdgeInsets.all(21),
                                                 child: Center(
                                                   child: withdrawState
                                                           is WithdrawLoading
@@ -500,6 +321,35 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _simplifiedWalletDataWidget({
+    required String title,
+    required String address,
+    EdgeInsets margin = EdgeInsets.zero,
+  }) {
+    return Container(
+      margin: margin,
+      padding: const EdgeInsets.fromLTRB(27, 14, 13, 13),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: <BoxShadow>[bsDefault],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$title:',
+            style: tsS16W700CFF.copyWith(color: Colors.black),
+          ),
+          Text(
+            address,
+            style: tsS16W400CFF.copyWith(color: Colors.black),
+          ),
+        ],
       ),
     );
   }
