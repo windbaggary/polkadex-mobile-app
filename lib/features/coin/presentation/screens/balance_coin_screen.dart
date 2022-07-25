@@ -82,7 +82,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                 !_isShowGraphNotifier.value;
                           },
                           child: _TopCoinTitleWidget(
-                            tokenId: widget.asset.assetId,
+                            asset: widget.asset,
                           )),
                       ValueListenableBuilder<bool>(
                         valueListenable: _isShowGraphNotifier,
@@ -568,9 +568,9 @@ class _ThisItemWidget extends StatelessWidget {
 
 /// The very top top widget includes the icon, name, value, price, etc
 class _TopCoinTitleWidget extends StatelessWidget {
-  const _TopCoinTitleWidget({required this.tokenId});
+  const _TopCoinTitleWidget({required this.asset});
 
-  final String tokenId;
+  final AssetEntity asset;
 
   @override
   Widget build(BuildContext context) {
@@ -589,7 +589,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
               height: 52,
               padding: const EdgeInsets.all(3),
               child: Image.asset(
-                TokenUtils.tokenIdToAssetImg(tokenId),
+                TokenUtils.tokenIdToAssetImg(asset.assetId),
                 fit: BoxFit.contain,
               ),
             ),
@@ -600,7 +600,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          double.parse(state.free.getBalance(tokenId))
+                          double.parse(state.free.getBalance(asset.assetId))
                               .toStringAsFixed(2),
                           style: tsS25W500CFF,
                         ),
@@ -627,7 +627,10 @@ class _TopCoinTitleWidget extends StatelessWidget {
                       style: tsS14W600CFF,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () => Coordinator.goToCoinWithdrawScreen(
+                    asset: asset,
+                    balanceCubit: context.read<BalanceCubit>(),
+                  ),
                 ),
               ),
           ],

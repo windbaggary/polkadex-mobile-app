@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -22,10 +23,10 @@ import 'package:shimmer/shimmer.dart';
 /// XD_PAGE: 28
 class CoinWithdrawScreen extends StatefulWidget {
   const CoinWithdrawScreen({
-    required this.tokenId,
+    required this.asset,
   });
 
-  final String tokenId;
+  final AssetEntity asset;
 
   @override
   _CoinWithdrawScreenState createState() => _CoinWithdrawScreenState();
@@ -34,7 +35,6 @@ class CoinWithdrawScreen extends StatefulWidget {
 class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
   final TextEditingController _addressController = TextEditingController();
-  final double _conversionRate = 20.0;
   bool _areAmountUnitsSwapped = false;
 
   @override
@@ -56,7 +56,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
               if (balanceState is BalanceLoaded) {
                 context.read<WithdrawCubit>().updateWithdrawParams(
                     amountFree: double.parse(
-                        balanceState.free.getBalance(widget.tokenId)));
+                        balanceState.free.getBalance(widget.asset)));
               }
 
               return BlocConsumer<WithdrawCubit, WithdrawState>(
@@ -68,7 +68,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                   if (withdrawState is WithdrawError) {
                     buildAppToast(
                         msg:
-                            '${TokenUtils.tokenIdToAcronym(widget.tokenId)} withdraw failed. Please try again',
+                            '${widget.asset.symbol} withdraw failed. Please try again',
                         context: context);
                   }
                 },
@@ -107,11 +107,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                               CrossAxisAlignment.stretch,
                                           children: [
                                             _ThisCoinTitleWidget(
-                                              tokenId: widget.tokenId,
+                                              asset: widget.asset,
                                               amount: withdrawState.amountFree,
                                               areUnitsSwapped:
                                                   _areAmountUnitsSwapped,
-                                              conversionRate: _conversionRate,
                                               isLoaded:
                                                   balanceState is BalanceLoaded,
                                             ),
@@ -122,7 +121,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   .read<WithdrawCubit>()
                                                   .state
                                                   .amountDisplayed,
-                                              conversionRate: _conversionRate,
                                               areUnitsSwapped:
                                                   _areAmountUnitsSwapped,
                                             ),
@@ -567,24 +565,19 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     }
 
     final double valInDouble = double.tryParse(_newEditableValue) ?? 0;
-    final double newAmountToBeWithdrawn = _areAmountUnitsSwapped
-        ? valInDouble * (1 / _conversionRate)
-        : valInDouble;
 
     provider.progress =
-        (newAmountToBeWithdrawn / previousState.amountFree).clamp(0.0, 1.0);
+        (valInDouble / previousState.amountFree).clamp(0.0, 1.0);
     cubit.updateWithdrawParams(
-        amountToBeWithdrawn: newAmountToBeWithdrawn,
-        amountDisplayed: _newEditableValue);
+        amountToBeWithdrawn: valInDouble, amountDisplayed: _newEditableValue);
   }
 
   void _onSwapTapped(
     WithdrawCubit cubit,
   ) {
     cubit.updateWithdrawParams(
-        amountDisplayed: !_areAmountUnitsSwapped
-            ? (cubit.state.amountToBeWithdrawn * _conversionRate).toString()
-            : cubit.state.amountToBeWithdrawn.toString());
+      amountDisplayed: cubit.state.amountToBeWithdrawn.toString(),
+    );
     setState(() => _areAmountUnitsSwapped = !_areAmountUnitsSwapped);
   }
 
@@ -593,7 +586,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     final currentState = cubit.state;
 
     await cubit.withdraw(
-      asset: widget.tokenId,
+      asset: widget.asset.assetId,
       amountFree: currentState.amountFree,
       amountToBeWithdrawn: currentState.amountToBeWithdrawn,
       address: currentState.address,
@@ -610,12 +603,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     final previousState = cubit.state;
     final amountSlide =
         previousState.amountFree * MathUtils.floorDecimalPrecision(progress, 2);
-    final amountDisplayed =
-        _areAmountUnitsSwapped ? amountSlide * _conversionRate : amountSlide;
 
     cubit.updateWithdrawParams(
       amountToBeWithdrawn: amountSlide,
-      amountDisplayed: amountDisplayed.toString(),
+      amountDisplayed: amountSlide.toString(),
     );
     provider.progress = progress;
   }
@@ -638,7 +629,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
             ),
             Expanded(
               child: Text(
-                "Withdraw ${TokenUtils.tokenIdToFullName(widget.tokenId)} (${TokenUtils.tokenIdToAcronym(widget.tokenId)})",
+                "Withdraw ${widget.asset.name} (${widget.asset.symbol})",
                 style: tsS19W700CFF,
                 textAlign: TextAlign.center,
               ),
@@ -653,26 +644,15 @@ class _ThisAmountWidget extends StatelessWidget {
   const _ThisAmountWidget({
     required this.amount,
     required this.amountDisplayed,
-    required this.conversionRate,
     required this.areUnitsSwapped,
   });
 
   final double amount;
   final String amountDisplayed;
-  final double conversionRate;
   final bool areUnitsSwapped;
 
   @override
   Widget build(BuildContext context) {
-    String primaryAmount = amount.toString();
-    String secondaryAmount = (amount * conversionRate).toString();
-
-    if (areUnitsSwapped) {
-      final temp = secondaryAmount;
-      secondaryAmount = primaryAmount;
-      primaryAmount = temp;
-    }
-
     return InkWell(
       onTap: () {
         context.read<_ThisProvider>().isKeyboardVisible = true;
@@ -694,14 +674,6 @@ class _ThisAmountWidget extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4),
-            Consumer<_ThisProvider>(
-              builder: (context, provider, child) => Text(
-                '~$secondaryAmount',
-                style: tsS15W400CFFOP50,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(height: 4),
             Text(
               'Enter amount',
               style: tsS16W400CFF.copyWith(
@@ -718,30 +690,19 @@ class _ThisAmountWidget extends StatelessWidget {
 
 class _ThisCoinTitleWidget extends StatelessWidget {
   const _ThisCoinTitleWidget({
-    required this.tokenId,
+    required this.asset,
     required this.amount,
     required this.areUnitsSwapped,
-    required this.conversionRate,
     required this.isLoaded,
   });
 
-  final String tokenId;
+  final AssetEntity asset;
   final double amount;
   final bool areUnitsSwapped;
-  final double conversionRate;
   final bool isLoaded;
 
   @override
   Widget build(BuildContext context) {
-    String primaryAmount = '$amount ${TokenUtils.tokenIdToAcronym(tokenId)} ';
-    String secondaryAmount = '\$${amount * conversionRate} ';
-
-    if (areUnitsSwapped) {
-      final temp = secondaryAmount;
-      secondaryAmount = primaryAmount;
-      primaryAmount = temp;
-    }
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(21, 40, 21, 0.0),
       child: Row(
@@ -756,7 +717,7 @@ class _ThisCoinTitleWidget extends StatelessWidget {
             width: 51,
             height: 51,
             child: Image.asset(
-              TokenUtils.tokenIdToAssetImg(tokenId),
+              TokenUtils.tokenIdToAssetImg(asset.assetId),
             ),
           ),
           Expanded(
@@ -775,15 +736,9 @@ class _ThisCoinTitleWidget extends StatelessWidget {
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
-                              text: primaryAmount,
+                              text: amount.toString(),
                               style: tsS17W600C0CA564.copyWith(
                                   color: AppColors.colorFFFFFF),
-                            ),
-                            TextSpan(
-                              text: secondaryAmount,
-                              style: tsS17W600C0CA564.copyWith(
-                                color: AppColors.colorFFFFFF.withOpacity(0.5),
-                              ),
                             ),
                           ],
                         ),
