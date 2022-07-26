@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -12,7 +12,6 @@ import 'package:polkadex/common/widgets/app_horizontal_slider.dart';
 import 'package:polkadex/common/widgets/app_slide_button.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/coin/presentation/cubits/withdraw_cubit/withdraw_cubit.dart';
-import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +33,8 @@ class CoinWithdrawScreen extends StatefulWidget {
 
 class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     with TickerProviderStateMixin {
-  bool _areAmountUnitsSwapped = false;
+  final TextEditingController _withdrawAmountController =
+      TextEditingController(text: '0.0');
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +108,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                             _ThisCoinTitleWidget(
                                               asset: widget.asset,
                                               amount: withdrawState.amountFree,
-                                              areUnitsSwapped:
-                                                  _areAmountUnitsSwapped,
                                               isLoaded:
                                                   balanceState is BalanceLoaded,
                                             ),
@@ -120,31 +118,19 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                   .read<WithdrawCubit>()
                                                   .state
                                                   .amountDisplayed,
-                                              areUnitsSwapped:
-                                                  _areAmountUnitsSwapped,
+                                              withdrawAmountController:
+                                                  _withdrawAmountController,
                                             ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.fromLTRB(
                                                       22, 40, 24, 0),
-                                              child: Consumer<_ThisProvider>(
-                                                builder:
-                                                    (context, thisProvider, _) {
-                                                  return AppHorizontalSlider(
-                                                    bgColor:
-                                                        const Color(0xFF313236),
-                                                    activeColor:
-                                                        AppColors.colorE6007A,
-                                                    initialProgress:
-                                                        thisProvider.progress,
-                                                    onProgressUpdate: (progress) =>
-                                                        _onAmountSlideUpdate(
-                                                            progress,
-                                                            context.read<
-                                                                WithdrawCubit>(),
-                                                            thisProvider),
-                                                  );
-                                                },
+                                              child: AppHorizontalSlider(
+                                                bgColor:
+                                                    const Color(0xFF313236),
+                                                activeColor:
+                                                    AppColors.colorE6007A,
+                                                onProgressUpdate: (progress) {},
                                               ),
                                             ),
                                             Column(
@@ -177,93 +163,40 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                               ],
                                             ),
                                             Consumer<_ThisProvider>(
-                                              builder: (context, provider, _) {
-                                                double height = 0;
-                                                if (!provider
-                                                    .isKeyboardVisible) {
-                                                  height = (10 *
-                                                          (MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height /
-                                                              759.27272727))
-                                                      .clamp(
-                                                          0.0, double.infinity);
-                                                }
-                                                return AnimatedSize(
-                                                  duration: AppConfigs
-                                                      .animDurationSmall,
-                                                  child: SizedBox(
-                                                    height: height,
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                            Consumer<_ThisProvider>(
                                               builder: (context, provider, _) =>
-                                                  AnimatedPadding(
-                                                duration: AppConfigs
-                                                    .animDurationSmall,
-                                                padding: EdgeInsets.all(21),
-                                                child: Center(
-                                                  child: withdrawState
-                                                          is WithdrawLoading
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 25.0),
-                                                          child:
-                                                              LoadingDotsWidget(
-                                                                  dotSize: 10),
-                                                        )
-                                                      : AppSlideButton(
-                                                          enabled: withdrawState
-                                                              is WithdrawValid,
-                                                          height: 60,
-                                                          onComplete: () =>
-                                                              _onSlideToWithdrawComplete(
-                                                            context.read<
-                                                                WithdrawCubit>(),
-                                                            provider,
-                                                          ),
-                                                          label:
-                                                              'Slide to withdraw',
-                                                          icon: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: AppColors
-                                                                  .color1C2023,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                            ),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(14),
-                                                            width: 45,
-                                                            height: 45,
-                                                            child: SvgPicture
-                                                                .asset(
-                                                              'arrow'
-                                                                  .asAssetSvg(),
-                                                              fit: BoxFit
-                                                                  .contain,
-                                                              color: AppColors
-                                                                  .colorFFFFFF,
-                                                            ),
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: AppColors
-                                                                .colorE6007A,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                          ),
-                                                        ),
+                                                  AppSlideButton(
+                                                enabled: withdrawState
+                                                    is WithdrawValid,
+                                                height: 60,
+                                                onComplete: () =>
+                                                    _onSlideToWithdrawComplete(
+                                                  context.read<WithdrawCubit>(),
+                                                  provider,
+                                                ),
+                                                label: 'Slide to withdraw',
+                                                icon: Container(
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        AppColors.color1C2023,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.all(14),
+                                                  width: 45,
+                                                  height: 45,
+                                                  child: SvgPicture.asset(
+                                                    'arrow'.asAssetSvg(),
+                                                    fit: BoxFit.contain,
+                                                    color:
+                                                        AppColors.colorFFFFFF,
+                                                  ),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.colorE6007A,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
                                                 ),
                                               ),
                                             ),
@@ -274,42 +207,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                        ),
-                        Consumer<_ThisProvider>(
-                          builder: (context, provider, child) =>
-                              Positioned.fill(
-                            child: IgnorePointer(
-                              ignoring: !provider.isKeyboardVisible,
-                              child: GestureDetector(
-                                  onTap: () {
-                                    provider.isKeyboardVisible = false;
-                                  },
-                                  child: Container(
-                                    color: Colors.transparent,
-                                  )),
-                            ),
-                          ),
-                        ),
-                        Consumer<_ThisProvider>(
-                          builder: (context, provider, _) => AnimatedPositioned(
-                            duration: AppConfigs.animDurationSmall,
-                            left: 0.0,
-                            right: 0.0,
-                            bottom: provider.isKeyboardVisible ? 0.0 : -400.0,
-                            child: AppCustomKeyboard(
-                              onKeypadNumberTapped: (number) =>
-                                  _onKeyboardNumberTapped(
-                                number,
-                                context.read<WithdrawCubit>(),
-                                provider,
-                              ),
-                              onSwapTapped: () =>
-                                  _onSwapTapped(context.read<WithdrawCubit>()),
-                              onEnterTapped: () => context
-                                  .read<_ThisProvider>()
-                                  .isKeyboardVisible = false,
                             ),
                           ),
                         ),
@@ -352,83 +249,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         ],
       ),
     );
-  }
-
-  void _onKeyboardNumberTapped(
-    _EnumKeypadNumbers numberTapped,
-    WithdrawCubit cubit,
-    _ThisProvider provider,
-  ) {
-    final previousState = cubit.state;
-    String _newEditableValue = previousState.amountDisplayed;
-
-    switch (numberTapped) {
-      case _EnumKeypadNumbers.one:
-        _newEditableValue += "1";
-        break;
-      case _EnumKeypadNumbers.two:
-        _newEditableValue += "2";
-        break;
-      case _EnumKeypadNumbers.three:
-        _newEditableValue += "3";
-        break;
-      case _EnumKeypadNumbers.four:
-        _newEditableValue += "4";
-        break;
-      case _EnumKeypadNumbers.five:
-        _newEditableValue += "5";
-        break;
-      case _EnumKeypadNumbers.six:
-        _newEditableValue += "6";
-        break;
-      case _EnumKeypadNumbers.seven:
-        _newEditableValue += "7";
-        break;
-      case _EnumKeypadNumbers.eight:
-        _newEditableValue += "8";
-        break;
-      case _EnumKeypadNumbers.nine:
-        _newEditableValue += "9";
-        break;
-      case _EnumKeypadNumbers.zero:
-        _newEditableValue += "0";
-        if (_newEditableValue.length == 1) {
-          _newEditableValue = "";
-        }
-        break;
-      case _EnumKeypadNumbers.dot:
-        if (_newEditableValue.contains('.')) {
-          return;
-        }
-        _newEditableValue += ".";
-        if (_newEditableValue.length == 1) {
-          _newEditableValue = "0.";
-        }
-        break;
-      case _EnumKeypadNumbers.back:
-        if (_newEditableValue.isEmpty) break;
-        if (_newEditableValue.isNotEmpty) {
-          _newEditableValue =
-              _newEditableValue.substring(0, _newEditableValue.length - 1);
-        }
-        break;
-    }
-
-    final double valInDouble = double.tryParse(_newEditableValue) ?? 0;
-
-    provider.progress =
-        (valInDouble / previousState.amountFree).clamp(0.0, 1.0);
-    cubit.updateWithdrawParams(
-        amountToBeWithdrawn: valInDouble, amountDisplayed: _newEditableValue);
-  }
-
-  void _onSwapTapped(
-    WithdrawCubit cubit,
-  ) {
-    cubit.updateWithdrawParams(
-      amountDisplayed: cubit.state.amountToBeWithdrawn.toString(),
-    );
-    setState(() => _areAmountUnitsSwapped = !_areAmountUnitsSwapped);
   }
 
   void _onSlideToWithdrawComplete(
@@ -494,45 +314,56 @@ class _ThisAmountWidget extends StatelessWidget {
   const _ThisAmountWidget({
     required this.amount,
     required this.amountDisplayed,
-    required this.areUnitsSwapped,
+    required this.withdrawAmountController,
   });
 
   final double amount;
   final String amountDisplayed;
-  final bool areUnitsSwapped;
+  final TextEditingController withdrawAmountController;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        context.read<_ThisProvider>().isKeyboardVisible = true;
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 56,
-          left: 21,
-          right: 21,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Consumer<_ThisProvider>(
-              builder: (context, provider, child) => Text(
-                amountDisplayed.isEmpty ? '0' : amountDisplayed,
-                style: tsS31W500CFF,
-                textAlign: TextAlign.center,
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 56,
+        left: 21,
+        right: 21,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: withdrawAmountController,
+            style: tsS31W500CFF,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.zero,
+              border: InputBorder.none,
+              errorBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
             ),
-            SizedBox(height: 4),
-            Text(
-              'Enter amount',
-              style: tsS16W400CFF.copyWith(
-                color: Colors.white.withOpacity(0.50),
-              ),
-              textAlign: TextAlign.center,
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: true,
+              signed: true,
             ),
-          ],
-        ),
+            onChanged: (_) {},
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,4}'))
+            ],
+          ),
+          SizedBox(height: 4),
+          Text(
+            'Enter amount',
+            style: tsS16W400CFF.copyWith(
+              color: Colors.white.withOpacity(0.50),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
@@ -542,13 +373,11 @@ class _ThisCoinTitleWidget extends StatelessWidget {
   const _ThisCoinTitleWidget({
     required this.asset,
     required this.amount,
-    required this.areUnitsSwapped,
     required this.isLoaded,
   });
 
   final AssetEntity asset;
   final double amount;
-  final bool areUnitsSwapped;
   final bool isLoaded;
 
   @override
