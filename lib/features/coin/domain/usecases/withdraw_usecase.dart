@@ -9,15 +9,17 @@ class WithdrawUseCase {
 
   final ICoinRepository _coinRepository;
 
-  Future<Either<ApiError, String>> call({
+  Future<Either<ApiError, void>> call({
+    required String mainAddress,
+    required String proxyAddress,
     required String asset,
     required double amount,
-    required String address,
   }) async {
     return await _coinRepository.withdraw(
+      mainAddress,
+      proxyAddress,
       asset,
       amount,
-      address,
     );
   }
 }

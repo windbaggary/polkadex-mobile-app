@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
@@ -13,53 +14,73 @@ void main() {
   late CoinRepository repository;
   late String asset;
   late double amount;
-  late String address;
+  late String proxyAddress;
+  late String mainAddress;
 
   setUp(() {
     dataSource = _MockCoinRemoteDatasource();
     repository = CoinRepository(coinRemoteDatasource: dataSource);
-    asset = 'PDEX';
+    asset = '1';
     amount = 10.0;
-    address = 'addressTest';
+    proxyAddress = 'proxyAddressTest';
+    mainAddress = 'mainAddressTest';
   });
 
   group('Balance repository tests ', () {
     test('Must return a withdraw response', () async {
-      when(() => dataSource.withdraw(any(), any(), any())).thenAnswer(
+      when(
+        () => dataSource.withdraw(
+          any(),
+          any(),
+          any(),
+          any(),
+        ),
+      ).thenAnswer(
         (_) async => Response(jsonEncode({"Fine": "Test success"}), 200),
       );
 
       final result = await repository.withdraw(
+        proxyAddress,
+        mainAddress,
         asset,
         amount,
-        address,
       );
 
       expect(result.isRight(), true);
       verify(() => dataSource.withdraw(
+            proxyAddress,
+            mainAddress,
             asset,
             amount,
-            address,
           )).called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
     test('Must return a failed withdraw response', () async {
-      when(() => dataSource.withdraw(any(), any(), any())).thenAnswer(
-        (_) async => Response('', 400),
+      when(
+        () => dataSource.withdraw(
+          any(),
+          any(),
+          any(),
+          any(),
+        ),
+      ).thenAnswer(
+        (_) async => throw RpcException(500, 'error'),
       );
 
       final result = await repository.withdraw(
+        proxyAddress,
+        mainAddress,
         asset,
         amount,
-        address,
       );
 
       expect(result.isLeft(), true);
       verify(() => dataSource.withdraw(
+            proxyAddress,
+            mainAddress,
             asset,
             amount,
-            address,
           )).called(1);
       verifyNoMoreInteractions(dataSource);
     });

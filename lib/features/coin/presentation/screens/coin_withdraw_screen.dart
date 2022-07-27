@@ -264,10 +264,11 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
     final currentState = cubit.state;
 
     await cubit.withdraw(
+      proxyAddress: context.read<AccountCubit>().proxyAccountAddress,
+      mainAddress: context.read<AccountCubit>().mainAccountAddress,
       asset: widget.asset.assetId,
       amountFree: currentState.amountFree,
       amountToBeWithdrawn: currentState.amountToBeWithdrawn,
-      address: context.read<AccountCubit>().proxyAccountAddress,
     );
 
     _onAmountSlideUpdate(0.0, cubit, provider);

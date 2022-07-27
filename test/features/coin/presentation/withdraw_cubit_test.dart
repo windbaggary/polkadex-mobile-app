@@ -14,7 +14,8 @@ void main() {
   late String asset;
   late double amountFree;
   late double amountToBeWithdrawn;
-  late String address;
+  late String proxyAddress;
+  late String mainAddress;
 
   setUp(() {
     _mockWithdrawUsecase = _MockWithdrawUsecase();
@@ -26,7 +27,8 @@ void main() {
     asset = 'PDEX';
     amountFree = 10.0;
     amountToBeWithdrawn = 1.0;
-    address = 'addressTest';
+    proxyAddress = 'proxyAddressTest';
+    mainAddress = 'mainAddressTest';
   });
 
   group(
@@ -88,21 +90,23 @@ void main() {
         build: () {
           when(
             () => _mockWithdrawUsecase(
+              proxyAddress: any(named: 'proxyAddress'),
+              mainAddress: any(named: 'mainAddress'),
               asset: any(named: 'asset'),
               amount: any(named: 'amount'),
-              address: any(named: 'address'),
             ),
           ).thenAnswer(
-            (_) async => Right('test'),
+            (_) async => Right(null),
           );
           return cubit;
         },
         act: (cubit) async {
           await cubit.withdraw(
+            proxyAddress: proxyAddress,
+            mainAddress: mainAddress,
             asset: asset,
             amountToBeWithdrawn: amountToBeWithdrawn,
             amountFree: amountFree,
-            address: address,
           );
         },
         expect: () => [
@@ -116,9 +120,10 @@ void main() {
         build: () {
           when(
             () => _mockWithdrawUsecase(
+              proxyAddress: any(named: 'proxyAddress'),
+              mainAddress: any(named: 'mainAddress'),
               asset: any(named: 'asset'),
               amount: any(named: 'amount'),
-              address: any(named: 'address'),
             ),
           ).thenAnswer(
             (_) async => Left(ApiError(message: '')),
@@ -127,10 +132,11 @@ void main() {
         },
         act: (cubit) async {
           await cubit.withdraw(
+            proxyAddress: proxyAddress,
+            mainAddress: mainAddress,
             asset: asset,
             amountToBeWithdrawn: amountToBeWithdrawn,
             amountFree: amountFree,
-            address: address,
           );
         },
         expect: () => [

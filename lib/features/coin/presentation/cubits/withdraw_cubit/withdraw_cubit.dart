@@ -45,10 +45,11 @@ class WithdrawCubit extends Cubit<WithdrawState> {
   }
 
   Future<void> withdraw({
+    required String proxyAddress,
+    required String mainAddress,
     required String asset,
     required double amountFree,
     required double amountToBeWithdrawn,
-    required String address,
   }) async {
     emit(WithdrawLoading(
       amountFree: amountFree,
@@ -56,9 +57,10 @@ class WithdrawCubit extends Cubit<WithdrawState> {
     ));
 
     final result = await _withdrawUseCase(
+      proxyAddress: proxyAddress,
+      mainAddress: mainAddress,
       asset: asset,
       amount: amountToBeWithdrawn,
-      address: address,
     );
 
     result.fold(
