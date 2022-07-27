@@ -38,8 +38,6 @@ void main() {
             WithdrawInitial(
               amountFree: 0.0,
               amountToBeWithdrawn: 0.0,
-              amountDisplayed: '0',
-              address: '',
             ));
       });
 
@@ -52,8 +50,6 @@ void main() {
           cubit.init(
             amountFree: amountFree,
             amountToBeWithdrawn: 0.0,
-            amountDisplayed: '',
-            address: '',
           );
         },
         expect: () => [
@@ -70,26 +66,19 @@ void main() {
           cubit.init(
             amountFree: amountFree,
             amountToBeWithdrawn: 0.0,
-            amountDisplayed: '',
-            address: '',
           );
           cubit.updateWithdrawParams(
             amountToBeWithdrawn: 2.0,
-            amountDisplayed: '2',
           );
         },
         expect: () => [
           WithdrawNotValid(
             amountFree: amountFree,
             amountToBeWithdrawn: 0.0,
-            amountDisplayed: '',
-            address: '',
           ),
-          WithdrawNotValid(
+          WithdrawValid(
             amountFree: amountFree,
             amountToBeWithdrawn: 2.0,
-            amountDisplayed: '2',
-            address: '',
           ),
         ],
       );

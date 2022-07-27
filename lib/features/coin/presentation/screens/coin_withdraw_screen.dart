@@ -43,8 +43,6 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
         ..init(
           amountFree: 0.0,
           amountToBeWithdrawn: 0.0,
-          amountDisplayed: '',
-          address: '',
         ),
       child: ChangeNotifierProvider(
         create: (_) => _ThisProvider(),
@@ -54,8 +52,8 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
             builder: (context, balanceState) {
               if (balanceState is BalanceLoaded) {
                 context.read<WithdrawCubit>().updateWithdrawParams(
-                    amountFree: double.parse(
-                        balanceState.free.getBalance(widget.asset)));
+                      amountFree: 100.0,
+                    );
               }
 
               return BlocConsumer<WithdrawCubit, WithdrawState>(
@@ -114,23 +112,31 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                             _ThisAmountWidget(
                                               amount: withdrawState
                                                   .amountToBeWithdrawn,
-                                              amountDisplayed: context
-                                                  .read<WithdrawCubit>()
-                                                  .state
-                                                  .amountDisplayed,
                                               withdrawAmountController:
                                                   _withdrawAmountController,
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      22, 40, 24, 0),
-                                              child: AppHorizontalSlider(
-                                                bgColor:
-                                                    const Color(0xFF313236),
-                                                activeColor:
-                                                    AppColors.colorE6007A,
-                                                onProgressUpdate: (progress) {},
+                                            Consumer<_ThisProvider>(
+                                              builder: (context, provider, _) =>
+                                                  Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        22, 40, 24, 0),
+                                                child: AppHorizontalSlider(
+                                                  bgColor:
+                                                      const Color(0xFF313236),
+                                                  activeColor:
+                                                      AppColors.colorE6007A,
+                                                  initialProgress:
+                                                      provider.progress,
+                                                  onProgressUpdate:
+                                                      (progress) =>
+                                                          _onAmountSlideUpdate(
+                                                    progress,
+                                                    context
+                                                        .read<WithdrawCubit>(),
+                                                    provider,
+                                                  ), //TODO: update onProgressUpdate callback
+                                                ),
                                               ),
                                             ),
                                             Column(
@@ -252,14 +258,16 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
   }
 
   void _onSlideToWithdrawComplete(
-      WithdrawCubit cubit, _ThisProvider provider) async {
+    WithdrawCubit cubit,
+    _ThisProvider provider,
+  ) async {
     final currentState = cubit.state;
 
     await cubit.withdraw(
       asset: widget.asset.assetId,
       amountFree: currentState.amountFree,
       amountToBeWithdrawn: currentState.amountToBeWithdrawn,
-      address: currentState.address,
+      address: context.read<AccountCubit>().proxyAccountAddress,
     );
 
     _onAmountSlideUpdate(0.0, cubit, provider);
@@ -276,9 +284,9 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
 
     cubit.updateWithdrawParams(
       amountToBeWithdrawn: amountSlide,
-      amountDisplayed: amountSlide.toString(),
     );
     provider.progress = progress;
+    _withdrawAmountController.text = amountSlide.toString();
   }
 
   /// The app bar for the screen
@@ -313,12 +321,10 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
 class _ThisAmountWidget extends StatelessWidget {
   const _ThisAmountWidget({
     required this.amount,
-    required this.amountDisplayed,
     required this.withdrawAmountController,
   });
 
   final double amount;
-  final String amountDisplayed;
   final TextEditingController withdrawAmountController;
 
   @override
@@ -350,7 +356,11 @@ class _ThisAmountWidget extends StatelessWidget {
               decimal: true,
               signed: true,
             ),
-            onChanged: (_) {},
+            onChanged: (newAmount) => _onAmountControllerChange(
+              newAmount,
+              context.read<WithdrawCubit>(),
+              context.read<_ThisProvider>(),
+            ),
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,4}'))
             ],
@@ -366,6 +376,19 @@ class _ThisAmountWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _onAmountControllerChange(
+    String amountToWithdraw,
+    WithdrawCubit cubit,
+    _ThisProvider provider,
+  ) {
+    final previousState = cubit.state;
+    final newAmountToWithdraw = double.tryParse(amountToWithdraw) ?? 0.0;
+
+    provider.progress =
+        (newAmountToWithdraw / previousState.amountFree).clamp(0.0, 1.0);
+    cubit.updateWithdrawParams(amountToBeWithdrawn: newAmountToWithdraw);
   }
 }
 
