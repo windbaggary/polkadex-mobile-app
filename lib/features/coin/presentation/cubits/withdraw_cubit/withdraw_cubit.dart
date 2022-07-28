@@ -10,8 +10,6 @@ class WithdrawCubit extends Cubit<WithdrawState> {
         super(WithdrawInitial(
           amountFree: 0.0,
           amountToBeWithdrawn: 0.0,
-          amountDisplayed: '0',
-          address: '',
         ));
 
   final WithdrawUseCase _withdrawUseCase;
@@ -19,66 +17,50 @@ class WithdrawCubit extends Cubit<WithdrawState> {
   void init({
     required double amountFree,
     required double amountToBeWithdrawn,
-    required String amountDisplayed,
-    required String address,
   }) {
     emit(WithdrawNotValid(
       amountFree: amountFree,
       amountToBeWithdrawn: amountToBeWithdrawn,
-      amountDisplayed: amountDisplayed,
-      address: address,
     ));
   }
 
   void updateWithdrawParams({
     double? amountFree,
     double? amountToBeWithdrawn,
-    String? amountDisplayed,
-    String? address,
   }) {
     final previousState = state;
     final newAmountFree = amountFree ?? previousState.amountFree;
     final newAmountToBeWithdrawn =
         amountToBeWithdrawn ?? previousState.amountToBeWithdrawn;
-    final newAmountDisplayed = amountDisplayed ?? previousState.amountDisplayed;
-    final newAddress = address ?? previousState.address;
 
-    newAddress.length >= 48 &&
-            newAmountToBeWithdrawn > 0.0 &&
-            newAmountToBeWithdrawn <= newAmountFree
+    newAmountToBeWithdrawn > 0.0 && newAmountToBeWithdrawn <= newAmountFree
         ? emit(WithdrawValid(
             amountFree: newAmountFree,
             amountToBeWithdrawn: newAmountToBeWithdrawn,
-            amountDisplayed: newAmountDisplayed,
-            address: newAddress,
           ))
         : emit(WithdrawNotValid(
             amountFree: newAmountFree,
             amountToBeWithdrawn: newAmountToBeWithdrawn,
-            amountDisplayed: newAmountDisplayed,
-            address: newAddress,
           ));
   }
 
   Future<void> withdraw({
+    required String proxyAddress,
+    required String mainAddress,
     required String asset,
     required double amountFree,
     required double amountToBeWithdrawn,
-    required String address,
   }) async {
-    final previousState = state;
-
     emit(WithdrawLoading(
       amountFree: amountFree,
       amountToBeWithdrawn: amountToBeWithdrawn,
-      amountDisplayed: previousState.amountDisplayed,
-      address: address,
     ));
 
     final result = await _withdrawUseCase(
+      proxyAddress: proxyAddress,
+      mainAddress: mainAddress,
       asset: asset,
       amount: amountToBeWithdrawn,
-      address: address,
     );
 
     result.fold(
@@ -86,8 +68,6 @@ class WithdrawCubit extends Cubit<WithdrawState> {
         WithdrawError(
           amountFree: amountFree,
           amountToBeWithdrawn: amountToBeWithdrawn,
-          amountDisplayed: previousState.amountDisplayed,
-          address: address,
           message: error.message,
         ),
       ),
@@ -95,8 +75,6 @@ class WithdrawCubit extends Cubit<WithdrawState> {
         WithdrawSuccess(
           amountFree: amountFree - amountToBeWithdrawn,
           amountToBeWithdrawn: 0.0,
-          amountDisplayed: '0',
-          address: address,
           message: '$asset successfully withdrawn.',
         ),
       ),

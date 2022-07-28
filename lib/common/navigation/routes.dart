@@ -164,7 +164,7 @@ abstract class Routes {
           return BlocProvider.value(
             value: withdrawArguments['balanceCubit'] as BalanceCubit,
             child: CoinWithdrawScreen(
-              tokenId: withdrawArguments['tokenId'],
+              asset: withdrawArguments['asset'],
             ),
           );
         };

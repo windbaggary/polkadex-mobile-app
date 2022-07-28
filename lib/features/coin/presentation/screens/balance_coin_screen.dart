@@ -25,21 +25,8 @@ import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
-import 'dart:math' as math;
-
 import 'package:shimmer/shimmer.dart';
 
-/// The screen enum menus only accessing inside this file.
-/// The enum represent the first top 3 menu of the screen
-///
-enum _EnumMenus {
-  deposit,
-  withdraw,
-  trade,
-}
-
-/// XD_PAGE: 20
-/// XD_PAGE: 31
 class BalanceCoinScreen extends StatefulWidget {
   BalanceCoinScreen({required this.asset});
 
@@ -95,7 +82,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                 !_isShowGraphNotifier.value;
                           },
                           child: _TopCoinTitleWidget(
-                            tokenId: widget.asset.assetId,
+                            asset: widget.asset,
                           )),
                       ValueListenableBuilder<bool>(
                         valueListenable: _isShowGraphNotifier,
@@ -143,7 +130,6 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                   ),
                                 ),
                                 _ThisGraphOptionWidget(),
-                                // SizedBox(height: 0),
                               ],
                             );
                           }
@@ -152,60 +138,6 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                             child: child,
                           );
                         },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(21, 42, 21, 0.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: buildInkWell(
-                                borderRadius: BorderRadius.circular(20),
-                                onTap: () =>
-                                    Coordinator.goToBalanceDepositScreenOne(
-                                        tokenId: widget.asset.assetId,
-                                        balanceCubit:
-                                            context.read<BalanceCubit>()),
-                                child: _ThisMenuItemWidget(
-                                  menu: _EnumMenus.deposit,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                width: math.min(16.0,
-                                    MediaQuery.of(context).size.width * 0.025)),
-                            Expanded(
-                              child: buildInkWell(
-                                borderRadius: BorderRadius.circular(20),
-                                onTap: () => Coordinator.goToCoinWithdrawScreen(
-                                    tokenId: widget.asset.assetId,
-                                    balanceCubit: context.read<BalanceCubit>()),
-                                child: _ThisMenuItemWidget(
-                                  menu: _EnumMenus.withdraw,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                width: math.min(16.0,
-                                    MediaQuery.of(context).size.width * 0.025)),
-                            Expanded(
-                              child: buildInkWell(
-                                borderRadius: BorderRadius.circular(20),
-                                onTap: () => Coordinator.goToCoinTradeScreen(
-                                    balanceCubit: context.read<BalanceCubit>(),
-                                    baseToken: widget.asset,
-                                    quoteToken: context
-                                        .read<MarketAssetCubit>()
-                                        .listAvailableMarkets
-                                        .firstWhere((market) =>
-                                            market[0].assetId ==
-                                            widget.asset.assetId)[1]),
-                                child: _ThisMenuItemWidget(
-                                  menu: _EnumMenus.trade,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -632,172 +564,13 @@ class _ThisItemWidget extends StatelessWidget {
       ],
     );
   }
-
-  //Widget _buildHistoryOrderItemWidget(BuildContext context, OrderEntity order) {
-  //  final cubit = context.read<MarketAssetCubit>();
-  //  Widget mainIcon, arrowIcon;
-//
-  //  switch (order.orderSide) {
-  //    case EnumBuySell.buy:
-  //      mainIcon = SvgPicture.asset(
-  //        'buy'.asAssetSvg(),
-  //      );
-  //      break;
-  //    case EnumBuySell.sell:
-  //      mainIcon = SvgPicture.asset(
-  //        'sell'.asAssetSvg(),
-  //      );
-  //      break;
-  //    default:
-  //      mainIcon = Container();
-  //  }
-//
-  //  switch (order.orderSide) {
-  //    case EnumBuySell.buy:
-  //      arrowIcon = SvgPicture.asset(
-  //        'Arrow-Green'.asAssetSvg(),
-  //        width: 10,
-  //        height: 6.0,
-  //      );
-  //      break;
-  //    case EnumBuySell.sell:
-  //      arrowIcon = SvgPicture.asset(
-  //        'Arrow-Red'.asAssetSvg(),
-  //        width: 10,
-  //        height: 6.0,
-  //      );
-  //      break;
-  //    default:
-  //      arrowIcon = Container();
-  //  }
-//
-  //  return Row(
-  //    children: [
-  //      Container(
-  //        width: 47,
-  //        height: 47,
-  //        margin: const EdgeInsets.only(right: 4.2),
-  //        padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 13),
-  //        decoration: BoxDecoration(
-  //            color: AppColors.color8BA1BE.withOpacity(0.2),
-  //            borderRadius: BorderRadius.circular(12)),
-  //        child: mainIcon,
-  //      ),
-  //      Expanded(
-  //        child: Column(
-  //          crossAxisAlignment: CrossAxisAlignment.stretch,
-  //          children: [
-  //            Text(
-  //              '${cubit.getAssetDetailsById(order.baseAsset).symbol}/${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
-  //              style: tsS15W500CFF,
-  //            ),
-  //            SizedBox(height: 1),
-  //            Text(
-  //              DateFormat("hh:mm:ss aa").format(order.timestamp).toUpperCase(),
-  //              style: tsS13W400CFFOP60.copyWith(color: AppColors.colorABB2BC),
-  //            ),
-  //          ],
-  //        ),
-  //      ),
-  //      Column(
-  //        crossAxisAlignment: CrossAxisAlignment.end,
-  //        children: [
-  //          Row(
-  //            children: [
-  //              Text(
-  //                '${order.amount} ${cubit.getAssetDetailsById(order.baseAsset).symbol}',
-  //                style: tsS14W500CFF.copyWith(
-  //                  color: order.orderSide == EnumBuySell.buy
-  //                      ? AppColors.color0CA564
-  //                      : AppColors.colorE6007A,
-  //                ),
-  //              ),
-  //              Padding(
-  //                padding: const EdgeInsets.only(
-  //                  left: 8.0,
-  //                  right: 4.0,
-  //                ),
-  //                child: arrowIcon,
-  //              ),
-  //              Text(
-  //                '${double.parse(order.amount) * double.parse(order.price)} ${cubit.getAssetDetailsById(order.quoteAsset).symbol}',
-  //                style: tsS14W500CFF,
-  //              ),
-  //            ],
-  //          ),
-  //        ],
-  //      ),
-  //    ],
-  //  );
-  //}
-}
-
-/// The item widget for the top menu
-/// [_EnumMenus] are represented in this widget
-class _ThisMenuItemWidget extends StatelessWidget {
-  const _ThisMenuItemWidget({
-    required this.menu,
-  });
-
-  final _EnumMenus menu;
-
-  @override
-  Widget build(BuildContext context) {
-    String text;
-    String svgAssets;
-    switch (menu) {
-      case _EnumMenus.deposit:
-        text = "Deposit";
-        svgAssets = "Deposit".asAssetSvg();
-
-        break;
-      case _EnumMenus.withdraw:
-        text = "Withdraw";
-        svgAssets = "Withdraw".asAssetSvg();
-        break;
-      case _EnumMenus.trade:
-        text = "Trade";
-        svgAssets = "trade_selected".asAssetSvg();
-        break;
-    }
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.color2E303C.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: <BoxShadow>[bsDefault],
-      ),
-      padding: const EdgeInsets.fromLTRB(0, 17, 0.0, 21),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              width: 47,
-              height: 47,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 9.0, horizontal: 12),
-              decoration: BoxDecoration(
-                  color: AppColors.color8BA1BE.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12)),
-              child: SvgPicture.asset(
-                svgAssets,
-              ),
-            ),
-          ),
-          SizedBox(height: 36),
-          Text(text, style: tsS16W500CFF),
-        ],
-      ),
-    );
-  }
 }
 
 /// The very top top widget includes the icon, name, value, price, etc
 class _TopCoinTitleWidget extends StatelessWidget {
-  const _TopCoinTitleWidget({required this.tokenId});
+  const _TopCoinTitleWidget({required this.asset});
 
-  final String tokenId;
+  final AssetEntity asset;
 
   @override
   Widget build(BuildContext context) {
@@ -816,7 +589,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
               height: 52,
               padding: const EdgeInsets.all(3),
               child: Image.asset(
-                TokenUtils.tokenIdToAssetImg(tokenId),
+                TokenUtils.tokenIdToAssetImg(asset.assetId),
                 fit: BoxFit.contain,
               ),
             ),
@@ -827,75 +600,38 @@ class _TopCoinTitleWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          double.parse(state.free.getBalance(tokenId))
+                          double.parse(state.free.getBalance(asset.assetId))
                               .toStringAsFixed(2),
                           style: tsS25W500CFF,
-                        ),
-                        SizedBox(height: 1),
-                        Row(
-                          children: [
-                            Text(
-                              '~\$76.12',
-                              style: tsS15W400CFF.copyWith(
-                                  color: AppColors.colorABB2BC),
-                            ),
-                            SizedBox(width: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.color0CA564,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 1.5,
-                                horizontal: 3.5,
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'gain_graph'.asAssetSvg(),
-                                    width: 8,
-                                    height: 7,
-                                    color: AppColors.colorFFFFFF,
-                                  ),
-                                  SizedBox(width: 2),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: "12.57",
-                                          style: tsS13W600CFF,
-                                        ),
-                                        TextSpan(
-                                          text: "%",
-                                          style: tsS13W600CFF.copyWith(
-                                              fontSize: 9),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     )
                   : _orderBalanceShimmerWidget(),
             ),
             if (state is BalanceLoaded)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$42.50',
-                    style: tsS13W600CFF,
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.colorE6007A,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                alignment: Alignment.center,
+                child: buildInkWell(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 6,
+                      horizontal: 12,
+                    ),
+                    child: Text(
+                      "Withdraw",
+                      style: tsS14W600CFF,
+                    ),
                   ),
-                  SizedBox(height: 02),
-                  Text(
-                    'Market Price',
-                    style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
+                  onTap: () => Coordinator.goToCoinWithdrawScreen(
+                    asset: asset,
+                    balanceCubit: context.read<BalanceCubit>(),
                   ),
-                ],
+                ),
               ),
           ],
         ),

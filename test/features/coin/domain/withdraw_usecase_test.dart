@@ -12,14 +12,16 @@ void main() {
   late _CoinRepositoryMock _repository;
   late String asset;
   late double amount;
-  late String address;
+  late String proxyAddress;
+  late String mainAddress;
 
   setUp(() {
     _repository = _CoinRepositoryMock();
     _usecase = WithdrawUseCase(coinRepository: _repository);
     asset = 'PDEX';
     amount = 10.0;
-    address = 'addressTest';
+    proxyAddress = 'proxyAddressTest';
+    mainAddress = 'mainAddressTest';
   });
 
   group('WithdrawUseCase tests', () {
@@ -27,22 +29,33 @@ void main() {
       "must successfully withdraw an amount of a given asset",
       () async {
         // arrange
-        when(() => _repository.withdraw(
-              any(),
-              any(),
-              any(),
-            )).thenAnswer(
-          (_) async => Right('success'),
+        when(
+          () => _repository.withdraw(
+            any(),
+            any(),
+            any(),
+            any(),
+          ),
+        ).thenAnswer(
+          (_) async => Right(null),
         );
         // act
         final result = await _usecase(
+          proxyAddress: proxyAddress,
+          mainAddress: mainAddress,
           amount: amount,
           asset: asset,
-          address: address,
         );
         // assert
         expect(result.isRight(), true);
-        verify(() => _repository.withdraw(any(), any(), any())).called(1);
+        verify(
+          () => _repository.withdraw(
+            any(),
+            any(),
+            any(),
+            any(),
+          ),
+        ).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );
@@ -51,19 +64,34 @@ void main() {
       "must fail to withdraw an amount of a given asset",
       () async {
         // arrange
-        when(() => _repository.withdraw(any(), any(), any())).thenAnswer(
+        when(
+          () => _repository.withdraw(
+            any(),
+            any(),
+            any(),
+            any(),
+          ),
+        ).thenAnswer(
           (_) async => Left(ApiError(message: '')),
         );
         // act
         final result = await _usecase(
+          proxyAddress: proxyAddress,
+          mainAddress: mainAddress,
           amount: amount,
           asset: asset,
-          address: address,
         );
         // assert
 
         expect(result.isLeft(), true);
-        verify(() => _repository.withdraw(any(), any(), any())).called(1);
+        verify(
+          () => _repository.withdraw(
+            any(),
+            any(),
+            any(),
+            any(),
+          ),
+        ).called(1);
         verifyNoMoreInteractions(_repository);
       },
     );

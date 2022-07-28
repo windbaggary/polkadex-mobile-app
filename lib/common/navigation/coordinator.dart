@@ -64,13 +64,13 @@ abstract class Coordinator {
   }
 
   static void goToCoinWithdrawScreen({
-    required String tokenId,
+    required AssetEntity asset,
     required BalanceCubit balanceCubit,
   }) {
     _navigationKey.currentState?.pushNamed(
       Routes.coinWithdrawScreen,
       arguments: {
-        'tokenId': tokenId,
+        'asset': asset,
         'balanceCubit': balanceCubit,
       },
     );

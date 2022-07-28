@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'package:dartz/dartz.dart';
+import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/domain/repositories/icoin_repository.dart';
@@ -11,26 +11,25 @@ class CoinRepository implements ICoinRepository {
   final CoinRemoteDatasource _coinRemoteDatasource;
 
   @override
-  Future<Either<ApiError, String>> withdraw(
+  Future<Either<ApiError, void>> withdraw(
+    String mainAddress,
+    String proxyAddress,
     String asset,
     double amount,
-    String address,
   ) async {
     try {
-      final result = await _coinRemoteDatasource.withdraw(
-        asset,
+      await _coinRemoteDatasource.withdraw(
+        mainAddress,
+        proxyAddress,
+        asset == 'PDEX' ? '' : asset,
         amount,
-        address,
       );
-      final Map<String, dynamic> body = jsonDecode(result.body);
 
-      if (result.statusCode == 200 && body.containsKey('Fine')) {
-        return Right(body['Fine']);
-      } else {
-        return Left(ApiError(message: body['Bad'] ?? result.reasonPhrase));
-      }
-    } catch (_) {
-      return Left(ApiError(message: 'Unexpected error. Please try again'));
+      return Right(null);
+    } on RpcException catch (rpcError) {
+      return Left(ApiError(message: rpcError.message));
+    } catch (e) {
+      return Left(ApiError(message: e.toString()));
     }
   }
 }
