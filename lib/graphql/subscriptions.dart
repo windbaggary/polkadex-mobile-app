@@ -13,7 +13,8 @@ String get onOrderUpdate => /* GraphQL */ '''
 subscription OnOrderUpdate(\$main_account: String!) {
 onOrderUpdate(main_account: \$main_account) {
 main_account
-id
+client_order_id
+exchange_order_id
 time
 m
 side

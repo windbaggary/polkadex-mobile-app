@@ -6,6 +6,7 @@ abstract class OrderEntity extends Equatable {
   const OrderEntity({
     required this.mainAccount,
     required this.tradeId,
+    required this.clientId,
     required this.time,
     required this.baseAsset,
     required this.quoteAsset,
@@ -21,6 +22,7 @@ abstract class OrderEntity extends Equatable {
 
   final String mainAccount;
   final String tradeId;
+  final String clientId;
   final DateTime time;
   final String baseAsset;
   final String quoteAsset;
@@ -67,6 +69,7 @@ abstract class OrderEntity extends Equatable {
   List<Object?> get props => [
         mainAccount,
         tradeId,
+        clientId,
         time,
         baseAsset,
         quoteAsset,

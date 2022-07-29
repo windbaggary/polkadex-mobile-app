@@ -142,7 +142,8 @@ order_id: \$order_id
 market: \$market
 ) {
 main_account
-id
+client_order_id
+exchange_order_id
 time
 m
 side
@@ -174,7 +175,8 @@ nextToken: \$nextToken
 ) {
 items {
 main_account
-id
+client_order_id
+exchange_order_id
 time
 m
 side
@@ -203,7 +205,8 @@ nextToken: \$nextToken
 ) {
 items {
 main_account
-id
+client_order_id
+exchange_order_id
 time
 m
 side

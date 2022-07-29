@@ -6,6 +6,7 @@ class OrderModel extends OrderEntity {
   const OrderModel({
     required String mainAccount,
     required String tradeId,
+    required String clientId,
     required DateTime time,
     required String baseAsset,
     required String quoteAsset,
@@ -20,6 +21,7 @@ class OrderModel extends OrderEntity {
   }) : super(
           mainAccount: mainAccount,
           tradeId: tradeId,
+          clientId: clientId,
           time: time,
           baseAsset: baseAsset,
           quoteAsset: quoteAsset,
@@ -38,7 +40,8 @@ class OrderModel extends OrderEntity {
 
     return OrderModel(
       mainAccount: map['main_account'],
-      tradeId: map['id'],
+      tradeId: map['exchange_order_id'],
+      clientId: map['client_order_id'],
       time: DateTime.parse(map['time']),
       baseAsset: assets[0],
       quoteAsset: assets[1],
@@ -58,6 +61,7 @@ class OrderModel extends OrderEntity {
   OrderModel copyWith({
     String? mainAccount,
     String? tradeId,
+    String? clientId,
     DateTime? time,
     String? baseAsset,
     String? quoteAsset,
@@ -73,6 +77,7 @@ class OrderModel extends OrderEntity {
     return OrderModel(
       mainAccount: mainAccount ?? this.mainAccount,
       tradeId: tradeId ?? this.tradeId,
+      clientId: clientId ?? this.clientId,
       time: time ?? this.time,
       baseAsset: baseAsset ?? this.baseAsset,
       quoteAsset: quoteAsset ?? this.quoteAsset,

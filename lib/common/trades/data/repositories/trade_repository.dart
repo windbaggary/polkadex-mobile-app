@@ -49,6 +49,7 @@ class TradeRepository implements ITradeRepository {
       final newOrder = OrderModel(
         mainAccount: mainAddress,
         tradeId: result,
+        clientId: '',
         qty: amount,
         price: price,
         orderSide: orderSide,
