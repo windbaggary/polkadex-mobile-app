@@ -78,7 +78,8 @@ void main() {
         "items": [
           {
             "main_account": "fjwhuerjghwsejdfkweldhjgea",
-            "id": "239795334492173596420427136507382475609",
+            "client_order_id": "239795334492173596420427136507382475609",
+            "exchange_order_id": "239795334492173596420427136507382475609",
             "time": "2022-07-05T18:44:43.989964791+00:00",
             "m": "PDEX-1",
             "side": "Ask",

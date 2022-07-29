@@ -37,6 +37,7 @@ void main() {
     order = order = OrderModel(
       mainAccount: mainAddress,
       tradeId: '0',
+      clientId: '',
       qty: qty,
       price: price,
       orderSide: orderSide,
