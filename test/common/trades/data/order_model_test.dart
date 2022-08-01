@@ -10,6 +10,7 @@ void main() {
     tOrder = OrderModel(
       mainAccount: 'asdfghj',
       tradeId: '0',
+      clientId: '',
       qty: "1",
       price: "50.0",
       orderSide: EnumBuySell.buy,
