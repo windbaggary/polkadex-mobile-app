@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -262,70 +263,68 @@ class _BalanceTabViewState extends State<BalanceTabView>
   }
 
   Widget _buildSelectToken() {
+    final availableAssets = context.read<MarketAssetCubit>().mapAvailableAssets;
+
     return Padding(
-      padding: EdgeInsets.all(12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
+      padding: EdgeInsets.all(6),
+      child: Padding(
+        padding: EdgeInsets.all(12),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
+            ),
           ),
-        ),
-        padding: EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            BlocBuilder<MarketAssetCubit, MarketAssetState>(
-              builder: (context, state) => Container(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.asset(
-                    TokenUtils.tokenIdToAssetImg(context
-                        .read<MarketAssetCubit>()
-                        .currentBaseAssetDetails
-                        .assetId),
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
-                builder: (context, state) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
-                      style: tsS20W600CFF.copyWith(color: Colors.black),
+          padding: EdgeInsets.all(8),
+          child: DropdownButton<AssetEntity>(
+            items: availableAssets.values
+                .map(
+                  (asset) => DropdownMenuItem<AssetEntity>(
+                    child: Container(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            TokenUtils.tokenIdToAssetImg(asset.assetId),
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(width: 8),
+                          RichText(
+                            text: TextSpan(
+                              style: tsS20W400CFF.copyWith(color: Colors.black),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: asset.name,
+                                ),
+                                TextSpan(
+                                    text: ' (${asset.symbol})',
+                                    style: tsS20W600CFF.copyWith(
+                                        color: Colors.black)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      context
-                          .read<MarketAssetCubit>()
-                          .currentBaseAssetDetails
-                          .name,
-                      style:
-                          tsS14W400CFF.copyWith(color: AppColors.color1F1F1F),
-                    ),
-                  ],
-                ),
-              ),
+                    value: asset,
+                  ),
+                )
+                .toList(),
+            value: availableAssets.values.first,
+            style: tsS16W600CFF,
+            dropdownColor: Colors.white,
+            underline: Container(),
+            onChanged: (value) {},
+            isExpanded: true,
+            icon: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: Colors.black,
+              size: 16,
             ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: Colors.black,
-                  size: 16,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
