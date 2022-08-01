@@ -5,7 +5,6 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/common/widgets/check_box_widget.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -13,7 +12,6 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
-import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
@@ -72,10 +70,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: 24),
-                      TopBalanceWidget(),
-                      SizedBox(height: 24),
-                      _ThisHoldingWidget(),
+                      _buildSelectToken(),
                       InkWell(
                         onTap: () {
                           final summaryVisProvider =
@@ -92,7 +87,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                           child: Column(
                             children: [
                               Text(
-                                'Summary',
+                                'Summary of Trades',
                                 style: tsS18W600CFF,
                                 textAlign: TextAlign.center,
                               ),
@@ -206,101 +201,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                 width: 51,
                               ),
                             ),
-                            Center(
-                              child: SizedBox(
-                                height: 35,
-                                child: DropdownButton<String>(
-                                  items: ['Main Wallet', 'Spot', 'Margin']
-                                      .map((e) => DropdownMenuItem<String>(
-                                            child: Text(
-                                              e,
-                                              style: tsS20W600CFF,
-                                            ),
-                                            value: e,
-                                          ))
-                                      .toList(),
-                                  value: 'Main Wallet',
-                                  style: tsS20W600CFF,
-                                  underline: Container(),
-                                  onChanged: (value) {},
-                                  isExpanded: false,
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.colorFFFFFF,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                bottom: 12,
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: Row(
-                                children: [
-                                  Consumer<_ThisProvider>(
-                                    builder: (context, thisProvider, child) =>
-                                        CheckBoxWidget(
-                                      checkColor: AppColors.colorFFFFFF,
-                                      backgroundColor: AppColors.colorE6007A,
-                                      isChecked:
-                                          thisProvider.isHideSmallBalance,
-                                      isBackTransparentOnUnchecked: true,
-                                      onTap: (val) =>
-                                          thisProvider.isHideSmallBalance = val,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Hide small balances',
-                                    style: tsS14W400CFF,
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          12, 12, 6, 12),
-                                      child: Opacity(
-                                        opacity: 1.0,
-                                        child: Text(
-                                          'Tokens',
-                                          style: tsS15W600CFF,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      final thisProvider =
-                                          context.read<_ThisProvider>();
-                                      thisProvider.isHideFiat =
-                                          !thisProvider.isHideFiat;
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          6, 12, 12, 12),
-                                      child: Consumer<_ThisProvider>(
-                                        builder:
-                                            (context, thisProvider, child) =>
-                                                Opacity(
-                                          opacity: thisProvider.isHideFiat
-                                              ? 1.0
-                                              : 0.3,
-                                          child: child,
-                                        ),
-                                        child: Text(
-                                          'Fiat',
-                                          style: tsS15W600CFF,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -360,97 +260,73 @@ class _BalanceTabViewState extends State<BalanceTabView>
     context.read<HomeScrollNotifProvider>().scrollOffset =
         _scrollController.offset;
   }
-}
 
-/// The holding row widget handles the click event for graph
-class _ThisHoldingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildSelectToken() {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 21,
-        right: 21,
-      ),
-      child: Row(
-        children: [
-          Text(
-            'Holding: ',
-            style: tsS13W500CFF.copyWith(
-              color: AppColors.colorABB2BC,
-            ),
+      padding: EdgeInsets.all(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
           ),
-          DropdownButton<String>(
-            items: ['24 hour', '1 week', '1 month']
-                .map((e) => DropdownMenuItem<String>(
-                      child: Text(
-                        e,
-                        style: tsS13W500CFF,
-                      ),
-                      value: e,
-                    ))
-                .toList(),
-            value: '24 hour',
-            style: tsS13W500CFF,
-            underline: Container(),
-            onChanged: (value) {},
-            isExpanded: false,
-            icon: Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: AppColors.colorFFFFFF,
-              size: 16,
-            ),
-          ),
-          // Text(
-          //   '24 hour ',
-          //   style: tsS13W500CFF,
-          // ),
-          Spacer(),
-          Text(
-            'Change ',
-            style: tsS13W500CFF.copyWith(
-              color: AppColors.colorABB2BC,
-            ),
-          ),
-          Text(
-            '+\$224',
-            style: tsS13W500CFF,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: AppColors.color0CA564,
-            ),
-            margin: const EdgeInsets.only(left: 8),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 4.5,
-              vertical: 2.5,
-            ),
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  'gain_graph'.asAssetSvg(),
-                  width: 8,
-                  height: 8,
-                ),
-                SizedBox(width: 2),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '52.47',
-                        style: tsS11W600CFF,
-                      ),
-                      TextSpan(
-                        text: '%',
-                        style: tsS8W600CFF,
-                      ),
-                    ],
+        ),
+        padding: EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            BlocBuilder<MarketAssetCubit, MarketAssetState>(
+              builder: (context, state) => Container(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    TokenUtils.tokenIdToAssetImg(context
+                        .read<MarketAssetCubit>()
+                        .currentBaseAssetDetails
+                        .assetId),
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
+                builder: (context, state) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
+                      style: tsS20W600CFF.copyWith(color: Colors.black),
+                    ),
+                    Text(
+                      context
+                          .read<MarketAssetCubit>()
+                          .currentBaseAssetDetails
+                          .name,
+                      style:
+                          tsS14W400CFF.copyWith(color: AppColors.color1F1F1F),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Colors.black,
+                  size: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
