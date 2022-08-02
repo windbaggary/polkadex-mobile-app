@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/common/configs/app_config.dart';
+import 'package:intl/intl.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
+import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
+import 'package:polkadex/features/landing/presentation/widgets/trade_item_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:provider/provider.dart';
 
@@ -71,6 +71,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                     children: [
                       _buildSelectTokenWidget(assetEntity: state.assetSelected),
                       _buildBalanceWidget(),
+                      SizedBox(height: 12),
                       InkWell(
                         onTap: () {
                           final summaryVisProvider =
@@ -82,140 +83,134 @@ class _BalanceTabViewState extends State<BalanceTabView>
 
                           summaryVisProvider.toggleVisible();
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Summary of Trades',
-                                style: tsS18W600CFF,
-                                textAlign: TextAlign.center,
-                              ),
-                              RotationTransition(
-                                turns: Tween(begin: 0.0, end: 0.5)
-                                    .animate(_controller),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: AppColors.colorFFFFFF,
-                                  size: 16,
+                        child: state.assetSelected != null
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Summary of Trades',
+                                      style: tsS18W600CFF,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
                                 ),
                               )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Consumer<_ThisIsChartVisibleProvider>(
-                        builder: (context, isChartVisbileProvider, _) =>
-                            AnimatedSize(
-                          duration: AppConfigs.animDurationSmall,
-                          alignment: Alignment.topCenter,
-                          child: isChartVisbileProvider.isChartVisible
-                              ? Column(
-                                  children: [
-                                    _ThisGraphHeadingWidget(),
-                                    SizedBox(height: 8),
-                                    SizedBox(
-                                      height: 250,
-                                      child:
-                                          Consumer<BalanceChartDummyProvider>(
-                                        builder: (context, provider, child) =>
-                                            AppLineChartWidget(
-                                          data: provider.list,
-                                          options: AppLineChartOptions(
-                                            yLabelCount: 3,
-                                            yAxisTopPaddingRatio: 0.05,
-                                            yAxisBottomPaddingRatio: 0.15,
-                                            chartScale: provider.chartScale,
-                                            lineColor: AppColors.colorE6007A,
-                                            yAxisLabelPrefix: "\$ ",
-                                            areaGradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: <Color>[
-                                                AppColors.colorE6007A
-                                                    .withOpacity(0.50),
-                                                AppColors.color8BA1BE
-                                                    .withOpacity(0.0),
-                                              ],
-                                              // stops: [0.0, 0.40],
-                                            ),
-                                            gridColor: AppColors.color8BA1BE
-                                                .withOpacity(0.15),
-                                            gridStroke: 1,
-                                            yLabelTextStyle: TextStyle(
-                                              fontSize: 08,
-                                              fontFamily: "WorkSans",
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey.shade400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    _ThisGraphOptionWidget(),
-                                    SizedBox(height: 30),
-                                  ],
-                                )
-                              : Container(),
-                        ),
+                            : Container(),
                       ),
                     ],
                   ),
                 ),
               ];
             },
-            body: Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: AppColors.color2E303C,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 30,
-                    offset: Offset(0.0, 20.0),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
-              child: CustomScrollView(
-                slivers: [
-                  SliverPersistentHeader(
-                    floating: false,
-                    pinned: true,
-                    delegate: _SliverPersistentHeaderDelegate(
-                      height: 115,
-                      child: Container(
-                        color: AppColors.color2E303C,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Center(
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 13),
-                                decoration: BoxDecoration(
-                                  color: AppColors.color1C2023,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                height: 3,
-                                width: 51,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Container(),
-                  ),
-                ],
-              ),
-            ),
+            body: state.assetSelected != null
+                ? _buildTradeList(asset: state.assetSelected!)
+                : Container(),
           );
         },
       ),
     );
+  }
+
+  Widget _buildTradeList({required AssetEntity asset}) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: AppColors.color2E303C,
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 30,
+                offset: Offset(0.0, 20.0),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
+          child: BlocBuilder<TradeHistoryCubit, TradeHistoryState>(
+            builder: (context, state) {
+              if (state is TradeHistoryLoaded) {
+                return state.trades.isEmpty
+                    ? Padding(
+                        padding: EdgeInsets.fromLTRB(18, 26.0, 18, 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 36, bottom: 36),
+                              child: Text(
+                                "There are no transactions",
+                                style: tsS16W500CABB2BC,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: state.trades.length,
+                        padding: const EdgeInsets.only(top: 13),
+                        itemBuilder: (context, index) {
+                          return TradeItemWidget(
+                            tradeItem: state.trades[index],
+                            dateTitle: _getDateTitle(
+                                state.trades[index].time,
+                                index > 0
+                                    ? state.trades[index - 1].time
+                                    : null),
+                          );
+                        },
+                      );
+              }
+
+              if (state is TradeHistoryError) {
+                return Container(
+                  height: 50,
+                  child: PolkadexErrorRefreshWidget(
+                    onRefresh: () =>
+                        context.read<TradeHistoryCubit>().getAccountTrades(
+                              asset,
+                              context.read<AccountCubit>().mainAccountAddress,
+                            ),
+                  ),
+                );
+              }
+
+              return OrderHistoryShimmerWidget();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  String? _getDateTitle(DateTime date, DateTime? previousDate) {
+    final dateString = _getDateString(date);
+    final datePreviousString =
+        previousDate != null ? _getDateString(previousDate) : '';
+
+    return dateString != datePreviousString ? dateString : null;
+  }
+
+  String _getDateString(DateTime date) {
+    final today = DateTime.now();
+    if (date.day == today.day &&
+        date.month == today.month &&
+        date.year == today.year) {
+      return "Today";
+    } else if (date.day == today.day - 1 &&
+        date.month == today.month &&
+        date.year == today.year) {
+      return "Yesterday";
+    } else {
+      return DateFormat("dd MMMM, yyyy").format(date);
+    }
   }
 
   void _onScrollListener() {
@@ -294,133 +289,52 @@ class _BalanceTabViewState extends State<BalanceTabView>
           state is BalanceLoaded && selectedAsset != null
               ? Padding(
                   padding: EdgeInsets.all(6),
-                  child: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          'Free: ${state.free[selectedAsset.assetId]}',
-                          style: tsS16W600CFF,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              'Free: ${state.free[selectedAsset.assetId]}',
+                              style: tsS16W600CFF,
+                            ),
+                            Text(
+                              'Reserved: ${state.reserved[selectedAsset.assetId]}',
+                              style: tsS16W600CFF,
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Reserved: ${state.reserved[selectedAsset.assetId]}',
-                          style: tsS16W600CFF,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.colorE6007A,
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                      ],
-                    ),
+                        child: buildInkWell(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 6,
+                              horizontal: 12,
+                            ),
+                            child: Text(
+                              "Withdraw",
+                              style: tsS14W600CFF,
+                            ),
+                          ),
+                          onTap: () => Coordinator.goToCoinWithdrawScreen(
+                            asset: selectedAsset,
+                            balanceCubit: context.read<BalanceCubit>(),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 )
               : Container(),
-    );
-  }
-}
-
-/// The heading part of the graph.
-class _ThisGraphHeadingWidget extends StatelessWidget {
-  Widget _buildItemWidget(
-      {required String? imgAsset,
-      required String title,
-      required String value}) {
-    return Row(
-      children: [
-        Container(
-          width: 23,
-          height: 23,
-          decoration: BoxDecoration(
-            color: (imgAsset == null)
-                ? AppColors.color8BA1BE.withOpacity(0.20)
-                : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          margin: const EdgeInsets.only(right: 6),
-          padding: const EdgeInsets.all(2),
-          child: (imgAsset == null) ? null : Image.asset(imgAsset),
-        ),
-        Expanded(
-            child: Text(
-          title,
-          style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
-        )),
-        Text(
-          value,
-          style: tsS12W500CFF,
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(21, 0, 21, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_1.png'.asAssetImg(),
-                                title: 'BTC',
-                                value: "60%")),
-                        Spacer(),
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_2.png'.asAssetImg(),
-                                title: 'DEX',
-                                value: "22%")),
-                        Spacer(),
-                      ],
-                    ),
-                    SizedBox(height: 7),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_3.png'.asAssetImg(),
-                                title: 'USDT',
-                                value: "10%")),
-                        Spacer(),
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset: null, title: 'Others', value: "8%")),
-                        Spacer(),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () => Coordinator.goToBalanceSummaryScreen(),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.colorE6007A,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset('pie-chart-18'.asAssetSvg()),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
@@ -439,98 +353,5 @@ class _ThisIsChartVisibleProvider extends ChangeNotifier {
   void toggleVisible() {
     _isChartVisible = !_isChartVisible;
     notifyListeners();
-  }
-}
-
-/// The bottom option menu unnder the graph
-class _ThisGraphOptionWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(25, 10, 16, 14),
-      child: Wrap(
-        children: EnumBalanceChartDataTypes.values
-            .map<Widget>((item) => Consumer<BalanceChartDummyProvider>(
-                  builder: (context, appChartProvider, child) {
-                    String text;
-                    switch (item) {
-                      case EnumBalanceChartDataTypes.hour:
-                        text = "24h";
-                        break;
-                      case EnumBalanceChartDataTypes.week:
-                        text = "7d";
-                        break;
-                      case EnumBalanceChartDataTypes.month:
-                        text = "1m";
-                        break;
-                      case EnumBalanceChartDataTypes.threeMonth:
-                        text = "3m";
-
-                        break;
-                      case EnumBalanceChartDataTypes.sixMonth:
-                        text = "6m";
-                        break;
-                      case EnumBalanceChartDataTypes.year:
-                        text = "1y";
-                        break;
-                      case EnumBalanceChartDataTypes.all:
-                        text = "All";
-                        break;
-                    }
-                    return InkWell(
-                      onTap: () {
-                        appChartProvider.balanceChartDataType = item;
-                      },
-                      child: AnimatedContainer(
-                        duration: AppConfigs.animDurationSmall,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 11.5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: item == appChartProvider.balanceChartDataType
-                              ? AppColors.colorE6007A
-                              : null,
-                        ),
-                        child: Text(
-                          text,
-                          style: item == appChartProvider.balanceChartDataType
-                              ? tsS13W600CFF
-                              : tsS12W400CFF.copyWith(
-                                  color: AppColors.colorABB2BC),
-                        ),
-                      ),
-                    );
-                  },
-                ))
-            .toList(),
-      ),
-    );
-  }
-}
-
-/// The sliver widget to maintain the wallet heading persistent on scroll
-class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-  final double height;
-
-  _SliverPersistentHeaderDelegate({
-    required this.child,
-    required this.height,
-  }) : super();
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return child;
-  }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(covariant _SliverPersistentHeaderDelegate oldDelegate) {
-    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
