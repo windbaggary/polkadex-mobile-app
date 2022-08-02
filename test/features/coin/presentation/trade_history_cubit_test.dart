@@ -104,8 +104,13 @@ void main() {
           );
         },
         expect: () => [
-          TradeHistoryLoading(),
-          TradeHistoryLoaded(trades: [trade]),
+          TradeHistoryLoading(
+            assetSelected: asset,
+          ),
+          TradeHistoryLoaded(
+            assetSelected: asset,
+            trades: [trade],
+          ),
         ],
       );
 
@@ -140,8 +145,13 @@ void main() {
           );
         },
         expect: () => [
-          TradeHistoryLoading(),
-          TradeHistoryError(message: 'error'),
+          TradeHistoryLoading(
+            assetSelected: asset,
+          ),
+          TradeHistoryError(
+            assetSelected: asset,
+            message: 'error',
+          ),
         ],
       );
     },

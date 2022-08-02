@@ -7,6 +7,7 @@ import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -69,6 +70,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _buildSelectTokenWidget(assetEntity: state.assetSelected),
+                      _buildBalanceWidget(),
                       InkWell(
                         onTap: () {
                           final summaryVisProvider =
@@ -281,6 +283,35 @@ class _BalanceTabViewState extends State<BalanceTabView>
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBalanceWidget() {
+    final selectedAsset = context.read<TradeHistoryCubit>().state.assetSelected;
+
+    return BlocBuilder<BalanceCubit, BalanceState>(
+      builder: (context, state) =>
+          state is BalanceLoaded && selectedAsset != null
+              ? Padding(
+                  padding: EdgeInsets.all(6),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'Free: ${state.free[selectedAsset.assetId]}',
+                          style: tsS16W600CFF,
+                        ),
+                        Text(
+                          'Reserved: ${state.reserved[selectedAsset.assetId]}',
+                          style: tsS16W600CFF,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Container(),
     );
   }
 }
