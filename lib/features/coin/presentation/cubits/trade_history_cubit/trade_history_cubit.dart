@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
@@ -22,10 +23,10 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
   List<AccountTradeEntity> _allTrades = [];
 
   Future<void> getAccountTrades(
-    String asset,
+    AssetEntity asset,
     String address,
   ) async {
-    emit(TradeHistoryLoading());
+    emit(TradeHistoryLoading(assetSelected: asset));
 
     final result = await _getTradesUseCase(
       address: address,
@@ -41,11 +42,15 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
         if (currentState is TradeHistoryLoaded) {
           final newList = [newTrade, ...currentState.trades];
 
-          emit(TradeHistoryLoaded(trades: newList));
+          emit(TradeHistoryLoaded(
+            assetSelected: asset,
+            trades: newList,
+          ));
         }
       },
       onMsgError: (error) => emit(
         TradeHistoryError(
+          assetSelected: asset,
           message: error.toString(),
         ),
       ),
@@ -54,20 +59,22 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     result.fold(
       (error) => emit(
         TradeHistoryError(
+          assetSelected: asset,
           message: error.message,
         ),
       ),
       (trades) {
         _allTrades = trades.where((trade) {
           if (trade is OrderEntity) {
-            return trade.asset == asset || trade.asset == asset;
+            return trade.asset == asset.assetId || trade.asset == asset.assetId;
           } else {
-            return trade.asset == asset;
+            return trade.asset == asset.assetId;
           }
         }).toList();
         _allTrades.sort((a, b) => b.time.compareTo(a.time));
 
         emit(TradeHistoryLoaded(
+          assetSelected: asset,
           trades: _allTrades,
         ));
       },

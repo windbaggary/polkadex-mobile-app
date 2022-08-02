@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:polkadex/common/market_asset/data/models/asset_model.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
 import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
@@ -21,13 +23,14 @@ void main() {
   late _MockGetAccountTradesUpdatesUseCase _mockGetAccountTradesUpdatesUseCase;
   late TradeHistoryCubit cubit;
   late String mainAccount;
-  late String asset;
+  late String assetId;
   late DateTime time;
   late String status;
   late String amount;
   late String fee;
   late String address;
   late AccountTradeEntity trade;
+  late AssetEntity asset;
 
   setUp(() {
     _mockGetAccountTradesUsecase = _MockGetAccountTradesUsecase();
@@ -38,7 +41,7 @@ void main() {
         getAccountTradesUpdatesUseCase: _mockGetAccountTradesUpdatesUseCase);
 
     mainAccount = '786653432';
-    asset = "0";
+    assetId = "0";
     time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
     status = 'OPEN';
     amount = "100.0";
@@ -47,11 +50,19 @@ void main() {
     trade = AccountTradeModel(
       mainAccount: mainAccount,
       txnType: EnumTradeTypes.deposit,
-      asset: asset,
+      asset: assetId,
       amount: amount,
       fee: fee,
       status: status,
       time: time,
+    );
+    asset = AssetModel(
+      assetId: assetId,
+      deposit: '',
+      name: 'asset',
+      symbol: 'ASS',
+      decimals: '22',
+      isFrozen: false,
     );
   });
 
@@ -88,7 +99,7 @@ void main() {
         },
         act: (cubit) async {
           await cubit.getAccountTrades(
-            '0',
+            asset,
             address,
           );
         },
@@ -124,7 +135,7 @@ void main() {
         },
         act: (cubit) async {
           await cubit.getAccountTrades(
-            '0',
+            asset,
             address,
           );
         },

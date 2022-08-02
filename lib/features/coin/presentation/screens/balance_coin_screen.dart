@@ -48,7 +48,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
     return BlocProvider(
       create: (_) => dependency<TradeHistoryCubit>()
         ..getAccountTrades(
-          widget.asset.assetId,
+          widget.asset,
           context.read<AccountCubit>().mainAccountAddress,
         ),
       child: MultiProvider(
@@ -356,7 +356,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                                   onRefresh: () => context
                                       .read<TradeHistoryCubit>()
                                       .getAccountTrades(
-                                        widget.asset.assetId,
+                                        widget.asset,
                                         context
                                             .read<AccountCubit>()
                                             .mainAccountAddress,

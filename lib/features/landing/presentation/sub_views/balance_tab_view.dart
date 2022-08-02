@@ -6,16 +6,15 @@ import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dar
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/features/landing/presentation/widgets/balance_item_shimmer_widget.dart';
-import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
-import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 18
@@ -54,14 +53,12 @@ class _BalanceTabViewState extends State<BalanceTabView>
       providers: [
         ChangeNotifierProvider<_ThisIsChartVisibleProvider>(
             create: (_) => _ThisIsChartVisibleProvider()),
-        ChangeNotifierProvider<_ThisProvider>(
-          create: (_) => _ThisProvider(),
-        ),
         ChangeNotifierProvider<BalanceChartDummyProvider>(
           create: (_) => BalanceChartDummyProvider(),
         ),
       ],
-      builder: (context, _) => BlocBuilder<BalanceCubit, BalanceState>(
+      builder: (context, _) =>
+          BlocBuilder<TradeHistoryCubit, TradeHistoryState>(
         builder: (context, state) {
           return NestedScrollView(
             controller: _scrollController,
@@ -71,7 +68,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _buildSelectToken(),
+                      _buildSelectTokenWidget(assetEntity: state.assetSelected),
                       InkWell(
                         onTap: () {
                           final summaryVisProvider =
@@ -208,45 +205,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: BlocBuilder<BalanceCubit, BalanceState>(
-                      builder: (context, state) {
-                        if (state is BalanceLoaded) {
-                          return ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 24),
-                            itemBuilder: (context, index) {
-                              String key = state.free.keys.elementAt(index);
-                              final asset = context
-                                  .read<MarketAssetCubit>()
-                                  .getAssetDetailsById(key);
-
-                              return InkWell(
-                                onTap: () =>
-                                    Coordinator.goToBalanceCoinPreviewScreen(
-                                  asset: asset,
-                                  balanceCubit: context.read<BalanceCubit>(),
-                                ),
-                                child: BalanceItemWidget(
-                                  tokenAcronym: asset.symbol,
-                                  tokenFullName: asset.name,
-                                  assetImg: TokenUtils.tokenIdToAssetImg(
-                                      asset.assetId),
-                                  amount: state.free.getBalance(key),
-                                ),
-                              );
-                            },
-                            itemCount: state.free.keys.length,
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                          );
-                        }
-
-                        if (state is BalanceLoading) {
-                          return BalanceItemShimmerWidget();
-                        }
-
-                        return Container();
-                      },
-                    ),
+                    child: Container(),
                   ),
                 ],
               ),
@@ -262,7 +221,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
         _scrollController.offset;
   }
 
-  Widget _buildSelectToken() {
+  Widget _buildSelectTokenWidget({required AssetEntity? assetEntity}) {
     final availableAssets = context.read<MarketAssetCubit>().mapAvailableAssets;
 
     return Padding(
@@ -292,20 +251,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                             fit: BoxFit.contain,
                           ),
                           SizedBox(width: 8),
-                          RichText(
-                            text: TextSpan(
-                              style: tsS20W400CFF.copyWith(color: Colors.black),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: asset.name,
-                                ),
-                                TextSpan(
-                                    text: ' (${asset.symbol})',
-                                    style: tsS20W600CFF.copyWith(
-                                        color: Colors.black)),
-                              ],
-                            ),
-                          ),
+                          Text('${asset.name} (${asset.symbol})'),
                         ],
                       ),
                     ),
@@ -313,11 +259,19 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   ),
                 )
                 .toList(),
-            value: availableAssets.values.first,
-            style: tsS16W600CFF,
+            value: assetEntity,
             dropdownColor: Colors.white,
             underline: Container(),
-            onChanged: (value) {},
+            style: tsS20W600CFF.copyWith(color: Colors.black),
+            hint: Text('Select an asset'),
+            onChanged: (selectedAsset) {
+              if (selectedAsset != null) {
+                context.read<TradeHistoryCubit>().getAccountTrades(
+                      selectedAsset,
+                      context.read<AccountCubit>().mainAccountAddress,
+                    );
+              }
+            },
             isExpanded: true,
             icon: Icon(
               Icons.keyboard_arrow_down_rounded,
@@ -457,37 +411,6 @@ class _ThisIsChartVisibleProvider extends ChangeNotifier {
   }
 }
 
-/// The provider to handle the list filter on this screen.
-class _ThisProvider extends ChangeNotifier {
-  bool _isHideSmallBalance = true;
-  bool _isHideFiat = false;
-
-  bool get isHideFiat => _isHideFiat;
-
-  bool get isHideSmallBalance => _isHideSmallBalance;
-
-  set isHideSmallBalance(bool val) {
-    _isHideSmallBalance = val;
-    notifyListeners();
-  }
-
-  set isHideFiat(bool val) {
-    _isHideFiat = val;
-    notifyListeners();
-  }
-
-  List<_ThisModel> get listCoins {
-    final list = List<_ThisModel>.from(_dummyList);
-    if (isHideFiat) {
-      list.removeWhere((e) => !e.iIsFiat);
-    }
-    if (isHideSmallBalance) {
-      list.removeWhere((e) => !e.isSmallBalance);
-    }
-    return list;
-  }
-}
-
 /// The bottom option menu unnder the graph
 class _ThisGraphOptionWidget extends StatelessWidget {
   @override
@@ -580,98 +503,3 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
     return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
-
-// Remove the dummy data below
-
-/// The model class for list item
-class _ThisModel {
-  final String imgAsset;
-  final String name;
-  final String code;
-  final String unit;
-  final double price;
-  final bool isFiat;
-
-  const _ThisModel({
-    required this.imgAsset,
-    required this.name,
-    required this.code,
-    required this.unit,
-    required this.price,
-    required this.isFiat,
-  });
-
-  bool get iIsFiat => isFiat;
-
-  bool get isSmallBalance => price < 100.0;
-
-  String get iPrice => '~\$${price.toStringAsFixed(2)}';
-}
-
-/// Creates the dummy data for the list
-const _dummyList = <_ThisModel>[
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_1.png',
-    name: 'Ethereum',
-    code: 'ETH',
-    unit: '0.8621',
-    price: 182.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_2.png',
-    name: 'Polkadex',
-    code: 'DEX',
-    unit: '2.0000',
-    price: 76.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_8.png',
-    name: 'Bitcoin',
-    code: 'BTC',
-    unit: '0.621',
-    price: 12.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_6.png',
-    name: 'Litecoin',
-    code: 'LTC',
-    unit: '0.7739',
-    price: 134.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_1.png',
-    name: 'Ethereum',
-    code: 'ETH',
-    unit: '0.62d1',
-    price: 182.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_2.png',
-    name: 'Polkadex',
-    code: 'DEX',
-    unit: '2.0000',
-    price: 76.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_8.png',
-    name: 'Bitcoin',
-    code: 'BTC',
-    unit: '0.6211',
-    price: 12.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_6.png',
-    name: 'Litecoin',
-    code: 'LTC',
-    unit: '0.7739',
-    price: 134.29,
-    isFiat: true,
-  ),
-];
