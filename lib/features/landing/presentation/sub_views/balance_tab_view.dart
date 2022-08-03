@@ -12,11 +12,14 @@ import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/bala
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/trade_item_widget.dart';
+import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
+
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +34,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
   late ScrollController _scrollController;
   late AnimationController _controller;
+  final List<Enum> _typeFilters = [];
+  DateTimeRange? _dateRange;
 
   @override
   void initState() {
@@ -87,14 +92,128 @@ class _BalanceTabViewState extends State<BalanceTabView>
                         },
                         child: state.assetSelected != null
                             ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                child: Column(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Summary of Trades',
+                                      'Trades',
                                       style: tsS18W600CFF,
                                       textAlign: TextAlign.center,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 6),
+                                          child: InkWell(
+                                            onTap: () =>
+                                                _onBuyFilterButtonPress(
+                                                    context),
+                                            child: Container(
+                                              width: 36,
+                                              height: 36,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 7.0,
+                                                      horizontal: 9),
+                                              decoration: BoxDecoration(
+                                                  color: _typeFilters.contains(
+                                                          EnumBuySell.buy)
+                                                      ? Colors.white
+                                                      : AppColors.color8BA1BE
+                                                          .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              child: SvgPicture.asset(
+                                                (_typeFilters.contains(
+                                                            EnumBuySell.buy)
+                                                        ? 'buysel'
+                                                        : 'buy')
+                                                    .asAssetSvg(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 6),
+                                          child: InkWell(
+                                            onTap: () =>
+                                                _onSellFilterButtonPress(
+                                                    context),
+                                            child: Container(
+                                              width: 36,
+                                              height: 36,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 7.0,
+                                                      horizontal: 9),
+                                              decoration: BoxDecoration(
+                                                  color: _typeFilters.contains(
+                                                          EnumBuySell.sell)
+                                                      ? Colors.white
+                                                      : AppColors.color8BA1BE
+                                                          .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              child: SvgPicture.asset(
+                                                (_typeFilters.contains(
+                                                            EnumBuySell.sell)
+                                                        ? 'sellsel'
+                                                        : 'sell')
+                                                    .asAssetSvg(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 14),
+                                        Theme(
+                                          data: Theme.of(context).copyWith(
+                                              primaryColor: AppColors
+                                                  .color1C2023,
+                                              cardColor: Colors.red,
+                                              colorScheme:
+                                                  ColorScheme.fromSwatch()
+                                                      .copyWith(
+                                                          secondary: AppColors
+                                                              .colorE6007A),
+                                              buttonTheme: ButtonThemeData(
+                                                  highlightColor: Colors.green,
+                                                  buttonColor: Colors.green,
+                                                  textTheme:
+                                                      ButtonTextTheme.accent)),
+                                          child: Builder(
+                                            builder: (context) => InkWell(
+                                              onTap: () async =>
+                                                  _onDateFilterButtonPress(
+                                                      context),
+                                              child: Container(
+                                                width: 36,
+                                                height: 36,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 7.0,
+                                                        horizontal: 9),
+                                                decoration: BoxDecoration(
+                                                    color: _dateRange != null
+                                                        ? AppColors.colorE6007A
+                                                        : AppColors.color8BA1BE
+                                                            .withOpacity(0.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                child: SvgPicture.asset(
+                                                  'calendar'.asAssetSvg(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -213,6 +332,41 @@ class _BalanceTabViewState extends State<BalanceTabView>
     } else {
       return DateFormat("dd MMMM, yyyy").format(date);
     }
+  }
+
+  void _onBuyFilterButtonPress(BuildContext context) {
+    setState(() => _typeFilters.contains(EnumBuySell.buy)
+        ? _typeFilters.remove(EnumBuySell.buy)
+        : _typeFilters.add(EnumBuySell.buy));
+
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
+          filters: _typeFilters,
+          dateFilter: _dateRange,
+        );
+  }
+
+  void _onSellFilterButtonPress(BuildContext context) {
+    setState(() => _typeFilters.contains(EnumBuySell.sell)
+        ? _typeFilters.remove(EnumBuySell.sell)
+        : _typeFilters.add(EnumBuySell.sell));
+
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
+          filters: _typeFilters,
+          dateFilter: _dateRange,
+        );
+  }
+
+  Future<void> _onDateFilterButtonPress(BuildContext context) async {
+    final _tempDate = await CustomDateRangePicker.call(
+        filterStartDate: _dateRange?.start,
+        filterEndDate: _dateRange?.end,
+        context: context);
+    setState(() => _dateRange = _tempDate);
+
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
+          filters: _typeFilters,
+          dateFilter: _dateRange,
+        );
   }
 
   void _onScrollListener() {

@@ -86,19 +86,26 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     DateTimeRange? dateFilter,
   }) async {
     List<AccountTradeEntity> _tradesFiltered = [..._allTrades];
+    final currentState = state;
 
-    if (dateFilter != null) {
-      _tradesFiltered.removeWhere((trade) =>
-          trade.time.isBefore(dateFilter.start) ||
-          trade.time.isAfter(dateFilter.end));
+    if (state is TradeHistoryLoaded) {
+      if (dateFilter != null) {
+        _tradesFiltered.removeWhere((trade) =>
+            trade.time.isBefore(dateFilter.start) ||
+            trade.time.isAfter(dateFilter.end));
+      }
+
+      if (filters.isNotEmpty) {
+        _tradesFiltered
+            .removeWhere((trade) => !filters.contains(trade.txnType));
+      }
+
+      emit(
+        TradeHistoryLoaded(
+          trades: _tradesFiltered,
+          assetSelected: currentState.assetSelected,
+        ),
+      );
     }
-
-    if (filters.isNotEmpty) {
-      _tradesFiltered.removeWhere((trade) => !filters.contains(trade.txnType));
-    }
-
-    emit(
-      TradeHistoryLoaded(trades: _tradesFiltered),
-    );
   }
 }
