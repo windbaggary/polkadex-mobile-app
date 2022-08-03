@@ -108,6 +108,7 @@ class AppButton extends StatelessWidget {
               child: Padding(
                 padding: innerPadding,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     leadingWidget ?? Container(),
