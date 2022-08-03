@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
@@ -12,7 +15,6 @@ import 'package:polkadex/features/landing/presentation/widgets/trade_item_widget
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
@@ -308,28 +310,17 @@ class _BalanceTabViewState extends State<BalanceTabView>
                           ],
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.colorE6007A,
-                          borderRadius: BorderRadius.circular(5),
+                      AppButton(
+                        label: 'Withdraw',
+                        leadingWidget: SvgPicture.asset(
+                          'Withdraw'.asAssetSvg(),
                         ),
-                        child: buildInkWell(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 6,
-                              horizontal: 12,
-                            ),
-                            child: Text(
-                              "Withdraw",
-                              style: tsS14W600CFF,
-                            ),
-                          ),
-                          onTap: () => Coordinator.goToCoinWithdrawScreen(
-                            asset: selectedAsset,
-                            balanceCubit: context.read<BalanceCubit>(),
-                          ),
+                        backgroundColor: AppColors.color3B4150,
+                        onTap: () => Coordinator.goToCoinWithdrawScreen(
+                          asset: selectedAsset,
+                          balanceCubit: context.read<BalanceCubit>(),
                         ),
+                        outerPadding: EdgeInsets.only(top: 8),
                       ),
                     ],
                   ),

@@ -48,6 +48,7 @@ class AppBackButton extends StatelessWidget {
 class AppButton extends StatelessWidget {
   AppButton({
     required this.label,
+    this.leadingWidget,
     this.enabled = true,
     this.onTap,
     this.innerPadding =
@@ -60,6 +61,7 @@ class AppButton extends StatelessWidget {
   final _notifier = ValueNotifier<bool>(false);
 
   final String label;
+  final Widget? leadingWidget;
   final bool enabled;
   final VoidCallback? onTap;
   final EdgeInsets innerPadding;
@@ -105,11 +107,18 @@ class AppButton extends StatelessWidget {
               ),
               child: Padding(
                 padding: innerPadding,
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: tsS18W600CFF.copyWith(
-                      color: enabled ? textColor : AppColors.colorFFFFFF),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    leadingWidget ?? Container(),
+                    if (leadingWidget != null) SizedBox(width: 8),
+                    Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: tsS18W600CFF.copyWith(
+                          color: enabled ? textColor : AppColors.colorFFFFFF),
+                    ),
+                  ],
                 ),
               ),
             ),
