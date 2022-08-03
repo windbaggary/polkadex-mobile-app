@@ -22,10 +22,12 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
 
   List<AccountTradeEntity> _allTrades = [];
 
-  Future<void> getAccountTrades(
-    AssetEntity asset,
-    String address,
-  ) async {
+  Future<void> getAccountTrades({
+    required AssetEntity asset,
+    required String address,
+    List<Enum> filters = const [],
+    DateTimeRange? dateFilter,
+  }) async {
     emit(TradeHistoryLoading(assetSelected: asset));
 
     final result = await _getTradesUseCase(
@@ -42,10 +44,17 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
         if (currentState is TradeHistoryLoaded) {
           final newList = [newTrade, ...currentState.trades];
 
-          emit(TradeHistoryLoaded(
-            assetSelected: asset,
-            trades: newList,
-          ));
+          filters.isNotEmpty || dateFilter != null
+              ? updateTradeHistoryFilter(
+                  filters: filters,
+                  dateFilter: dateFilter,
+                )
+              : emit(
+                  TradeHistoryLoaded(
+                    assetSelected: asset,
+                    trades: newList,
+                  ),
+                );
         }
       },
       onMsgError: (error) => emit(
@@ -73,16 +82,23 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
         }).toList();
         _allTrades.sort((a, b) => b.time.compareTo(a.time));
 
-        emit(TradeHistoryLoaded(
-          assetSelected: asset,
-          trades: _allTrades,
-        ));
+        filters.isNotEmpty || dateFilter != null
+            ? updateTradeHistoryFilter(
+                filters: filters,
+                dateFilter: dateFilter,
+              )
+            : emit(
+                TradeHistoryLoaded(
+                  assetSelected: asset,
+                  trades: _allTrades,
+                ),
+              );
       },
     );
   }
 
   Future<void> updateTradeHistoryFilter({
-    required List<Enum> filters,
+    List<Enum> filters = const [],
     DateTimeRange? dateFilter,
   }) async {
     List<AccountTradeEntity> _tradesFiltered = [..._allTrades];

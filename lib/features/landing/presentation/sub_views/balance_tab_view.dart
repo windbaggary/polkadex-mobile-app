@@ -296,8 +296,10 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   child: PolkadexErrorRefreshWidget(
                     onRefresh: () =>
                         context.read<TradeHistoryCubit>().getAccountTrades(
-                              asset,
-                              context.read<AccountCubit>().mainAccountAddress,
+                              asset: asset,
+                              address: context
+                                  .read<AccountCubit>()
+                                  .mainAccountAddress,
                             ),
                   ),
                 );
@@ -420,8 +422,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
             onChanged: (selectedAsset) {
               if (selectedAsset != null) {
                 context.read<TradeHistoryCubit>().getAccountTrades(
-                      selectedAsset,
-                      context.read<AccountCubit>().mainAccountAddress,
+                      asset: selectedAsset,
+                      address: context.read<AccountCubit>().mainAccountAddress,
                     );
               }
             },
