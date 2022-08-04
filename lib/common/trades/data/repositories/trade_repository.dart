@@ -7,6 +7,7 @@ import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
 import 'package:polkadex/common/trades/data/models/recent_trade_model.dart';
 import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
 import 'package:polkadex/common/trades/domain/entities/recent_trade_entity.dart';
+import 'package:polkadex/common/user_data/user_data_remote_datasource.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
 import 'package:polkadex/common/trades/data/models/order_model.dart';
@@ -15,10 +16,14 @@ import 'package:polkadex/common/trades/domain/repositories/itrade_repository.dar
 import 'package:polkadex/common/utils/extensions.dart';
 
 class TradeRepository implements ITradeRepository {
-  TradeRepository({required TradeRemoteDatasource tradeRemoteDatasource})
-      : _tradeRemoteDatasource = tradeRemoteDatasource;
+  TradeRepository({
+    required TradeRemoteDatasource tradeRemoteDatasource,
+    required UserDataRemoteDatasource userDataRemoteDatasource,
+  })  : _tradeRemoteDatasource = tradeRemoteDatasource,
+        _userDataRemoteDatasource = userDataRemoteDatasource;
 
   final TradeRemoteDatasource _tradeRemoteDatasource;
+  final UserDataRemoteDatasource _userDataRemoteDatasource;
   StreamSubscription? accountTradeSubscription;
   StreamSubscription? orderSubscription;
   StreamSubscription? recentTradesSubscription;
@@ -125,7 +130,7 @@ class TradeRepository implements ITradeRepository {
     Function(Object) onMsgError,
   ) async {
     final orderStream =
-        await _tradeRemoteDatasource.fetchOrdersUpdates(address);
+        await _userDataRemoteDatasource.getUserDataStream(address);
 
     await orderSubscription?.cancel();
 
@@ -133,11 +138,16 @@ class TradeRepository implements ITradeRepository {
       orderSubscription = orderStream.listen((message) {
         final data = message.data;
 
-        if (message.data != null) {
-          final liveData = jsonDecode(data)['onOrderUpdate'];
-          onMsgReceived(
-            OrderModel.fromJson(liveData),
-          );
+        if (data != null) {
+          final liveData =
+              jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+          final newOrderData = liveData['SetOrder'];
+
+          if (newOrderData != null) {
+            onMsgReceived(
+              OrderModel.fromJson(newOrderData),
+            );
+          }
         }
       });
     } catch (error) {
@@ -168,12 +178,12 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<void> fetchRecentTradesUpdates(
-    String market,
+    String address,
     Function(RecentTradeEntity) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
     final recentTradesStream =
-        await _tradeRemoteDatasource.fetchRecentTradesStream(market);
+        await _userDataRemoteDatasource.getUserDataStream(address);
 
     await recentTradesSubscription?.cancel();
 
@@ -229,7 +239,7 @@ class TradeRepository implements ITradeRepository {
     Function(Object) onMsgError,
   ) async {
     final accountTradesStream =
-        await _tradeRemoteDatasource.fetchAccountTradesUpdates(address);
+        await _userDataRemoteDatasource.getUserDataStream(address);
 
     await accountTradeSubscription?.cancel();
 
@@ -237,11 +247,16 @@ class TradeRepository implements ITradeRepository {
       accountTradeSubscription = accountTradesStream.listen((message) {
         final data = message.data;
 
-        if (message.data != null) {
-          final liveData = jsonDecode(data)['onUpdateTransaction'];
-          onMsgReceived(
-            AccountTradeModel.fromJson(liveData),
-          );
+        if (data != null) {
+          final liveData =
+              jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+          final newAccountTradeData = liveData['SetTransaction'];
+
+          if (newAccountTradeData != null) {
+            onMsgReceived(
+              AccountTradeModel.fromJson(newAccountTradeData),
+            );
+          }
         }
       });
     } catch (error) {

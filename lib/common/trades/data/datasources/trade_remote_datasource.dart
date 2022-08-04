@@ -1,7 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
-import 'package:polkadex/graphql/subscriptions.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/graphql/queries.dart';
 
@@ -83,20 +82,6 @@ class TradeRemoteDatasource {
         .response;
   }
 
-  Future<Stream> fetchOrdersUpdates(
-    String address,
-  ) async {
-    return Amplify.API.subscribe(
-      GraphQLRequest(
-        document: onOrderUpdate,
-        variables: {
-          'main_account': address,
-        },
-      ),
-      onEstablished: () => print('onOrderUpdate subscription established'),
-    );
-  }
-
   Future<GraphQLResponse> fetchRecentTrades(String market) async {
     return await Amplify.API
         .query(
@@ -108,18 +93,6 @@ class TradeRemoteDatasource {
           ),
         )
         .response;
-  }
-
-  Future<Stream> fetchRecentTradesStream(String market) async {
-    return Amplify.API.subscribe(
-      GraphQLRequest(
-        document: websocketStreams,
-        variables: <String, dynamic>{
-          'name': '$market-raw-trade',
-        },
-      ),
-      onEstablished: () => print('recentTrades subscription established'),
-    );
   }
 
   Future<GraphQLResponse> fetchAccountTrades(
@@ -144,7 +117,7 @@ class TradeRemoteDatasource {
   Future<Stream> fetchAccountTradesUpdates(String address) async {
     return Amplify.API.subscribe(
       GraphQLRequest(
-        document: onUpdateTransaction,
+        document: '', //TODO: update fetchAccountTrades using websocket-streams
         variables: {
           'main_account': address,
         },

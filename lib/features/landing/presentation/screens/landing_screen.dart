@@ -100,7 +100,7 @@ class _LandingScreenState extends State<LandingScreen>
   Widget build(BuildContext context) {
     context
         .read<RecentTradesCubit>()
-        .getRecentTrades(context.read<MarketAssetCubit>().currentMarketId);
+        .getRecentTrades(context.read<AccountCubit>().mainAccountAddress);
 
     return WillPopScope(
       onWillPop: () async => false,

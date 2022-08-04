@@ -225,6 +225,7 @@ Future<void> init() async {
   dependency.registerFactory<ITradeRepository>(
     () => TradeRepository(
       tradeRemoteDatasource: dependency(),
+      userDataRemoteDatasource: dependency(),
     ),
   );
 
@@ -284,6 +285,7 @@ Future<void> init() async {
   dependency.registerFactory<IBalanceRepository>(
     () => BalanceRepository(
       balanceRemoteDatasource: dependency(),
+      userDataRemoteDatasource: dependency(),
     ),
   );
 

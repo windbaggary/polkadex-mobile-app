@@ -1,6 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:polkadex/graphql/queries.dart';
-import 'package:polkadex/graphql/subscriptions.dart';
 
 class TickerRemoteDatasource {
   Future<GraphQLResponse> getAllTickers() async {
@@ -19,7 +18,7 @@ class TickerRemoteDatasource {
   ) async {
     return Amplify.API.subscribe(
       GraphQLRequest(
-        document: onNewTicker,
+        document: '', //TODO: update ticker stream using websocket-streams
         variables: {
           'm': '$leftTokenId-$rightTokenId',
         },
