@@ -113,17 +113,4 @@ class TradeRemoteDatasource {
         )
         .response;
   }
-
-  Future<Stream> fetchAccountTradesUpdates(String address) async {
-    return Amplify.API.subscribe(
-      GraphQLRequest(
-        document: '', //TODO: update fetchAccountTrades using websocket-streams
-        variables: {
-          'main_account': address,
-        },
-      ),
-      onEstablished: () =>
-          print('onUpdateTransaction subscription established'),
-    );
-  }
 }
