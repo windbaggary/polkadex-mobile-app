@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/common/configs/app_config.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
-import 'package:polkadex/common/widgets/check_box_widget.dart';
-import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/features/landing/presentation/widgets/balance_item_shimmer_widget.dart';
-import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
-import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
-import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
+import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
+import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
+import 'package:polkadex/features/landing/presentation/widgets/trade_item_widget.dart';
+import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/features/landing/utils/token_utils.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
+
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 18
@@ -30,6 +34,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
   late ScrollController _scrollController;
   late AnimationController _controller;
+  final List<Enum> _typeFilters = [];
+  DateTimeRange? _dateRange;
 
   @override
   void initState() {
@@ -55,14 +61,12 @@ class _BalanceTabViewState extends State<BalanceTabView>
       providers: [
         ChangeNotifierProvider<_ThisIsChartVisibleProvider>(
             create: (_) => _ThisIsChartVisibleProvider()),
-        ChangeNotifierProvider<_ThisProvider>(
-          create: (_) => _ThisProvider(),
-        ),
         ChangeNotifierProvider<BalanceChartDummyProvider>(
           create: (_) => BalanceChartDummyProvider(),
         ),
       ],
-      builder: (context, _) => BlocBuilder<BalanceCubit, BalanceState>(
+      builder: (context, _) =>
+          BlocBuilder<TradeHistoryCubit, TradeHistoryState>(
         builder: (context, state) {
           return NestedScrollView(
             controller: _scrollController,
@@ -72,10 +76,9 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: 24),
-                      TopBalanceWidget(),
-                      SizedBox(height: 24),
-                      _ThisHoldingWidget(),
+                      _buildSelectTokenWidget(assetEntity: state.assetSelected),
+                      _buildBalanceWidget(),
+                      SizedBox(height: 12),
                       InkWell(
                         onTap: () {
                           final summaryVisProvider =
@@ -87,480 +90,398 @@ class _BalanceTabViewState extends State<BalanceTabView>
 
                           summaryVisProvider.toggleVisible();
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Summary',
-                                style: tsS18W600CFF,
-                                textAlign: TextAlign.center,
-                              ),
-                              RotationTransition(
-                                turns: Tween(begin: 0.0, end: 0.5)
-                                    .animate(_controller),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: AppColors.colorFFFFFF,
-                                  size: 16,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Consumer<_ThisIsChartVisibleProvider>(
-                        builder: (context, isChartVisbileProvider, _) =>
-                            AnimatedSize(
-                          duration: AppConfigs.animDurationSmall,
-                          alignment: Alignment.topCenter,
-                          child: isChartVisbileProvider.isChartVisible
-                              ? Column(
+                        child: state.assetSelected != null
+                            ? Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _ThisGraphHeadingWidget(),
-                                    SizedBox(height: 8),
-                                    SizedBox(
-                                      height: 250,
-                                      child:
-                                          Consumer<BalanceChartDummyProvider>(
-                                        builder: (context, provider, child) =>
-                                            AppLineChartWidget(
-                                          data: provider.list,
-                                          options: AppLineChartOptions(
-                                            yLabelCount: 3,
-                                            yAxisTopPaddingRatio: 0.05,
-                                            yAxisBottomPaddingRatio: 0.15,
-                                            chartScale: provider.chartScale,
-                                            lineColor: AppColors.colorE6007A,
-                                            yAxisLabelPrefix: "\$ ",
-                                            areaGradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: <Color>[
-                                                AppColors.colorE6007A
-                                                    .withOpacity(0.50),
-                                                AppColors.color8BA1BE
-                                                    .withOpacity(0.0),
-                                              ],
-                                              // stops: [0.0, 0.40],
-                                            ),
-                                            gridColor: AppColors.color8BA1BE
-                                                .withOpacity(0.15),
-                                            gridStroke: 1,
-                                            yLabelTextStyle: TextStyle(
-                                              fontSize: 08,
-                                              fontFamily: "WorkSans",
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey.shade400,
+                                    Text(
+                                      'Trades',
+                                      style: tsS18W600CFF,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 6),
+                                          child: InkWell(
+                                            onTap: () =>
+                                                _onBuyFilterButtonPress(
+                                                    context),
+                                            child: Container(
+                                              width: 36,
+                                              height: 36,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 7.0,
+                                                      horizontal: 9),
+                                              decoration: BoxDecoration(
+                                                  color: _typeFilters.contains(
+                                                          EnumBuySell.buy)
+                                                      ? Colors.white
+                                                      : AppColors.color8BA1BE
+                                                          .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              child: SvgPicture.asset(
+                                                (_typeFilters.contains(
+                                                            EnumBuySell.buy)
+                                                        ? 'buysel'
+                                                        : 'buy')
+                                                    .asAssetSvg(),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 6),
+                                          child: InkWell(
+                                            onTap: () =>
+                                                _onSellFilterButtonPress(
+                                                    context),
+                                            child: Container(
+                                              width: 36,
+                                              height: 36,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 7.0,
+                                                      horizontal: 9),
+                                              decoration: BoxDecoration(
+                                                  color: _typeFilters.contains(
+                                                          EnumBuySell.sell)
+                                                      ? Colors.white
+                                                      : AppColors.color8BA1BE
+                                                          .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              child: SvgPicture.asset(
+                                                (_typeFilters.contains(
+                                                            EnumBuySell.sell)
+                                                        ? 'sellsel'
+                                                        : 'sell')
+                                                    .asAssetSvg(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 14),
+                                        Theme(
+                                          data: Theme.of(context).copyWith(
+                                              primaryColor: AppColors
+                                                  .color1C2023,
+                                              cardColor: Colors.red,
+                                              colorScheme:
+                                                  ColorScheme.fromSwatch()
+                                                      .copyWith(
+                                                          secondary: AppColors
+                                                              .colorE6007A),
+                                              buttonTheme: ButtonThemeData(
+                                                  highlightColor: Colors.green,
+                                                  buttonColor: Colors.green,
+                                                  textTheme:
+                                                      ButtonTextTheme.accent)),
+                                          child: Builder(
+                                            builder: (context) => InkWell(
+                                              onTap: () async =>
+                                                  _onDateFilterButtonPress(
+                                                      context),
+                                              child: Container(
+                                                width: 36,
+                                                height: 36,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 7.0,
+                                                        horizontal: 9),
+                                                decoration: BoxDecoration(
+                                                    color: _dateRange != null
+                                                        ? AppColors.colorE6007A
+                                                        : AppColors.color8BA1BE
+                                                            .withOpacity(0.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                child: SvgPicture.asset(
+                                                  'calendar'.asAssetSvg(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    _ThisGraphOptionWidget(),
-                                    SizedBox(height: 30),
                                   ],
-                                )
-                              : Container(),
-                        ),
+                                ),
+                              )
+                            : Container(),
                       ),
                     ],
                   ),
                 ),
               ];
             },
-            body: Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: AppColors.color2E303C,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 30,
-                    offset: Offset(0.0, 20.0),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
-              child: CustomScrollView(
-                slivers: [
-                  SliverPersistentHeader(
-                    floating: false,
-                    pinned: true,
-                    delegate: _SliverPersistentHeaderDelegate(
-                      height: 115,
-                      child: Container(
-                        color: AppColors.color2E303C,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Center(
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 13),
-                                decoration: BoxDecoration(
-                                  color: AppColors.color1C2023,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                height: 3,
-                                width: 51,
-                              ),
-                            ),
-                            Center(
-                              child: SizedBox(
-                                height: 35,
-                                child: DropdownButton<String>(
-                                  items: ['Main Wallet', 'Spot', 'Margin']
-                                      .map((e) => DropdownMenuItem<String>(
-                                            child: Text(
-                                              e,
-                                              style: tsS20W600CFF,
-                                            ),
-                                            value: e,
-                                          ))
-                                      .toList(),
-                                  value: 'Main Wallet',
-                                  style: tsS20W600CFF,
-                                  underline: Container(),
-                                  onChanged: (value) {},
-                                  isExpanded: false,
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.colorFFFFFF,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                bottom: 12,
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: Row(
-                                children: [
-                                  Consumer<_ThisProvider>(
-                                    builder: (context, thisProvider, child) =>
-                                        CheckBoxWidget(
-                                      checkColor: AppColors.colorFFFFFF,
-                                      backgroundColor: AppColors.colorE6007A,
-                                      isChecked:
-                                          thisProvider.isHideSmallBalance,
-                                      isBackTransparentOnUnchecked: true,
-                                      onTap: (val) =>
-                                          thisProvider.isHideSmallBalance = val,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Hide small balances',
-                                    style: tsS14W400CFF,
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          12, 12, 6, 12),
-                                      child: Opacity(
-                                        opacity: 1.0,
-                                        child: Text(
-                                          'Tokens',
-                                          style: tsS15W600CFF,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      final thisProvider =
-                                          context.read<_ThisProvider>();
-                                      thisProvider.isHideFiat =
-                                          !thisProvider.isHideFiat;
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          6, 12, 12, 12),
-                                      child: Consumer<_ThisProvider>(
-                                        builder:
-                                            (context, thisProvider, child) =>
-                                                Opacity(
-                                          opacity: thisProvider.isHideFiat
-                                              ? 1.0
-                                              : 0.3,
-                                          child: child,
-                                        ),
-                                        child: Text(
-                                          'Fiat',
-                                          style: tsS15W600CFF,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: BlocBuilder<BalanceCubit, BalanceState>(
-                      builder: (context, state) {
-                        if (state is BalanceLoaded) {
-                          return ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 24),
-                            itemBuilder: (context, index) {
-                              String key = state.free.keys.elementAt(index);
-                              final asset = context
-                                  .read<MarketAssetCubit>()
-                                  .getAssetDetailsById(key);
-
-                              return InkWell(
-                                onTap: () =>
-                                    Coordinator.goToBalanceCoinPreviewScreen(
-                                  asset: asset,
-                                  balanceCubit: context.read<BalanceCubit>(),
-                                ),
-                                child: BalanceItemWidget(
-                                  tokenAcronym: asset.symbol,
-                                  tokenFullName: asset.name,
-                                  assetImg: TokenUtils.tokenIdToAssetImg(
-                                      asset.assetId),
-                                  amount: state.free.getBalance(key),
-                                ),
-                              );
-                            },
-                            itemCount: state.free.keys.length,
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                          );
-                        }
-
-                        if (state is BalanceLoading) {
-                          return BalanceItemShimmerWidget();
-                        }
-
-                        return Container();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            body: state.assetSelected != null
+                ? _buildTradeList(asset: state.assetSelected!)
+                : Container(),
           );
         },
       ),
     );
   }
 
+  Widget _buildTradeList({required AssetEntity asset}) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: AppColors.color2E303C,
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 30,
+                offset: Offset(0.0, 20.0),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
+          child: BlocBuilder<TradeHistoryCubit, TradeHistoryState>(
+            builder: (context, state) {
+              if (state is TradeHistoryLoaded) {
+                return state.trades.isEmpty
+                    ? Padding(
+                        padding: EdgeInsets.fromLTRB(18, 26.0, 18, 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 36, bottom: 36),
+                              child: Text(
+                                "There are no transactions",
+                                style: tsS16W500CABB2BC,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: state.trades.length,
+                        padding: const EdgeInsets.only(top: 13),
+                        itemBuilder: (context, index) {
+                          return TradeItemWidget(
+                            tradeItem: state.trades[index],
+                            dateTitle: _getDateTitle(
+                                state.trades[index].time,
+                                index > 0
+                                    ? state.trades[index - 1].time
+                                    : null),
+                          );
+                        },
+                      );
+              }
+
+              if (state is TradeHistoryError) {
+                return Container(
+                  height: 50,
+                  child: PolkadexErrorRefreshWidget(
+                    onRefresh: () =>
+                        context.read<TradeHistoryCubit>().getAccountTrades(
+                              asset: asset,
+                              address: context
+                                  .read<AccountCubit>()
+                                  .mainAccountAddress,
+                            ),
+                  ),
+                );
+              }
+
+              return OrderHistoryShimmerWidget();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  String? _getDateTitle(DateTime date, DateTime? previousDate) {
+    final dateString = _getDateString(date);
+    final datePreviousString =
+        previousDate != null ? _getDateString(previousDate) : '';
+
+    return dateString != datePreviousString ? dateString : null;
+  }
+
+  String _getDateString(DateTime date) {
+    final today = DateTime.now();
+    if (date.day == today.day &&
+        date.month == today.month &&
+        date.year == today.year) {
+      return "Today";
+    } else if (date.day == today.day - 1 &&
+        date.month == today.month &&
+        date.year == today.year) {
+      return "Yesterday";
+    } else {
+      return DateFormat("dd MMMM, yyyy").format(date);
+    }
+  }
+
+  void _onBuyFilterButtonPress(BuildContext context) {
+    setState(() => _typeFilters.contains(EnumBuySell.buy)
+        ? _typeFilters.remove(EnumBuySell.buy)
+        : _typeFilters.add(EnumBuySell.buy));
+
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
+          filters: _typeFilters,
+          dateFilter: _dateRange,
+        );
+  }
+
+  void _onSellFilterButtonPress(BuildContext context) {
+    setState(() => _typeFilters.contains(EnumBuySell.sell)
+        ? _typeFilters.remove(EnumBuySell.sell)
+        : _typeFilters.add(EnumBuySell.sell));
+
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
+          filters: _typeFilters,
+          dateFilter: _dateRange,
+        );
+  }
+
+  Future<void> _onDateFilterButtonPress(BuildContext context) async {
+    final _tempDate = await CustomDateRangePicker.call(
+        filterStartDate: _dateRange?.start,
+        filterEndDate: _dateRange?.end,
+        context: context);
+    setState(() => _dateRange = _tempDate);
+
+    context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
+          filters: _typeFilters,
+          dateFilter: _dateRange,
+        );
+  }
+
   void _onScrollListener() {
     context.read<HomeScrollNotifProvider>().scrollOffset =
         _scrollController.offset;
   }
-}
 
-/// The holding row widget handles the click event for graph
-class _ThisHoldingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildSelectTokenWidget({required AssetEntity? assetEntity}) {
+    final availableAssets = context.read<MarketAssetCubit>().mapAvailableAssets;
+
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 21,
-        right: 21,
-      ),
-      child: Row(
-        children: [
-          Text(
-            'Holding: ',
-            style: tsS13W500CFF.copyWith(
-              color: AppColors.colorABB2BC,
+      padding: EdgeInsets.all(6),
+      child: Padding(
+        padding: EdgeInsets.all(12),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
             ),
           ),
-          DropdownButton<String>(
-            items: ['24 hour', '1 week', '1 month']
-                .map((e) => DropdownMenuItem<String>(
-                      child: Text(
-                        e,
-                        style: tsS13W500CFF,
+          padding: EdgeInsets.all(8),
+          child: DropdownButton<AssetEntity>(
+            items: availableAssets.values
+                .map(
+                  (asset) => DropdownMenuItem<AssetEntity>(
+                    child: Container(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            TokenUtils.tokenIdToAssetImg(asset.assetId),
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(width: 8),
+                          Text('${asset.name} (${asset.symbol})'),
+                        ],
                       ),
-                      value: e,
-                    ))
+                    ),
+                    value: asset,
+                  ),
+                )
                 .toList(),
-            value: '24 hour',
-            style: tsS13W500CFF,
+            value: assetEntity,
+            dropdownColor: Colors.white,
             underline: Container(),
-            onChanged: (value) {},
-            isExpanded: false,
+            style: tsS20W600CFF.copyWith(color: Colors.black),
+            hint: Text('Select an asset'),
+            onChanged: (selectedAsset) {
+              if (selectedAsset != null) {
+                context.read<TradeHistoryCubit>().getAccountTrades(
+                      asset: selectedAsset,
+                      address: context.read<AccountCubit>().mainAccountAddress,
+                    );
+              }
+            },
+            isExpanded: true,
             icon: Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: AppColors.colorFFFFFF,
+              color: Colors.black,
               size: 16,
             ),
           ),
-          // Text(
-          //   '24 hour ',
-          //   style: tsS13W500CFF,
-          // ),
-          Spacer(),
-          Text(
-            'Change ',
-            style: tsS13W500CFF.copyWith(
-              color: AppColors.colorABB2BC,
-            ),
-          ),
-          Text(
-            '+\$224',
-            style: tsS13W500CFF,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: AppColors.color0CA564,
-            ),
-            margin: const EdgeInsets.only(left: 8),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 4.5,
-              vertical: 2.5,
-            ),
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  'gain_graph'.asAssetSvg(),
-                  width: 8,
-                  height: 8,
-                ),
-                SizedBox(width: 2),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '52.47',
-                        style: tsS11W600CFF,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBalanceWidget() {
+    final selectedAsset = context.read<TradeHistoryCubit>().state.assetSelected;
+
+    return BlocBuilder<BalanceCubit, BalanceState>(
+      builder: (context, state) =>
+          state is BalanceLoaded && selectedAsset != null
+              ? Padding(
+                  padding: EdgeInsets.all(6),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              'Free: ${state.free[selectedAsset.assetId]}',
+                              style: tsS16W600CFF,
+                            ),
+                            Text(
+                              'Reserved: ${state.reserved[selectedAsset.assetId]}',
+                              style: tsS16W600CFF,
+                            ),
+                          ],
+                        ),
                       ),
-                      TextSpan(
-                        text: '%',
-                        style: tsS8W600CFF,
+                      AppButton(
+                        label: 'Withdraw',
+                        leadingWidget: SvgPicture.asset(
+                          'Withdraw'.asAssetSvg(),
+                        ),
+                        backgroundColor: AppColors.color3B4150,
+                        onTap: () => Coordinator.goToCoinWithdrawScreen(
+                          asset: selectedAsset,
+                          balanceCubit: context.read<BalanceCubit>(),
+                        ),
+                        outerPadding: EdgeInsets.only(top: 8),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// The heading part of the graph.
-class _ThisGraphHeadingWidget extends StatelessWidget {
-  Widget _buildItemWidget(
-      {required String? imgAsset,
-      required String title,
-      required String value}) {
-    return Row(
-      children: [
-        Container(
-          width: 23,
-          height: 23,
-          decoration: BoxDecoration(
-            color: (imgAsset == null)
-                ? AppColors.color8BA1BE.withOpacity(0.20)
-                : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          margin: const EdgeInsets.only(right: 6),
-          padding: const EdgeInsets.all(2),
-          child: (imgAsset == null) ? null : Image.asset(imgAsset),
-        ),
-        Expanded(
-            child: Text(
-          title,
-          style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
-        )),
-        Text(
-          value,
-          style: tsS12W500CFF,
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(21, 0, 21, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_1.png'.asAssetImg(),
-                                title: 'BTC',
-                                value: "60%")),
-                        Spacer(),
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_2.png'.asAssetImg(),
-                                title: 'DEX',
-                                value: "22%")),
-                        Spacer(),
-                      ],
-                    ),
-                    SizedBox(height: 7),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_3.png'.asAssetImg(),
-                                title: 'USDT',
-                                value: "10%")),
-                        Spacer(),
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset: null, title: 'Others', value: "8%")),
-                        Spacer(),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () => Coordinator.goToBalanceSummaryScreen(),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.colorE6007A,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset('pie-chart-18'.asAssetSvg()),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+                )
+              : Container(),
     );
   }
 }
@@ -581,222 +502,3 @@ class _ThisIsChartVisibleProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-/// The provider to handle the list filter on this screen.
-class _ThisProvider extends ChangeNotifier {
-  bool _isHideSmallBalance = true;
-  bool _isHideFiat = false;
-
-  bool get isHideFiat => _isHideFiat;
-
-  bool get isHideSmallBalance => _isHideSmallBalance;
-
-  set isHideSmallBalance(bool val) {
-    _isHideSmallBalance = val;
-    notifyListeners();
-  }
-
-  set isHideFiat(bool val) {
-    _isHideFiat = val;
-    notifyListeners();
-  }
-
-  List<_ThisModel> get listCoins {
-    final list = List<_ThisModel>.from(_dummyList);
-    if (isHideFiat) {
-      list.removeWhere((e) => !e.iIsFiat);
-    }
-    if (isHideSmallBalance) {
-      list.removeWhere((e) => !e.isSmallBalance);
-    }
-    return list;
-  }
-}
-
-/// The bottom option menu unnder the graph
-class _ThisGraphOptionWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(25, 10, 16, 14),
-      child: Wrap(
-        children: EnumBalanceChartDataTypes.values
-            .map<Widget>((item) => Consumer<BalanceChartDummyProvider>(
-                  builder: (context, appChartProvider, child) {
-                    String text;
-                    switch (item) {
-                      case EnumBalanceChartDataTypes.hour:
-                        text = "24h";
-                        break;
-                      case EnumBalanceChartDataTypes.week:
-                        text = "7d";
-                        break;
-                      case EnumBalanceChartDataTypes.month:
-                        text = "1m";
-                        break;
-                      case EnumBalanceChartDataTypes.threeMonth:
-                        text = "3m";
-
-                        break;
-                      case EnumBalanceChartDataTypes.sixMonth:
-                        text = "6m";
-                        break;
-                      case EnumBalanceChartDataTypes.year:
-                        text = "1y";
-                        break;
-                      case EnumBalanceChartDataTypes.all:
-                        text = "All";
-                        break;
-                    }
-                    return InkWell(
-                      onTap: () {
-                        appChartProvider.balanceChartDataType = item;
-                      },
-                      child: AnimatedContainer(
-                        duration: AppConfigs.animDurationSmall,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 11.5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: item == appChartProvider.balanceChartDataType
-                              ? AppColors.colorE6007A
-                              : null,
-                        ),
-                        child: Text(
-                          text,
-                          style: item == appChartProvider.balanceChartDataType
-                              ? tsS13W600CFF
-                              : tsS12W400CFF.copyWith(
-                                  color: AppColors.colorABB2BC),
-                        ),
-                      ),
-                    );
-                  },
-                ))
-            .toList(),
-      ),
-    );
-  }
-}
-
-/// The sliver widget to maintain the wallet heading persistent on scroll
-class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-  final double height;
-
-  _SliverPersistentHeaderDelegate({
-    required this.child,
-    required this.height,
-  }) : super();
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return child;
-  }
-
-  @override
-  double get maxExtent => height;
-
-  @override
-  double get minExtent => height;
-
-  @override
-  bool shouldRebuild(covariant _SliverPersistentHeaderDelegate oldDelegate) {
-    return oldDelegate.height != height || oldDelegate.child != child;
-  }
-}
-
-// Remove the dummy data below
-
-/// The model class for list item
-class _ThisModel {
-  final String imgAsset;
-  final String name;
-  final String code;
-  final String unit;
-  final double price;
-  final bool isFiat;
-
-  const _ThisModel({
-    required this.imgAsset,
-    required this.name,
-    required this.code,
-    required this.unit,
-    required this.price,
-    required this.isFiat,
-  });
-
-  bool get iIsFiat => isFiat;
-
-  bool get isSmallBalance => price < 100.0;
-
-  String get iPrice => '~\$${price.toStringAsFixed(2)}';
-}
-
-/// Creates the dummy data for the list
-const _dummyList = <_ThisModel>[
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_1.png',
-    name: 'Ethereum',
-    code: 'ETH',
-    unit: '0.8621',
-    price: 182.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_2.png',
-    name: 'Polkadex',
-    code: 'DEX',
-    unit: '2.0000',
-    price: 76.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_8.png',
-    name: 'Bitcoin',
-    code: 'BTC',
-    unit: '0.621',
-    price: 12.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_6.png',
-    name: 'Litecoin',
-    code: 'LTC',
-    unit: '0.7739',
-    price: 134.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_1.png',
-    name: 'Ethereum',
-    code: 'ETH',
-    unit: '0.62d1',
-    price: 182.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_2.png',
-    name: 'Polkadex',
-    code: 'DEX',
-    unit: '2.0000',
-    price: 76.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_8.png',
-    name: 'Bitcoin',
-    code: 'BTC',
-    unit: '0.6211',
-    price: 12.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_6.png',
-    name: 'Litecoin',
-    code: 'LTC',
-    unit: '0.7739',
-    price: 134.29,
-    isFiat: true,
-  ),
-];
