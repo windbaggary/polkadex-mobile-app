@@ -46,11 +46,15 @@ class TickerRepository implements ITickerRepository {
       tickerStream.listen((message) {
         final data = message.data;
 
-        if (message.data != null) {
-          final liveData = jsonDecode(data)['onNewTicker'];
-          onMsgReceived(
-            TickerModel.fromJson(liveData),
-          );
+        if (data != null) {
+          final newOrderData =
+              jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+
+          if (newOrderData != null) {
+            onMsgReceived(
+              TickerModel.fromJson(newOrderData),
+            );
+          }
         }
       });
     } catch (error) {

@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:polkadex/graphql/queries.dart';
+import 'package:polkadex/graphql/subscriptions.dart';
 
 class GraphRemoteDatasource {
   Future<GraphQLResponse> getCoinGraphData(
@@ -31,10 +32,9 @@ class GraphRemoteDatasource {
   ) async {
     return Amplify.API.subscribe(
       GraphQLRequest(
-        document: '', //TODO: update graph stream using websocket-streams
+        document: websocketStreams,
         variables: <String, dynamic>{
-          'm': '$leftTokenId-$rightTokenId',
-          'interval': timestamp,
+          'name': '$leftTokenId-${rightTokenId}_$timestamp',
         },
       ),
       onEstablished: () =>
