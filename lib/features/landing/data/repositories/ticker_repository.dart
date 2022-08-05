@@ -47,12 +47,12 @@ class TickerRepository implements ITickerRepository {
         final data = message.data;
 
         if (data != null) {
-          final newOrderData =
+          final newTickerData =
               jsonDecode(jsonDecode(data)['websocket_streams']['data']);
 
-          if (newOrderData != null) {
+          if (newTickerData != null) {
             onMsgReceived(
-              TickerModel.fromJson(newOrderData),
+              TickerModel.fromJson(newTickerData),
             );
           }
         }
