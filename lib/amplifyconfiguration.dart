@@ -5,5 +5,10 @@ const amplifyconfig = ''' {
         "plugins": {
             "awsAPIPlugin": {}
         }
+    },
+    "auth": {
+        "plugins": {
+            "awsCognitoAuthPlugin": {}
+        }
     }
 }''';

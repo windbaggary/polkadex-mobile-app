@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,16 +69,40 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _configureAmplify() async {
     final api = AmplifyAPI();
-    await Amplify.addPlugin(api);
+    final auth = AmplifyAuthCognito();
+
+    await Amplify.addPlugins([api, auth]);
 
     final amplifyConfigMap = jsonDecode(amplifyconfig);
+
+    //API access configuration
     amplifyConfigMap['api']['plugins']['awsAPIPlugin']
         [dotenv.get('API_NAME')] = {
-      'endpointType': 'GraphQL',
+      "endpointType": 'GraphQL',
       "endpoint": dotenv.get('GRAPHQL_ENDPOINT'),
       "region": dotenv.get('REGION'),
-      "authorizationType": "API_KEY",
+      "authorizationType": 'API_KEY',
       "apiKey": dotenv.get('API_KEY'),
+    };
+
+    //Auth configuration
+    amplifyConfigMap['auth']['plugins']['awsCognitoAuthPlugin'] = {
+      "IdentityManager": {"Default": {}},
+      "CredentialsProvider": {
+        "CognitoIdentity": {
+          "Default": {
+            "PoolId": dotenv.get('IDENTITY_POOL_ID'),
+            "Region": dotenv.get('REGION')
+          }
+        }
+      },
+      "CognitoUserPool": {
+        "Default": {
+          "PoolId": dotenv.get('USER_POOL_ID'),
+          "AppClientId": dotenv.get('CLIENT_POOL_ID'),
+          "Region": dotenv.get('REGION')
+        }
+      },
     };
 
     try {
