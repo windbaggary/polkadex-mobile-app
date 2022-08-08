@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/domain/repositories/icoin_repository.dart';
@@ -26,8 +25,6 @@ class CoinRepository implements ICoinRepository {
       );
 
       return Right(null);
-    } on RpcException catch (rpcError) {
-      return Left(ApiError(message: rpcError.message));
     } catch (e) {
       return Left(ApiError(message: e.toString()));
     }

@@ -50,10 +50,11 @@ class TradeRepository implements ITradeRepository {
         price,
         amount,
       );
+      final newOrderId = jsonDecode(result.data)['place_order']['items'][0];
 
       final newOrder = OrderModel(
         mainAccount: mainAddress,
-        tradeId: result,
+        tradeId: newOrderId,
         clientId: '',
         qty: amount,
         price: price,
@@ -89,8 +90,6 @@ class TradeRepository implements ITradeRepository {
       );
 
       return Right(null);
-    } on RpcException catch (rpcError) {
-      return Left(ApiError(message: rpcError.message));
     } catch (e) {
       return Left(ApiError(message: e.toString()));
     }

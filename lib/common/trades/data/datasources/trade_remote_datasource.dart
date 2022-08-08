@@ -1,11 +1,12 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
+import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/graphql/mutations.dart' as mutations;
 import 'package:polkadex/graphql/queries.dart';
 
 class TradeRemoteDatasource {
-  Future<String> placeOrder(
+  Future<GraphQLResponse> placeOrder(
     String mainAddress,
     String proxyAddress,
     String baseAsset,
@@ -15,19 +16,26 @@ class TradeRemoteDatasource {
     String price,
     String amount,
   ) async {
-    final nonce = await BlockchainRpcHelper.sendRpcRequest(
-        'enclave_getNonce', [mainAddress]);
+    final nonce = MathUtils.getNonce();
 
     final String _callPlaceOrderJSON =
-        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), ${nonce + 1}, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), $nonce, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
-    return await BlockchainRpcHelper.sendRpcRequest(
-        'enclave_placeOrder', payloadResult);
+    return await Amplify.API
+        .mutate(
+          request: GraphQLRequest(
+            document: mutations.placeOrder,
+            variables: {
+              'input': {'PlaceOrder': payloadResult},
+            },
+          ),
+        )
+        .response;
   }
 
-  Future<void> cancelOrder(
+  Future<GraphQLResponse> cancelOrder(
     String address,
     String baseAsset,
     String quoteAsset,
@@ -39,15 +47,23 @@ class TradeRemoteDatasource {
     final Map<String, dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callCancelOrderJSON, isSynchronous: true);
 
-    return await BlockchainRpcHelper.sendRpcRequest(
-      'enclave_cancelOrder',
-      [
-        payloadResult['order_id'],
-        payloadResult['account'],
-        payloadResult['pair'],
-        payloadResult['signature'],
-      ],
-    );
+    return await Amplify.API
+        .mutate(
+          request: GraphQLRequest(
+            document: mutations.cancelOrder,
+            variables: {
+              'input': {
+                'CancelOrder': [
+                  payloadResult['order_id'],
+                  payloadResult['account'],
+                  payloadResult['pair'],
+                  payloadResult['signature'],
+                ]
+              },
+            },
+          ),
+        )
+        .response;
   }
 
   Future<GraphQLResponse> fetchOpenOrders(String address) async {

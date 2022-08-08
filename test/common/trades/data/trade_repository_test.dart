@@ -34,6 +34,7 @@ void main() {
   late Stream tStream;
   late DateTime tFrom;
   late DateTime tTo;
+  late String tPlaceOrderSuccess;
 
   setUp(() {
     tradeDataSource = _MockTradeRemoteDatasource();
@@ -104,6 +105,12 @@ void main() {
         "nextToken": null
       }
     }''';
+    tPlaceOrderSuccess = '''{
+      "place_order": {
+        "items": ["239795334492173596420427136507382475609"],
+        "nextToken": null
+      }
+    }''';
     tStream = _MockStream();
   });
 
@@ -116,7 +123,7 @@ void main() {
     test('Must return a success orders submit response', () async {
       when(() => tradeDataSource.placeOrder(
           any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
-        (_) async => '123456789',
+        (_) async => GraphQLResponse(data: tPlaceOrderSuccess, errors: []),
       );
 
       final result = await repository.placeOrder(

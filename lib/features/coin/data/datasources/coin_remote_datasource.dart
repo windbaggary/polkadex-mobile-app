@@ -1,23 +1,32 @@
-import 'package:polkadex/common/network/blockchain_rpc_helper.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/graphql/mutations.dart' as mutations;
 
 class CoinRemoteDatasource {
-  Future<void> withdraw(
+  Future<GraphQLResponse> withdraw(
     String mainAddress,
     String proxyAddress,
     String asset,
     double amount,
   ) async {
-    final nonce = await BlockchainRpcHelper.sendRpcRequest(
-        'enclave_getNonce', [mainAddress]);
+    final nonce = MathUtils.getNonce();
 
     final String _callWithdrawJSON =
-        "polkadexWorker.withdrawJSON(keyring.getPair('$proxyAddress'), ${nonce + 1}, '$asset', $amount)";
+        "polkadexWorker.withdrawJSON(keyring.getPair('$proxyAddress'), $nonce, '$asset', $amount)";
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callWithdrawJSON, isSynchronous: true);
 
-    return await BlockchainRpcHelper.sendRpcRequest(
-        'enclave_withdraw', payloadResult);
+    return await Amplify.API
+        .mutate(
+          request: GraphQLRequest(
+            document: mutations.withdraw,
+            variables: {
+              'input': {'Withdraw': payloadResult},
+            },
+          ),
+        )
+        .response;
   }
 }
