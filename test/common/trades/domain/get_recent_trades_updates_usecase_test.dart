@@ -9,12 +9,12 @@ class _TradeRepositoryMock extends Mock implements ITradeRepository {}
 void main() {
   late GetRecentTradesUpdatesUseCase _usecase;
   late _TradeRepositoryMock _repository;
-  late String m;
+  late String address;
 
   setUp(() {
     _repository = _TradeRepositoryMock();
     _usecase = GetRecentTradesUpdatesUseCase(tradeRepository: _repository);
-    m = "PDEX-1";
+    address = "adressTest";
 
     group('GetRecentTradesUpdatesUseCase tests', () {
       test(
@@ -27,7 +27,7 @@ void main() {
           );
           // act
           await _usecase(
-            market: m,
+            address: address,
             onMsgReceived: (_) {},
             onMsgError: (_) {},
           );

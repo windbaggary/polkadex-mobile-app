@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,6 +14,7 @@ void main() {
   late double amount;
   late String proxyAddress;
   late String mainAddress;
+  late String tWithdrawSuccess;
 
   setUp(() {
     dataSource = _MockCoinRemoteDatasource();
@@ -24,6 +23,12 @@ void main() {
     amount = 10.0;
     proxyAddress = 'proxyAddressTest';
     mainAddress = 'mainAddressTest';
+    tWithdrawSuccess = '''{
+      "withdraw": {
+        "items": [],
+        "nextToken": null
+      }
+    }''';
   });
 
   group('Balance repository tests ', () {
@@ -36,7 +41,7 @@ void main() {
           any(),
         ),
       ).thenAnswer(
-        (_) async => Response(jsonEncode({"Fine": "Test success"}), 200),
+        (_) async => GraphQLResponse(data: tWithdrawSuccess, errors: []),
       );
 
       final result = await repository.withdraw(

@@ -75,15 +75,17 @@ class GraphRepository implements IGraphRepository {
         final data = message.data;
 
         if (message.data != null) {
-          final liveData = jsonDecode(data)['onCandleStickEvents'];
+          final newGraphData =
+              jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+
           onMsgReceived(
             KLineEntity.fromCustom(
-              open: double.parse(liveData['o']),
-              close: double.parse(liveData['c']),
-              time: DateTime.parse(liveData['t']).millisecondsSinceEpoch,
-              high: double.parse(liveData['h']),
-              low: double.parse(liveData['l']),
-              vol: double.parse(liveData['v_base']),
+              open: double.parse(newGraphData['o']),
+              close: double.parse(newGraphData['c']),
+              time: DateTime.parse(newGraphData['t']).millisecondsSinceEpoch,
+              high: double.parse(newGraphData['h']),
+              low: double.parse(newGraphData['l']),
+              vol: double.parse(newGraphData['v_base']),
             ),
           );
         }
