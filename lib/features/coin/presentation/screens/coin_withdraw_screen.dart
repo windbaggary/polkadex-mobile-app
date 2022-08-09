@@ -141,6 +141,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 ),
                                               ),
                                             ),
+                                            SizedBox(height: 16),
                                             Column(
                                               children: [
                                                 _simplifiedWalletDataWidget(
@@ -152,7 +153,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                       .proxyAccountAddress,
                                                   margin:
                                                       const EdgeInsets.fromLTRB(
-                                                          22, 26, 22, 0.0),
+                                                          22, 0.0, 22, 0.0),
                                                 ),
                                                 Icon(
                                                   Icons
@@ -170,6 +171,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 ),
                                               ],
                                             ),
+                                            SizedBox(height: 16),
                                             Consumer<_ThisProvider>(
                                               builder: (context, provider, _) =>
                                                   AppSlideButton(
@@ -237,7 +239,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
   }) {
     return Container(
       margin: margin,
-      padding: const EdgeInsets.fromLTRB(27, 14, 13, 13),
+      padding: const EdgeInsets.fromLTRB(27, 16, 13, 13),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
