@@ -408,8 +408,8 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
         String lockedBalance = '-';
 
         if (state is BalanceLoaded) {
-          availableBalance = state.free['PDEX'] ?? '-';
-          lockedBalance = state.reserved['PDEX'] ?? '-';
+          availableBalance = state.free[widget.asset.assetId] ?? '-';
+          lockedBalance = state.reserved[widget.asset.assetId] ?? '-';
         }
 
         return Padding(
