@@ -26,6 +26,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
   late ScrollController _scrollController;
   late AnimationController _controller;
+  final ValueNotifier<bool> hideSmallBalancesNotifier =
+      ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -51,9 +53,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
       providers: [
         ChangeNotifierProvider<_ThisIsChartVisibleProvider>(
             create: (_) => _ThisIsChartVisibleProvider()),
-        ChangeNotifierProvider<_ThisProvider>(
-          create: (_) => _ThisProvider(),
-        ),
         ChangeNotifierProvider<BalanceChartDummyProvider>(
           create: (_) => BalanceChartDummyProvider(),
         ),
@@ -110,16 +109,17 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               ),
                               child: Row(
                                 children: [
-                                  Consumer<_ThisProvider>(
-                                    builder: (context, thisProvider, child) =>
+                                  ValueListenableBuilder<bool>(
+                                    valueListenable: hideSmallBalancesNotifier,
+                                    builder: (context, areSmallbalancesHidden,
+                                            child) =>
                                         CheckBoxWidget(
                                       checkColor: AppColors.colorFFFFFF,
                                       backgroundColor: AppColors.colorE6007A,
-                                      isChecked:
-                                          thisProvider.isHideSmallBalance,
+                                      isChecked: areSmallbalancesHidden,
                                       isBackTransparentOnUnchecked: true,
                                       onTap: (val) =>
-                                          thisProvider.isHideSmallBalance = val,
+                                          hideSmallBalancesNotifier.value = val,
                                     ),
                                   ),
                                   SizedBox(width: 8),
@@ -137,45 +137,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: BlocBuilder<BalanceCubit, BalanceState>(
-                      builder: (context, state) {
-                        if (state is BalanceLoaded) {
-                          return ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 24),
-                            itemBuilder: (context, index) {
-                              String key = state.free.keys.elementAt(index);
-                              final asset = context
-                                  .read<MarketAssetCubit>()
-                                  .getAssetDetailsById(key);
-
-                              return InkWell(
-                                onTap: () =>
-                                    Coordinator.goToBalanceCoinPreviewScreen(
-                                  asset: asset,
-                                  balanceCubit: context.read<BalanceCubit>(),
-                                ),
-                                child: BalanceItemWidget(
-                                  tokenAcronym: asset.symbol,
-                                  tokenFullName: asset.name,
-                                  assetImg: TokenUtils.tokenIdToAssetImg(
-                                      asset.assetId),
-                                  amount: state.free.getBalance(key),
-                                ),
-                              );
-                            },
-                            itemCount: state.free.keys.length,
-                            shrinkWrap: true,
-                            physics: BouncingScrollPhysics(),
-                          );
-                        }
-
-                        if (state is BalanceLoading) {
-                          return BalanceItemShimmerWidget();
-                        }
-
-                        return Container();
-                      },
-                    ),
+                    child: _buildAssetList(),
                   ),
                 ],
               ),
@@ -189,6 +151,53 @@ class _BalanceTabViewState extends State<BalanceTabView>
   void _onScrollListener() {
     context.read<HomeScrollNotifProvider>().scrollOffset =
         _scrollController.offset;
+  }
+
+  Widget _buildAssetList() {
+    return BlocBuilder<BalanceCubit, BalanceState>(
+      builder: (context, state) {
+        if (state is BalanceLoaded) {
+          return ValueListenableBuilder<bool>(
+            valueListenable: hideSmallBalancesNotifier,
+            builder: (context, areSmallBalancesHidden, child) =>
+                ListView.builder(
+              padding: const EdgeInsets.only(bottom: 24),
+              itemBuilder: (context, index) {
+                String key = state.free.keys.elementAt(index);
+                final asset =
+                    context.read<MarketAssetCubit>().getAssetDetailsById(key);
+                final amount =
+                    double.tryParse(state.free.getBalance(key)) ?? 0.0;
+
+                return areSmallBalancesHidden && amount <= 0
+                    ? Container()
+                    : InkWell(
+                        onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+                          asset: asset,
+                          balanceCubit: context.read<BalanceCubit>(),
+                        ),
+                        child: BalanceItemWidget(
+                          tokenAcronym: asset.symbol,
+                          tokenFullName: asset.name,
+                          assetImg: TokenUtils.tokenIdToAssetImg(asset.assetId),
+                          amount: state.free.getBalance(key),
+                        ),
+                      );
+              },
+              itemCount: state.free.keys.length,
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+            ),
+          );
+        }
+
+        if (state is BalanceLoading) {
+          return BalanceItemShimmerWidget();
+        }
+
+        return Container();
+      },
+    );
   }
 }
 
@@ -206,37 +215,6 @@ class _ThisIsChartVisibleProvider extends ChangeNotifier {
   void toggleVisible() {
     _isChartVisible = !_isChartVisible;
     notifyListeners();
-  }
-}
-
-/// The provider to handle the list filter on this screen.
-class _ThisProvider extends ChangeNotifier {
-  bool _isHideSmallBalance = true;
-  bool _isHideFiat = false;
-
-  bool get isHideFiat => _isHideFiat;
-
-  bool get isHideSmallBalance => _isHideSmallBalance;
-
-  set isHideSmallBalance(bool val) {
-    _isHideSmallBalance = val;
-    notifyListeners();
-  }
-
-  set isHideFiat(bool val) {
-    _isHideFiat = val;
-    notifyListeners();
-  }
-
-  List<_ThisModel> get listCoins {
-    final list = List<_ThisModel>.from(_dummyList);
-    if (isHideFiat) {
-      list.removeWhere((e) => !e.iIsFiat);
-    }
-    if (isHideSmallBalance) {
-      list.removeWhere((e) => !e.isSmallBalance);
-    }
-    return list;
   }
 }
 
@@ -266,98 +244,3 @@ class _SliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
     return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
-
-// Remove the dummy data below
-
-/// The model class for list item
-class _ThisModel {
-  final String imgAsset;
-  final String name;
-  final String code;
-  final String unit;
-  final double price;
-  final bool isFiat;
-
-  const _ThisModel({
-    required this.imgAsset,
-    required this.name,
-    required this.code,
-    required this.unit,
-    required this.price,
-    required this.isFiat,
-  });
-
-  bool get iIsFiat => isFiat;
-
-  bool get isSmallBalance => price < 100.0;
-
-  String get iPrice => '~\$${price.toStringAsFixed(2)}';
-}
-
-/// Creates the dummy data for the list
-const _dummyList = <_ThisModel>[
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_1.png',
-    name: 'Ethereum',
-    code: 'ETH',
-    unit: '0.8621',
-    price: 182.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_2.png',
-    name: 'Polkadex',
-    code: 'DEX',
-    unit: '2.0000',
-    price: 76.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_8.png',
-    name: 'Bitcoin',
-    code: 'BTC',
-    unit: '0.621',
-    price: 12.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_6.png',
-    name: 'Litecoin',
-    code: 'LTC',
-    unit: '0.7739',
-    price: 134.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_1.png',
-    name: 'Ethereum',
-    code: 'ETH',
-    unit: '0.62d1',
-    price: 182.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_2.png',
-    name: 'Polkadex',
-    code: 'DEX',
-    unit: '2.0000',
-    price: 76.29,
-    isFiat: true,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_8.png',
-    name: 'Bitcoin',
-    code: 'BTC',
-    unit: '0.6211',
-    price: 12.29,
-    isFiat: false,
-  ),
-  _ThisModel(
-    imgAsset: 'trade_open/trade_open_6.png',
-    name: 'Litecoin',
-    code: 'LTC',
-    unit: '0.7739',
-    price: 134.29,
-    isFiat: true,
-  ),
-];
