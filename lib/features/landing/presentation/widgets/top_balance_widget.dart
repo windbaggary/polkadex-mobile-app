@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 
 class TopBalanceWidget extends StatelessWidget {
@@ -27,8 +28,8 @@ class TopBalanceWidget extends StatelessWidget {
               ),
             ),
             Text(
-              'Total Balance',
-              style: tsS15W400CFF.copyWith(color: AppColors.colorABB2BC),
+              context.read<AccountCubit>().accountName,
+              style: tsS20W600CFF,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 16),
