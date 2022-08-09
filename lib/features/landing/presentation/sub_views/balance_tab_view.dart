@@ -95,23 +95,12 @@ class _BalanceTabViewState extends State<BalanceTabView>
                     floating: false,
                     pinned: true,
                     delegate: _SliverPersistentHeaderDelegate(
-                      height: 115,
+                      height: 50,
                       child: Container(
                         color: AppColors.color2E303C,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Center(
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 13),
-                                decoration: BoxDecoration(
-                                  color: AppColors.color1C2023,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                height: 3,
-                                width: 51,
-                              ),
-                            ),
                             Padding(
                               padding: const EdgeInsets.only(
                                 top: 10,
