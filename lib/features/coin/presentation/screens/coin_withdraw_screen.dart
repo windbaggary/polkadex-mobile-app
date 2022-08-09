@@ -52,7 +52,9 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
             builder: (context, balanceState) {
               if (balanceState is BalanceLoaded) {
                 context.read<WithdrawCubit>().updateWithdrawParams(
-                      amountFree: 100.0,
+                      amountFree: double.tryParse(
+                              balanceState.free[widget.asset.assetId]) ??
+                          0.0,
                     );
               }
 
