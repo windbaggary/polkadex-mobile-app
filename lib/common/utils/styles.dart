@@ -163,12 +163,6 @@ TextStyle get tsS20W500CFF => TextStyle(
       color: AppColors.colorFFFFFF,
     );
 
-TextStyle get tsS20W400CFF => TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w400,
-      color: AppColors.colorFFFFFF,
-    );
-
 TextStyle get tsS14W400CFF => TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
