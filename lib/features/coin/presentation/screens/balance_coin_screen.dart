@@ -32,11 +32,10 @@ class BalanceCoinScreen extends StatefulWidget {
   final AssetEntity asset;
 
   @override
-  _BalanceCoinPreviewScreenState createState() =>
-      _BalanceCoinPreviewScreenState();
+  _BalanceCoinScreenState createState() => _BalanceCoinScreenState();
 }
 
-class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
+class _BalanceCoinScreenState extends State<BalanceCoinScreen>
     with TickerProviderStateMixin {
   final _isShowGraphNotifier = ValueNotifier<bool>(false);
   final List<Enum> _typeFilters = [];
@@ -138,6 +137,7 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                           );
                         },
                       ),
+                      _buildBalancesWidget(),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(21, 52, 21, 20.0),
                         child: Row(
@@ -399,6 +399,55 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
         previousDate != null ? _getDateString(previousDate) : '';
 
     return dateString != datePreviousString ? dateString : null;
+  }
+
+  Widget _buildBalancesWidget() {
+    return BlocBuilder<BalanceCubit, BalanceState>(
+      builder: (context, state) {
+        String availableBalance = '-';
+        String lockedBalance = '-';
+
+        if (state is BalanceLoaded) {
+          availableBalance = state.free['PDEX'] ?? '-';
+          lockedBalance = state.reserved['PDEX'] ?? '-';
+        }
+
+        return Padding(
+          padding: const EdgeInsets.only(left: 21, bottom: 12, top: 42),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    "Available",
+                    style: tsS16W400CFF.copyWith(color: AppColors.colorABB2BC),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    availableBalance,
+                    style: tsS16W600CFF,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Locked",
+                    style: tsS16W400CFF.copyWith(color: AppColors.colorABB2BC),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    lockedBalance,
+                    style: tsS16W600CFF,
+                  )
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
