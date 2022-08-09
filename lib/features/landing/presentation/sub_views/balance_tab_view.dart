@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:provider/provider.dart';
 
@@ -74,96 +70,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
                     children: [
                       SizedBox(height: 24),
                       TopBalanceWidget(),
-                      SizedBox(height: 24),
-                      _ThisHoldingWidget(),
-                      InkWell(
-                        onTap: () {
-                          final summaryVisProvider =
-                              context.read<_ThisIsChartVisibleProvider>();
-
-                          summaryVisProvider.isChartVisible
-                              ? _controller.reverse()
-                              : _controller.forward();
-
-                          summaryVisProvider.toggleVisible();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Summary',
-                                style: tsS18W600CFF,
-                                textAlign: TextAlign.center,
-                              ),
-                              RotationTransition(
-                                turns: Tween(begin: 0.0, end: 0.5)
-                                    .animate(_controller),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: AppColors.colorFFFFFF,
-                                  size: 16,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Consumer<_ThisIsChartVisibleProvider>(
-                        builder: (context, isChartVisbileProvider, _) =>
-                            AnimatedSize(
-                          duration: AppConfigs.animDurationSmall,
-                          alignment: Alignment.topCenter,
-                          child: isChartVisbileProvider.isChartVisible
-                              ? Column(
-                                  children: [
-                                    _ThisGraphHeadingWidget(),
-                                    SizedBox(height: 8),
-                                    SizedBox(
-                                      height: 250,
-                                      child:
-                                          Consumer<BalanceChartDummyProvider>(
-                                        builder: (context, provider, child) =>
-                                            AppLineChartWidget(
-                                          data: provider.list,
-                                          options: AppLineChartOptions(
-                                            yLabelCount: 3,
-                                            yAxisTopPaddingRatio: 0.05,
-                                            yAxisBottomPaddingRatio: 0.15,
-                                            chartScale: provider.chartScale,
-                                            lineColor: AppColors.colorE6007A,
-                                            yAxisLabelPrefix: "\$ ",
-                                            areaGradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: <Color>[
-                                                AppColors.colorE6007A
-                                                    .withOpacity(0.50),
-                                                AppColors.color8BA1BE
-                                                    .withOpacity(0.0),
-                                              ],
-                                              // stops: [0.0, 0.40],
-                                            ),
-                                            gridColor: AppColors.color8BA1BE
-                                                .withOpacity(0.15),
-                                            gridStroke: 1,
-                                            yLabelTextStyle: TextStyle(
-                                              fontSize: 08,
-                                              fontFamily: "WorkSans",
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.grey.shade400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    _ThisGraphOptionWidget(),
-                                    SizedBox(height: 30),
-                                  ],
-                                )
-                              : Container(),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -206,32 +112,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                 width: 51,
                               ),
                             ),
-                            Center(
-                              child: SizedBox(
-                                height: 35,
-                                child: DropdownButton<String>(
-                                  items: ['Main Wallet', 'Spot', 'Margin']
-                                      .map((e) => DropdownMenuItem<String>(
-                                            child: Text(
-                                              e,
-                                              style: tsS20W600CFF,
-                                            ),
-                                            value: e,
-                                          ))
-                                      .toList(),
-                                  value: 'Main Wallet',
-                                  style: tsS20W600CFF,
-                                  underline: Container(),
-                                  onChanged: (value) {},
-                                  isExpanded: false,
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.colorFFFFFF,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
                             Padding(
                               padding: const EdgeInsets.only(
                                 top: 10,
@@ -259,45 +139,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                     style: tsS14W400CFF,
                                   ),
                                   Spacer(),
-                                  InkWell(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          12, 12, 6, 12),
-                                      child: Opacity(
-                                        opacity: 1.0,
-                                        child: Text(
-                                          'Tokens',
-                                          style: tsS15W600CFF,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      final thisProvider =
-                                          context.read<_ThisProvider>();
-                                      thisProvider.isHideFiat =
-                                          !thisProvider.isHideFiat;
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          6, 12, 12, 12),
-                                      child: Consumer<_ThisProvider>(
-                                        builder:
-                                            (context, thisProvider, child) =>
-                                                Opacity(
-                                          opacity: thisProvider.isHideFiat
-                                              ? 1.0
-                                              : 0.3,
-                                          child: child,
-                                        ),
-                                        child: Text(
-                                          'Fiat',
-                                          style: tsS15W600CFF,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -362,209 +203,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
   }
 }
 
-/// The holding row widget handles the click event for graph
-class _ThisHoldingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 21,
-        right: 21,
-      ),
-      child: Row(
-        children: [
-          Text(
-            'Holding: ',
-            style: tsS13W500CFF.copyWith(
-              color: AppColors.colorABB2BC,
-            ),
-          ),
-          DropdownButton<String>(
-            items: ['24 hour', '1 week', '1 month']
-                .map((e) => DropdownMenuItem<String>(
-                      child: Text(
-                        e,
-                        style: tsS13W500CFF,
-                      ),
-                      value: e,
-                    ))
-                .toList(),
-            value: '24 hour',
-            style: tsS13W500CFF,
-            underline: Container(),
-            onChanged: (value) {},
-            isExpanded: false,
-            icon: Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: AppColors.colorFFFFFF,
-              size: 16,
-            ),
-          ),
-          // Text(
-          //   '24 hour ',
-          //   style: tsS13W500CFF,
-          // ),
-          Spacer(),
-          Text(
-            'Change ',
-            style: tsS13W500CFF.copyWith(
-              color: AppColors.colorABB2BC,
-            ),
-          ),
-          Text(
-            '+\$224',
-            style: tsS13W500CFF,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: AppColors.color0CA564,
-            ),
-            margin: const EdgeInsets.only(left: 8),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 4.5,
-              vertical: 2.5,
-            ),
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  'gain_graph'.asAssetSvg(),
-                  width: 8,
-                  height: 8,
-                ),
-                SizedBox(width: 2),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '52.47',
-                        style: tsS11W600CFF,
-                      ),
-                      TextSpan(
-                        text: '%',
-                        style: tsS8W600CFF,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// The heading part of the graph.
-class _ThisGraphHeadingWidget extends StatelessWidget {
-  Widget _buildItemWidget(
-      {required String? imgAsset,
-      required String title,
-      required String value}) {
-    return Row(
-      children: [
-        Container(
-          width: 23,
-          height: 23,
-          decoration: BoxDecoration(
-            color: (imgAsset == null)
-                ? AppColors.color8BA1BE.withOpacity(0.20)
-                : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          margin: const EdgeInsets.only(right: 6),
-          padding: const EdgeInsets.all(2),
-          child: (imgAsset == null) ? null : Image.asset(imgAsset),
-        ),
-        Expanded(
-            child: Text(
-          title,
-          style: tsS13W500CFF.copyWith(color: AppColors.colorABB2BC),
-        )),
-        Text(
-          value,
-          style: tsS12W500CFF,
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(21, 0, 21, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_1.png'.asAssetImg(),
-                                title: 'BTC',
-                                value: "60%")),
-                        Spacer(),
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_2.png'.asAssetImg(),
-                                title: 'DEX',
-                                value: "22%")),
-                        Spacer(),
-                      ],
-                    ),
-                    SizedBox(height: 7),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset:
-                                    'trade_open/trade_open_3.png'.asAssetImg(),
-                                title: 'USDT',
-                                value: "10%")),
-                        Spacer(),
-                        Expanded(
-                            flex: 5,
-                            child: _buildItemWidget(
-                                imgAsset: null, title: 'Others', value: "8%")),
-                        Spacer(),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () => Coordinator.goToBalanceSummaryScreen(),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.colorE6007A,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: SvgPicture.asset('pie-chart-18'.asAssetSvg()),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 /// The provider to maintain the hide and visible of charts
 class _ThisIsChartVisibleProvider extends ChangeNotifier {
   bool _isChartVisible = false;
@@ -610,72 +248,6 @@ class _ThisProvider extends ChangeNotifier {
       list.removeWhere((e) => !e.isSmallBalance);
     }
     return list;
-  }
-}
-
-/// The bottom option menu unnder the graph
-class _ThisGraphOptionWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(25, 10, 16, 14),
-      child: Wrap(
-        children: EnumBalanceChartDataTypes.values
-            .map<Widget>((item) => Consumer<BalanceChartDummyProvider>(
-                  builder: (context, appChartProvider, child) {
-                    String text;
-                    switch (item) {
-                      case EnumBalanceChartDataTypes.hour:
-                        text = "24h";
-                        break;
-                      case EnumBalanceChartDataTypes.week:
-                        text = "7d";
-                        break;
-                      case EnumBalanceChartDataTypes.month:
-                        text = "1m";
-                        break;
-                      case EnumBalanceChartDataTypes.threeMonth:
-                        text = "3m";
-
-                        break;
-                      case EnumBalanceChartDataTypes.sixMonth:
-                        text = "6m";
-                        break;
-                      case EnumBalanceChartDataTypes.year:
-                        text = "1y";
-                        break;
-                      case EnumBalanceChartDataTypes.all:
-                        text = "All";
-                        break;
-                    }
-                    return InkWell(
-                      onTap: () {
-                        appChartProvider.balanceChartDataType = item;
-                      },
-                      child: AnimatedContainer(
-                        duration: AppConfigs.animDurationSmall,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 11.5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: item == appChartProvider.balanceChartDataType
-                              ? AppColors.colorE6007A
-                              : null,
-                        ),
-                        child: Text(
-                          text,
-                          style: item == appChartProvider.balanceChartDataType
-                              ? tsS13W600CFF
-                              : tsS12W400CFF.copyWith(
-                                  color: AppColors.colorABB2BC),
-                        ),
-                      ),
-                    );
-                  },
-                ))
-            .toList(),
-      ),
-    );
   }
 }
 
