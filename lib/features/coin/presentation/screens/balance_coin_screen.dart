@@ -20,7 +20,6 @@ import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
 import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
-import 'package:polkadex/features/landing/presentation/widgets/top_pair_widget.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:polkadex/injection_container.dart';
@@ -138,42 +137,6 @@ class _BalanceCoinPreviewScreenState extends State<BalanceCoinScreen>
                             child: child,
                           );
                         },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 21, bottom: 12, top: 42),
-                        child: Text(
-                          "Trade Pairs",
-                          style: tsS20W600CFF,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 108,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) => TopPairWidget(
-                            leftAsset: context
-                                .read<MarketAssetCubit>()
-                                .listAvailableMarkets[index][0],
-                            rightAsset: context
-                                .read<MarketAssetCubit>()
-                                .listAvailableMarkets[index][1],
-                            onTap: () => Coordinator.goToCoinTradeScreen(
-                                baseToken: context
-                                    .read<MarketAssetCubit>()
-                                    .listAvailableMarkets[index][0],
-                                quoteToken: context
-                                    .read<MarketAssetCubit>()
-                                    .listAvailableMarkets[index][1],
-                                balanceCubit: context.read<BalanceCubit>()),
-                          ),
-                          itemCount: context
-                              .read<MarketAssetCubit>()
-                              .listAvailableMarkets
-                              .length,
-                          scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
-                          padding: const EdgeInsets.only(left: 21),
-                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(21, 52, 21, 20.0),
