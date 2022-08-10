@@ -14,7 +14,6 @@ import 'package:polkadex/features/landing/presentation/sub_views/balance_tab_vie
 import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/trade_tab_view.dart';
-import 'package:polkadex/features/landing/presentation/widgets/app_bottom_navigation_bar.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_drawer_widget.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
@@ -32,9 +31,8 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen>
     with TickerProviderStateMixin {
-  // AnimationController _entryAnimationController;
-  // Animation<Offset> _offsetBottomTopAnimation;
-  // Animation<double> _appbarAnimation;
+  late PageController _pageController;
+
   late AnimationController _drawerAnimationController;
   late AnimationController _drawerNotifAnimController;
   late AnimationController _contentAnimController;
@@ -47,6 +45,7 @@ class _LandingScreenState extends State<LandingScreen>
   bool _isDrawerVisible = false;
   bool _isNotifDrawerVisible = false;
   double _dragStartDX = 0.0;
+  int _selectedIndex = 0;
 
   late ValueNotifier<String> _titleNotifier;
 
@@ -71,29 +70,21 @@ class _LandingScreenState extends State<LandingScreen>
       reverseDuration: AppConfigs.animDurationSmall,
     );
 
-    // Future.microtask(() => _initAnimations());
+    _pageController = PageController();
+
     _initAnimations();
 
-    // _entryAnimationController = AnimationController(
-    //     vsync: this,
-    //     duration: AppConfigs.animDuration,
-    //     reverseDuration: AppConfigs.animReverseDuration);
-    // _initAnimations();
-
     super.initState();
-    // Future.microtask(() => _entryAnimationController.forward().orCancel);
   }
 
   @override
   void dispose() {
-    // _entryAnimationController.dispose();
-    // _entryAnimationController = null;
-
     _titleNotifier.dispose();
-
     _drawerAnimationController.dispose();
     _drawerNotifAnimController.dispose();
     _contentAnimController.dispose();
+    _pageController.dispose();
+
     super.dispose();
   }
 
@@ -143,6 +134,32 @@ class _LandingScreenState extends State<LandingScreen>
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: AppColors.color1C2023,
+              bottomNavigationBar: BottomNavigationBar(
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.call),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.camera),
+                    label: 'Markets',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.chat),
+                    label: 'Trade',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.chat),
+                    label: 'Wallets',
+                  ),
+                ],
+                type: BottomNavigationBarType.fixed,
+                selectedIconTheme: IconThemeData(
+                  color: AppColors.colorE6007A,
+                ),
+                currentIndex: _selectedIndex,
+                onTap: (index) => _onItemTapped(index),
+              ),
               body: SafeArea(
                 child: GestureDetector(
                   onHorizontalDragCancel: _onHorizontalDragCancel,
@@ -224,7 +241,18 @@ class _LandingScreenState extends State<LandingScreen>
                               ),
                             );
                           },
-                          child: _ThisContentWidget(),
+                          child: PageView(
+                            controller: _pageController,
+                            onPageChanged: (index) {
+                              setState(() => _selectedIndex = index);
+                            },
+                            children: [
+                              HomeTabView(),
+                              ExchangeTabView(),
+                              TradeTabView(),
+                              BalanceTabView(),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -236,6 +264,14 @@ class _LandingScreenState extends State<LandingScreen>
         ),
       ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+    });
   }
 
   /// Initialise the animations
@@ -443,45 +479,12 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
           children: <Widget>[
             _ThisAppBar(_bottomNavbarNotifier.value),
             Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: TabBarView(
-                      controller: _tabController,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: EnumBottonBarItem.values
-                          .map((e) => _buildBottomBarTab(e))
-                          .toList(),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Consumer2<BottomNavigationProvider,
-                        HomeScrollNotifProvider>(
-                      builder: (context, bottomNavigationProvider,
-                          homeScrollProvider, child) {
-                        return Container(
-                          height: homeScrollProvider.bottombarSize -
-                              homeScrollProvider.bottombarValue,
-                          child: SingleChildScrollView(
-                            physics: NeverScrollableScrollPhysics(),
-                            child: Container(
-                              transform: Matrix4.identity(),
-                              height: homeScrollProvider.bottombarSize,
-                              child: AppBottomNavigationBar(
-                                onSelected: _onBottomNavigationSelected,
-                                initialItem: EnumBottonBarItem
-                                    .values[_tabController.index],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+              child: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: EnumBottonBarItem.values
+                    .map((e) => _buildBottomBarTab(e))
+                    .toList(),
               ),
             ),
           ],
@@ -496,40 +499,12 @@ class __ThisContentWidgetState extends State<_ThisContentWidget>
       case EnumBottonBarItem.home:
         return HomeTabView();
       case EnumBottonBarItem.exchange:
-        return ExchangeTabView(
-          onBottombarItemSel: _onBottomNavigationSelected,
-          tabController: _tabController,
-        );
+        return ExchangeTabView();
       case EnumBottonBarItem.trade:
         return TradeTabView();
       case EnumBottonBarItem.balance:
         return BalanceTabView();
     }
-  }
-
-  /// This method will be called when user click on search icon on app bar
-  // void _onSearchTap(BuildContext context) {}
-  void _onBottomNavigationSelected(EnumBottonBarItem item) {
-    _bottomNavbarNotifier.value = item;
-    String title = "Hello Kas";
-    switch (item) {
-      case EnumBottonBarItem.home:
-        title = "Hello Kas";
-        break;
-      case EnumBottonBarItem.exchange:
-        title = "Exchange";
-        break;
-      case EnumBottonBarItem.trade:
-        title = "Trade";
-        break;
-      case EnumBottonBarItem.balance:
-        title = "Balance";
-        break;
-    }
-    Future.microtask(() =>
-        _ThisInheritedWidget.of(context)?.appbarTitleNotifier.value = title);
-    _tabController.animateTo(EnumBottonBarItem.values.indexOf(item),
-        curve: Curves.easeIn);
   }
 
   /// Unsubscribe from bottom navigation bar selection

@@ -24,17 +24,6 @@ import 'package:shimmer/shimmer.dart';
 
 /// XD_PAGE: 23
 class ExchangeTabView extends StatefulWidget {
-  /// A callback to handle the bottom navigation bar
-  final Function(EnumBottonBarItem val) onBottombarItemSel;
-
-  /// The tab controller to maintain the state
-  final TabController tabController;
-
-  const ExchangeTabView({
-    required this.onBottombarItemSel,
-    required this.tabController,
-  });
-
   @override
   _ExchangeTabViewState createState() => _ExchangeTabViewState();
 }
@@ -219,26 +208,6 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
               ),
             ),
           ),
-          // Consumer<HomeScrollNotifProvider>(
-          //   builder: (context, homeScrollProvider, child) {
-          //     return Container(
-          //       height: homeScrollProvider.bottombarSize -
-          //           homeScrollProvider.bottombarValue,
-          //       child: SingleChildScrollView(
-          //         physics: NeverScrollableScrollPhysics(),
-          //         child: Container(
-          //           transform: Matrix4.identity(),
-          //           height: homeScrollProvider.bottombarSize,
-          //           child: AppBottomNavigationBar(
-          //             onSelected: widget.onBottombarItemSel,
-          //             initialItem:
-          //                 EnumBottonBarItem.values[widget.tabController.index],
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // )
         ],
       ),
     );
