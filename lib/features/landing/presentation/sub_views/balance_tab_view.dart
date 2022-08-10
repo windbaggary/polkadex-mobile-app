@@ -67,8 +67,10 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: 24),
-                      TopBalanceWidget(),
+                      Padding(
+                        padding: const EdgeInsets.all(32),
+                        child: TopBalanceWidget(),
+                      ),
                     ],
                   ),
                 ),
