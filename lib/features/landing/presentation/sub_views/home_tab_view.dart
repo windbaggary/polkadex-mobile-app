@@ -58,125 +58,129 @@ class _HomeTabViewState extends State<HomeTabView>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           OrderbookAppBarWidget(),
-          SingleChildScrollView(
-            controller: _scrollController,
-            clipBehavior: Clip.none,
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16,
-                    top: 2,
-                  ),
-                  child: AppSliderWidget(
-                    height: 200,
-                    childrens: List.generate(
-                      10,
-                      (index) => InkWell(
-                          onTap: () async {
-                            try {
-                              final link =
-                                  Uri.parse('https://www.polkadex.trade');
-                              if (await url_launcher.canLaunchUrl(link)) {
-                                url_launcher.launchUrl(link);
-                              }
-                            } catch (ex) {
-                              print(ex);
-                            }
-                          },
-                          child: _ThisSliderItemWidget()),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16.0,
+                      right: 16,
+                      top: 2,
                     ),
-                    opacities: [0.1, 0.50, 1.0],
-                    offsetsY: [0.0, 5.0, 10.0],
-                    scales: [0.85, 0.95, 1.0],
+                    child: AppSliderWidget(
+                      height: 200,
+                      childrens: List.generate(
+                        10,
+                        (index) => InkWell(
+                            onTap: () async {
+                              try {
+                                final link =
+                                    Uri.parse('https://www.polkadex.trade');
+                                if (await url_launcher.canLaunchUrl(link)) {
+                                  url_launcher.launchUrl(link);
+                                }
+                              } catch (ex) {
+                                print(ex);
+                              }
+                            },
+                            child: _ThisSliderItemWidget()),
+                      ),
+                      opacities: [0.1, 0.50, 1.0],
+                      offsetsY: [0.0, 5.0, 10.0],
+                      scales: [0.85, 0.95, 1.0],
+                    ),
                   ),
-                ),
 
-                //   ),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 21,
-                    right: 21,
-                    top: 10,
-                    bottom: 12,
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 21,
+                      right: 21,
+                      top: 10,
+                      bottom: 12,
+                    ),
+                    child: Text(
+                      'Tops Pairs',
+                      style: tsS20W600CFF,
+                    ),
                   ),
-                  child: Text(
-                    'Tops Pairs',
-                    style: tsS20W600CFF,
+                  SizedBox(
+                    height: 108,
+                    child: BlocBuilder<TickerCubit, TickerState>(
+                      builder: (context, state) => ListView.builder(
+                        itemBuilder: (context, index) {
+                          final baseAsset =
+                              cubit.listAvailableMarkets[index][0];
+                          final quoteAsset =
+                              cubit.listAvailableMarkets[index][1];
+
+                          return TopPairWidget(
+                            leftAsset: baseAsset,
+                            rightAsset: quoteAsset,
+                            onTap: () =>
+                                Coordinator.goToBalanceCoinPreviewScreen(
+                              asset: context
+                                  .read<MarketAssetCubit>()
+                                  .listAvailableMarkets[index][0],
+                              balanceCubit: context.read<BalanceCubit>(),
+                            ),
+                            ticker: state is TickerLoaded
+                                ? state.ticker[
+                                    '${baseAsset.assetId}-${quoteAsset.assetId}']
+                                : null,
+                          );
+                        },
+                        itemCount: context
+                            .read<MarketAssetCubit>()
+                            .listAvailableMarkets
+                            .length,
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(left: 21),
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 108,
-                  child: BlocBuilder<TickerCubit, TickerState>(
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 21,
+                      right: 21,
+                      top: 45,
+                      bottom: 9,
+                    ),
+                    child: Text(
+                      'Ranking List',
+                      style: tsS20W600CFF,
+                    ),
+                  ),
+                  _ThisRankingListFilterWidget(),
+                  BlocBuilder<TickerCubit, TickerState>(
                     builder: (context, state) => ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
                       itemBuilder: (context, index) {
                         final baseAsset = cubit.listAvailableMarkets[index][0];
                         final quoteAsset = cubit.listAvailableMarkets[index][1];
 
-                        return TopPairWidget(
-                          leftAsset: baseAsset,
-                          rightAsset: quoteAsset,
-                          onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
-                            asset: context
-                                .read<MarketAssetCubit>()
-                                .listAvailableMarkets[index][0],
-                            balanceCubit: context.read<BalanceCubit>(),
-                          ),
+                        return _ThisRankingListItemWidget(
+                          baseAsset: baseAsset,
+                          quoteAsset: quoteAsset,
                           ticker: state is TickerLoaded
                               ? state.ticker[
                                   '${baseAsset.assetId}-${quoteAsset.assetId}']
                               : null,
                         );
                       },
-                      itemCount: context
-                          .read<MarketAssetCubit>()
-                          .listAvailableMarkets
-                          .length,
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(left: 21),
+                      itemCount: cubit.listAvailableMarkets.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 21,
-                    right: 21,
-                    top: 45,
-                    bottom: 9,
-                  ),
-                  child: Text(
-                    'Ranking List',
-                    style: tsS20W600CFF,
-                  ),
-                ),
-                _ThisRankingListFilterWidget(),
-                BlocBuilder<TickerCubit, TickerState>(
-                  builder: (context, state) => ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
-                    itemBuilder: (context, index) {
-                      final baseAsset = cubit.listAvailableMarkets[index][0];
-                      final quoteAsset = cubit.listAvailableMarkets[index][1];
-
-                      return _ThisRankingListItemWidget(
-                        baseAsset: baseAsset,
-                        quoteAsset: quoteAsset,
-                        ticker: state is TickerLoaded
-                            ? state.ticker[
-                                '${baseAsset.assetId}-${quoteAsset.assetId}']
-                            : null,
-                      );
-                    },
-                    itemCount: cubit.listAvailableMarkets.length,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           )
         ],
