@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
@@ -16,10 +14,7 @@ import 'package:polkadex/features/landing/presentation/sub_views/home_tab_view.d
 import 'package:polkadex/features/landing/presentation/sub_views/trade_tab_view.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_drawer_widget.dart';
-import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
@@ -45,8 +40,8 @@ class _LandingScreenState extends State<LandingScreen>
   bool _isDrawerVisible = false;
   bool _isNotifDrawerVisible = false;
   double _dragStartDX = 0.0;
-  int _selectedIndex = 0;
 
+  final ValueNotifier<int> _pageViewNotifier = ValueNotifier<int>(0);
   late ValueNotifier<String> _titleNotifier;
 
   @override
@@ -126,15 +121,12 @@ class _LandingScreenState extends State<LandingScreen>
             ChangeNotifierProvider<HomeScrollNotifProvider>(
                 create: (_) => HomeScrollNotifProvider()),
           ],
-          builder: (context, child) => _ThisInheritedWidget(
-            onOpenDrawer: _onOpenDrawer,
-            onOpenRightDrawer: _onOpenRightDrawer,
-            appbarTitleNotifier: _titleNotifier,
-            onNotificationTap: _onOpenRightDrawer,
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: AppColors.color1C2023,
-              bottomNavigationBar: BottomNavigationBar(
+          builder: (context, child) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.color1C2023,
+            bottomNavigationBar: ValueListenableBuilder<int>(
+              valueListenable: _pageViewNotifier,
+              builder: (context, index, child) => BottomNavigationBar(
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(Icons.call),
@@ -157,106 +149,100 @@ class _LandingScreenState extends State<LandingScreen>
                 selectedIconTheme: IconThemeData(
                   color: AppColors.colorE6007A,
                 ),
-                currentIndex: _selectedIndex,
-                onTap: (index) => _onItemTapped(index),
+                currentIndex: index,
+                onTap: (newIndex) => _onItemTapped(newIndex),
               ),
-              body: SafeArea(
-                child: GestureDetector(
-                  onHorizontalDragCancel: _onHorizontalDragCancel,
-                  onHorizontalDragEnd: _onHorizontalDragEnd,
-                  onHorizontalDragStart: _onHorizontalDragStart,
-                  onHorizontalDragUpdate: (details) =>
-                      _onHorizontalDragUpdate(details),
-                  child: Stack(
-                    alignment: Alignment.topLeft,
-                    children: [
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: AnimatedBuilder(
-                          animation: _leftDrawerWidthAnimation,
-                          builder: (context, child) {
-                            return Transform.translate(
-                              offset:
-                                  Offset(_leftDrawerWidthAnimation.value, 0.0),
-                              child: child,
-                            );
+            ),
+            body: SafeArea(
+              child: GestureDetector(
+                onHorizontalDragCancel: _onHorizontalDragCancel,
+                onHorizontalDragEnd: _onHorizontalDragEnd,
+                onHorizontalDragStart: _onHorizontalDragStart,
+                onHorizontalDragUpdate: (details) =>
+                    _onHorizontalDragUpdate(details),
+                child: Stack(
+                  alignment: Alignment.topLeft,
+                  children: [
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: AnimatedBuilder(
+                        animation: _leftDrawerWidthAnimation,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset:
+                                Offset(_leftDrawerWidthAnimation.value, 0.0),
+                            child: child,
+                          );
+                        },
+                        child: NotificationDrawerWidget(
+                          onClearTap: () {
+                            context
+                                .read<NotificationDrawerProvider>()
+                                .seenAll();
                           },
-                          child: NotificationDrawerWidget(
-                            onClearTap: () {
-                              context
-                                  .read<NotificationDrawerProvider>()
-                                  .seenAll();
-                            },
-                          ),
                         ),
                       ),
-                      AnimatedBuilder(
-                          animation: _rightDrawerWidthAnimation,
-                          builder: (context, child) => Transform.translate(
-                                offset: Offset(
-                                    _rightDrawerWidthAnimation.value, 0.0),
-                                child: child,
-                              ),
-                          child: AppDrawerWidget()),
-                      AnimatedBuilder(
+                    ),
+                    AnimatedBuilder(
                         animation: _rightDrawerWidthAnimation,
                         builder: (context, child) => Transform.translate(
-                            offset:
-                                Offset(_rightDrawerWidthAnimation.value, 0.0),
-                            child: child),
-                        child: AnimatedBuilder(
-                          animation: _contentAnimController,
-                          builder: (context, child) {
-                            return Container(
-                              transform: Matrix4.translationValues(
-                                  _leftDrawerWidthAnimation.value, 0.0, 0.0),
-                              decoration: BoxDecoration(
-                                color: AppColors.color1C2023,
-                                borderRadius:
-                                    _drawerContentRadiusAnimation.value,
-                              ),
-                              foregroundDecoration: BoxDecoration(
-                                color: _drawerContentColorAnimation.value,
-                                borderRadius:
-                                    _drawerContentRadiusAnimation.value,
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                              child: InkWell(
-                                onTap: (_isDrawerVisible ||
-                                        _isNotifDrawerVisible)
-                                    ? () {
-                                        if (_isDrawerVisible) _onHideDrawer();
-                                        if (_isNotifDrawerVisible) {
-                                          _onHideRightDrawer();
-                                        }
+                              offset:
+                                  Offset(_rightDrawerWidthAnimation.value, 0.0),
+                              child: child,
+                            ),
+                        child: AppDrawerWidget()),
+                    AnimatedBuilder(
+                      animation: _rightDrawerWidthAnimation,
+                      builder: (context, child) => Transform.translate(
+                          offset: Offset(_rightDrawerWidthAnimation.value, 0.0),
+                          child: child),
+                      child: AnimatedBuilder(
+                        animation: _contentAnimController,
+                        builder: (context, child) {
+                          return Container(
+                            transform: Matrix4.translationValues(
+                                _leftDrawerWidthAnimation.value, 0.0, 0.0),
+                            decoration: BoxDecoration(
+                              color: AppColors.color1C2023,
+                              borderRadius: _drawerContentRadiusAnimation.value,
+                            ),
+                            foregroundDecoration: BoxDecoration(
+                              color: _drawerContentColorAnimation.value,
+                              borderRadius: _drawerContentRadiusAnimation.value,
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            child: InkWell(
+                              onTap: (_isDrawerVisible || _isNotifDrawerVisible)
+                                  ? () {
+                                      if (_isDrawerVisible) _onHideDrawer();
+                                      if (_isNotifDrawerVisible) {
+                                        _onHideRightDrawer();
                                       }
-                                    : null,
-                                child: IgnorePointer(
-                                  ignoring:
-                                      _isDrawerVisible || _isNotifDrawerVisible,
-                                  child: child,
-                                ),
+                                    }
+                                  : null,
+                              child: IgnorePointer(
+                                ignoring:
+                                    _isDrawerVisible || _isNotifDrawerVisible,
+                                child: child,
                               ),
-                            );
-                          },
-                          child: PageView(
-                            controller: _pageController,
-                            onPageChanged: (index) {
-                              setState(() => _selectedIndex = index);
-                            },
-                            children: [
-                              HomeTabView(),
-                              ExchangeTabView(),
-                              TradeTabView(),
-                              BalanceTabView(),
-                            ],
-                          ),
+                            ),
+                          );
+                        },
+                        child: PageView(
+                          controller: _pageController,
+                          children: [
+                            HomeTabView(),
+                            ExchangeTabView(),
+                            TradeTabView(),
+                            BalanceTabView(),
+                          ],
+                          physics: NeverScrollableScrollPhysics(),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -267,11 +253,9 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _pageController.animateToPage(index,
-          duration: Duration(milliseconds: 500), curve: Curves.easeOut);
-    });
+    _pageViewNotifier.value = index;
+    _pageController.animateToPage(index,
+        duration: Duration(milliseconds: 500), curve: Curves.easeOut);
   }
 
   /// Initialise the animations
@@ -307,24 +291,6 @@ class _LandingScreenState extends State<LandingScreen>
       parent: _contentAnimController,
       curve: Curves.decelerate,
     ));
-  }
-
-  /// Open the drawer menu
-  ///
-  void _onOpenDrawer() {
-    _drawerAnimationController.reset();
-    _contentAnimController.reset();
-    _drawerAnimationController.forward().orCancel;
-    _contentAnimController.forward().orCancel;
-    _isDrawerVisible = true;
-  }
-
-  void _onOpenRightDrawer() {
-    _drawerNotifAnimController.reset();
-    _contentAnimController.reset();
-    _drawerNotifAnimController.forward().orCancel;
-    _contentAnimController.forward().orCancel;
-    _isNotifDrawerVisible = true;
   }
 
   /// Hide the drawer menu
@@ -429,260 +395,4 @@ class _LandingScreenState extends State<LandingScreen>
 
   /// Handle the drawer menu animation
   void _onHorizontalDragCancel() => _onHorizontalDragComplete(Velocity.zero);
-}
-
-class _ThisContentWidget extends StatefulWidget {
-  @override
-  __ThisContentWidgetState createState() => __ThisContentWidgetState();
-}
-
-class __ThisContentWidgetState extends State<_ThisContentWidget>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
-  late TabController _tabController;
-  late ValueNotifier<EnumBottonBarItem> _bottomNavbarNotifier;
-  StreamSubscription<EnumBottonBarItem>? _bottomBarStreamSubScription;
-
-  @override
-  void initState() {
-    _bottomNavbarNotifier =
-        ValueNotifier<EnumBottonBarItem>(EnumBottonBarItem.home);
-
-    _tabController =
-        TabController(length: EnumBottonBarItem.values.length, vsync: this)
-          ..addListener(() {
-            context.read<HomeScrollNotifProvider>().scrollOffset = 0.0;
-          });
-
-    WidgetsBinding.instance!.addObserver(this);
-    _subscribeBottomBarStream();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _bottomNavbarNotifier.dispose();
-    _unsubscribeBottomBar();
-    WidgetsBinding.instance!.removeObserver(this);
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<EnumBottonBarItem>(
-      valueListenable: _bottomNavbarNotifier,
-      builder: (context, selectedMenu, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _ThisAppBar(_bottomNavbarNotifier.value),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
-                children: EnumBottonBarItem.values
-                    .map((e) => _buildBottomBarTab(e))
-                    .toList(),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// Widget to build the content view based on bottom navigation bar selection
-  Widget _buildBottomBarTab(EnumBottonBarItem e) {
-    switch (e) {
-      case EnumBottonBarItem.home:
-        return HomeTabView();
-      case EnumBottonBarItem.exchange:
-        return ExchangeTabView();
-      case EnumBottonBarItem.trade:
-        return TradeTabView();
-      case EnumBottonBarItem.balance:
-        return BalanceTabView();
-    }
-  }
-
-  /// Unsubscribe from bottom navigation bar selection
-  void _unsubscribeBottomBar() {
-    _bottomBarStreamSubScription?.cancel();
-  }
-
-  /// Subscribe to bottom navigation bar selection
-  void _subscribeBottomBarStream() {
-    _unsubscribeBottomBar();
-    _bottomBarStreamSubScription =
-        BottomNavigationProvider().streamBottomBarItem.listen((type) {
-      _tabController.animateTo(EnumBottonBarItem.values.indexOf(type));
-    });
-  }
-}
-
-/// The app bar for the landing screen. This wideget is shown as appbar for
-/// all the tabviews
-class _ThisBaseAppbar extends StatelessWidget with PreferredSizeWidget {
-  final String assetImg;
-  final String title;
-  final List<Widget> actions;
-  // final Animation<double> animation;
-
-  /// The call back listner for avatar onTap
-  final VoidCallback onAvatarTapped;
-
-  const _ThisBaseAppbar({
-    required this.assetImg,
-    required this.title,
-    required this.actions,
-    required this.onAvatarTapped,
-    // this.animation,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            if (assetImg.isNotEmpty) _buildAvatar(),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 16),
-                  child: SvgPicture.asset(
-                    'title'.asAssetSvg(),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
-            if (actions.isNotEmpty) _buildNotification(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Size get preferredSize => Size(double.infinity, kToolbarHeight);
-
-  Widget _buildAvatar() {
-    return InkWell(
-      onTap: onAvatarTapped,
-      child: Container(
-        width: 40,
-        height: 40,
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            color: AppColors.color558BA1BE, shape: BoxShape.circle),
-        child: SvgPicture.asset(
-          'profile'.asAssetSvg(),
-          color: Colors.white,
-          fit: BoxFit.contain,
-        ),
-      ),
-      // ),
-    );
-  }
-
-  Widget _buildNotification() {
-    return Row(children: actions);
-  }
-}
-
-/// The inherited widget for the entire screen to access the parent methods
-/// from the child widgets
-class _ThisInheritedWidget extends InheritedWidget {
-  /// Method to open the left drawer menu
-  final VoidCallback onOpenDrawer;
-
-  /// Method to open the right drawer menu
-  final VoidCallback onOpenRightDrawer;
-
-  /// Set the title on the appbar
-  final ValueNotifier<String> appbarTitleNotifier;
-
-  /// Handle the notification icon click on app bar
-  final VoidCallback onNotificationTap;
-
-  _ThisInheritedWidget({
-    required this.onOpenDrawer,
-    required this.onOpenRightDrawer,
-    required this.appbarTitleNotifier,
-    required this.onNotificationTap,
-    required Widget child,
-  }) : super(child: child);
-
-  @override
-  bool updateShouldNotify(covariant _ThisInheritedWidget oldWidget) {
-    return oldWidget.onOpenDrawer != onOpenDrawer ||
-        oldWidget.onOpenRightDrawer != onOpenRightDrawer ||
-        oldWidget.onNotificationTap != onNotificationTap ||
-        oldWidget.appbarTitleNotifier != appbarTitleNotifier;
-  }
-
-  static _ThisInheritedWidget? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<_ThisInheritedWidget>();
-}
-
-/// The app bar widget for the screen.
-class _ThisAppBar extends StatelessWidget {
-  const _ThisAppBar(this.bottomNavbarValue);
-
-  final EnumBottonBarItem bottomNavbarValue;
-
-  @override
-  Widget build(BuildContext context) {
-    final provider = context.watch<HomeScrollNotifProvider>();
-    return bottomNavbarValue == EnumBottonBarItem.home ||
-            bottomNavbarValue == EnumBottonBarItem.balance
-        ? Container(
-            height: kToolbarHeight - provider.appbarValue,
-            child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: Container(
-                transform: Matrix4.identity()
-                  ..translate(0.0, -provider.appbarValue),
-                height: kToolbarHeight,
-                child: ValueListenableBuilder<String>(
-                  valueListenable:
-                      _ThisInheritedWidget.of(context)!.appbarTitleNotifier,
-                  builder: (context, title, child) => _ThisBaseAppbar(
-                    // animation: this._appbarAnimation,
-                    assetImg: 'user_icon.png'.asAssetImg(),
-                    title: title,
-                    actions: [
-                      InkWell(
-                        onTap: () => _ThisInheritedWidget.of(context)!
-                            .onNotificationTap(),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              color: AppColors.color558BA1BE,
-                              shape: BoxShape.circle),
-                          child: SvgPicture.asset(
-                            'notifications'.asAssetSvg(),
-                            color: Colors.white,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        // ),
-                      )
-                    ],
-                    onAvatarTapped: () =>
-                        _ThisInheritedWidget.of(context)!.onOpenDrawer(),
-                  ),
-                ),
-              ),
-            ),
-          )
-        : Container();
-  }
 }
