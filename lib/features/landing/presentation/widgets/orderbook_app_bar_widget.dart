@@ -25,7 +25,7 @@ class OrderbookAppBarWidget extends StatelessWidget {
             assetImg: 'user_icon.png'.asAssetImg(),
             actions: [
               InkWell(
-                onTap: () => {},
+                onTap: () => Scaffold.of(context).openEndDrawer(),
                 child: Container(
                   width: 40,
                   height: 40,
@@ -41,7 +41,7 @@ class OrderbookAppBarWidget extends StatelessWidget {
                 // ),
               )
             ],
-            onAvatarTapped: () => {},
+            onAvatarTapped: () => Scaffold.of(context).openDrawer(),
           ),
         ),
       ),
