@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -117,21 +119,21 @@ class _LandingScreenState extends State<LandingScreen>
             bottomNavigationBar: ValueListenableBuilder<int>(
               valueListenable: _pageViewNotifier,
               builder: (context, index, child) => BottomNavigationBar(
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.call),
+                items: <BottomNavigationBarItem>[
+                  _buildCustomBottomNavigationItem(
+                    svgName: 'home',
                     label: 'Home',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.camera),
+                  _buildCustomBottomNavigationItem(
+                    svgName: 'markets',
                     label: 'Markets',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.chat),
+                  _buildCustomBottomNavigationItem(
+                    svgName: 'trade',
                     label: 'Trade',
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.chat),
+                  _buildCustomBottomNavigationItem(
+                    svgName: 'wallet',
                     label: 'Wallets',
                   ),
                 ],
@@ -166,6 +168,22 @@ class _LandingScreenState extends State<LandingScreen>
           ),
         ),
       ),
+    );
+  }
+
+  BottomNavigationBarItem _buildCustomBottomNavigationItem({
+    required String svgName,
+    required String label,
+  }) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        svgName.asAssetSvg(),
+      ),
+      activeIcon: SvgPicture.asset(
+        svgName.asAssetSvg(),
+        color: AppColors.colorE6007A,
+      ),
+      label: label,
     );
   }
 
