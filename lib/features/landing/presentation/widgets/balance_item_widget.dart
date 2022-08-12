@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 
@@ -6,13 +7,13 @@ class BalanceItemWidget extends StatelessWidget {
   const BalanceItemWidget({
     required this.tokenAcronym,
     required this.tokenFullName,
-    required this.assetImg,
+    required this.assetSvg,
     required this.amount,
   });
 
   final String tokenAcronym;
   final String tokenFullName;
-  final String assetImg;
+  final String assetSvg;
   final String amount;
 
   @override
@@ -34,8 +35,8 @@ class BalanceItemWidget extends StatelessWidget {
             width: 42,
             height: 42,
             padding: const EdgeInsets.all(3),
-            child: Image.asset(
-              assetImg,
+            child: SvgPicture.asset(
+              assetSvg,
               fit: BoxFit.contain,
             ),
           ),

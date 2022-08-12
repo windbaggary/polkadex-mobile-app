@@ -23,14 +23,12 @@ abstract class TokenUtils {
     }
   }
 
-  static String tokenIdToAssetImg(String acronym) {
+  static String tokenIdToAssetSvg(String acronym) {
     switch (acronym) {
-      case '0':
-        return 'trade_open/trade_open_5.png'.asAssetImg();
-      case '1':
-        return 'trade_open/trade_open_13.png'.asAssetImg();
+      case 'PDEX':
+        return 'polkadex_white'.asAssetSvg();
       default:
-        return 'trade_open/trade_open_11.png'.asAssetImg();
+        return 'unknow_white'.asAssetSvg();
     }
   }
 }

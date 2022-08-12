@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/features/landing/presentation/widgets/quantity_input_widget.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
@@ -50,8 +51,8 @@ class OrderQuantityWidget extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(13, 12, 13, 10),
             child: Row(
               children: [
-                Image.asset(
-                  TokenUtils.tokenIdToAssetImg(tokenId),
+                SvgPicture.asset(
+                  TokenUtils.tokenIdToAssetSvg(tokenId),
                   width: 17,
                   height: 17,
                 ),

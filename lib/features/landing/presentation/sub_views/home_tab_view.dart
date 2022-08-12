@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
@@ -416,8 +417,8 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(baseAsset.assetId),
+                child: SvgPicture.asset(
+                  TokenUtils.tokenIdToAssetSvg(baseAsset.assetId),
                   fit: BoxFit.contain,
                 ),
               ),

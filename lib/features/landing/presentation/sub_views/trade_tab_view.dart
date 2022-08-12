@@ -226,80 +226,83 @@ class _ThisTopSelectableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Row(
-        children: [
-          BlocBuilder<MarketAssetCubit, MarketAssetState>(
-            builder: (context, state) => Container(
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(context
-                      .read<MarketAssetCubit>()
-                      .currentBaseAssetDetails
-                      .assetId),
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
-                  builder: (context, state) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
-                        style: tsS20W600CFF,
-                      ),
-                      Text(
-                        context
-                            .read<MarketAssetCubit>()
-                            .currentBaseAssetDetails
-                            .name,
-                        style:
-                            tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
-                      ),
-                    ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0),
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          children: [
+            BlocBuilder<MarketAssetCubit, MarketAssetState>(
+              builder: (context, state) => Container(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: SvgPicture.asset(
+                    TokenUtils.tokenIdToAssetSvg(context
+                        .read<MarketAssetCubit>()
+                        .currentBaseAssetDetails
+                        .assetId),
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.color3B4150),
-                  color: AppColors.color2E303C,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
+                    builder: (context, state) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
+                          style: tsS20W600CFF,
+                        ),
+                        Text(
+                          context
+                              .read<MarketAssetCubit>()
+                              .currentBaseAssetDetails
+                              .name,
+                          style: tsS14W400CFF.copyWith(
+                              color: AppColors.colorABB2BC),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                padding: EdgeInsets.all(4),
-                margin: EdgeInsets.only(left: 4, right: 8),
-                child: SvgPicture.asset(
-                  'switch'.asAssetSvg(),
-                  width: 12,
-                  height: 12,
-                  color: Colors.white,
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.color3B4150),
+                    color: AppColors.color2E303C,
+                  ),
+                  padding: EdgeInsets.all(4),
+                  margin: EdgeInsets.only(left: 4, right: 8),
+                  child: SvgPicture.asset(
+                    'switch'.asAssetSvg(),
+                    width: 12,
+                    height: 12,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Flexible(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
-              child: Sparkline(
-                data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
-                lineColor: graphColor,
+              ],
+            ),
+            Flexible(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
+                child: Sparkline(
+                  data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
+                  lineColor: graphColor,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

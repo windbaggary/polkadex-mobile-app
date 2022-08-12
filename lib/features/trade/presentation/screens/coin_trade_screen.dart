@@ -888,8 +888,8 @@ class _TopCoinWidget extends StatelessWidget {
             SizedBox(
               width: 48,
               height: 48,
-              child: Image.asset(
-                TokenUtils.tokenIdToAssetImg(leftToken.assetId),
+              child: SvgPicture.asset(
+                TokenUtils.tokenIdToAssetSvg(leftToken.assetId),
               ),
             ),
             SizedBox(width: 11),

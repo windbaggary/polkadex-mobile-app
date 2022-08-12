@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
@@ -444,15 +445,14 @@ class _ThisListItemWidget extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 43,
-                height: 43,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: AppColors.colorFFFFFF,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 padding: EdgeInsets.all(3),
-                child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(baseAsset.assetId),
+                child: SvgPicture.asset(
+                  TokenUtils.tokenIdToAssetSvg(baseAsset.assetId),
                   fit: BoxFit.contain,
                 ),
               ),
