@@ -1,50 +1,30 @@
 part of 'trade_history_cubit.dart';
 
 abstract class TradeHistoryState extends Equatable {
-  const TradeHistoryState({this.assetSelected});
-
-  final AssetEntity? assetSelected;
+  const TradeHistoryState();
 
   @override
-  List<Object?> get props => [assetSelected];
+  List<Object> get props => [];
 }
 
-class TradeHistoryInitial extends TradeHistoryState {
-  TradeHistoryInitial({AssetEntity? assetSelected})
-      : super(assetSelected: assetSelected);
-}
+class TradeHistoryInitial extends TradeHistoryState {}
 
-class TradeHistoryLoading extends TradeHistoryState {
-  TradeHistoryLoading({AssetEntity? assetSelected})
-      : super(assetSelected: assetSelected);
-}
+class TradeHistoryLoading extends TradeHistoryState {}
 
 class TradeHistoryError extends TradeHistoryState {
-  TradeHistoryError({
-    required this.message,
-    AssetEntity? assetSelected,
-  }) : super(assetSelected: assetSelected);
+  TradeHistoryError({required this.message});
 
   final String message;
 
   @override
-  List<Object?> get props => [
-        message,
-        assetSelected,
-      ];
+  List<Object> get props => [message];
 }
 
 class TradeHistoryLoaded extends TradeHistoryState {
-  const TradeHistoryLoaded({
-    required this.trades,
-    AssetEntity? assetSelected,
-  }) : super(assetSelected: assetSelected);
+  const TradeHistoryLoaded({required this.trades});
 
   final List<AccountTradeEntity> trades;
 
   @override
-  List<Object?> get props => [
-        trades,
-        assetSelected,
-      ];
+  List<Object> get props => [trades];
 }
