@@ -182,7 +182,9 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
                     size: 18,
                   ),
                   Text(
-                    "${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%",
+                    ticker != null
+                        ? '${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%'
+                        : '',
                     style: tsS14W600CFF.copyWith(color: mainTrendColor()),
                   )
                 ],

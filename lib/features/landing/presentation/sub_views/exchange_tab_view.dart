@@ -487,7 +487,7 @@ class _ThisListItemWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Vol: ${ticker?.volumeBase24hr.toStringAsFixed(4)}',
+                            'Vol: ${ticker != null ? ticker?.volumeBase24hr.toStringAsFixed(4) : ''}',
                             style: tsS12W400CFF.copyWith(
                               color: AppColors.colorABB2BC.withOpacity(0.70),
                             ),

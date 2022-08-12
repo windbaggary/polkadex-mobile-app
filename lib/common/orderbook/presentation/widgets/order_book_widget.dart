@@ -340,7 +340,9 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
                         size: 18,
                       ),
                       Text(
-                        state.trades.first.price.toStringAsFixed(4),
+                        state.trades.isEmpty
+                            ? ''
+                            : state.trades.first.price.toStringAsFixed(4),
                         style:
                             isUpTendency ? tsS18W600CE6007A : tsS18W600C0CA564,
                       ),

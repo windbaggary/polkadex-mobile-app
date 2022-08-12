@@ -440,7 +440,7 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                     ),
                   ]),
                   Text(
-                    'Vol: ${ticker?.volumeBase24hr.toStringAsFixed(4)}',
+                    'Vol: ${ticker != null ? ticker?.volumeBase24hr.toStringAsFixed(4) : ''}',
                     style: tsS12W400CFF.copyWith(
                       color: AppColors.colorABB2BC.withOpacity(0.70),
                     ),
@@ -460,8 +460,9 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 child: RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                    text:
-                        '${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}',
+                    text: ticker != null
+                        ? ticker?.priceChangePercent24Hr.toStringAsFixed(2)
+                        : '',
                     style: tsS15W500CFF,
                   ),
                   TextSpan(
