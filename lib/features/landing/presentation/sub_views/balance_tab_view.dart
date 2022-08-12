@@ -9,7 +9,6 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
-import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/orderbook_app_bar_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/trade_item_widget.dart';
@@ -26,20 +25,22 @@ import 'package:provider/provider.dart';
 /// XD_PAGE: 18
 /// XD_PAGE: 19
 class BalanceTabView extends StatefulWidget {
+  BalanceTabView({required this.scrollController});
+
+  final ScrollController scrollController;
+
   @override
   _BalanceTabViewState createState() => _BalanceTabViewState();
 }
 
 class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
-  late ScrollController _scrollController;
   late AnimationController _controller;
   final List<Enum> _typeFilters = [];
   DateTimeRange? _dateRange;
 
   @override
   void initState() {
-    _scrollController = ScrollController()..addListener(_onScrollListener);
     _controller = AnimationController(
       duration: const Duration(milliseconds: 250),
       vsync: this,
@@ -49,8 +50,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScrollListener);
-    _scrollController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -73,7 +72,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
             builder: (context, state) {
               return Expanded(
                 child: NestedScrollView(
-                  controller: _scrollController,
+                  controller: widget.scrollController,
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return <Widget>[
                       SliverToBoxAdapter(
@@ -396,11 +395,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
           filters: _typeFilters,
           dateFilter: _dateRange,
         );
-  }
-
-  void _onScrollListener() {
-    context.read<HomeScrollNotifProvider>().scrollOffset =
-        _scrollController.offset;
   }
 
   Widget _buildSelectTokenWidget({required AssetEntity? assetEntity}) {

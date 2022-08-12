@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/features/landing/presentation/widgets/scroll_to_hide_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -35,8 +36,11 @@ class _LandingScreenState extends State<LandingScreen>
   late AnimationController _drawerNotifAnimController;
   late AnimationController _contentAnimController;
 
-  final ValueNotifier<int> _pageViewNotifier = ValueNotifier<int>(0);
   late ValueNotifier<String> _titleNotifier;
+
+  late ScrollController _scrollController;
+
+  final ValueNotifier<int> _pageViewNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -61,6 +65,8 @@ class _LandingScreenState extends State<LandingScreen>
 
     _pageController = PageController();
 
+    _scrollController = ScrollController();
+
     super.initState();
   }
 
@@ -71,6 +77,7 @@ class _LandingScreenState extends State<LandingScreen>
     _drawerNotifAnimController.dispose();
     _contentAnimController.dispose();
     _pageController.dispose();
+    _scrollController.dispose();
 
     super.dispose();
   }
@@ -118,31 +125,34 @@ class _LandingScreenState extends State<LandingScreen>
             backgroundColor: AppColors.color1C2023,
             bottomNavigationBar: ValueListenableBuilder<int>(
               valueListenable: _pageViewNotifier,
-              builder: (context, index, child) => BottomNavigationBar(
-                items: <BottomNavigationBarItem>[
-                  _buildCustomBottomNavigationItem(
-                    svgName: 'home',
-                    label: 'Home',
+              builder: (context, index, child) => ScrollToHideWidget(
+                controller: _scrollController,
+                child: BottomNavigationBar(
+                  items: <BottomNavigationBarItem>[
+                    _buildCustomBottomNavigationItem(
+                      svgName: 'home',
+                      label: 'Home',
+                    ),
+                    _buildCustomBottomNavigationItem(
+                      svgName: 'markets',
+                      label: 'Markets',
+                    ),
+                    _buildCustomBottomNavigationItem(
+                      svgName: 'trade',
+                      label: 'Trade',
+                    ),
+                    _buildCustomBottomNavigationItem(
+                      svgName: 'wallet',
+                      label: 'Wallets',
+                    ),
+                  ],
+                  type: BottomNavigationBarType.fixed,
+                  selectedIconTheme: IconThemeData(
+                    color: AppColors.colorE6007A,
                   ),
-                  _buildCustomBottomNavigationItem(
-                    svgName: 'markets',
-                    label: 'Markets',
-                  ),
-                  _buildCustomBottomNavigationItem(
-                    svgName: 'trade',
-                    label: 'Trade',
-                  ),
-                  _buildCustomBottomNavigationItem(
-                    svgName: 'wallet',
-                    label: 'Wallets',
-                  ),
-                ],
-                type: BottomNavigationBarType.fixed,
-                selectedIconTheme: IconThemeData(
-                  color: AppColors.colorE6007A,
+                  currentIndex: index,
+                  onTap: (newIndex) => _onItemTapped(newIndex),
                 ),
-                currentIndex: index,
-                onTap: (newIndex) => _onItemTapped(newIndex),
               ),
             ),
             drawer: Drawer(
@@ -157,10 +167,18 @@ class _LandingScreenState extends State<LandingScreen>
               child: PageView(
                 controller: _pageController,
                 children: [
-                  HomeTabView(),
-                  ExchangeTabView(),
-                  TradeTabView(),
-                  BalanceTabView(),
+                  HomeTabView(
+                    scrollController: _scrollController,
+                  ),
+                  ExchangeTabView(
+                    scrollController: _scrollController,
+                  ),
+                  TradeTabView(
+                    scrollController: _scrollController,
+                  ),
+                  BalanceTabView(
+                    scrollController: _scrollController,
+                  ),
                 ],
                 physics: NeverScrollableScrollPhysics(),
               ),

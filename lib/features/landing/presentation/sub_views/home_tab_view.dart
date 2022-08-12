@@ -7,7 +7,6 @@ import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
-import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/rank_list_provider.dart';
 import 'package:polkadex/features/landing/presentation/widgets/app_slider_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -23,27 +22,15 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 /// XD_PAGE: 34
 class HomeTabView extends StatefulWidget {
+  HomeTabView({required this.scrollController});
+
+  final ScrollController scrollController;
+
   @override
   _HomeTabViewState createState() => _HomeTabViewState();
 }
 
-class _HomeTabViewState extends State<HomeTabView>
-    with SingleTickerProviderStateMixin {
-  late ScrollController _scrollController;
-
-  @override
-  void initState() {
-    _scrollController = ScrollController()..addListener(_scrollListener);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
+class _HomeTabViewState extends State<HomeTabView> {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<MarketAssetCubit>();
@@ -60,7 +47,7 @@ class _HomeTabViewState extends State<HomeTabView>
           OrderbookAppBarWidget(),
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
+              controller: widget.scrollController,
               physics: BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -179,6 +166,48 @@ class _HomeTabViewState extends State<HomeTabView>
                       physics: NeverScrollableScrollPhysics(),
                     ),
                   ),
+                  BlocBuilder<TickerCubit, TickerState>(
+                    builder: (context, state) => ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
+                      itemBuilder: (context, index) {
+                        final baseAsset = cubit.listAvailableMarkets[index][0];
+                        final quoteAsset = cubit.listAvailableMarkets[index][1];
+
+                        return _ThisRankingListItemWidget(
+                          baseAsset: baseAsset,
+                          quoteAsset: quoteAsset,
+                          ticker: state is TickerLoaded
+                              ? state.ticker[
+                                  '${baseAsset.assetId}-${quoteAsset.assetId}']
+                              : null,
+                        );
+                      },
+                      itemCount: cubit.listAvailableMarkets.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    ),
+                  ),
+                  BlocBuilder<TickerCubit, TickerState>(
+                    builder: (context, state) => ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
+                      itemBuilder: (context, index) {
+                        final baseAsset = cubit.listAvailableMarkets[index][0];
+                        final quoteAsset = cubit.listAvailableMarkets[index][1];
+
+                        return _ThisRankingListItemWidget(
+                          baseAsset: baseAsset,
+                          quoteAsset: quoteAsset,
+                          ticker: state is TickerLoaded
+                              ? state.ticker[
+                                  '${baseAsset.assetId}-${quoteAsset.assetId}']
+                              : null,
+                        );
+                      },
+                      itemCount: cubit.listAvailableMarkets.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -186,11 +215,6 @@ class _HomeTabViewState extends State<HomeTabView>
         ],
       ),
     );
-  }
-
-  void _scrollListener() {
-    final provider = context.read<HomeScrollNotifProvider>();
-    provider.scrollOffset = _scrollController.offset;
   }
 }
 
