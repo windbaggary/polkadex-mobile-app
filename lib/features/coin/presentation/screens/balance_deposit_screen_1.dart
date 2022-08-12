@@ -49,7 +49,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                 ),
                 Expanded(
                   child: Text(
-                    "Deposit ${TokenUtils.tokenIdToFullName(widget.tokenId)} (${TokenUtils.tokenIdToAcronym(widget.tokenId)})",
+                    "Deposit",
                     style: tsS19W700CFF,
                     textAlign: TextAlign.center,
                   ),
@@ -308,8 +308,9 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                             text: TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text:
-                                      '${double.parse(state.free.getBalance(widget.tokenId)).toStringAsFixed(2)} ${TokenUtils.tokenIdToAcronym(widget.tokenId)} ',
+                                  text: double.parse(
+                                          state.free.getBalance(widget.tokenId))
+                                      .toStringAsFixed(2),
                                   style: tsS17W600C0CA564.copyWith(
                                       color: AppColors.colorFFFFFF),
                                 ),
