@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/orderbook_app_bar_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -62,104 +61,96 @@ class _BalanceTabViewState extends State<BalanceTabView>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           OrderbookAppBarWidget(),
-          BlocBuilder<TradeHistoryCubit, TradeHistoryState>(
-            builder: (context, state) {
-              return Expanded(
-                child: NestedScrollView(
-                  controller: widget.scrollController,
-                  headerSliverBuilder: (context, innerBoxIsScrolled) {
-                    return <Widget>[
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(height: 24),
-                            TopBalanceWidget(),
-                            Padding(
-                              padding: const EdgeInsets.all(32),
-                              child: TopBalanceWidget(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ];
-                  },
-                  body: Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: AppColors.color2E303C,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 30,
-                          offset: Offset(0.0, 20.0),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverPersistentHeader(
-                          floating: false,
-                          pinned: true,
-                          delegate: _SliverPersistentHeaderDelegate(
-                            height: 50,
-                            child: Container(
-                              color: AppColors.color2E303C,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 10,
-                                      bottom: 12,
-                                      left: 10,
-                                      right: 10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        ValueListenableBuilder<bool>(
-                                          valueListenable:
-                                              hideSmallBalancesNotifier,
-                                          builder: (context,
-                                                  areSmallbalancesHidden,
-                                                  child) =>
-                                              CheckBoxWidget(
-                                            checkColor: AppColors.colorFFFFFF,
-                                            backgroundColor:
-                                                AppColors.colorE6007A,
-                                            isChecked: areSmallbalancesHidden,
-                                            isBackTransparentOnUnchecked: true,
-                                            onTap: (val) =>
-                                                hideSmallBalancesNotifier
-                                                    .value = val,
-                                          ),
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'Hide small balances',
-                                          style: tsS14W400CFF,
-                                        ),
-                                        Spacer(),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: _buildAssetList(),
+          Expanded(
+            child: NestedScrollView(
+              controller: widget.scrollController,
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: TopBalanceWidget(),
                         ),
                       ],
                     ),
                   ),
+                ];
+              },
+              body: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: AppColors.color2E303C,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 30,
+                      offset: Offset(0.0, 20.0),
+                    ),
+                  ],
                 ),
-              );
-            },
-          )
+                padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverPersistentHeader(
+                      floating: false,
+                      pinned: true,
+                      delegate: _SliverPersistentHeaderDelegate(
+                        height: 50,
+                        child: Container(
+                          color: AppColors.color2E303C,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 12,
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                child: Row(
+                                  children: [
+                                    ValueListenableBuilder<bool>(
+                                      valueListenable:
+                                          hideSmallBalancesNotifier,
+                                      builder: (context, areSmallbalancesHidden,
+                                              child) =>
+                                          CheckBoxWidget(
+                                        checkColor: AppColors.colorFFFFFF,
+                                        backgroundColor: AppColors.colorE6007A,
+                                        isChecked: areSmallbalancesHidden,
+                                        isBackTransparentOnUnchecked: true,
+                                        onTap: (val) =>
+                                            hideSmallBalancesNotifier.value =
+                                                val,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Hide small balances',
+                                      style: tsS14W400CFF,
+                                    ),
+                                    Spacer(),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: _buildAssetList(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
