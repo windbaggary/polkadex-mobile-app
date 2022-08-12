@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
@@ -145,48 +146,6 @@ class _HomeTabViewState extends State<HomeTabView> {
                     ),
                   ),
                   _ThisRankingListFilterWidget(),
-                  BlocBuilder<TickerCubit, TickerState>(
-                    builder: (context, state) => ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
-                      itemBuilder: (context, index) {
-                        final baseAsset = cubit.listAvailableMarkets[index][0];
-                        final quoteAsset = cubit.listAvailableMarkets[index][1];
-
-                        return _ThisRankingListItemWidget(
-                          baseAsset: baseAsset,
-                          quoteAsset: quoteAsset,
-                          ticker: state is TickerLoaded
-                              ? state.ticker[
-                                  '${baseAsset.assetId}-${quoteAsset.assetId}']
-                              : null,
-                        );
-                      },
-                      itemCount: cubit.listAvailableMarkets.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                    ),
-                  ),
-                  BlocBuilder<TickerCubit, TickerState>(
-                    builder: (context, state) => ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
-                      itemBuilder: (context, index) {
-                        final baseAsset = cubit.listAvailableMarkets[index][0];
-                        final quoteAsset = cubit.listAvailableMarkets[index][1];
-
-                        return _ThisRankingListItemWidget(
-                          baseAsset: baseAsset,
-                          quoteAsset: quoteAsset,
-                          ticker: state is TickerLoaded
-                              ? state.ticker[
-                                  '${baseAsset.assetId}-${quoteAsset.assetId}']
-                              : null,
-                        );
-                      },
-                      itemCount: cubit.listAvailableMarkets.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                    ),
-                  ),
                   BlocBuilder<TickerCubit, TickerState>(
                     builder: (context, state) => ListView.builder(
                       padding: const EdgeInsets.fromLTRB(12, 0, 12, 64),
@@ -441,8 +400,8 @@ class _ThisRankingListItemWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(baseAsset.assetId),
+                child: SvgPicture.asset(
+                  TokenUtils.tokenIdToAssetSvg(baseAsset.assetId),
                   fit: BoxFit.contain,
                 ),
               ),

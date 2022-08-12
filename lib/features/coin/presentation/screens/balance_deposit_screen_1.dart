@@ -2,6 +2,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -48,7 +49,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                 ),
                 Expanded(
                   child: Text(
-                    "Deposit ${TokenUtils.tokenIdToFullName(widget.tokenId)} (${TokenUtils.tokenIdToAcronym(widget.tokenId)})",
+                    "Deposit",
                     style: tsS19W700CFF,
                     textAlign: TextAlign.center,
                   ),
@@ -287,8 +288,8 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
             padding: const EdgeInsets.all(5),
             width: 51,
             height: 51,
-            child: Image.asset(
-              TokenUtils.tokenIdToAssetImg(widget.tokenId),
+            child: SvgPicture.asset(
+              TokenUtils.tokenIdToAssetSvg(widget.tokenId),
             ),
           ),
           Expanded(
@@ -307,8 +308,9 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                             text: TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text:
-                                      '${double.parse(state.free.getBalance(widget.tokenId)).toStringAsFixed(2)} ${TokenUtils.tokenIdToAcronym(widget.tokenId)} ',
+                                  text: double.parse(
+                                          state.free.getBalance(widget.tokenId))
+                                      .toStringAsFixed(2),
                                   style: tsS17W600C0CA564.copyWith(
                                       color: AppColors.colorFFFFFF),
                                 ),

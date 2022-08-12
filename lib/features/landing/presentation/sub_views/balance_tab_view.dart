@@ -182,7 +182,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                         child: BalanceItemWidget(
                           tokenAcronym: asset.symbol,
                           tokenFullName: asset.name,
-                          assetImg: TokenUtils.tokenIdToAssetImg(asset.assetId),
+                          assetSvg: TokenUtils.tokenIdToAssetSvg(asset.assetId),
                           amount: state.free.getBalance(key),
                         ),
                       );

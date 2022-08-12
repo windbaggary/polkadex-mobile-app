@@ -423,8 +423,8 @@ class _ThisCoinTitleWidget extends StatelessWidget {
             padding: const EdgeInsets.all(5),
             width: 51,
             height: 51,
-            child: Image.asset(
-              TokenUtils.tokenIdToAssetImg(asset.assetId),
+            child: SvgPicture.asset(
+              TokenUtils.tokenIdToAssetSvg(asset.assetId),
             ),
           ),
           Expanded(
