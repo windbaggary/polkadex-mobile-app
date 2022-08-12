@@ -22,7 +22,7 @@ class MarketAssetCubit extends Cubit<MarketAssetState> {
   final Map<String, AssetEntity> _assets = {};
 
   List<List<AssetEntity>> get listAvailableMarkets => _marketsList;
-  Map<String, AssetEntity> get mapAvailableAssets => _assets;
+  Map<String, List<String>> get mapAvailableMarkets => _marketsMap;
 
   AssetEntity get currentBaseAssetDetails {
     final currentState = state;
