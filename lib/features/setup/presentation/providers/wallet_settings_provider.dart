@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/features/setup/presentation/utils/password_regex.dart';
-import 'package:polkadex/injection_container.dart';
 
 class WalletSettingsProvider extends ChangeNotifier {
-  bool _isBiometricOnlyEnabled =
-      dependency.get<bool>(instanceName: 'isBiometricAvailable');
+  bool _isFingerPrintEnabled = false;
   bool _hasLeast8Characters = false;
   bool _hasLeast1Uppercase = false;
   bool _hasLeast1LowercaseLetter = false;
   bool _hasLeast1Digit = false;
   bool _isNextEnabled = false;
 
-  bool get isBiometricOnlyEnabled => _isBiometricOnlyEnabled;
+  bool get isFingerPrintEnabled => _isFingerPrintEnabled;
   bool get hasLeast8Characters => _hasLeast8Characters;
   bool get hasLeast1Uppercase => _hasLeast1Uppercase;
   bool get hasLeast1LowercaseLetter => _hasLeast1LowercaseLetter;
@@ -19,7 +17,7 @@ class WalletSettingsProvider extends ChangeNotifier {
   bool get isNextEnabled => _isNextEnabled;
 
   set fingerPrintAuth(bool value) {
-    _isBiometricOnlyEnabled = value;
+    _isFingerPrintEnabled = value;
     notifyListeners();
   }
 

@@ -46,8 +46,7 @@ class AppSettingsSecurity extends StatelessWidget {
                     loading: state is AccountUpdatingTimer,
                   ),
                   if (dependency.get<bool>(
-                          instanceName: 'isBiometricAvailable') &&
-                      !context.read<AccountCubit>().biometricOnly)
+                      instanceName: 'isBiometricAvailable'))
                     Column(
                       children: [
                         SizedBox(height: 8),

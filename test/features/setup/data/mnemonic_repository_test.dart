@@ -57,7 +57,6 @@ void main() {
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
       name: "",
-      biometricOnly: false,
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );

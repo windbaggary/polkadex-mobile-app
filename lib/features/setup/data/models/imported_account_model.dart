@@ -14,7 +14,6 @@ class ImportedAccountModel extends ImportedAccountEntity {
     required String proxyAddress,
     required MetaEntity meta,
     required String name,
-    required bool biometricOnly,
     required bool biometricAccess,
     required EnumTimerIntervalTypes timerInterval,
   }) : super(
@@ -24,7 +23,6 @@ class ImportedAccountModel extends ImportedAccountEntity {
           proxyAddress: proxyAddress,
           meta: meta,
           name: name,
-          biometricOnly: biometricOnly,
           biometricAccess: biometricAccess,
           timerInterval: timerInterval,
         );
@@ -37,7 +35,6 @@ class ImportedAccountModel extends ImportedAccountEntity {
       proxyAddress: map['address'] ?? '',
       meta: MetaModel.fromJson(map['meta']),
       name: map['name'] ?? '',
-      biometricOnly: map['biometricOnly'] ?? false,
       biometricAccess: map['biometricAccess'] ?? false,
       timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
           EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
@@ -52,7 +49,6 @@ class ImportedAccountModel extends ImportedAccountEntity {
       'address': proxyAddress,
       'meta': (meta as MetaModel).toJson(),
       'name': name,
-      'biometricOnly': biometricOnly,
       'biometricAccess': biometricAccess,
       'timerInterval': timerInterval.toString(),
     };
@@ -65,7 +61,6 @@ class ImportedAccountModel extends ImportedAccountEntity {
     String? proxyAddress,
     MetaEntity? meta,
     String? name,
-    bool? biometricOnly,
     bool? biometricAccess,
     String? signature,
     EnumTimerIntervalTypes? timerInterval,
@@ -77,7 +72,6 @@ class ImportedAccountModel extends ImportedAccountEntity {
       proxyAddress: proxyAddress ?? this.proxyAddress,
       meta: meta ?? this.meta,
       name: name ?? this.name,
-      biometricOnly: biometricOnly ?? this.biometricOnly,
       biometricAccess: biometricAccess ?? this.biometricAccess,
       timerInterval: timerInterval ?? this.timerInterval,
     );

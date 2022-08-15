@@ -11,7 +11,6 @@ class ImportedAccountEntity extends Equatable {
     required this.proxyAddress,
     required this.meta,
     required this.name,
-    required this.biometricOnly,
     required this.biometricAccess,
     required this.timerInterval,
   });
@@ -22,7 +21,6 @@ class ImportedAccountEntity extends Equatable {
   final String proxyAddress;
   final MetaEntity meta;
   final String name;
-  final bool biometricOnly;
   final bool biometricAccess;
   final EnumTimerIntervalTypes timerInterval;
 

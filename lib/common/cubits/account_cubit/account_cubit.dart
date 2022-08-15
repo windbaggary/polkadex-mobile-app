@@ -80,14 +80,6 @@ class AccountCubit extends Cubit<AccountState> {
         : false;
   }
 
-  bool get biometricOnly {
-    final currentState = state;
-
-    return currentState is AccountLoaded
-        ? currentState.account.biometricOnly
-        : true;
-  }
-
   EnumTimerIntervalTypes get timerInterval {
     final currentState = state;
 
@@ -154,7 +146,6 @@ class AccountCubit extends Cubit<AccountState> {
                 (importedAcc as ImportedAccountModel).copyWith(
               name: name,
               mainAddress: mainAddress,
-              biometricOnly: biometricOnly,
               biometricAccess: useBiometric,
             );
 

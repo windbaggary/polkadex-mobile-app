@@ -99,7 +99,6 @@ void main() {
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
       name: 'test',
-      biometricOnly: false,
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
@@ -110,7 +109,6 @@ void main() {
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       meta: tMeta,
       name: 'test',
-      biometricOnly: false,
       biometricAccess: true,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
