@@ -124,11 +124,10 @@ class _IntroScreenState extends State<IntroScreen>
                   child: SizedBox(
                     height: 54,
                     child: LoginButtonWidget(
-                      text: 'Access with QR Code',
+                      text: 'I alredy have an account',
                       backgroundColor: AppColors.colorFFFFFF,
                       textStyle: tsS16W500C24252C,
-                      onTap: () => Coordinator.goToQrCodeScanScreen(
-                          onQrCodeScan: _qRCodeMnemonicEval),
+                      onTap: () => Coordinator.goToSignInScreen(),
                     ),
                   ),
                 ),

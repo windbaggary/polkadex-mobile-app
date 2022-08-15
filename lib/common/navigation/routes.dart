@@ -26,11 +26,13 @@ import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/backup_mnemonic_screen.dart';
+import 'package:polkadex/features/setup/presentation/screens/code_verification_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/confirm_password_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/import_wallet_methods_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/restore_existing_wallet_screen.dart';
+import 'package:polkadex/features/setup/presentation/screens/sign_in_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/sign_up_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
 import 'package:polkadex/features/trade/presentation/screens/coin_trade_screen.dart';
@@ -47,6 +49,8 @@ abstract class Routes {
   static const restoreExistingWalletScreen = '/restoreExistingWallet';
   static const walletSettingsScreen = '/walletSettings';
   static const signUpScreen = '/signUpScreen';
+  static const signInScreen = '/signInScreen';
+  static const codeVerificationScreen = '/codeVerificationScreen';
   static const privacyPolicyScreen = '/privacyPolicy';
   static const coinWithdrawScreen = '/coinWithdraw';
   static const coinTradeScreen = '/coinTrade';
@@ -162,6 +166,20 @@ abstract class Routes {
               opacity: CurvedAnimation(
                   parent: animation, curve: Interval(0.500, 1.00)),
               child: SignUpScreen(),
+            );
+          },
+        );
+      case signInScreen:
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return ChangeNotifierProvider(
+              create: (context) => dependency<WalletSettingsProvider>(),
+              child: FadeTransition(
+                opacity: CurvedAnimation(
+                    parent: animation, curve: Interval(0.500, 1.00)),
+                child: SignInScreen(),
+              ),
             );
           },
         );

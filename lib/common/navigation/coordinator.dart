@@ -58,6 +58,12 @@ abstract class Coordinator {
     );
   }
 
+  static void goToSignInScreen() {
+    _navigationKey.currentState?.pushNamed(
+      Routes.signInScreen,
+    );
+  }
+
   static void goToCodeVerificationScreen() {
     _navigationKey.currentState?.pushNamed(
       Routes.codeVerificationScreen,
