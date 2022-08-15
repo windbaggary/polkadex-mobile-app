@@ -52,6 +52,18 @@ abstract class Coordinator {
           );
   }
 
+  static void goToSignUpScreen() {
+    _navigationKey.currentState?.pushNamed(
+      Routes.signUpScreen,
+    );
+  }
+
+  static void goToCodeVerificationScreen() {
+    _navigationKey.currentState?.pushNamed(
+      Routes.codeVerificationScreen,
+    );
+  }
+
   static void goToIntroScreen() {
     _navigationKey.currentState?.pushNamedAndRemoveUntil(
       Routes.introScreen,

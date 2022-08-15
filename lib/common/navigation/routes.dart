@@ -31,6 +31,7 @@ import 'package:polkadex/features/setup/presentation/screens/import_wallet_metho
 import 'package:polkadex/features/setup/presentation/screens/intro_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/mnemonic_generated_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/restore_existing_wallet_screen.dart';
+import 'package:polkadex/features/setup/presentation/screens/sign_up_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/wallet_settings_screen.dart';
 import 'package:polkadex/features/trade/presentation/screens/coin_trade_screen.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
@@ -45,6 +46,7 @@ abstract class Routes {
   static const mnemonicGeneratedScreen = '/mnemonicGenerated';
   static const restoreExistingWalletScreen = '/restoreExistingWallet';
   static const walletSettingsScreen = '/walletSettings';
+  static const signUpScreen = '/signUpScreen';
   static const privacyPolicyScreen = '/privacyPolicy';
   static const coinWithdrawScreen = '/coinWithdraw';
   static const coinTradeScreen = '/coinTrade';
@@ -149,6 +151,28 @@ abstract class Routes {
                   child: WalletSettingsScreen(),
                 ),
               ),
+            );
+          },
+        );
+      case signUpScreen:
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                  parent: animation, curve: Interval(0.500, 1.00)),
+              child: SignUpScreen(),
+            );
+          },
+        );
+      case codeVerificationScreen:
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return FadeTransition(
+              opacity: CurvedAnimation(
+                  parent: animation, curve: Interval(0.500, 1.00)),
+              child: CodeVerificationScreen(),
             );
           },
         );
