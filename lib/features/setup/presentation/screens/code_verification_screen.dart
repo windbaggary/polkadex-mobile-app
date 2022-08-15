@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 
 class CodeVerificationScreen extends StatefulWidget {
   @override
@@ -93,11 +93,9 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(
-                              left: 20,
-                              top: 20,
-                              right: 20,
-                              bottom: 32,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -119,16 +117,74 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                                 Column(
                                   children: [
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: WalletInputWidget(
-                                        title: 'Password',
-                                        description: 'Set password',
-                                        controller: null,
-                                        obscureText: true,
-                                        onChanged: (_) {},
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          final codeLength = 5;
+                                          final pinCodeBoxDimension =
+                                              constraints.maxWidth /
+                                                      codeLength -
+                                                  16;
+
+                                          return PinCodeTextField(
+                                            appContext: context,
+                                            pastedTextStyle: TextStyle(
+                                              color: Colors.green.shade600,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            length: codeLength,
+                                            animationType: AnimationType.fade,
+                                            pinTheme: PinTheme(
+                                              fieldWidth: pinCodeBoxDimension,
+                                              fieldHeight: pinCodeBoxDimension,
+                                              shape: PinCodeFieldShape.box,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              activeFillColor: Colors.white,
+                                              activeColor: Colors.white,
+                                              selectedColor: Colors.white,
+                                              selectedFillColor: Colors.white,
+                                              inactiveFillColor:
+                                                  AppColors.color1C1C26,
+                                              inactiveColor:
+                                                  AppColors.color1C1C26,
+                                            ),
+                                            animationDuration: const Duration(
+                                                milliseconds: 300),
+                                            enableActiveFill: true,
+                                            keyboardType: TextInputType.number,
+                                            boxShadows: const [
+                                              BoxShadow(
+                                                offset: Offset(0, 1),
+                                                color: Colors.black12,
+                                                blurRadius: 10,
+                                              )
+                                            ],
+                                            onChanged: (_) {},
+                                          );
+                                        },
                                       ),
                                     ),
+                                    Padding(
+                                      padding: EdgeInsets.zero,
+                                      child: RichText(
+                                          text: TextSpan(
+                                              style: tsS14W400CFF,
+                                              children: <TextSpan>[
+                                            TextSpan(
+                                                text:
+                                                    'Didn\'t receive the code? '),
+                                            TextSpan(
+                                              text: 'Resend',
+                                              style: tsS14W400CFF.copyWith(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                color: AppColors.colorE6007A,
+                                              ),
+                                            ),
+                                          ])),
+                                    )
                                   ],
                                 ),
                               ],
