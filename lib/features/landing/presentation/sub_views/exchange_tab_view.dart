@@ -19,16 +19,9 @@ import 'package:polkadex/features/landing/utils/token_utils.dart';
 
 /// XD_PAGE: 23
 class ExchangeTabView extends StatefulWidget {
-  /// A callback to handle the bottom navigation bar
-  final Function(EnumBottonBarItem val) onBottombarItemSel;
+  ExchangeTabView({required this.scrollController});
 
-  /// The tab controller to maintain the state
-  final TabController tabController;
-
-  const ExchangeTabView({
-    required this.onBottombarItemSel,
-    required this.tabController,
-  });
+  final ScrollController scrollController;
 
   @override
   _ExchangeTabViewState createState() => _ExchangeTabViewState();
@@ -42,9 +35,6 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   /// The animtion controller for hide/expant alt coins on top selection
   late AnimationController _altCoinAnimationController;
 
-  /// A scroll controller for the list
-  late ScrollController _scrollController;
-
   /// A value notifier for hiding the appbar
   late ValueNotifier<double> _scrollHideNotifier;
 
@@ -56,7 +46,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   @override
   void initState() {
     _scrollHideNotifier = ValueNotifier<double>(1.0);
-    _scrollController = ScrollController()..addListener(_onScrollChanged);
+    widget.scrollController.addListener(_onScrollChanged);
     _animationController = AnimationController(
       vsync: this,
       duration: AppConfigs.animDuration,
@@ -81,8 +71,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   void dispose() {
     _animationController.dispose();
     _altCoinAnimationController.dispose();
-    _scrollController.removeListener(_onScrollChanged);
-    _scrollController.dispose();
+    widget.scrollController.removeListener(_onScrollChanged);
     _scrollHideNotifier.dispose();
     super.dispose();
   }
@@ -96,7 +85,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
       children: [
         Expanded(
           child: NestedScrollView(
-            controller: _scrollController,
+            controller: widget.scrollController,
             floatHeaderSlivers: true,
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
               AnimatedBuilder(
@@ -191,9 +180,9 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   /// A call back for the scroll controller to hide the appbar
   void _onScrollChanged() {
     _scrollHideNotifier.value =
-        1.0 - (_scrollController.offset / 60).clamp(0.0, 1.0);
+        1.0 - (widget.scrollController.offset / 60).clamp(0.0, 1.0);
     context.read<HomeScrollNotifProvider>().scrollOffset =
-        _scrollController.offset;
+        widget.scrollController.offset;
   }
 }
 

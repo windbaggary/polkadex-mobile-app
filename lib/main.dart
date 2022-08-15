@@ -138,7 +138,7 @@ class _MyAppState extends State<MyApp> {
                     selectionColor: AppColors.color8E8E93,
                     selectionHandleColor: AppColors.colorE6007A,
                   ),
-                  canvasColor: AppColors.color2E303C,
+                  canvasColor: Colors.white,
                   fontFamily: 'WorkSans',
                   dialogTheme: DialogTheme(
                     backgroundColor: AppColors.color2E303C,

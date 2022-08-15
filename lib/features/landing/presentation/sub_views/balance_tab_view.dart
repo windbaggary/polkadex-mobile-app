@@ -2,36 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
+import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
+import 'package:polkadex/features/landing/presentation/widgets/orderbook_app_bar_widget.dart';
+import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
-import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
-import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:provider/provider.dart';
 
 /// XD_PAGE: 18
 /// XD_PAGE: 19
 class BalanceTabView extends StatefulWidget {
+  BalanceTabView({required this.scrollController});
+
+  final ScrollController scrollController;
+
   @override
   _BalanceTabViewState createState() => _BalanceTabViewState();
 }
 
 class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
-  late ScrollController _scrollController;
   late AnimationController _controller;
   final ValueNotifier<bool> hideSmallBalancesNotifier =
       ValueNotifier<bool>(false);
 
   @override
   void initState() {
-    _scrollController = ScrollController()..addListener(_onScrollListener);
     _controller = AnimationController(
       duration: const Duration(milliseconds: 250),
       vsync: this,
@@ -41,8 +43,6 @@ class _BalanceTabViewState extends State<BalanceTabView>
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScrollListener);
-    _scrollController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -57,102 +57,103 @@ class _BalanceTabViewState extends State<BalanceTabView>
           create: (_) => BalanceChartDummyProvider(),
         ),
       ],
-      builder: (context, _) => BlocBuilder<BalanceCubit, BalanceState>(
-        builder: (context, state) {
-          return NestedScrollView(
-            controller: _scrollController,
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return <Widget>[
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(32),
-                        child: TopBalanceWidget(),
-                      ),
-                    ],
+      builder: (context, _) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          OrderbookAppBarWidget(),
+          Expanded(
+            child: NestedScrollView(
+              controller: widget.scrollController,
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: TopBalanceWidget(),
+                        ),
+                      ],
+                    ),
                   ),
+                ];
+              },
+              body: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: AppColors.color2E303C,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 30,
+                      offset: Offset(0.0, 20.0),
+                    ),
+                  ],
                 ),
-              ];
-            },
-            body: Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                color: AppColors.color2E303C,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 30,
-                    offset: Offset(0.0, 20.0),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
-              child: CustomScrollView(
-                slivers: [
-                  SliverPersistentHeader(
-                    floating: false,
-                    pinned: true,
-                    delegate: _SliverPersistentHeaderDelegate(
-                      height: 50,
-                      child: Container(
-                        color: AppColors.color2E303C,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                bottom: 12,
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: Row(
-                                children: [
-                                  ValueListenableBuilder<bool>(
-                                    valueListenable: hideSmallBalancesNotifier,
-                                    builder: (context, areSmallbalancesHidden,
-                                            child) =>
-                                        CheckBoxWidget(
-                                      checkColor: AppColors.colorFFFFFF,
-                                      backgroundColor: AppColors.colorE6007A,
-                                      isChecked: areSmallbalancesHidden,
-                                      isBackTransparentOnUnchecked: true,
-                                      onTap: (val) =>
-                                          hideSmallBalancesNotifier.value = val,
+                padding: const EdgeInsets.fromLTRB(12.5, 19.0, 12.5, 0.0),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverPersistentHeader(
+                      floating: false,
+                      pinned: true,
+                      delegate: _SliverPersistentHeaderDelegate(
+                        height: 50,
+                        child: Container(
+                          color: AppColors.color2E303C,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 12,
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                child: Row(
+                                  children: [
+                                    ValueListenableBuilder<bool>(
+                                      valueListenable:
+                                          hideSmallBalancesNotifier,
+                                      builder: (context, areSmallbalancesHidden,
+                                              child) =>
+                                          CheckBoxWidget(
+                                        checkColor: AppColors.colorFFFFFF,
+                                        backgroundColor: AppColors.colorE6007A,
+                                        isChecked: areSmallbalancesHidden,
+                                        isBackTransparentOnUnchecked: true,
+                                        onTap: (val) =>
+                                            hideSmallBalancesNotifier.value =
+                                                val,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Hide small balances',
-                                    style: tsS14W400CFF,
-                                  ),
-                                  Spacer(),
-                                ],
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Hide small balances',
+                                      style: tsS14W400CFF,
+                                    ),
+                                    Spacer(),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: _buildAssetList(),
-                  ),
-                ],
+                    SliverToBoxAdapter(
+                      child: _buildAssetList(),
+                    ),
+                  ],
+                ),
               ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
-  }
-
-  void _onScrollListener() {
-    context.read<HomeScrollNotifProvider>().scrollOffset =
-        _scrollController.offset;
   }
 
   Widget _buildAssetList() {
