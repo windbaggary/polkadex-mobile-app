@@ -149,6 +149,7 @@ class _IntroScreenState extends State<IntroScreen>
                         TextSpan(
                           style: tsS13W400CABB2BC.copyWith(
                             decoration: TextDecoration.underline,
+                            color: AppColors.colorE6007A,
                           ),
                           text: 'Privacy Policy',
                           recognizer: TapGestureRecognizer()
