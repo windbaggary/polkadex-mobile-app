@@ -386,8 +386,8 @@ class _ThisQuoteItemWidget extends AnimatedWidget {
         builder: (context, constraints) {
           return Row(
             children: [
-              Image.asset(
-                TokenUtils.tokenIdToAssetImg(asset.assetId),
+              SvgPicture.asset(
+                TokenUtils.tokenIdToAssetSvg(asset.assetId),
                 width: 43,
                 height: 43,
               ),
@@ -510,8 +510,8 @@ class _ThisBaseItemWidget extends AnimatedWidget {
       margin: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Image.asset(
-            TokenUtils.tokenIdToAssetImg(asset.assetId),
+          SvgPicture.asset(
+            TokenUtils.tokenIdToAssetSvg(asset.assetId),
             width: 43,
             height: 43,
           ),

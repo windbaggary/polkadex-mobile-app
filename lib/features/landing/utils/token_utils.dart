@@ -1,36 +1,12 @@
 import 'package:polkadex/common/utils/extensions.dart';
 
 abstract class TokenUtils {
-  static String tokenIdToFullName(String acronym) {
+  static String tokenIdToAssetSvg(String acronym) {
     switch (acronym) {
-      case '0':
-        return 'PolkaDoge';
-      case '1':
-        return 'ShibaDex';
+      case 'PDEX':
+        return 'polkadex_white'.asAssetSvg();
       default:
-        return 'Token';
-    }
-  }
-
-  static String tokenIdToAcronym(String acronym) {
-    switch (acronym) {
-      case '0':
-        return 'PDG';
-      case '1':
-        return 'SDX';
-      default:
-        return 'TKN';
-    }
-  }
-
-  static String tokenIdToAssetImg(String acronym) {
-    switch (acronym) {
-      case '0':
-        return 'trade_open/trade_open_5.png'.asAssetImg();
-      case '1':
-        return 'trade_open/trade_open_13.png'.asAssetImg();
-      default:
-        return 'trade_open/trade_open_11.png'.asAssetImg();
+        return 'unknow_white'.asAssetSvg();
     }
   }
 }

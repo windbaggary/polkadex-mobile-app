@@ -19,9 +19,9 @@ class TickerRemoteDatasource {
   ) async {
     return Amplify.API.subscribe(
       GraphQLRequest(
-        document: onNewTicker,
+        document: websocketStreams,
         variables: {
-          'm': '$leftTokenId-$rightTokenId',
+          'name': '$leftTokenId-$rightTokenId-ticker',
         },
       ),
       onEstablished: () => print(

@@ -2,6 +2,7 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:polkadex/common/user_data/user_data_remote_datasource.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/data/datasources/trade_remote_datasource.dart';
 import 'package:polkadex/common/trades/data/repositories/trade_repository.dart';
@@ -9,10 +10,14 @@ import 'package:polkadex/common/trades/data/repositories/trade_repository.dart';
 class _MockTradeRemoteDatasource extends Mock implements TradeRemoteDatasource {
 }
 
+class _UserDataRemoteDatasource extends Mock
+    implements UserDataRemoteDatasource {}
+
 class _MockStream extends Mock implements Stream {}
 
 void main() {
-  late _MockTradeRemoteDatasource dataSource;
+  late _MockTradeRemoteDatasource tradeDataSource;
+  late _UserDataRemoteDatasource userDataSource;
   late TradeRepository repository;
   late String baseAsset;
   late String quoteAsset;
@@ -29,10 +34,15 @@ void main() {
   late Stream tStream;
   late DateTime tFrom;
   late DateTime tTo;
+  late String tPlaceOrderSuccess;
 
   setUp(() {
-    dataSource = _MockTradeRemoteDatasource();
-    repository = TradeRepository(tradeRemoteDatasource: dataSource);
+    tradeDataSource = _MockTradeRemoteDatasource();
+    userDataSource = _UserDataRemoteDatasource();
+    repository = TradeRepository(
+      tradeRemoteDatasource: tradeDataSource,
+      userDataRemoteDatasource: userDataSource,
+    );
     baseAsset = "0";
     quoteAsset = "1";
     orderType = EnumOrderTypes.market;
@@ -95,6 +105,12 @@ void main() {
         "nextToken": null
       }
     }''';
+    tPlaceOrderSuccess = '''{
+      "place_order": {
+        "items": ["239795334492173596420427136507382475609"],
+        "nextToken": null
+      }
+    }''';
     tStream = _MockStream();
   });
 
@@ -105,9 +121,9 @@ void main() {
 
   group('Trade repository tests ', () {
     test('Must return a success orders submit response', () async {
-      when(() => dataSource.placeOrder(
+      when(() => tradeDataSource.placeOrder(
           any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
-        (_) async => '123456789',
+        (_) async => GraphQLResponse(data: tPlaceOrderSuccess, errors: []),
       );
 
       final result = await repository.placeOrder(
@@ -122,13 +138,13 @@ void main() {
       );
 
       expect(result.isRight(), true);
-      verify(() => dataSource.placeOrder(mainAddress, proxyAddress, baseAsset,
-          quoteAsset, 'Market', 'Bid', price, amount)).called(1);
-      verifyNoMoreInteractions(dataSource);
+      verify(() => tradeDataSource.placeOrder(mainAddress, proxyAddress,
+          baseAsset, quoteAsset, 'Market', 'Bid', price, amount)).called(1);
+      verifyNoMoreInteractions(tradeDataSource);
     });
 
     test('Must return a failed orders submit response', () async {
-      when(() => dataSource.placeOrder(
+      when(() => tradeDataSource.placeOrder(
           any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
         (_) async => throw RpcException(-32000, 'error'),
       );
@@ -145,14 +161,14 @@ void main() {
       );
 
       expect(result.isLeft(), true);
-      verify(() => dataSource.placeOrder(mainAddress, proxyAddress, baseAsset,
-          quoteAsset, 'Market', 'Bid', price, amount)).called(1);
-      verifyNoMoreInteractions(dataSource);
+      verify(() => tradeDataSource.placeOrder(mainAddress, proxyAddress,
+          baseAsset, quoteAsset, 'Market', 'Bid', price, amount)).called(1);
+      verifyNoMoreInteractions(tradeDataSource);
     });
   });
 
   test('Must return a success orders fetch response', () async {
-    when(() => dataSource.fetchOrders(any(), any(), any())).thenAnswer(
+    when(() => tradeDataSource.fetchOrders(any(), any(), any())).thenAnswer(
       (_) async => GraphQLResponse(data: tOrdersSuccess, errors: []),
     );
 
@@ -163,16 +179,16 @@ void main() {
     );
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchOrders(
+    verify(() => tradeDataSource.fetchOrders(
           mainAddress,
           tFrom,
           tTo,
         )).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verifyNoMoreInteractions(tradeDataSource);
   });
 
   test('Must return a failed orders fetch response', () async {
-    when(() => dataSource.fetchOrders(any(), any(), any())).thenAnswer(
+    when(() => tradeDataSource.fetchOrders(any(), any(), any())).thenAnswer(
       (_) async => throw Exception('Some arbitrary error'),
     );
 
@@ -183,16 +199,16 @@ void main() {
     );
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchOrders(
+    verify(() => tradeDataSource.fetchOrders(
           mainAddress,
           tFrom,
           tTo,
         )).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verifyNoMoreInteractions(tradeDataSource);
   });
 
   test('Must return a successful orders fetch live data response', () async {
-    when(() => dataSource.fetchOrdersUpdates(
+    when(() => userDataSource.getUserDataStream(
           any(),
         )).thenAnswer(
       (_) async => tStream,
@@ -204,12 +220,13 @@ void main() {
       (_) {},
     );
 
-    verify(() => dataSource.fetchOrdersUpdates(mainAddress)).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verify(() => userDataSource.getUserDataStream(mainAddress)).called(1);
+    verifyNoMoreInteractions(userDataSource);
   });
 
   test('Must return a success account trades fetch response', () async {
-    when(() => dataSource.fetchAccountTrades(any(), any(), any())).thenAnswer(
+    when(() => tradeDataSource.fetchAccountTrades(any(), any(), any()))
+        .thenAnswer(
       (_) async => GraphQLResponse(data: tAccountTradeSuccess, errors: []),
     );
 
@@ -220,16 +237,17 @@ void main() {
     );
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchAccountTrades(
+    verify(() => tradeDataSource.fetchAccountTrades(
           mainAddress,
           tFrom,
           tTo,
         )).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verifyNoMoreInteractions(tradeDataSource);
   });
 
   test('Must return a failed account trades fetch response', () async {
-    when(() => dataSource.fetchAccountTrades(any(), any(), any())).thenAnswer(
+    when(() => tradeDataSource.fetchAccountTrades(any(), any(), any()))
+        .thenAnswer(
       (_) async => throw Exception('Some arbitrary error'),
     );
 
@@ -240,16 +258,16 @@ void main() {
     );
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchAccountTrades(
+    verify(() => tradeDataSource.fetchAccountTrades(
           mainAddress,
           tFrom,
           tTo,
         )).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verifyNoMoreInteractions(tradeDataSource);
   });
 
   test('Must return a successful fetch orderbook live data response', () async {
-    when(() => dataSource.fetchAccountTradesUpdates(
+    when(() => userDataSource.getUserDataStream(
           any(),
         )).thenAnswer(
       (_) async => tStream,
@@ -261,37 +279,37 @@ void main() {
       (_) {},
     );
 
-    verify(() => dataSource.fetchAccountTradesUpdates(mainAddress)).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verify(() => userDataSource.getUserDataStream(mainAddress)).called(1);
+    verifyNoMoreInteractions(userDataSource);
   });
 
   test('Must return a success recent trades fetch response', () async {
-    when(() => dataSource.fetchRecentTrades(any())).thenAnswer(
+    when(() => tradeDataSource.fetchRecentTrades(any())).thenAnswer(
       (_) async => GraphQLResponse(data: tRecentTradeSuccess, errors: []),
     );
 
     final result = await repository.fetchRecentTrades(mainAddress);
 
     expect(result.isRight(), true);
-    verify(() => dataSource.fetchRecentTrades(mainAddress)).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verify(() => tradeDataSource.fetchRecentTrades(mainAddress)).called(1);
+    verifyNoMoreInteractions(tradeDataSource);
   });
 
   test('Must return a failed recent trades fetch response', () async {
-    when(() => dataSource.fetchRecentTrades(any())).thenAnswer(
+    when(() => tradeDataSource.fetchRecentTrades(any())).thenAnswer(
       (_) async => throw Exception('Some arbitrary error'),
     );
 
     final result = await repository.fetchRecentTrades(mainAddress);
 
     expect(result.isLeft(), true);
-    verify(() => dataSource.fetchRecentTrades(mainAddress)).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verify(() => tradeDataSource.fetchRecentTrades(mainAddress)).called(1);
+    verifyNoMoreInteractions(tradeDataSource);
   });
 
   test('Must return a successful fetch recent trades live data response',
       () async {
-    when(() => dataSource.fetchRecentTradesStream(
+    when(() => userDataSource.getUserDataStream(
           any(),
         )).thenAnswer(
       (_) async => tStream,
@@ -303,7 +321,7 @@ void main() {
       (_) {},
     );
 
-    verify(() => dataSource.fetchRecentTradesStream(tMarket)).called(1);
-    verifyNoMoreInteractions(dataSource);
+    verify(() => userDataSource.getUserDataStream(tMarket)).called(1);
+    verifyNoMoreInteractions(userDataSource);
   });
 }

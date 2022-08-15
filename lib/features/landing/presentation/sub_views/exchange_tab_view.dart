@@ -8,32 +8,20 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
-import 'package:polkadex/features/landing/presentation/providers/exchange_loading_provider.dart';
-import 'package:polkadex/features/landing/presentation/providers/exchange_tab_view_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_list_animated_widget.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/utils/maps.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 /// XD_PAGE: 23
 class ExchangeTabView extends StatefulWidget {
-  /// A callback to handle the bottom navigation bar
-  final Function(EnumBottonBarItem val) onBottombarItemSel;
+  ExchangeTabView({required this.scrollController});
 
-  /// The tab controller to maintain the state
-  final TabController tabController;
-
-  const ExchangeTabView({
-    required this.onBottombarItemSel,
-    required this.tabController,
-  });
+  final ScrollController scrollController;
 
   @override
   _ExchangeTabViewState createState() => _ExchangeTabViewState();
@@ -47,9 +35,6 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   /// The animtion controller for hide/expant alt coins on top selection
   late AnimationController _altCoinAnimationController;
 
-  /// A scroll controller for the list
-  late ScrollController _scrollController;
-
   /// A value notifier for hiding the appbar
   late ValueNotifier<double> _scrollHideNotifier;
 
@@ -61,7 +46,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   @override
   void initState() {
     _scrollHideNotifier = ValueNotifier<double>(1.0);
-    _scrollController = ScrollController()..addListener(_onScrollChanged);
+    widget.scrollController.addListener(_onScrollChanged);
     _animationController = AnimationController(
       vsync: this,
       duration: AppConfigs.animDuration,
@@ -86,8 +71,7 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   void dispose() {
     _animationController.dispose();
     _altCoinAnimationController.dispose();
-    _scrollController.removeListener(_onScrollChanged);
-    _scrollController.dispose();
+    widget.scrollController.removeListener(_onScrollChanged);
     _scrollHideNotifier.dispose();
     super.dispose();
   }
@@ -96,160 +80,109 @@ class _ExchangeTabViewState extends State<ExchangeTabView>
   Widget build(BuildContext context) {
     final cubit = context.read<MarketAssetCubit>();
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ExchangeTabViewProvider>(
-          create: (_) => ExchangeTabViewProvider(),
-        ),
-        ChangeNotifierProvider<ExchangeLoadingProvider>(
-          create: (_) => ExchangeLoadingProvider()..initLoadingTimer(),
-        ),
-      ],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: NestedScrollView(
-              controller: _scrollController,
-              floatHeaderSlivers: true,
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                AnimatedBuilder(
-                  animation: _altHeightAnimation,
-                  builder: (context, _) {
-                    return ValueListenableBuilder<double>(
-                      valueListenable: _scrollHideNotifier,
-                      builder: (context, scrollHideVal, child) {
-                        return SliverPersistentHeader(
-                          pinned: true,
-                          delegate: _SliverPersistentHeaderDelegate(
-                            height: 98.0 +
-                                (31.0 * _altHeightAnimation.value) +
-                                (14.0 * scrollHideVal),
-                            child: Container(
-                              color: AppColors.color1C2023,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  AnimatedPadding(
-                                    duration: AppConfigs.animDurationSmall,
-                                    padding: (const EdgeInsets.fromLTRB(
-                                            12, 14, 12, 0)) *
-                                        scrollHideVal,
-                                    child: _ThisFilterHeadingWidget(
-                                      initial: _selectedExchangeFilter,
-                                      onSelected: (val) {
-                                        _selectedExchangeFilter = val;
-                                        if (val ==
-                                            EnumExchangeFilter.altCoins) {
-                                          if (_altCoinAnimationController
-                                                  .status !=
-                                              AnimationStatus.completed) {
-                                            _altCoinAnimationController
-                                              ..reset()
-                                              ..forward().orCancel;
-                                          }
-                                        } else {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: NestedScrollView(
+            controller: widget.scrollController,
+            floatHeaderSlivers: true,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              AnimatedBuilder(
+                animation: _altHeightAnimation,
+                builder: (context, _) {
+                  return ValueListenableBuilder<double>(
+                    valueListenable: _scrollHideNotifier,
+                    builder: (context, scrollHideVal, child) {
+                      return SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _SliverPersistentHeaderDelegate(
+                          height: 98.0 +
+                              (31.0 * _altHeightAnimation.value) +
+                              (14.0 * scrollHideVal),
+                          child: Container(
+                            color: AppColors.color1C2023,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                AnimatedPadding(
+                                  duration: AppConfigs.animDurationSmall,
+                                  padding: (const EdgeInsets.fromLTRB(
+                                          12, 14, 12, 0)) *
+                                      scrollHideVal,
+                                  child: _ThisFilterHeadingWidget(
+                                    initial: _selectedExchangeFilter,
+                                    onSelected: (val) {
+                                      _selectedExchangeFilter = val;
+                                      if (val == EnumExchangeFilter.altCoins) {
+                                        if (_altCoinAnimationController
+                                                .status !=
+                                            AnimationStatus.completed) {
                                           _altCoinAnimationController
-                                              .reverse()
-                                              .orCancel;
+                                            ..reset()
+                                            ..forward().orCancel;
                                         }
-                                      },
-                                    ),
+                                      } else {
+                                        _altCoinAnimationController
+                                            .reverse()
+                                            .orCancel;
+                                      }
+                                    },
                                   ),
-                                  _ThisHeaderWidget(),
-                                ],
-                              ),
+                                ),
+                                _ThisHeaderWidget(),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-              body: Consumer<ExchangeLoadingProvider>(
-                builder: (context, provider, child) {
-                  if (provider.isLoading) {
-                    return Shimmer.fromColors(
-                      highlightColor: AppColors.color8BA1BE,
-                      baseColor: AppColors.color2E303C,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: List.generate(
-                                4, (index) => _ThisLoadingItem())),
-                      ),
-                    );
-                  } else {
-                    return BlocBuilder<TickerCubit, TickerState>(
-                      builder: (context, state) => ListView.builder(
-                        itemBuilder: (context, index) {
-                          final baseAsset =
-                              cubit.listAvailableMarkets[index][0];
-                          final quoteAsset =
-                              cubit.listAvailableMarkets[index][1];
-
-                          return AppHeightFactorAnimatedWidget(
-                            index: index,
-                            child: _ThisListItemWidget(
-                              baseAsset: baseAsset,
-                              quoteAsset: quoteAsset,
-                              ticker: state is TickerLoaded
-                                  ? state.ticker[
-                                      '${baseAsset.assetId}-${quoteAsset.assetId}']
-                                  : null,
-                            ),
-                            animationController: _animationController,
-                            interval: Interval(
-                              0.35,
-                              1.00,
-                              curve: Curves.decelerate,
-                            ),
-                          );
-                        },
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        itemCount: cubit.listAvailableMarkets.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                      ),
-                    );
-                  }
+                        ),
+                      );
+                    },
+                  );
                 },
+              ),
+            ],
+            body: BlocBuilder<TickerCubit, TickerState>(
+              builder: (context, state) => ListView.builder(
+                itemBuilder: (context, index) {
+                  final baseAsset = cubit.listAvailableMarkets[index][0];
+                  final quoteAsset = cubit.listAvailableMarkets[index][1];
+
+                  return AppHeightFactorAnimatedWidget(
+                    index: index,
+                    child: _ThisListItemWidget(
+                      baseAsset: baseAsset,
+                      quoteAsset: quoteAsset,
+                      ticker: state is TickerLoaded
+                          ? state.ticker[
+                              '${baseAsset.assetId}-${quoteAsset.assetId}']
+                          : null,
+                    ),
+                    animationController: _animationController,
+                    interval: Interval(
+                      0.35,
+                      1.00,
+                      curve: Curves.decelerate,
+                    ),
+                  );
+                },
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                itemCount: cubit.listAvailableMarkets.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
               ),
             ),
           ),
-          // Consumer<HomeScrollNotifProvider>(
-          //   builder: (context, homeScrollProvider, child) {
-          //     return Container(
-          //       height: homeScrollProvider.bottombarSize -
-          //           homeScrollProvider.bottombarValue,
-          //       child: SingleChildScrollView(
-          //         physics: NeverScrollableScrollPhysics(),
-          //         child: Container(
-          //           transform: Matrix4.identity(),
-          //           height: homeScrollProvider.bottombarSize,
-          //           child: AppBottomNavigationBar(
-          //             onSelected: widget.onBottombarItemSel,
-          //             initialItem:
-          //                 EnumBottonBarItem.values[widget.tabController.index],
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // )
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   /// A call back for the scroll controller to hide the appbar
   void _onScrollChanged() {
     _scrollHideNotifier.value =
-        1.0 - (_scrollController.offset / 60).clamp(0.0, 1.0);
+        1.0 - (widget.scrollController.offset / 60).clamp(0.0, 1.0);
     context.read<HomeScrollNotifProvider>().scrollOffset =
-        _scrollController.offset;
+        widget.scrollController.offset;
   }
 }
 
@@ -327,27 +260,6 @@ class _ThisFilterHeadingWidget extends StatelessWidget {
                     .toList(),
               ),
               Spacer(),
-              InkWell(
-                onTap: () {
-                  context
-                      .read<ExchangeTabViewProvider>()
-                      .toggleFavoriteFilter();
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  width: 18,
-                  height: 17,
-                  child: Consumer<ExchangeTabViewProvider>(
-                    builder: (context, provider, child) => Opacity(
-                      opacity: provider.isFavoriteFilter ? 1.0 : 0.4,
-                      child: child,
-                    ),
-                    child: SvgPicture.asset(
-                      'star-filled'.asAssetSvg(),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -478,9 +390,8 @@ class _ThisHeaderWidget extends StatelessWidget {
             ),
           ),
           Spacer(),
-          SizedBox(width: MediaQuery.of(context).size.width * 0.07),
           Padding(
-            padding: const EdgeInsets.only(right: 56, left: 30),
+            padding: const EdgeInsets.only(right: 22),
             child: Text(
               "Change",
               style: tsS13W500CFFOP40,
@@ -523,15 +434,14 @@ class _ThisListItemWidget extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 43,
-                height: 43,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: AppColors.colorFFFFFF,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 padding: EdgeInsets.all(3),
-                child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(baseAsset.assetId),
+                child: SvgPicture.asset(
+                  TokenUtils.tokenIdToAssetSvg(baseAsset.assetId),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -566,7 +476,7 @@ class _ThisListItemWidget extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Vol: ${ticker?.volumeBase24hr.toStringAsFixed(4)}',
+                            'Vol: ${ticker != null ? ticker?.volumeBase24hr.toStringAsFixed(4) : ''}',
                             style: tsS12W400CFF.copyWith(
                               color: AppColors.colorABB2BC.withOpacity(0.70),
                             ),
@@ -596,111 +506,8 @@ class _ThisListItemWidget extends StatelessWidget {
                   ),
                 ])),
               ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  margin: const EdgeInsets.only(left: 8),
-                  width: 15 + 17.0,
-                  height: 15 + 8.0,
-                  padding:
-                      const EdgeInsets.only(right: 12, top: 4.0, bottom: 4.0),
-                  child: Opacity(
-                    opacity: 0.40,
-                    child: SvgPicture.asset(
-                      'star-filled'.asAssetSvg(),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ThisLoadingItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 9),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.color2E303C.withOpacity(0.30),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.fromLTRB(11, 17, 0, 16),
-        child: Row(
-          children: [
-            Container(
-              width: 43,
-              height: 43,
-              decoration: BoxDecoration(
-                color: AppColors.colorFFFFFF,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              padding: EdgeInsets.all(3),
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 15,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(height: 4),
-                  Container(
-                    width: 50,
-                    height: 8,
-                    color: Colors.grey,
-                  ),
-                ],
-              ),
-            ),
-            Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  color: Colors.grey,
-                  height: 15,
-                  width: 50,
-                ),
-                SizedBox(height: 4),
-                Container(
-                  height: 8,
-                  width: 50,
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-            SizedBox(width: 16),
-            Container(
-              width: 50,
-              height: 20,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(7),
-              ),
-              padding: const EdgeInsets.all(5),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 8),
-              width: 15 + 17.0,
-              height: 15 + 8.0,
-              padding: const EdgeInsets.only(right: 17, top: 4.0, bottom: 4.0),
-              child: Opacity(
-                opacity: 1.0,
-                child: SvgPicture.asset(
-                  'star-filled'.asAssetSvg(),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

@@ -62,7 +62,7 @@ void main() {
           );
           when(
             () => _mockGetRecentTradesUpdatesUseCase(
-              market: any(named: 'market'),
+              address: any(named: 'address'),
               onMsgReceived: any(named: 'onMsgReceived'),
               onMsgError: any(named: 'onMsgError'),
             ),
@@ -90,7 +90,7 @@ void main() {
           );
           when(
             () => _mockGetRecentTradesUpdatesUseCase(
-              market: any(named: 'market'),
+              address: any(named: 'address'),
               onMsgReceived: any(named: 'onMsgReceived'),
               onMsgError: any(named: 'onMsgError'),
             ),

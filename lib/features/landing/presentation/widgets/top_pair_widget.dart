@@ -47,7 +47,9 @@ class TopPairWidget extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    '${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%',
+                    ticker != null
+                        ? '${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%'
+                        : '',
                     style: tsS17W600C0CA564,
                   ),
                 ],

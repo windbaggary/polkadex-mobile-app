@@ -10,7 +10,6 @@ import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/o
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
-import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/trade_bottom_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/place_order_widget.dart';
@@ -26,6 +25,10 @@ import 'package:provider/provider.dart';
 ///
 /// XD_PAGE: 7
 class TradeTabView extends StatefulWidget {
+  TradeTabView({required this.scrollController});
+
+  final ScrollController scrollController;
+
   @override
   _TradeTabViewState createState() => _TradeTabViewState();
 }
@@ -33,12 +36,10 @@ class TradeTabView extends StatefulWidget {
 class _TradeTabViewState extends State<TradeTabView>
     with TickerProviderStateMixin {
   late TabController _buySellDotController;
-  late ScrollController _scrollController;
 
   @override
   void initState() {
     _buySellDotController = TabController(length: 2, vsync: this);
-    _scrollController = ScrollController()..addListener(_scrollListener);
 
     super.initState();
   }
@@ -46,8 +47,7 @@ class _TradeTabViewState extends State<TradeTabView>
   @override
   void dispose() {
     _disposeControllers();
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
+
     super.dispose();
   }
 
@@ -81,7 +81,7 @@ class _TradeTabViewState extends State<TradeTabView>
             ],
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
-              controller: _scrollController,
+              controller: widget.scrollController,
               padding: const EdgeInsets.only(bottom: 64),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,11 +132,6 @@ class _TradeTabViewState extends State<TradeTabView>
       ),
     );
   }
-
-  void _scrollListener() {
-    context.read<HomeScrollNotifProvider>().scrollOffset =
-        _scrollController.offset;
-  }
 }
 
 /// The top widget of the screen
@@ -182,7 +177,9 @@ class _ThisTopRowSelectWidget extends StatelessWidget {
                     size: 18,
                   ),
                   Text(
-                    "${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%",
+                    ticker != null
+                        ? '${ticker?.priceChangePercent24Hr.toStringAsFixed(2)}%'
+                        : '',
                     style: tsS14W600CFF.copyWith(color: mainTrendColor()),
                   )
                 ],
@@ -226,80 +223,83 @@ class _ThisTopSelectableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Row(
-        children: [
-          BlocBuilder<MarketAssetCubit, MarketAssetState>(
-            builder: (context, state) => Container(
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset(
-                  TokenUtils.tokenIdToAssetImg(context
-                      .read<MarketAssetCubit>()
-                      .currentBaseAssetDetails
-                      .assetId),
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
-                  builder: (context, state) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
-                        style: tsS20W600CFF,
-                      ),
-                      Text(
-                        context
-                            .read<MarketAssetCubit>()
-                            .currentBaseAssetDetails
-                            .name,
-                        style:
-                            tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
-                      ),
-                    ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0),
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          children: [
+            BlocBuilder<MarketAssetCubit, MarketAssetState>(
+              builder: (context, state) => Container(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: SvgPicture.asset(
+                    TokenUtils.tokenIdToAssetSvg(context
+                        .read<MarketAssetCubit>()
+                        .currentBaseAssetDetails
+                        .assetId),
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.color3B4150),
-                  color: AppColors.color2E303C,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
+                    builder: (context, state) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
+                          style: tsS20W600CFF,
+                        ),
+                        Text(
+                          context
+                              .read<MarketAssetCubit>()
+                              .currentBaseAssetDetails
+                              .name,
+                          style: tsS14W400CFF.copyWith(
+                              color: AppColors.colorABB2BC),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                padding: EdgeInsets.all(4),
-                margin: EdgeInsets.only(left: 4, right: 8),
-                child: SvgPicture.asset(
-                  'switch'.asAssetSvg(),
-                  width: 12,
-                  height: 12,
-                  color: Colors.white,
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.color3B4150),
+                    color: AppColors.color2E303C,
+                  ),
+                  padding: EdgeInsets.all(4),
+                  margin: EdgeInsets.only(left: 4, right: 8),
+                  child: SvgPicture.asset(
+                    'switch'.asAssetSvg(),
+                    width: 12,
+                    height: 12,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Flexible(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
-              child: Sparkline(
-                data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
-                lineColor: graphColor,
+              ],
+            ),
+            Flexible(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
+                child: Sparkline(
+                  data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
+                  lineColor: graphColor,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

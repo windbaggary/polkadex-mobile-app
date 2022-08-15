@@ -7,7 +7,6 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/dummy_providers/app_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/utils/time_utils.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
@@ -19,18 +18,15 @@ import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.d
 import 'package:polkadex/features/trade/presentation/widgets/coin_graph_shimmer_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
-import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/common/widgets/build_methods.dart';
-import 'package:provider/provider.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'dart:math' as math;
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:polkadex/injection_container.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class CoinTradeScreen extends StatefulWidget {
   const CoinTradeScreen({
@@ -100,80 +96,57 @@ class _CoinTradeScreenState extends State<CoinTradeScreen> {
         child: Scaffold(
           backgroundColor: AppColors.color1C2023,
           body: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraint) {
-                return Stack(
-                  children: [
-                    SingleChildScrollView(
-                      controller: _scrollController,
-                      child: ConstrainedBox(
-                        constraints:
-                            BoxConstraints(minHeight: constraint.maxHeight),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.color2E303C,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(40),
-                                ),
-                              ),
-                              child: _ThisAppBar(
-                                leftToken: widget.leftToken,
-                                rightToken: widget.rightToken,
-                              ),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.color2E303C,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(40),
+                      ),
+                    ),
+                    child: _ThisAppBar(
+                      leftToken: widget.leftToken,
+                      rightToken: widget.rightToken,
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.color2E303C,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          ),
+                        ),
+                        child: Consumer<_ThisOrderDisplayProvider>(
+                          builder: (context, orderDisplayProvider, _) =>
+                              CardFlipAnimation(
+                            duration: AppConfigs.animDuration,
+                            firstChild: _ThisGraphCard(
+                              leftToken: widget.leftToken,
+                              rightToken: widget.rightToken,
                             ),
-                            Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.color2E303C,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(25),
-                                      bottomRight: Radius.circular(25),
-                                    ),
-                                  ),
-                                  child: Consumer<_ThisOrderDisplayProvider>(
-                                    builder:
-                                        (context, orderDisplayProvider, _) =>
-                                            CardFlipAnimation(
-                                      duration: AppConfigs.animDuration,
-                                      firstChild: _ThisGraphCard(
-                                        leftToken: widget.leftToken,
-                                        rightToken: widget.rightToken,
-                                      ),
-                                      secondChild: _ThisDetailCard(
-                                        leftToken: widget.leftToken,
-                                        rightToken: widget.rightToken,
-                                      ),
-                                      cardState:
-                                          orderDisplayProvider.enumCoinDisplay,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            secondChild: _ThisDetailCard(
+                              leftToken: widget.leftToken,
+                              rightToken: widget.rightToken,
                             ),
-                            OrderBookWidget(
-                              amountToken: widget.leftToken,
-                              priceToken: widget.rightToken,
-                            ),
-                          ],
+                            cardState: orderDisplayProvider.enumCoinDisplay,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: _ThisBottomNavigationBar(),
-                      ),
-                    ),
-                  ],
-                );
-              },
+                    ],
+                  ),
+                  OrderBookWidget(
+                    amountToken: widget.leftToken,
+                    priceToken: widget.rightToken,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -625,160 +598,6 @@ class _ThisGraphOptionWidget extends StatelessWidget {
   }
 }
 
-class _ThisBottomNavigationBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.color2E303C,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 20,
-            offset: Offset(0.0, -9.0),
-          ),
-        ],
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(30),
-          // bottomLeft: Radius.circular(30),
-          // bottomRight: Radius.circular(30),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Spacer(flex: 2),
-          Center(
-            child: buildInkWell(
-              highlightColor: AppColors.color0CA564,
-              splashColor: AppColors.color0CA564,
-              borderRadius: BorderRadius.circular(17),
-              onTap: () => _onBuySellButtonClick(context, 0),
-              child: Container(
-                width: math.max(MediaQuery.of(context).size.width * 0.30, 110),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(17),
-                ),
-                padding: const EdgeInsets.only(
-                  left: 8,
-                  top: 7,
-                  bottom: 7,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 47,
-                      height: 47,
-                      decoration: BoxDecoration(
-                        color: AppColors.color8BA1BE.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.all(12),
-                      child: SvgPicture.asset(
-                        'tradeArrowsBuy'.asAssetSvg(),
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      "Buy",
-                      style: tsS16W500CFF,
-                    ),
-                    Spacer(flex: 2),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 8),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 7),
-              child: buildInkWell(
-                highlightColor: AppColors.colorE6007A,
-                splashColor: AppColors.colorE6007A,
-                borderRadius: BorderRadius.circular(17),
-                onTap: () => _onBuySellButtonClick(context, 1),
-                child: Container(
-                  width:
-                      math.max(MediaQuery.of(context).size.width * 0.30, 110),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(17),
-                  ),
-                  padding: const EdgeInsets.only(
-                    left: 8,
-                    top: 7,
-                    bottom: 7,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 47,
-                        height: 47,
-                        decoration: BoxDecoration(
-                          color: AppColors.color8BA1BE.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.all(12),
-                        child: SvgPicture.asset(
-                          'tradeArrows'.asAssetSvg(),
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        "Sell",
-                        style: tsS16W500CFF,
-                      ),
-                      Spacer(flex: 2),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Spacer(flex: 3),
-          SizedBox(
-            width: 23,
-            height: 23,
-            child: SvgPicture.asset(
-              'trade'.asAssetSvg(),
-              fit: BoxFit.contain,
-            ),
-          ),
-          Spacer(flex: 3),
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: SvgPicture.asset(
-              'notification-on'.asAssetSvg(),
-            ),
-          ),
-          Spacer(flex: 3),
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: Opacity(
-              opacity: 0.5,
-              child: SvgPicture.asset(
-                'star-filled'.asAssetSvg(),
-              ),
-            ),
-          ),
-          Spacer(flex: 3),
-        ],
-      ),
-    );
-  }
-
-  void _onBuySellButtonClick(BuildContext context, int orderSideIndex) {
-    BottomNavigationProvider().enumBottomBarItem = EnumBottonBarItem.trade;
-    Coordinator.goBackToLandingScreen();
-  }
-}
-
 class _ThisAppBar extends StatelessWidget {
   const _ThisAppBar({
     required this.leftToken,
@@ -888,8 +707,8 @@ class _TopCoinWidget extends StatelessWidget {
             SizedBox(
               width: 48,
               height: 48,
-              child: Image.asset(
-                TokenUtils.tokenIdToAssetImg(leftToken.assetId),
+              child: SvgPicture.asset(
+                TokenUtils.tokenIdToAssetSvg(leftToken.assetId),
               ),
             ),
             SizedBox(width: 11),

@@ -13,10 +13,10 @@ class AddressRepository implements IAdressRepository {
 
   @override
   Future<Either<ApiError, String>> fetchMainAddress(String proxyAddress) async {
-    final result =
-        await _addressRemoteDatasource.fetchMainAddress(proxyAddress);
-
     try {
+      final result =
+          await _addressRemoteDatasource.fetchMainAddress(proxyAddress);
+
       String item =
           jsonDecode(result.data)['findUserByProxyAccount']['items'][0];
       item = item.substring(1, item.length - 1);

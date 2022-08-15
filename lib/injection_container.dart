@@ -19,6 +19,7 @@ import 'package:polkadex/common/trades/domain/usecases/get_account_trades_update
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_orders_updates_usecase.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_recent_trades_updates_usecase.dart';
+import 'package:polkadex/common/user_data/user_data_remote_datasource.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
 import 'package:polkadex/features/coin/data/repositories/coin_repository.dart';
@@ -224,6 +225,7 @@ Future<void> init() async {
   dependency.registerFactory<ITradeRepository>(
     () => TradeRepository(
       tradeRemoteDatasource: dependency(),
+      userDataRemoteDatasource: dependency(),
     ),
   );
 
@@ -283,6 +285,7 @@ Future<void> init() async {
   dependency.registerFactory<IBalanceRepository>(
     () => BalanceRepository(
       balanceRemoteDatasource: dependency(),
+      userDataRemoteDatasource: dependency(),
     ),
   );
 
@@ -472,5 +475,9 @@ Future<void> init() async {
       getMarketsUseCase: dependency(),
       getAssetsDetailsUseCase: dependency(),
     ),
+  );
+
+  dependency.registerFactory(
+    () => UserDataRemoteDatasource(),
   );
 }

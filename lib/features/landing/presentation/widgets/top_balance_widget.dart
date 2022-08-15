@@ -1,172 +1,77 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
+import 'package:polkadex/common/widgets/build_methods.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
-import 'package:shimmer/shimmer.dart';
 
 class TopBalanceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BalanceCubit, BalanceState>(
       builder: (context, state) {
-        final Widget mainBalanceValueWidget;
-        final Widget secondaryBalanceValueWidget;
-
-        if (state is BalanceLoaded) {
-          mainBalanceValueWidget = Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                    text: '0.8713 ',
-                    style: tsS32W600CFF,
+        return Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: AppConfigs.size.width / 3),
+            child: Column(
+              children: [
+                Center(
+                  child: Container(
+                    width: 42,
+                    height: 42,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.color8BA1BE.withOpacity(0.30),
+                    ),
+                    padding: const EdgeInsets.all(11),
+                    child: SvgPicture.asset('wallet_selected'.asAssetSvg()),
                   ),
-                  TextSpan(
-                    text: 'BTC ',
-                    style: tsS15W600CFF,
-                  ),
-                ],
-              ),
-            ),
-          );
-          secondaryBalanceValueWidget = RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '~437.50 ',
-                  style: tsS19W400CFF,
                 ),
-                TextSpan(
-                  text: 'USD',
-                  style: tsS12W400CFF,
+                Text(
+                  context.read<AccountCubit>().accountName,
+                  style: tsS20W600CFF,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        FlutterClipboard.copy(context
+                                .read<AccountCubit>()
+                                .proxyAccountAddress)
+                            .then((value) => buildAppToast(
+                                msg:
+                                    'Wallet address has been copied to the clipboard',
+                                context: context));
+                      },
+                      child: SvgPicture.asset(
+                        'copy'.asAssetSvg(),
+                      ),
+                    ),
+                    SizedBox(width: 2),
+                    Flexible(
+                      child: Text(
+                        context.read<AccountCubit>().proxyAccountAddress,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          );
-        } else if (state is BalanceError) {
-          mainBalanceValueWidget = Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                    text: '- ',
-                    style: tsS32W600CFF,
-                  ),
-                  TextSpan(
-                    text: 'BTC ',
-                    style: tsS15W600CFF,
-                  ),
-                ],
-              ),
-            ),
-          );
-          secondaryBalanceValueWidget = RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '- ',
-                  style: tsS19W400CFF,
-                ),
-                TextSpan(
-                  text: 'USD',
-                  style: tsS12W400CFF,
-                ),
-              ],
-            ),
-          );
-        } else {
-          mainBalanceValueWidget = _mainBTCBalanceShimmerWidget();
-          secondaryBalanceValueWidget = _secondaryUSDBalanceShimmerWidget();
-        }
-
-        return Column(
-          children: [
-            Center(
-              child: Container(
-                width: 42,
-                height: 42,
-                margin: const EdgeInsets.only(bottom: 9),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: AppColors.color8BA1BE.withOpacity(0.30),
-                ),
-                padding: const EdgeInsets.all(11),
-                child: SvgPicture.asset('wallet_selected'.asAssetSvg()),
-              ),
-            ),
-            Text(
-              'Total Balance',
-              style: tsS15W400CFF.copyWith(color: AppColors.colorABB2BC),
-              textAlign: TextAlign.center,
-            ),
-            mainBalanceValueWidget,
-            SizedBox(height: 4),
-            secondaryBalanceValueWidget,
-          ],
+          ),
         );
       },
-    );
-  }
-
-  Widget _mainBTCBalanceShimmerWidget() {
-    return Shimmer.fromColors(
-      highlightColor: AppColors.color8BA1BE,
-      baseColor: AppColors.color2E303C,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '0.8713 ',
-                  style: tsS32W600CFF,
-                ),
-                TextSpan(
-                  text: 'BTC ',
-                  style: tsS15W600CFF,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _secondaryUSDBalanceShimmerWidget() {
-    return Shimmer.fromColors(
-      highlightColor: AppColors.color8BA1BE,
-      baseColor: AppColors.color2E303C,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-        ),
-        child: RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                text: '~437.50 ',
-                style: tsS19W400CFF,
-              ),
-              TextSpan(
-                text: 'USD',
-                style: tsS12W400CFF,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

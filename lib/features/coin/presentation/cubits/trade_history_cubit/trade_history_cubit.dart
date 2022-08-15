@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/trades/domain/entities/account_trade_entity.dart';
 import 'package:polkadex/common/trades/domain/usecases/get_account_trades_usecase.dart';
@@ -22,13 +21,11 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
 
   List<AccountTradeEntity> _allTrades = [];
 
-  Future<void> getAccountTrades({
-    required AssetEntity asset,
-    required String address,
-    List<Enum> filters = const [],
-    DateTimeRange? dateFilter,
-  }) async {
-    emit(TradeHistoryLoading(assetSelected: asset));
+  Future<void> getAccountTrades(
+    String asset,
+    String address,
+  ) async {
+    emit(TradeHistoryLoading());
 
     final result = await _getTradesUseCase(
       address: address,
@@ -44,22 +41,11 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
         if (currentState is TradeHistoryLoaded) {
           final newList = [newTrade, ...currentState.trades];
 
-          filters.isNotEmpty || dateFilter != null
-              ? updateTradeHistoryFilter(
-                  filters: filters,
-                  dateFilter: dateFilter,
-                )
-              : emit(
-                  TradeHistoryLoaded(
-                    assetSelected: asset,
-                    trades: newList,
-                  ),
-                );
+          emit(TradeHistoryLoaded(trades: newList));
         }
       },
       onMsgError: (error) => emit(
         TradeHistoryError(
-          assetSelected: asset,
           message: error.toString(),
         ),
       ),
@@ -68,60 +54,44 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
     result.fold(
       (error) => emit(
         TradeHistoryError(
-          assetSelected: asset,
           message: error.message,
         ),
       ),
       (trades) {
         _allTrades = trades.where((trade) {
           if (trade is OrderEntity) {
-            return trade.asset == asset.assetId || trade.asset == asset.assetId;
+            return trade.asset == asset || trade.asset == asset;
           } else {
-            return trade.asset == asset.assetId;
+            return trade.asset == asset;
           }
         }).toList();
         _allTrades.sort((a, b) => b.time.compareTo(a.time));
 
-        filters.isNotEmpty || dateFilter != null
-            ? updateTradeHistoryFilter(
-                filters: filters,
-                dateFilter: dateFilter,
-              )
-            : emit(
-                TradeHistoryLoaded(
-                  assetSelected: asset,
-                  trades: _allTrades,
-                ),
-              );
+        emit(TradeHistoryLoaded(
+          trades: _allTrades,
+        ));
       },
     );
   }
 
   Future<void> updateTradeHistoryFilter({
-    List<Enum> filters = const [],
+    required List<Enum> filters,
     DateTimeRange? dateFilter,
   }) async {
     List<AccountTradeEntity> _tradesFiltered = [..._allTrades];
-    final currentState = state;
 
-    if (state is TradeHistoryLoaded) {
-      if (dateFilter != null) {
-        _tradesFiltered.removeWhere((trade) =>
-            trade.time.isBefore(dateFilter.start) ||
-            trade.time.isAfter(dateFilter.end));
-      }
-
-      if (filters.isNotEmpty) {
-        _tradesFiltered
-            .removeWhere((trade) => !filters.contains(trade.txnType));
-      }
-
-      emit(
-        TradeHistoryLoaded(
-          trades: _tradesFiltered,
-          assetSelected: currentState.assetSelected,
-        ),
-      );
+    if (dateFilter != null) {
+      _tradesFiltered.removeWhere((trade) =>
+          trade.time.isBefore(dateFilter.start) ||
+          trade.time.isAfter(dateFilter.end));
     }
+
+    if (filters.isNotEmpty) {
+      _tradesFiltered.removeWhere((trade) => !filters.contains(trade.txnType));
+    }
+
+    emit(
+      TradeHistoryLoaded(trades: _tradesFiltered),
+    );
   }
 }

@@ -52,7 +52,9 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
             builder: (context, balanceState) {
               if (balanceState is BalanceLoaded) {
                 context.read<WithdrawCubit>().updateWithdrawParams(
-                      amountFree: 100.0,
+                      amountFree: double.tryParse(
+                              balanceState.free[widget.asset.assetId]) ??
+                          0.0,
                     );
               }
 
@@ -139,6 +141,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 ),
                                               ),
                                             ),
+                                            SizedBox(height: 16),
                                             Column(
                                               children: [
                                                 _simplifiedWalletDataWidget(
@@ -150,7 +153,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                       .proxyAccountAddress,
                                                   margin:
                                                       const EdgeInsets.fromLTRB(
-                                                          22, 26, 22, 0.0),
+                                                          22, 0.0, 22, 0.0),
                                                 ),
                                                 Icon(
                                                   Icons
@@ -168,6 +171,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
                                                 ),
                                               ],
                                             ),
+                                            SizedBox(height: 16),
                                             Consumer<_ThisProvider>(
                                               builder: (context, provider, _) =>
                                                   AppSlideButton(
@@ -235,7 +239,7 @@ class _CoinWithdrawScreenState extends State<CoinWithdrawScreen>
   }) {
     return Container(
       margin: margin,
-      padding: const EdgeInsets.fromLTRB(27, 14, 13, 13),
+      padding: const EdgeInsets.fromLTRB(27, 16, 13, 13),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -419,8 +423,8 @@ class _ThisCoinTitleWidget extends StatelessWidget {
             padding: const EdgeInsets.all(5),
             width: 51,
             height: 51,
-            child: Image.asset(
-              TokenUtils.tokenIdToAssetImg(asset.assetId),
+            child: SvgPicture.asset(
+              TokenUtils.tokenIdToAssetSvg(asset.assetId),
             ),
           ),
           Expanded(
