@@ -38,6 +38,22 @@ class AccountLoaded extends AccountState {
       ];
 }
 
+class AccountVerifyingCode extends AccountState {
+  AccountVerifyingCode({
+    required this.email,
+    required this.password,
+  });
+
+  final String email;
+  final String? password;
+
+  @override
+  List<Object?> get props => [
+        email,
+        password,
+      ];
+}
+
 class AccountUpdatingBiometric extends AccountLoaded {
   AccountUpdatingBiometric({
     required ImportedAccountEntity account,

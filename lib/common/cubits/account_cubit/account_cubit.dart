@@ -5,6 +5,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
@@ -14,11 +15,14 @@ import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.d
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
 
 part 'account_state.dart';
 
 class AccountCubit extends Cubit<AccountState> {
   AccountCubit({
+    required SignUpUseCase signUpUseCase,
+    required ConfirmSignUpUseCase confirmSignUpUseCase,
     required GetAccountUseCase getAccountStorageUseCase,
     required DeleteAccountUseCase deleteAccountUseCase,
     required DeletePasswordUseCase deletePasswordUseCase,
@@ -29,7 +33,9 @@ class AccountCubit extends Cubit<AccountState> {
     required ConfirmPasswordUseCase confirmPasswordUseCase,
     required RegisterUserUseCase registerUserUseCase,
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
-  })  : _getAccountStorageUseCase = getAccountStorageUseCase,
+  })  : _signUpUseCase = signUpUseCase,
+        _confirmSignUpUseCase = confirmSignUpUseCase,
+        _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountUseCase = deleteAccountUseCase,
         _deletePasswordUseCase = deletePasswordUseCase,
         _importAccountUseCase = importAccountUseCase,
@@ -40,6 +46,8 @@ class AccountCubit extends Cubit<AccountState> {
         _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
+  final SignUpUseCase _signUpUseCase;
+  final ConfirmSignUpUseCase _confirmSignUpUseCase;
   final GetAccountUseCase _getAccountStorageUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
   final DeletePasswordUseCase _deletePasswordUseCase;
@@ -109,18 +117,6 @@ class AccountCubit extends Cubit<AccountState> {
     return await _savePasswordUseCase(password: password);
   }
 
-  Future<bool> authenticateBiometric() async {
-    final currentState = state;
-
-    if (currentState is AccountLoaded) {
-      final password = await _getPasswordUseCase();
-
-      return await confirmPassword(password!);
-    }
-
-    return false;
-  }
-
   Future<void> saveAccount(List<String> mnemonicWords, String password,
       String name, bool biometricOnly, bool useBiometric) async {
     final resultImport = await _importAccountUseCase(
@@ -155,6 +151,18 @@ class AccountCubit extends Cubit<AccountState> {
         );
       },
     );
+  }
+
+  Future<bool> authenticateBiometric() async {
+    final currentState = state;
+
+    if (currentState is AccountLoaded) {
+      final password = await _getPasswordUseCase();
+
+      return await confirmPassword(password!);
+    }
+
+    return false;
   }
 
   Future<bool> confirmPassword(String password) async {

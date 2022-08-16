@@ -44,6 +44,7 @@ import 'package:polkadex/features/landing/domain/usecases/get_ticker_updates_use
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
+import 'package:polkadex/features/setup/data/datasources/account_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/address_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/repositories/account_repository.dart';
@@ -52,6 +53,7 @@ import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.da
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iadress_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
@@ -60,6 +62,7 @@ import 'package:polkadex/features/setup/domain/usecases/get_main_account_address
 import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
@@ -107,6 +110,9 @@ Future<void> init() async {
   dependency.registerFactory(
     () => AccountLocalDatasource(),
   );
+  dependency.registerFactory(
+    () => AccountRemoteDatasource(),
+  );
 
   dependency.registerFactory(
     () => AddressRemoteDatasource(),
@@ -121,6 +127,7 @@ Future<void> init() async {
   dependency.registerFactory<IAccountRepository>(
     () => AccountRepository(
       accountLocalDatasource: dependency(),
+      accountRemoteDatasource: dependency(),
     ),
   );
 
@@ -197,6 +204,18 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => SignUpUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => ConfirmSignUpUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
@@ -205,6 +224,8 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => AccountCubit(
+      signUpUseCase: dependency(),
+      confirmSignUpUseCase: dependency(),
       savePasswordUseCase: dependency(),
       deleteAccountUseCase: dependency(),
       deletePasswordUseCase: dependency(),

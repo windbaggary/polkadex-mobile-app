@@ -7,6 +7,7 @@ import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
@@ -16,7 +17,12 @@ import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.da
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
 import 'package:test/test.dart';
+
+class _MockSignUpUseCase extends Mock implements SignUpUseCase {}
+
+class _MockConfirmSignUpUseCase extends Mock implements ConfirmSignUpUseCase {}
 
 class _MockGetAccountUseCase extends Mock implements GetAccountUseCase {}
 
@@ -42,6 +48,8 @@ class _MockGetMainAccountAddressUseCase extends Mock
     implements GetMainAccountAddressUsecase {}
 
 void main() {
+  late _MockSignUpUseCase _mockSignUpUseCase;
+  late _MockConfirmSignUpUseCase _mockConfirmSignUpUseCase;
   late _MockGetAccountUseCase _mockGetAccountUseCase;
   late _MockDeleteAccountUsecase _mockDeleteAccountUsecase;
   late _MockDeletePasswordUsecase _mockDeletePasswordUsecase;
@@ -62,6 +70,8 @@ void main() {
   late String tPassword;
 
   setUp(() {
+    _mockSignUpUseCase = _MockSignUpUseCase();
+    _mockConfirmSignUpUseCase = _MockConfirmSignUpUseCase();
     _mockGetAccountUseCase = _MockGetAccountUseCase();
     _mockDeleteAccountUsecase = _MockDeleteAccountUsecase();
     _mockDeletePasswordUsecase = _MockDeletePasswordUsecase();
@@ -74,6 +84,8 @@ void main() {
     _mockGetMainAccountAddressUseCase = _MockGetMainAccountAddressUseCase();
 
     cubit = AccountCubit(
+      signUpUseCase: _mockSignUpUseCase,
+      confirmSignUpUseCase: _mockConfirmSignUpUseCase,
       getAccountStorageUseCase: _mockGetAccountUseCase,
       deleteAccountUseCase: _mockDeleteAccountUsecase,
       deletePasswordUseCase: _mockDeletePasswordUsecase,
