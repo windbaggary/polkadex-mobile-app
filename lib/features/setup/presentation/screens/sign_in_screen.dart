@@ -4,6 +4,7 @@ import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/setup/presentation/utils/email_regex.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -233,8 +234,8 @@ class _SignInScreenState extends State<SignInScreen>
   //}
 
   void _evalLogInEnabled() {
-    _isLogInEnabled.value =
-        _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+    _isLogInEnabled.value = EmailRegex.checkIsEmail(_emailController.text) &&
+        _passwordController.text.isNotEmpty;
   }
 
   //void _onShowRegisterErrorModal(String? errorMessage) {

@@ -7,6 +7,7 @@ import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
+import 'package:polkadex/features/setup/presentation/utils/email_regex.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:polkadex/features/setup/presentation/utils/password_regex.dart';
@@ -263,7 +264,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       builder: (context, isNextEnabled, _) => AppButton(
                         enabled: isNextEnabled,
                         label: 'Continue',
-                        onTap: () => _onContinuePressed(context),
+                        onTap: () => Coordinator.goToCodeVerificationScreen(),
                       ),
                     ),
                   ],
@@ -316,7 +317,7 @@ class _SignUpScreenState extends State<SignUpScreen>
         _hasLeast1Uppercase.value &&
         _hasLeast1LowercaseLetter.value &&
         _hasLeast1Digit.value &&
-        _emailController.text.isNotEmpty &&
+        EmailRegex.checkIsEmail(_emailController.text) &&
         (_passwordController.text == _passwordRepeatController.text);
   }
 
