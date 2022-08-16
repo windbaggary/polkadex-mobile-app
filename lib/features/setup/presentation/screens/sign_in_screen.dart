@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
+import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/setup/presentation/utils/email_regex.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
+import 'package:polkadex/injection_container.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -25,6 +28,7 @@ class _SignInScreenState extends State<SignInScreen>
   final _passwordController = TextEditingController();
 
   final ValueNotifier<bool> _isLogInEnabled = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isFingerPrintEnabled = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -134,7 +138,7 @@ class _SignInScreenState extends State<SignInScreen>
                                     children: [
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(bottom: 12),
+                                            const EdgeInsets.only(bottom: 20),
                                         child: WalletInputWidget(
                                           title: 'Email',
                                           description: 'Email',
@@ -153,6 +157,25 @@ class _SignInScreenState extends State<SignInScreen>
                                           onChanged: (_) => _evalLogInEnabled(),
                                         ),
                                       ),
+                                      if (dependency.get<bool>(
+                                          instanceName: 'isBiometricAvailable'))
+                                        ValueListenableBuilder<bool>(
+                                          valueListenable:
+                                              _isFingerPrintEnabled,
+                                          builder: (context,
+                                                  isFingerPrintEnabled, _) =>
+                                              OptionTabSwitchWidget(
+                                            svgAsset:
+                                                "finger-print".asAssetSvg(),
+                                            title: "Secure with Biometric Only",
+                                            description:
+                                                "Secure your access without typing your password.",
+                                            isChecked: isFingerPrintEnabled,
+                                            onSwitchChanged: (newValue) =>
+                                                _isFingerPrintEnabled.value =
+                                                    newValue,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -205,10 +228,10 @@ class _SignInScreenState extends State<SignInScreen>
       text: 'We are almost there...',
     );
 
-    await accountCubit.signUp(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
+    await accountCubit.signIn(
+        email: _emailController.text,
+        password: _passwordController.text,
+        useBiometric: _isFingerPrintEnabled.value);
 
     final currentState = accountCubit.state;
 

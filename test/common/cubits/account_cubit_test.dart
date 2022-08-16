@@ -217,67 +217,67 @@ void main() {
         },
       );
 
-      test(
-        'Biometric verification success for account login',
-        () async {
-          when(
-            () => _mockGetAccountUseCase(),
-          ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
-          );
-          when(
-            () => _mockGetPasswordUseCase(),
-          ).thenAnswer(
-            (_) async => 'test',
-          );
-          when(
-            () => _mockConfirmPasswordUseCase(
-              account: any(named: 'account'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer(
-            (_) async => true,
-          );
-
-          await cubit.loadAccountData();
-          final result = await cubit.signInWithBiometric();
-
-          expect(result, true);
-          verify(() => _mockGetPasswordUseCase()).called(1);
-          verifyNoMoreInteractions(_mockSavePasswordUseCase);
-        },
-      );
-
-      test(
-        'Biometric verification fail for account login',
-        () async {
-          when(
-            () => _mockGetAccountUseCase(),
-          ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
-          );
-          when(
-            () => _mockGetPasswordUseCase(),
-          ).thenAnswer(
-            (_) async => 'test',
-          );
-          when(
-            () => _mockConfirmPasswordUseCase(
-              account: any(named: 'account'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer(
-            (_) async => false,
-          );
-
-          await cubit.loadAccountData();
-          final result = await cubit.signInWithBiometric();
-
-          expect(result, false);
-          verify(() => _mockGetPasswordUseCase()).called(1);
-          verifyNoMoreInteractions(_mockSavePasswordUseCase);
-        },
-      );
+      //test(
+      //  'Biometric verification success for account login',
+      //  () async {
+      //    when(
+      //      () => _mockGetAccountUseCase(),
+      //    ).thenAnswer(
+      //      (_) async => tImportedAccountBioOff,
+      //    );
+      //    when(
+      //      () => _mockGetPasswordUseCase(),
+      //    ).thenAnswer(
+      //      (_) async => 'test',
+      //    );
+      //    when(
+      //      () => _mockConfirmPasswordUseCase(
+      //        account: any(named: 'account'),
+      //        password: any(named: 'password'),
+      //      ),
+      //    ).thenAnswer(
+      //      (_) async => true,
+      //    );
+//
+      //    await cubit.loadAccountData();
+      //    final result = await cubit.signInWithBiometric();
+//
+      //    expect(result, true);
+      //    verify(() => _mockGetPasswordUseCase()).called(1);
+      //    verifyNoMoreInteractions(_mockSavePasswordUseCase);
+      //  },
+      //);
+//
+      //test(
+      //  'Biometric verification fail for account login',
+      //  () async {
+      //    when(
+      //      () => _mockGetAccountUseCase(),
+      //    ).thenAnswer(
+      //      (_) async => tImportedAccountBioOff,
+      //    );
+      //    when(
+      //      () => _mockGetPasswordUseCase(),
+      //    ).thenAnswer(
+      //      (_) async => 'test',
+      //    );
+      //    when(
+      //      () => _mockConfirmPasswordUseCase(
+      //        account: any(named: 'account'),
+      //        password: any(named: 'password'),
+      //      ),
+      //    ).thenAnswer(
+      //      (_) async => false,
+      //    );
+//
+      //    await cubit.loadAccountData();
+      //    final result = await cubit.signInWithBiometric();
+//
+      //    expect(result, false);
+      //    verify(() => _mockGetPasswordUseCase()).called(1);
+      //    verifyNoMoreInteractions(_mockSavePasswordUseCase);
+      //  },
+      //);
 
       blocTest<AccountCubit, AccountState>(
         'Account created and saved in secure storage',
@@ -321,63 +321,63 @@ void main() {
         ],
       );
 
-      test(
-        'Password verification success for account login',
-        () async {
-          when(
-            () => _mockGetAccountUseCase(),
-          ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
-          );
-          when(
-            () => _mockConfirmPasswordUseCase(
-              account: any(named: 'account'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer(
-            (_) async => true,
-          );
-
-          await cubit.loadAccountData();
-          final result = await cubit.signIn('test');
-
-          expect(result, true);
-          verify(() => _mockConfirmPasswordUseCase(
-                account: any(named: 'account'),
-                password: any(named: 'password'),
-              )).called(1);
-          verifyNoMoreInteractions(_mockConfirmPasswordUseCase);
-        },
-      );
-
-      test(
-        'Password verification fail for account login',
-        () async {
-          when(
-            () => _mockGetAccountUseCase(),
-          ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
-          );
-          when(
-            () => _mockConfirmPasswordUseCase(
-              account: any(named: 'account'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer(
-            (_) async => false,
-          );
-
-          await cubit.loadAccountData();
-          final result = await cubit.signIn('test');
-
-          expect(result, false);
-          verify(() => _mockConfirmPasswordUseCase(
-                account: any(named: 'account'),
-                password: any(named: 'password'),
-              )).called(1);
-          verifyNoMoreInteractions(_mockConfirmPasswordUseCase);
-        },
-      );
+      //test(
+      //  'Password verification success for account login',
+      //  () async {
+      //    when(
+      //      () => _mockGetAccountUseCase(),
+      //    ).thenAnswer(
+      //      (_) async => tImportedAccountBioOff,
+      //    );
+      //    when(
+      //      () => _mockConfirmPasswordUseCase(
+      //        account: any(named: 'account'),
+      //        password: any(named: 'password'),
+      //      ),
+      //    ).thenAnswer(
+      //      (_) async => true,
+      //    );
+//
+      //    await cubit.loadAccountData();
+      //    final result = await cubit.signIn('test');
+//
+      //    expect(result, true);
+      //    verify(() => _mockConfirmPasswordUseCase(
+      //          account: any(named: 'account'),
+      //          password: any(named: 'password'),
+      //        )).called(1);
+      //    verifyNoMoreInteractions(_mockConfirmPasswordUseCase);
+      //  },
+      //);
+//
+      //test(
+      //  'Password verification fail for account login',
+      //  () async {
+      //    when(
+      //      () => _mockGetAccountUseCase(),
+      //    ).thenAnswer(
+      //      (_) async => tImportedAccountBioOff,
+      //    );
+      //    when(
+      //      () => _mockConfirmPasswordUseCase(
+      //        account: any(named: 'account'),
+      //        password: any(named: 'password'),
+      //      ),
+      //    ).thenAnswer(
+      //      (_) async => false,
+      //    );
+//
+      //    await cubit.loadAccountData();
+      //    final result = await cubit.signIn('test');
+//
+      //    expect(result, false);
+      //    verify(() => _mockConfirmPasswordUseCase(
+      //          account: any(named: 'account'),
+      //          password: any(named: 'password'),
+      //        )).called(1);
+      //    verifyNoMoreInteractions(_mockConfirmPasswordUseCase);
+      //  },
+      //);
 
       blocTest<AccountCubit, AccountState>(
         'Account biometric access switched on',

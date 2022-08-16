@@ -174,37 +174,33 @@ class AccountCubit extends Cubit<AccountState> {
     return await _savePasswordUseCase(password: password);
   }
 
-  Future<bool> signInWithBiometric() async {
-    final currentState = state;
+  Future<bool> signIn({
+    required String email,
+    required String password,
+    required bool useBiometric,
+  }) async {
+    final account = ImportedAccountModel(
+      email: email,
+      mainAddress: '',
+      proxyAddress: '',
+      biometricAccess: useBiometric,
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
 
-    if (currentState is AccountLoaded) {
-      final password = await _getPasswordUseCase();
-
-      return await signIn(password!);
+    if (useBiometric) {
+      await savePassword(password);
     }
 
-    return false;
-  }
+    //TODO: execute signIn usecase
 
-  Future<bool> signIn(String password) async {
-    final currentState = state;
+    emit(
+      AccountLoaded(
+        account: account,
+        password: password,
+      ),
+    );
 
-    if (currentState is AccountLoaded) {
-      emit(AccountPasswordValidating(account: currentState.account));
-
-      //TODO: execute signIn usecase
-
-      emit(
-        AccountLoaded(
-          account: currentState.account,
-          password: password,
-        ),
-      );
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   Future<void> switchBiometricAccess() async {
