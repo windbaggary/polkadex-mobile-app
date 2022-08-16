@@ -174,19 +174,19 @@ class AccountCubit extends Cubit<AccountState> {
     return await _savePasswordUseCase(password: password);
   }
 
-  Future<bool> authenticateBiometric() async {
+  Future<bool> signInWithBiometric() async {
     final currentState = state;
 
     if (currentState is AccountLoaded) {
       final password = await _getPasswordUseCase();
 
-      return await confirmPassword(password!);
+      return await signIn(password!);
     }
 
     return false;
   }
 
-  Future<bool> confirmPassword(String password) async {
+  Future<bool> signIn(String password) async {
     final currentState = state;
 
     if (currentState is AccountLoaded) {

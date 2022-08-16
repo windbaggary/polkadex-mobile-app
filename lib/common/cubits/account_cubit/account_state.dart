@@ -54,6 +54,26 @@ class AccountVerifyingCode extends AccountState {
       ];
 }
 
+class AccountLogInError extends AccountLoaded {
+  AccountLogInError({
+    required this.errorMessage,
+    required ImportedAccountEntity account,
+    String? password,
+  }) : super(
+          account: account,
+          password: password,
+        );
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        errorMessage,
+        account,
+        password,
+      ];
+}
+
 class AccountUpdatingBiometric extends AccountLoaded {
   AccountUpdatingBiometric({
     required ImportedAccountEntity account,

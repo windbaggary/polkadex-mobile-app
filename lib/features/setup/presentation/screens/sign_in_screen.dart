@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/setup/presentation/utils/email_regex.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 
@@ -175,7 +180,7 @@ class _SignInScreenState extends State<SignInScreen>
                       builder: (context, isLogInEnabled, _) => AppButton(
                         enabled: isLogInEnabled,
                         label: 'Log In',
-                        onTap: () {},
+                        onTap: () => _onLogInPressed(context),
                       ),
                     ),
                   ],
@@ -188,71 +193,44 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  //void _onNextTap(
-  //  List<String> mnemonicWords,
-  //  String password,
-  //  String name,
-  //  bool onlyBiometric,
-  //) async {
-  //  final accountCubit = context.read<AccountCubit>();
-  //  final isBiometricAvailable =
-  //      dependency.get<bool>(instanceName: 'isBiometricAvailable');
-//
-  //  FocusScope.of(context).unfocus();
-//
-  //  if (isBiometricAvailable) {
-  //    final hasImported = await accountCubit.savePassword(
-  //      password,
-  //    );
-//
-  //    if (!hasImported) {
-  //      return;
-  //    }
-  //  }
-//
-  //  LoadingPopup.show(
-  //    context: context,
-  //    text: 'We are almost there...',
-  //  );
-//
-  //  await accountCubit.saveAccount(
-  //    mnemonicWords,
-  //    password,
-  //    name,
-  //    onlyBiometric,
-  //    isBiometricAvailable,
-  //  );
-  //  final accountState = accountCubit.state;
-//
-  //  if (accountState is AccountLoaded) {
-  //    await context.read<MarketAssetCubit>().getMarkets();
-  //    Coordinator.goToLandingScreen(accountState.account);
-  //  } else if (accountState is AccountNotLoaded) {
-  //    _onShowRegisterErrorModal(accountState.errorMessage);
-  //  }
-  //}
+  void _onLogInPressed(
+    BuildContext context,
+  ) async {
+    final accountCubit = context.read<AccountCubit>();
+
+    FocusScope.of(context).unfocus();
+
+    LoadingPopup.show(
+      context: context,
+      text: 'We are almost there...',
+    );
+
+    await accountCubit.signUp(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    final currentState = accountCubit.state;
+
+    if (currentState is AccountLoaded) {
+      final errorMsg =
+          currentState is AccountLogInError ? currentState.errorMessage : null;
+
+      errorMsg != null
+          ? PolkadexSnackBar.show(
+              context: context,
+              text: errorMsg,
+            )
+          : Coordinator.goToLandingScreen(
+              currentState.account,
+            );
+    }
+  }
 
   void _evalLogInEnabled() {
     _isLogInEnabled.value = EmailRegex.checkIsEmail(_emailController.text) &&
         _passwordController.text.isNotEmpty;
   }
-
-  //void _onShowRegisterErrorModal(String? errorMessage) {
-  //  Navigator.of(context).pop();
-  //  showModalBottomSheet(
-  //    context: context,
-  //    isScrollControlled: true,
-  //    shape: RoundedRectangleBorder(
-  //      borderRadius: BorderRadius.vertical(
-  //        top: Radius.circular(30),
-  //      ),
-  //    ),
-  //    builder: (_) => WarningModalWidget(
-  //      title: 'Account register error',
-  //      subtitle: errorMessage,
-  //    ),
-  //  );
-  //}
 
   Future<bool> _onPop(BuildContext context) async {
     await _animationController.reverse();

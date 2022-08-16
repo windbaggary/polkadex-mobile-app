@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
-import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-
-import 'package:provider/provider.dart';
 
 class ConfirmPasswordScreen extends StatefulWidget {
   @override
@@ -153,17 +146,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                     ),
                     enabled: _isConfirmEnabled,
                     onTap: () async {
-                      final isCorrect = await context
-                          .read<AccountCubit>()
-                          .confirmPassword(_passwordController.text);
-                      final accountState = context.read<AccountCubit>().state;
-
-                      if (isCorrect && accountState is AccountLoaded) {
-                        await context.read<MarketAssetCubit>().getMarkets();
-                        Coordinator.goToLandingScreen(accountState.account);
-                      } else {
-                        _onShowIncorrectPasswordModal(context);
-                      }
+                      //TODO: Implement authentication
                     },
                   ),
                 ],
@@ -171,23 +154,6 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
             ),
           )
         ],
-      ),
-    );
-  }
-
-  void _onShowIncorrectPasswordModal(BuildContext context) {
-    Navigator.of(context).pop();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
-      ),
-      builder: (_) => WarningModalWidget(
-        title: 'Incorrect password',
-        subtitle: 'Please enter again.',
       ),
     );
   }

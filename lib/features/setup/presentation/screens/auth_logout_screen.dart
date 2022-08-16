@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -90,22 +89,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                     vertical: 16,
                                   ),
                                   onTap: () async {
-                                    if (state is AccountLoaded &&
-                                        state.account.biometricAccess) {
-                                      final authenticated = await context
-                                          .read<AccountCubit>()
-                                          .authenticateBiometric();
-
-                                      if (authenticated) {
-                                        await context
-                                            .read<MarketAssetCubit>()
-                                            .getMarkets();
-                                        Coordinator.goToLandingScreen(
-                                            state.account);
-                                      }
-                                    } else {
-                                      Coordinator.goToConfirmPasswordScreen();
-                                    }
+                                    //TODO: implement authenticate flow
                                   },
                                 ),
                               ),

@@ -240,7 +240,7 @@ void main() {
           );
 
           await cubit.loadAccountData();
-          final result = await cubit.authenticateBiometric();
+          final result = await cubit.signInWithBiometric();
 
           expect(result, true);
           verify(() => _mockGetPasswordUseCase()).called(1);
@@ -271,7 +271,7 @@ void main() {
           );
 
           await cubit.loadAccountData();
-          final result = await cubit.authenticateBiometric();
+          final result = await cubit.signInWithBiometric();
 
           expect(result, false);
           verify(() => _mockGetPasswordUseCase()).called(1);
@@ -339,7 +339,7 @@ void main() {
           );
 
           await cubit.loadAccountData();
-          final result = await cubit.confirmPassword('test');
+          final result = await cubit.signIn('test');
 
           expect(result, true);
           verify(() => _mockConfirmPasswordUseCase(
@@ -368,7 +368,7 @@ void main() {
           );
 
           await cubit.loadAccountData();
-          final result = await cubit.confirmPassword('test');
+          final result = await cubit.signIn('test');
 
           expect(result, false);
           verify(() => _mockConfirmPasswordUseCase(
