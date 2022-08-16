@@ -193,7 +193,7 @@ class AccountCubit extends Cubit<AccountState> {
         password: password,
       );
 
-      emit(AccountLoaded(account: currentState.account, password: password));
+      emit(AccountLoaded(account: currentState.account));
 
       return confirmationResult;
     }
@@ -233,7 +233,6 @@ class AccountCubit extends Cubit<AccountState> {
     if (currentState is AccountLoaded) {
       emit(AccountUpdatingTimer(
         account: currentState.account,
-        password: currentState.password,
       ));
 
       ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
@@ -242,7 +241,6 @@ class AccountCubit extends Cubit<AccountState> {
       await _saveAccountUseCase(keypairJson: json.encode(acc));
       emit(AccountLoaded(
         account: acc,
-        password: currentState.password,
       ));
     }
   }

@@ -25,16 +25,13 @@ class AccountNotLoaded extends AccountState {
 class AccountLoaded extends AccountState {
   AccountLoaded({
     required this.account,
-    this.password,
   });
 
   final ImportedAccountEntity account;
-  final String? password;
 
   @override
   List<Object?> get props => [
         account,
-        password,
       ];
 }
 
@@ -58,19 +55,19 @@ class AccountUpdatingBiometric extends AccountLoaded {
   AccountUpdatingBiometric({
     required ImportedAccountEntity account,
     String? password,
-  }) : super(account: account, password: password);
+  }) : super(account: account);
 }
 
 class AccountPasswordValidating extends AccountLoaded {
   AccountPasswordValidating({
     required ImportedAccountEntity account,
     String? password,
-  }) : super(account: account, password: password);
+  }) : super(account: account);
 }
 
 class AccountUpdatingTimer extends AccountLoaded {
   AccountUpdatingTimer({
     required ImportedAccountEntity account,
     String? password,
-  }) : super(account: account, password: password);
+  }) : super(account: account);
 }
