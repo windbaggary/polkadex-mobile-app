@@ -155,11 +155,15 @@ class AccountCubit extends Cubit<AccountState> {
       ),
       (newAccount) async {
         await _saveAccountUseCase(keypairJson: json.encode(newAccount));
-        await savePassword(password);
+
+        if (useBiometric) {
+          await savePassword(password);
+        }
 
         emit(
           AccountLoaded(
             account: newAccount,
+            password: password,
           ),
         );
       },
@@ -188,14 +192,16 @@ class AccountCubit extends Cubit<AccountState> {
     if (currentState is AccountLoaded) {
       emit(AccountPasswordValidating(account: currentState.account));
 
-      final confirmationResult = await _confirmPasswordUseCase(
-        account: (currentState.account as ImportedAccountModel).toJson(),
-        password: password,
+      //TODO: execute signIn usecase
+
+      emit(
+        AccountLoaded(
+          account: currentState.account,
+          password: password,
+        ),
       );
 
-      emit(AccountLoaded(account: currentState.account, password: password));
-
-      return confirmationResult;
+      return true;
     }
 
     return false;
@@ -210,6 +216,7 @@ class AccountCubit extends Cubit<AccountState> {
       emit(
         AccountUpdatingBiometric(
           account: currentState.account,
+          password: currentState.password,
         ),
       );
 
@@ -220,6 +227,7 @@ class AccountCubit extends Cubit<AccountState> {
       emit(
         AccountLoaded(
           account: acc,
+          password: currentState.password,
         ),
       );
     }
@@ -240,10 +248,12 @@ class AccountCubit extends Cubit<AccountState> {
           .copyWith(timerInterval: newInterval);
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));
-      emit(AccountLoaded(
-        account: acc,
-        password: currentState.password,
-      ));
+      emit(
+        AccountLoaded(
+          account: acc,
+          password: currentState.password,
+        ),
+      );
     }
   }
 }

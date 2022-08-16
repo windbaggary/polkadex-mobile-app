@@ -45,7 +45,7 @@ class AccountVerifyingCode extends AccountState {
   });
 
   final String email;
-  final String? password;
+  final String password;
 
   @override
   List<Object?> get props => [
@@ -58,19 +58,28 @@ class AccountUpdatingBiometric extends AccountLoaded {
   AccountUpdatingBiometric({
     required ImportedAccountEntity account,
     String? password,
-  }) : super(account: account, password: password);
+  }) : super(
+          account: account,
+          password: password,
+        );
 }
 
 class AccountPasswordValidating extends AccountLoaded {
   AccountPasswordValidating({
     required ImportedAccountEntity account,
     String? password,
-  }) : super(account: account, password: password);
+  }) : super(
+          account: account,
+          password: password,
+        );
 }
 
 class AccountUpdatingTimer extends AccountLoaded {
   AccountUpdatingTimer({
     required ImportedAccountEntity account,
     String? password,
-  }) : super(account: account, password: password);
+  }) : super(
+          account: account,
+          password: password,
+        );
 }

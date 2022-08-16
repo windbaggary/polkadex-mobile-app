@@ -58,6 +58,7 @@ void main() {
   late AccountCubit cubit;
   late ImportedAccountModel tImportedAccountBioOff;
   late ImportedAccountModel tImportedAccountBioOn;
+  late String tPassword;
 
   setUp(() {
     _mockSignUpUseCase = _MockSignUpUseCase();
@@ -99,6 +100,7 @@ void main() {
       biometricAccess: true,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
+    tPassword = 'testPassword';
 
     registerFallbackValue(tImportedAccountBioOff);
     registerFallbackValue(tImportedAccountBioOn);
@@ -306,13 +308,16 @@ void main() {
         act: (cubit) async {
           await cubit.confirmSignUp(
             email: 'test@test.com',
-            password: 'test',
+            password: tPassword,
             code: 'test',
             useBiometric: false,
           );
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(
+            account: tImportedAccountBioOff,
+            password: tPassword,
+          ),
         ],
       );
 
@@ -403,17 +408,25 @@ void main() {
         act: (cubit) async {
           await cubit.confirmSignUp(
             email: 'test@test.com',
-            password: 'test',
+            password: tPassword,
             code: 'test',
             useBiometric: false,
           );
-          print(cubit.state);
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
-          AccountUpdatingBiometric(account: tImportedAccountBioOff),
-          AccountLoaded(account: tImportedAccountBioOn),
+          AccountLoaded(
+            account: tImportedAccountBioOff,
+            password: tPassword,
+          ),
+          AccountUpdatingBiometric(
+            account: tImportedAccountBioOff,
+            password: tPassword,
+          ),
+          AccountLoaded(
+            account: tImportedAccountBioOn,
+            password: tPassword,
+          ),
         ],
       );
 
@@ -446,16 +459,25 @@ void main() {
         act: (cubit) async {
           await cubit.confirmSignUp(
             email: 'test@test.com',
-            password: 'test',
+            password: tPassword,
             code: 'test',
             useBiometric: true,
           );
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOn),
-          AccountUpdatingBiometric(account: tImportedAccountBioOn),
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(
+            account: tImportedAccountBioOn,
+            password: tPassword,
+          ),
+          AccountUpdatingBiometric(
+            account: tImportedAccountBioOn,
+            password: tPassword,
+          ),
+          AccountLoaded(
+            account: tImportedAccountBioOff,
+            password: tPassword,
+          ),
         ],
       );
     },
