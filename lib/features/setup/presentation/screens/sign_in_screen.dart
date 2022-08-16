@@ -5,7 +5,6 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
-import 'package:polkadex/features/setup/presentation/utils/password_regex.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -19,15 +18,8 @@ class _SignInScreenState extends State<SignInScreen>
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _passwordRepeatController = TextEditingController();
 
-  final ValueNotifier<bool> _hasLeast8Characters = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _hasLeast1Uppercase = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _hasLeast1LowercaseLetter =
-      ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _hasLeast1Digit = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _isNextEnabled = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _isFingerPrintEnabled = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isLogInEnabled = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -47,14 +39,6 @@ class _SignInScreenState extends State<SignInScreen>
     _animationController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _passwordRepeatController.dispose();
-
-    _hasLeast8Characters.dispose();
-    _hasLeast1Uppercase.dispose();
-    _hasLeast1LowercaseLetter.dispose();
-    _hasLeast1Digit.dispose();
-    _isNextEnabled.dispose();
-    _isFingerPrintEnabled.dispose();
 
     super.dispose();
   }
@@ -150,7 +134,7 @@ class _SignInScreenState extends State<SignInScreen>
                                           title: 'Email',
                                           description: 'Email',
                                           controller: _emailController,
-                                          onChanged: (_) => _evalNextEnabled(),
+                                          onChanged: (_) => _evalLogInEnabled(),
                                         ),
                                       ),
                                       Padding(
@@ -161,7 +145,7 @@ class _SignInScreenState extends State<SignInScreen>
                                           description: 'Password',
                                           controller: _passwordController,
                                           obscureText: true,
-                                          onChanged: (_) => _evalNextEnabled(),
+                                          onChanged: (_) => _evalLogInEnabled(),
                                         ),
                                       ),
                                     ],
@@ -187,10 +171,10 @@ class _SignInScreenState extends State<SignInScreen>
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     ValueListenableBuilder<bool>(
-                      valueListenable: _isNextEnabled,
-                      builder: (context, isNextEnabled, _) => AppButton(
-                        enabled: isNextEnabled,
-                        label: 'Continue',
+                      valueListenable: _isLogInEnabled,
+                      builder: (context, isLogInEnabled, _) => AppButton(
+                        enabled: isLogInEnabled,
+                        label: 'Log In',
                         onTap: () => Coordinator.goToCodeVerificationScreen(),
                       ),
                     ),
@@ -248,25 +232,9 @@ class _SignInScreenState extends State<SignInScreen>
   //  }
   //}
 
-  void _evalNextEnabled() {
-    _evalPasswordRequirements();
-
-    _isNextEnabled.value = _hasLeast8Characters.value &&
-        _hasLeast1Uppercase.value &&
-        _hasLeast1LowercaseLetter.value &&
-        _hasLeast1Digit.value &&
-        _emailController.text.isNotEmpty &&
-        (_passwordController.text == _passwordRepeatController.text);
-  }
-
-  void _evalPasswordRequirements() {
-    _hasLeast8Characters.value =
-        PasswordRegex.check8Characters(_passwordController.text);
-    _hasLeast1Uppercase.value =
-        PasswordRegex.check1Uppercase(_passwordController.text);
-    _hasLeast1LowercaseLetter.value =
-        PasswordRegex.check1Lowercase(_passwordController.text);
-    _hasLeast1Digit.value = PasswordRegex.check1Digit(_passwordController.text);
+  void _evalLogInEnabled() {
+    _isLogInEnabled.value =
+        _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
   }
 
   //void _onShowRegisterErrorModal(String? errorMessage) {
