@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
+import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:polkadex/features/setup/presentation/utils/password_regex.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/injection_container.dart';
 
@@ -259,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       builder: (context, isNextEnabled, _) => AppButton(
                         enabled: isNextEnabled,
                         label: 'Continue',
-                        onTap: () => Coordinator.goToCodeVerificationScreen(),
+                        onTap: () => _onContinuePressed(context),
                       ),
                     ),
                   ],
@@ -272,49 +276,38 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
-  //void _onNextTap(
-  //  List<String> mnemonicWords,
-  //  String password,
-  //  String name,
-  //  bool onlyBiometric,
-  //) async {
-  //  final accountCubit = context.read<AccountCubit>();
-  //  final isBiometricAvailable =
-  //      dependency.get<bool>(instanceName: 'isBiometricAvailable');
-//
-  //  FocusScope.of(context).unfocus();
-//
-  //  if (isBiometricAvailable) {
-  //    final hasImported = await accountCubit.savePassword(
-  //      password,
-  //    );
-//
-  //    if (!hasImported) {
-  //      return;
-  //    }
-  //  }
-//
-  //  LoadingPopup.show(
-  //    context: context,
-  //    text: 'We are almost there...',
-  //  );
-//
-  //  await accountCubit.saveAccount(
-  //    mnemonicWords,
-  //    password,
-  //    name,
-  //    onlyBiometric,
-  //    isBiometricAvailable,
-  //  );
-  //  final accountState = accountCubit.state;
-//
-  //  if (accountState is AccountLoaded) {
-  //    await context.read<MarketAssetCubit>().getMarkets();
-  //    Coordinator.goToLandingScreen(accountState.account);
-  //  } else if (accountState is AccountNotLoaded) {
-  //    _onShowRegisterErrorModal(accountState.errorMessage);
-  //  }
-  //}
+  void _onContinuePressed(
+    BuildContext context,
+  ) async {
+    final accountCubit = context.read<AccountCubit>();
+
+    FocusScope.of(context).unfocus();
+
+    LoadingPopup.show(
+      context: context,
+      text: 'We are almost there...',
+    );
+
+    await accountCubit.signUp(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    final currentState = accountCubit.state;
+
+    if (currentState is AccountVerifyingCode) {
+      Coordinator.goToCodeVerificationScreen();
+    } else {
+      final errorMsg = currentState is AccountNotLoaded
+          ? currentState.errorMessage
+          : 'Unexpected error on sign up.';
+
+      PolkadexSnackBar.show(
+        context: context,
+        text: errorMsg,
+      );
+    }
+  }
 
   void _evalNextEnabled() {
     _evalPasswordRequirements();
@@ -336,23 +329,6 @@ class _SignUpScreenState extends State<SignUpScreen>
         PasswordRegex.check1Lowercase(_passwordController.text);
     _hasLeast1Digit.value = PasswordRegex.check1Digit(_passwordController.text);
   }
-
-  //void _onShowRegisterErrorModal(String? errorMessage) {
-  //  Navigator.of(context).pop();
-  //  showModalBottomSheet(
-  //    context: context,
-  //    isScrollControlled: true,
-  //    shape: RoundedRectangleBorder(
-  //      borderRadius: BorderRadius.vertical(
-  //        top: Radius.circular(30),
-  //      ),
-  //    ),
-  //    builder: (_) => WarningModalWidget(
-  //      title: 'Account register error',
-  //      subtitle: errorMessage,
-  //    ),
-  //  );
-  //}
 
   Future<bool> _onPop(BuildContext context) async {
     await _animationController.reverse();

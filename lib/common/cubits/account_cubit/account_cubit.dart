@@ -113,6 +113,30 @@ class AccountCubit extends Cubit<AccountState> {
     return;
   }
 
+  Future<void> signUp({
+    required String email,
+    required String password,
+  }) async {
+    final result = await _signUpUseCase(
+      email: email,
+      password: password,
+    );
+
+    result.fold(
+      (error) => emit(
+        AccountNotLoaded(
+          errorMessage: error.message,
+        ),
+      ),
+      (_) => emit(
+        AccountVerifyingCode(
+          email: email,
+          password: password,
+        ),
+      ),
+    );
+  }
+
   Future<bool> savePassword(String password) async {
     return await _savePasswordUseCase(password: password);
   }
