@@ -98,14 +98,4 @@ class AccountLocalDatasource {
 
     return result;
   }
-
-  Future<Map<String, dynamic>> registerUser(String address) async {
-    final String _callRegister =
-        'polkadexWorker.register(keyring.getPair("$address"), keyring.getPair("$address"))';
-
-    final Map<String, dynamic> result =
-        await dependency<WebViewRunner>().evalJavascript(_callRegister);
-
-    return result;
-  }
 }

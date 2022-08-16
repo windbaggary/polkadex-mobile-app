@@ -12,7 +12,6 @@ import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
@@ -31,8 +30,6 @@ class AccountCubit extends Cubit<AccountState> {
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
     required ConfirmPasswordUseCase confirmPasswordUseCase,
-    required RegisterUserUseCase
-        registerUserUseCase, //TODO: delete register flow
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
   })  : _signUpUseCase = signUpUseCase,
         _confirmSignUpUseCase = confirmSignUpUseCase,

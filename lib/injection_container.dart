@@ -59,7 +59,6 @@ import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
@@ -198,12 +197,6 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => RegisterUserUseCase(
-      accountRepository: dependency(),
-    ),
-  );
-
-  dependency.registerFactory(
     () => SignUpUseCase(
       accountRepository: dependency(),
     ),
@@ -234,7 +227,6 @@ Future<void> init() async {
       getPasswordUseCase: dependency(),
       getAccountStorageUseCase: dependency(),
       confirmPasswordUseCase: dependency(),
-      registerUserUseCase: dependency(),
       getMainAccountAddressUsecase: dependency(),
     ),
   );
@@ -326,7 +318,6 @@ Future<void> init() async {
     () => BalanceCubit(
       getBalanceUseCase: dependency(),
       getBalanceUpdatesUseCase: dependency(),
-      registerUserUseCase: dependency(),
     ),
   );
 

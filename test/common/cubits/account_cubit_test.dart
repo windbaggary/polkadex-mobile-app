@@ -11,7 +11,6 @@ import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
@@ -40,8 +39,6 @@ class _MockGetPasswordUseCase extends Mock implements GetPasswordUseCase {}
 class _MockConfirmPasswordUseCase extends Mock
     implements ConfirmPasswordUseCase {}
 
-class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
-
 class _MockGetMainAccountAddressUseCase extends Mock
     implements GetMainAccountAddressUsecase {}
 
@@ -56,7 +53,6 @@ void main() {
   late _MockSavePasswordUseCase _mockSavePasswordUseCase;
   late _MockGetPasswordUseCase _mockGetPasswordUseCase;
   late _MockConfirmPasswordUseCase _mockConfirmPasswordUseCase;
-  late _MockRegisterUserUseCase _mockRegisterUserUseCase;
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
@@ -74,7 +70,6 @@ void main() {
     _mockSavePasswordUseCase = _MockSavePasswordUseCase();
     _mockGetPasswordUseCase = _MockGetPasswordUseCase();
     _mockConfirmPasswordUseCase = _MockConfirmPasswordUseCase();
-    _mockRegisterUserUseCase = _MockRegisterUserUseCase();
     _mockGetMainAccountAddressUseCase = _MockGetMainAccountAddressUseCase();
 
     cubit = AccountCubit(
@@ -88,7 +83,6 @@ void main() {
       savePasswordUseCase: _mockSavePasswordUseCase,
       getPasswordUseCase: _mockGetPasswordUseCase,
       confirmPasswordUseCase: _mockConfirmPasswordUseCase,
-      registerUserUseCase: _mockRegisterUserUseCase,
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
     tImportedAccountBioOff = ImportedAccountModel(

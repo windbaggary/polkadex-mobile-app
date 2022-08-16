@@ -106,11 +106,4 @@ class AccountRepository implements IAccountRepository {
     return await _accountLocalDatasource.confirmPassword(
         account, password.toBase64());
   }
-
-  @override
-  Future<String?> register(String address) async {
-    final result = await _accountLocalDatasource.registerUser(address);
-
-    return result['signature'];
-  }
 }
