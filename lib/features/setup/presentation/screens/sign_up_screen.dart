@@ -122,12 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(
-                              left: 20,
-                              top: 20,
-                              right: 20,
-                              bottom: 32,
-                            ),
+                            padding: const EdgeInsets.all(20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -139,23 +134,24 @@ class _SignUpScreenState extends State<SignUpScreen>
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 14),
+                                  padding: const EdgeInsets.only(bottom: 16),
                                   child: Text(
                                     'Polkadex is a fully non-custodial platform',
                                     style: tsS18W400CFF,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: WalletInputWidget(
-                                    title: 'Email',
-                                    description: 'Set Email',
-                                    controller: _emailController,
-                                    onChanged: (_) => _evalNextEnabled(),
-                                  ),
-                                ),
                                 Column(
                                   children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 12),
+                                      child: WalletInputWidget(
+                                        title: 'Email',
+                                        description: 'Set email',
+                                        controller: _emailController,
+                                        onChanged: (_) => _evalNextEnabled(),
+                                      ),
+                                    ),
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
@@ -169,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     ),
                                     Padding(
                                       padding:
-                                          const EdgeInsets.only(bottom: 26),
+                                          const EdgeInsets.only(bottom: 32),
                                       child: WalletInputWidget(
                                         title: 'Repeat Password',
                                         description: 'Repeat your password',
