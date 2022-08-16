@@ -3,9 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
@@ -62,8 +60,6 @@ void main() {
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
-  late MetaModel tMeta;
-  late EncodingModel tEncoding;
   late ImportedAccountModel tImportedAccountBioOff;
   late ImportedAccountModel tImportedAccountBioOn;
   late List<String> tMnemonicWords;
@@ -97,29 +93,16 @@ void main() {
       registerUserUseCase: _mockRegisterUserUseCase,
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
-
-    tMeta = MetaModel(name: 'userName');
-    tEncoding = EncodingModel(
-      content: ["sr25519"],
-      version: '3',
-      type: ["none"],
-    );
     tImportedAccountBioOff = ImportedAccountModel(
-      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-      encoding: tEncoding,
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      meta: tMeta,
       name: 'test',
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
     tImportedAccountBioOn = ImportedAccountModel(
-      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-      encoding: tEncoding,
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      meta: tMeta,
       name: 'test',
       biometricAccess: true,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
