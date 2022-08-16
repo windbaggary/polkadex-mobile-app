@@ -64,9 +64,18 @@ abstract class Coordinator {
     );
   }
 
-  static void goToCodeVerificationScreen() {
+  static void goToCodeVerificationScreen({
+    required String email,
+    required String password,
+    required bool useBiometric,
+  }) {
     _navigationKey.currentState?.pushNamed(
       Routes.codeVerificationScreen,
+      arguments: {
+        'email': email,
+        'password': password,
+        'useBiometric': useBiometric,
+      },
     );
   }
 

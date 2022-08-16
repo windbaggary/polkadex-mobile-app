@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
@@ -176,7 +175,7 @@ class _SignInScreenState extends State<SignInScreen>
                       builder: (context, isLogInEnabled, _) => AppButton(
                         enabled: isLogInEnabled,
                         label: 'Log In',
-                        onTap: () => Coordinator.goToCodeVerificationScreen(),
+                        onTap: () {},
                       ),
                     ),
                   ],

@@ -187,10 +187,16 @@ abstract class Routes {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
+            final codeVerificationArguments = settings.arguments as Map;
+
             return FadeTransition(
               opacity: CurvedAnimation(
                   parent: animation, curve: Interval(0.500, 1.00)),
-              child: CodeVerificationScreen(),
+              child: CodeVerificationScreen(
+                email: codeVerificationArguments['email'],
+                password: codeVerificationArguments['password'],
+                useBiometric: codeVerificationArguments['useBiometric'],
+              ),
             );
           },
         );

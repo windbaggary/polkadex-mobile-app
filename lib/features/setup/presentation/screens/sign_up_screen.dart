@@ -264,7 +264,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       builder: (context, isNextEnabled, _) => AppButton(
                         enabled: isNextEnabled,
                         label: 'Continue',
-                        onTap: () => Coordinator.goToCodeVerificationScreen(),
+                        onTap: () => _onContinuePressed(context),
                       ),
                     ),
                   ],
@@ -297,7 +297,11 @@ class _SignUpScreenState extends State<SignUpScreen>
     final currentState = accountCubit.state;
 
     if (currentState is AccountVerifyingCode) {
-      Coordinator.goToCodeVerificationScreen();
+      Coordinator.goToCodeVerificationScreen(
+        email: _emailController.text,
+        password: _passwordController.text,
+        useBiometric: _isFingerPrintEnabled.value,
+      );
     } else {
       final errorMsg = currentState is AccountNotLoaded
           ? currentState.errorMessage

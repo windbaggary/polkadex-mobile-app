@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/loading_popup.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 
 class CodeVerificationScreen extends StatefulWidget {
+  CodeVerificationScreen({
+    required this.email,
+    required this.password,
+    required this.useBiometric,
+  });
+
+  final String email;
+  final String password;
+  final bool useBiometric;
+
   @override
   _CodeVerificationScreenState createState() => _CodeVerificationScreenState();
 }
@@ -16,6 +31,8 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
   late Animation<double> _entryAnimation;
 
   final ValueNotifier<bool> _isVerifyEnabled = ValueNotifier<bool>(false);
+
+  final TextEditingController _pinCodeController = TextEditingController();
 
   @override
   void initState() {
@@ -33,6 +50,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _isVerifyEnabled.dispose();
     super.dispose();
   }
 
@@ -123,7 +141,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                                           vertical: 16),
                                       child: LayoutBuilder(
                                         builder: (context, constraints) {
-                                          final codeLength = 5;
+                                          final codeLength = 6;
                                           final pinCodeBoxDimension =
                                               constraints.maxWidth /
                                                       codeLength -
@@ -131,6 +149,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
 
                                           return PinCodeTextField(
                                             appContext: context,
+                                            controller: _pinCodeController,
                                             pastedTextStyle: TextStyle(
                                               color: Colors.green.shade600,
                                               fontWeight: FontWeight.bold,
@@ -222,7 +241,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                       builder: (context, isVerifyEnabled, _) => AppButton(
                         enabled: isVerifyEnabled,
                         label: 'Verify Account',
-                        onTap: () => {},
+                        onTap: () => _onVerifyPressed(context),
                       ),
                     ),
                   ],
@@ -235,66 +254,39 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
     );
   }
 
-  //void _onNextTap(
-  //  List<String> mnemonicWords,
-  //  String password,
-  //  String name,
-  //  bool onlyBiometric,
-  //) async {
-  //  final accountCubit = context.read<AccountCubit>();
-  //  final isBiometricAvailable =
-  //      dependency.get<bool>(instanceName: 'isBiometricAvailable');
-//
-  //  FocusScope.of(context).unfocus();
-//
-  //  if (isBiometricAvailable) {
-  //    final hasImported = await accountCubit.savePassword(
-  //      password,
-  //    );
-//
-  //    if (!hasImported) {
-  //      return;
-  //    }
-  //  }
-//
-  //  LoadingPopup.show(
-  //    context: context,
-  //    text: 'We are almost there...',
-  //  );
-//
-  //  await accountCubit.saveAccount(
-  //    mnemonicWords,
-  //    password,
-  //    name,
-  //    onlyBiometric,
-  //    isBiometricAvailable,
-  //  );
-  //  final accountState = accountCubit.state;
-//
-  //  if (accountState is AccountLoaded) {
-  //    await context.read<MarketAssetCubit>().getMarkets();
-  //    Coordinator.goToLandingScreen(accountState.account);
-  //  } else if (accountState is AccountNotLoaded) {
-  //    _onShowRegisterErrorModal(accountState.errorMessage);
-  //  }
-  //}
+  void _onVerifyPressed(
+    BuildContext context,
+  ) async {
+    final accountCubit = context.read<AccountCubit>();
 
-  //void _onShowRegisterErrorModal(String? errorMessage) {
-  //  Navigator.of(context).pop();
-  //  showModalBottomSheet(
-  //    context: context,
-  //    isScrollControlled: true,
-  //    shape: RoundedRectangleBorder(
-  //      borderRadius: BorderRadius.vertical(
-  //        top: Radius.circular(30),
-  //      ),
-  //    ),
-  //    builder: (_) => WarningModalWidget(
-  //      title: 'Account register error',
-  //      subtitle: errorMessage,
-  //    ),
-  //  );
-  //}
+    FocusScope.of(context).unfocus();
+
+    LoadingPopup.show(
+      context: context,
+      text: 'We are almost there...',
+    );
+
+    await accountCubit.confirmSignUp(
+        email: widget.email,
+        password: widget.password,
+        code: _pinCodeController.text,
+        useBiometric: widget.useBiometric);
+
+    final currentState = accountCubit.state;
+
+    if (currentState is AccountLoaded) {
+      Coordinator.goToLandingScreen(currentState.account);
+    } else {
+      final errorMsg = currentState is AccountNotLoaded
+          ? currentState.errorMessage
+          : 'Unexpected error on sign up verification.';
+
+      PolkadexSnackBar.show(
+        context: context,
+        text: errorMsg,
+      );
+    }
+  }
 
   Future<bool> _onPop(BuildContext context) async {
     await _animationController.reverse();
