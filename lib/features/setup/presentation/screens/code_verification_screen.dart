@@ -15,6 +15,8 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
 
+  final ValueNotifier<bool> _isVerifyEnabled = ValueNotifier<bool>(false);
+
   @override
   void initState() {
     _animationController = AnimationController(
@@ -161,7 +163,14 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                                                 blurRadius: 10,
                                               )
                                             ],
-                                            onChanged: (_) {},
+                                            onCompleted: (code) =>
+                                                _isVerifyEnabled.value = true,
+                                            onChanged: (code) =>
+                                                _isVerifyEnabled.value &&
+                                                        code.length < codeLength
+                                                    ? _isVerifyEnabled.value =
+                                                        false
+                                                    : null,
                                           );
                                         },
                                       ),
@@ -169,9 +178,9 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                                     Padding(
                                       padding: EdgeInsets.zero,
                                       child: RichText(
-                                          text: TextSpan(
-                                              style: tsS14W400CFF,
-                                              children: <TextSpan>[
+                                        text: TextSpan(
+                                          style: tsS14W400CFF,
+                                          children: <TextSpan>[
                                             TextSpan(
                                                 text:
                                                     'Didn\'t receive the code? '),
@@ -183,7 +192,9 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                                                 color: AppColors.colorE6007A,
                                               ),
                                             ),
-                                          ])),
+                                          ],
+                                        ),
+                                      ),
                                     )
                                   ],
                                 ),
@@ -206,10 +217,13 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AppButton(
-                      enabled: false,
-                      label: 'Verify Account',
-                      onTap: () => {},
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isVerifyEnabled,
+                      builder: (context, isVerifyEnabled, _) => AppButton(
+                        enabled: isVerifyEnabled,
+                        label: 'Verify Account',
+                        onTap: () => {},
+                      ),
                     ),
                   ],
                 ),
