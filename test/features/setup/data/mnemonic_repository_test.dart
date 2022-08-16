@@ -39,9 +39,9 @@ void main() {
     };
     tErrorData = {"error": "errorTest"};
     tImportedAccount = ImportedAccountModel(
+      email: "",
       mainAddress: "",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      name: "",
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );

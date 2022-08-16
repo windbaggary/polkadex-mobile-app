@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
+import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/account_remote_datasource.dart';
@@ -37,14 +38,23 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<Either<ApiError, Unit>> confirmSignUp(
+  Future<Either<ApiError, ImportedAccountEntity>> confirmSignUp(
     String email,
     String code,
+    bool useBiometric,
   ) async {
     try {
       await _accountRemoteDatasource.confirmSignUp(email, code);
 
-      return Right(unit);
+      return Right(
+        ImportedAccountModel(
+          email: email,
+          mainAddress: '',
+          proxyAddress: '',
+          biometricAccess: useBiometric,
+          timerInterval: EnumTimerIntervalTypes.oneMinute,
+        ),
+      );
     } catch (e) {
       return Left(
         ApiError(

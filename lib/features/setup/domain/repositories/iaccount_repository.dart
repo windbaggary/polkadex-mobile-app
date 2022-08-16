@@ -4,9 +4,10 @@ import 'package:polkadex/features/setup/domain/entities/imported_account_entity.
 
 abstract class IAccountRepository {
   Future<Either<ApiError, Unit>> signUp(String email, String password);
-  Future<Either<ApiError, Unit>> confirmSignUp(
+  Future<Either<ApiError, ImportedAccountEntity>> confirmSignUp(
     String email,
     String code,
+    bool useBiometric,
   );
   Future<void> saveAccountStorage(String keypairJson, {String? password});
   Future<ImportedAccountEntity?> getAccountStorage();

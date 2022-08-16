@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
-import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
@@ -253,13 +247,8 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                             _passwordController.text ==
                                 _passwordRepeatController.text,
                         label: 'Next',
-                        onTap: () => _onNextTap(
-                            Provider.of<MnemonicProvider>(context,
-                                    listen: false)
-                                .mnemonicWords,
-                            _passwordController.text,
-                            _nameController.text,
-                            settingProvider.isFingerPrintEnabled),
+                        onTap:
+                            () {}, //TODO: Implement adding wallet to current account
                       ),
                     ],
                   ),
@@ -268,67 +257,6 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
             ],
           );
         }),
-      ),
-    );
-  }
-
-  void _onNextTap(
-    List<String> mnemonicWords,
-    String password,
-    String name,
-    bool onlyBiometric,
-  ) async {
-    final accountCubit = context.read<AccountCubit>();
-    final isBiometricAvailable =
-        dependency.get<bool>(instanceName: 'isBiometricAvailable');
-
-    FocusScope.of(context).unfocus();
-
-    if (isBiometricAvailable) {
-      final hasImported = await accountCubit.savePassword(
-        password,
-      );
-
-      if (!hasImported) {
-        return;
-      }
-    }
-
-    LoadingPopup.show(
-      context: context,
-      text: 'We are almost there...',
-    );
-
-    await accountCubit.saveAccount(
-      mnemonicWords,
-      password,
-      name,
-      onlyBiometric,
-      isBiometricAvailable,
-    );
-    final accountState = accountCubit.state;
-
-    if (accountState is AccountLoaded) {
-      await context.read<MarketAssetCubit>().getMarkets();
-      Coordinator.goToLandingScreen(accountState.account);
-    } else if (accountState is AccountNotLoaded) {
-      _onShowRegisterErrorModal(accountState.errorMessage);
-    }
-  }
-
-  void _onShowRegisterErrorModal(String? errorMessage) {
-    Navigator.of(context).pop();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
-      ),
-      builder: (_) => WarningModalWidget(
-        title: 'Account register error',
-        subtitle: errorMessage,
       ),
     );
   }

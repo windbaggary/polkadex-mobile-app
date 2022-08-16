@@ -62,8 +62,6 @@ void main() {
   late AccountCubit cubit;
   late ImportedAccountModel tImportedAccountBioOff;
   late ImportedAccountModel tImportedAccountBioOn;
-  late List<String> tMnemonicWords;
-  late String tPassword;
 
   setUp(() {
     _mockSignUpUseCase = _MockSignUpUseCase();
@@ -94,21 +92,19 @@ void main() {
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
     tImportedAccountBioOff = ImportedAccountModel(
+      email: 'test',
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      name: 'test',
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
     tImportedAccountBioOn = ImportedAccountModel(
+      email: 'test',
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      name: 'test',
       biometricAccess: true,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
-    tMnemonicWords = ['word', 'word', 'word', 'word', 'word'];
-    tPassword = 'test';
 
     registerFallbackValue(tImportedAccountBioOff);
     registerFallbackValue(tImportedAccountBioOn);
@@ -291,25 +287,13 @@ void main() {
         'Account created and saved in secure storage',
         build: () {
           when(
-            () => _mockImportAccountUseCase(
-              mnemonic: any(named: 'mnemonic'),
-              password: any(named: 'password'),
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
             (_) async => Right(tImportedAccountBioOff),
-          );
-          when(
-            () => _mockRegisterUserUseCase(
-              address: any(named: 'address'),
-            ),
-          ).thenAnswer(
-            (_) async => 'test',
-          );
-          when(
-            () => _mockGetMainAccountAddressUseCase(
-                proxyAdrress: any(named: 'proxyAdrress')),
-          ).thenAnswer(
-            (_) async => Right('k9o1dxJxQE8Zwm5Fy'),
           );
           when(
             () => _mockSaveAccountUseCase(
@@ -318,13 +302,23 @@ void main() {
           ).thenAnswer(
             (_) async {},
           );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false, false);
+          await cubit.confirmSignUp(
+            email: 'test@test.com',
+            password: 'test',
+            code: 'test',
+            useBiometric: false,
+          );
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
+          AccountLoaded(account: tImportedAccountBioOff),
         ],
       );
 
@@ -390,25 +384,13 @@ void main() {
         'Account biometric access switched on',
         build: () {
           when(
-            () => _mockImportAccountUseCase(
-              mnemonic: any(named: 'mnemonic'),
-              password: any(named: 'password'),
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
             (_) async => Right(tImportedAccountBioOff),
-          );
-          when(
-            () => _mockRegisterUserUseCase(
-              address: any(named: 'address'),
-            ),
-          ).thenAnswer(
-            (_) async => 'test',
-          );
-          when(
-            () => _mockGetMainAccountAddressUseCase(
-                proxyAdrress: any(named: 'proxyAdrress')),
-          ).thenAnswer(
-            (_) async => Right('k9o1dxJxQE8Zwm5Fy'),
           );
           when(
             () => _mockSaveAccountUseCase(
@@ -425,14 +407,19 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false, false);
+          await cubit.confirmSignUp(
+            email: 'test@test.com',
+            password: 'test',
+            code: 'test',
+            useBiometric: false,
+          );
+          print(cubit.state);
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
-          AccountUpdatingBiometric(
-              account: tImportedAccountBioOff, password: tPassword),
-          AccountLoaded(account: tImportedAccountBioOn, password: tPassword),
+          AccountLoaded(account: tImportedAccountBioOff),
+          AccountUpdatingBiometric(account: tImportedAccountBioOff),
+          AccountLoaded(account: tImportedAccountBioOn),
         ],
       );
 
@@ -440,25 +427,13 @@ void main() {
         'Account biometric access switched off',
         build: () {
           when(
-            () => _mockImportAccountUseCase(
-              mnemonic: any(named: 'mnemonic'),
-              password: any(named: 'password'),
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
             (_) async => Right(tImportedAccountBioOn),
-          );
-          when(
-            () => _mockRegisterUserUseCase(
-              address: any(named: 'address'),
-            ),
-          ).thenAnswer(
-            (_) async => 'test',
-          );
-          when(
-            () => _mockGetMainAccountAddressUseCase(
-                proxyAdrress: any(named: 'proxyAdrress')),
-          ).thenAnswer(
-            (_) async => Right('k9o1dxJxQE8Zwm5Fy'),
           );
           when(
             () => _mockSaveAccountUseCase(
@@ -467,17 +442,26 @@ void main() {
           ).thenAnswer(
             (_) async {},
           );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.saveAccount(tMnemonicWords, 'test', 'test', false, true);
+          await cubit.confirmSignUp(
+            email: 'test@test.com',
+            password: 'test',
+            code: 'test',
+            useBiometric: true,
+          );
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOn, password: tPassword),
-          AccountUpdatingBiometric(
-              account: tImportedAccountBioOn, password: tPassword),
-          AccountLoaded(account: tImportedAccountBioOff, password: tPassword),
+          AccountLoaded(account: tImportedAccountBioOn),
+          AccountUpdatingBiometric(account: tImportedAccountBioOn),
+          AccountLoaded(account: tImportedAccountBioOff),
         ],
       );
     },

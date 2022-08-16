@@ -31,7 +31,8 @@ class AccountCubit extends Cubit<AccountState> {
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
     required ConfirmPasswordUseCase confirmPasswordUseCase,
-    required RegisterUserUseCase registerUserUseCase,
+    required RegisterUserUseCase
+        registerUserUseCase, //TODO: delete register flow
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
   })  : _signUpUseCase = signUpUseCase,
         _confirmSignUpUseCase = confirmSignUpUseCase,
@@ -61,7 +62,7 @@ class AccountCubit extends Cubit<AccountState> {
   String get accountName {
     final currentState = state;
 
-    return currentState is AccountLoaded ? currentState.account.name : '';
+    return currentState is AccountLoaded ? currentState.account.email : '';
   }
 
   String get mainAccountAddress {
@@ -137,44 +138,39 @@ class AccountCubit extends Cubit<AccountState> {
     );
   }
 
-  Future<bool> savePassword(String password) async {
-    return await _savePasswordUseCase(password: password);
-  }
-
-  Future<void> saveAccount(List<String> mnemonicWords, String password,
-      String name, bool biometricOnly, bool useBiometric) async {
-    final resultImport = await _importAccountUseCase(
-      mnemonic: mnemonicWords.join(' '),
-      password: password,
+  Future<void> confirmSignUp({
+    required String email,
+    required String password,
+    required String code,
+    required bool useBiometric,
+  }) async {
+    final result = await _confirmSignUpUseCase(
+      email: email,
+      code: code,
+      useBiometric: useBiometric,
     );
 
-    await resultImport.fold(
-      (_) {},
-      (importedAcc) async {
-        final resultMainAddress = await _getMainAccountAddressUsecase(
-          proxyAdrress: importedAcc.proxyAddress,
-        );
+    await result.fold(
+      (error) async => emit(
+        AccountNotLoaded(
+          errorMessage: error.message,
+        ),
+      ),
+      (newAccount) async {
+        await _saveAccountUseCase(keypairJson: json.encode(newAccount));
+        await savePassword(password);
 
-        resultMainAddress.fold(
-          (error) {
-            emit(
-              AccountNotLoaded(errorMessage: error.message),
-            );
-          },
-          (mainAddress) async {
-            ImportedAccountEntity acc =
-                (importedAcc as ImportedAccountModel).copyWith(
-              name: name,
-              mainAddress: mainAddress,
-              biometricAccess: useBiometric,
-            );
-
-            emit(AccountLoaded(account: acc, password: password));
-            await _saveAccountUseCase(keypairJson: json.encode(acc));
-          },
+        emit(
+          AccountLoaded(
+            account: newAccount,
+          ),
         );
       },
     );
+  }
+
+  Future<bool> savePassword(String password) async {
+    return await _savePasswordUseCase(password: password);
   }
 
   Future<bool> authenticateBiometric() async {
@@ -211,33 +207,24 @@ class AccountCubit extends Cubit<AccountState> {
   Future<void> switchBiometricAccess() async {
     final currentState = state;
 
-    if (currentState is AccountLoaded && currentState.password != null) {
+    if (currentState is AccountLoaded) {
       final currentBioAccess = currentState.account.biometricAccess;
-      bool hasAuthNotFailed = true;
 
-      emit(AccountUpdatingBiometric(
-        account: currentState.account,
-        password: currentState.password,
-      ));
+      emit(
+        AccountUpdatingBiometric(
+          account: currentState.account,
+        ),
+      );
 
-      if (!currentBioAccess) {
-        hasAuthNotFailed =
-            await _savePasswordUseCase(password: currentState.password!);
-      }
+      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+          .copyWith(biometricAccess: !currentBioAccess);
 
-      if (hasAuthNotFailed) {
-        ImportedAccountEntity acc =
-            (currentState.account as ImportedAccountModel)
-                .copyWith(biometricAccess: !currentBioAccess);
-
-        await _saveAccountUseCase(keypairJson: json.encode(acc));
-        emit(AccountLoaded(
+      await _saveAccountUseCase(keypairJson: json.encode(acc));
+      emit(
+        AccountLoaded(
           account: acc,
-          password: currentState.password,
-        ));
-      } else {
-        emit(currentState);
-      }
+        ),
+      );
     }
 
     return;

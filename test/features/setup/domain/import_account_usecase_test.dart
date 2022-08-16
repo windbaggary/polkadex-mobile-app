@@ -19,9 +19,9 @@ void main() {
     _repository = _MnemonicRepositoryMock();
     _usecase = ImportAccountUseCase(mnemonicRepository: _repository);
     tImportedAccount = ImportedAccountModel(
+      email: "",
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      name: "",
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
