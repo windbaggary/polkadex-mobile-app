@@ -9,11 +9,14 @@ import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_in_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_out_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
 
 part 'account_state.dart';
@@ -21,7 +24,10 @@ part 'account_state.dart';
 class AccountCubit extends Cubit<AccountState> {
   AccountCubit({
     required SignUpUseCase signUpUseCase,
+    required SignInUseCase signInUseCase,
+    required SignOutUseCase signOutUseCase,
     required ConfirmSignUpUseCase confirmSignUpUseCase,
+    required GetCurrentUserUseCase getCurrentUserUseCase,
     required GetAccountUseCase getAccountStorageUseCase,
     required DeleteAccountUseCase deleteAccountUseCase,
     required DeletePasswordUseCase deletePasswordUseCase,
@@ -32,7 +38,10 @@ class AccountCubit extends Cubit<AccountState> {
     required ConfirmPasswordUseCase confirmPasswordUseCase,
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
   })  : _signUpUseCase = signUpUseCase,
+        _signInUseCase = signInUseCase,
+        _signOutUseCase = signOutUseCase,
         _confirmSignUpUseCase = confirmSignUpUseCase,
+        _getCurrentUserUseCase = getCurrentUserUseCase,
         _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountUseCase = deleteAccountUseCase,
         _deletePasswordUseCase = deletePasswordUseCase,
@@ -45,7 +54,10 @@ class AccountCubit extends Cubit<AccountState> {
         super(AccountInitial());
 
   final SignUpUseCase _signUpUseCase;
+  final SignInUseCase _signInUseCase;
+  final SignOutUseCase _signOutUseCase;
   final ConfirmSignUpUseCase _confirmSignUpUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
   final GetAccountUseCase _getAccountStorageUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
   final DeletePasswordUseCase _deletePasswordUseCase;

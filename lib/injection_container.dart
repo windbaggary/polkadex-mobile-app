@@ -58,9 +58,12 @@ import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.d
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_in_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_out_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
 import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
@@ -209,6 +212,24 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => SignInUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => SignOutUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
+    () => GetCurrentUserUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
@@ -218,7 +239,10 @@ Future<void> init() async {
   dependency.registerFactory(
     () => AccountCubit(
       signUpUseCase: dependency(),
+      signInUseCase: dependency(),
+      signOutUseCase: dependency(),
       confirmSignUpUseCase: dependency(),
+      getCurrentUserUseCase: dependency(),
       savePasswordUseCase: dependency(),
       deleteAccountUseCase: dependency(),
       deletePasswordUseCase: dependency(),

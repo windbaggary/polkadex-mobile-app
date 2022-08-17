@@ -26,4 +26,22 @@ class AccountRemoteDatasource {
       confirmationCode: code,
     );
   }
+
+  Future<SignInResult> signIn(
+    String email,
+    String password,
+  ) async {
+    return await Amplify.Auth.signIn(
+      username: email,
+      password: password,
+    );
+  }
+
+  Future<SignOutResult> signOut() async {
+    return await Amplify.Auth.signOut();
+  }
+
+  Future<AuthUser> getCurrentUser() async {
+    return await Amplify.Auth.getCurrentUser();
+  }
 }

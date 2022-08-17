@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -55,6 +56,54 @@ class AccountRepository implements IAccountRepository {
           timerInterval: EnumTimerIntervalTypes.oneMinute,
         ),
       );
+    } catch (e) {
+      return Left(
+        ApiError(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ApiError, Unit>> signIn(
+    String email,
+    String password,
+  ) async {
+    try {
+      await _accountRemoteDatasource.signIn(email, password);
+
+      return Right(unit);
+    } catch (e) {
+      return Left(
+        ApiError(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ApiError, Unit>> signOut() async {
+    try {
+      await _accountRemoteDatasource.signOut();
+
+      return Right(unit);
+    } catch (e) {
+      return Left(
+        ApiError(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ApiError, AuthUser>> getCurrentUser() async {
+    try {
+      final result = await _accountRemoteDatasource.getCurrentUser();
+
+      return Right(result);
     } catch (e) {
       return Left(
         ApiError(

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 
 abstract class IAccountRepository {
@@ -9,6 +10,12 @@ abstract class IAccountRepository {
     String code,
     bool useBiometric,
   );
+  Future<Either<ApiError, Unit>> signIn(
+    String email,
+    String password,
+  );
+  Future<Either<ApiError, AuthUser>> getCurrentUser();
+  Future<Either<ApiError, Unit>> signOut();
   Future<void> saveAccountStorage(String keypairJson, {String? password});
   Future<ImportedAccountEntity?> getAccountStorage();
   Future<void> deleteAccountStorage();
