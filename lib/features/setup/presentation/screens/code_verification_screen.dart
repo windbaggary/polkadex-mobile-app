@@ -261,6 +261,14 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
 
     FocusScope.of(context).unfocus();
 
+    if (widget.useBiometric) {
+      final isPasswordSaved = await accountCubit.savePassword(widget.password);
+
+      if (!isPasswordSaved) {
+        return;
+      }
+    }
+
     LoadingPopup.show(
       context: context,
       text: 'We are almost there...',
@@ -271,6 +279,8 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
         password: widget.password,
         code: _pinCodeController.text,
         useBiometric: widget.useBiometric);
+
+    Navigator.of(context).pop();
 
     final currentState = accountCubit.state;
 

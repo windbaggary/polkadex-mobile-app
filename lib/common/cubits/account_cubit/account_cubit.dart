@@ -119,8 +119,13 @@ class AccountCubit extends Cubit<AccountState> {
 
     await _deleteAccountUseCase();
     await _deletePasswordUseCase();
+    await _signOutUseCase();
 
     return;
+  }
+
+  Future<bool> savePassword(String password) async {
+    return await _savePasswordUseCase(password: password);
   }
 
   Future<void> signUp({
@@ -160,17 +165,17 @@ class AccountCubit extends Cubit<AccountState> {
     );
 
     await result.fold(
-      (error) async => emit(
-        AccountNotLoaded(
-          errorMessage: error.message,
-        ),
-      ),
+      (error) async {
+        await _deletePasswordUseCase();
+
+        emit(
+          AccountNotLoaded(
+            errorMessage: error.message,
+          ),
+        );
+      },
       (newAccount) async {
         await _saveAccountUseCase(keypairJson: json.encode(newAccount));
-
-        if (useBiometric) {
-          await savePassword(password);
-        }
 
         emit(
           AccountLoggedIn(
@@ -182,35 +187,37 @@ class AccountCubit extends Cubit<AccountState> {
     );
   }
 
-  Future<bool> savePassword(String password) async {
-    return await _savePasswordUseCase(password: password);
-  }
-
   Future<void> signIn({
-    //TODO: WIP
     required String email,
     required String password,
     required bool useBiometric,
   }) async {
-    final account = ImportedAccountModel(
+    final result = await _signInUseCase(
       email: email,
-      mainAddress: '',
-      proxyAddress: '',
-      biometricAccess: useBiometric,
-      timerInterval: EnumTimerIntervalTypes.oneMinute,
+      password: password,
+      useBiometric: useBiometric,
     );
 
-    if (useBiometric) {
-      await savePassword(password);
-    }
+    await result.fold(
+      (error) async {
+        await _deletePasswordUseCase();
 
-    //TODO: execute signIn usecase
+        emit(
+          AccountNotLoaded(
+            errorMessage: error.message,
+          ),
+        );
+      },
+      (newAccount) async {
+        await _saveAccountUseCase(keypairJson: json.encode(newAccount));
 
-    emit(
-      AccountLoggedIn(
-        account: account,
-        password: password,
-      ),
+        emit(
+          AccountLoggedIn(
+            account: newAccount,
+            password: password,
+          ),
+        );
+      },
     );
   }
 

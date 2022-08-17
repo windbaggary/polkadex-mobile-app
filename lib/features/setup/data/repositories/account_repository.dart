@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
@@ -79,14 +78,23 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<Either<ApiError, Unit>> signIn(
+  Future<Either<ApiError, ImportedAccountEntity>> signIn(
     String email,
     String password,
+    bool useBiometric,
   ) async {
     try {
       await _accountRemoteDatasource.signIn(email, password);
 
-      return Right(unit);
+      return Right(
+        ImportedAccountModel(
+          email: email,
+          mainAddress: '',
+          proxyAddress: '',
+          biometricAccess: useBiometric,
+          timerInterval: EnumTimerIntervalTypes.oneMinute,
+        ),
+      );
     } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(

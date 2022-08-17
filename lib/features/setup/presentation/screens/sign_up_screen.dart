@@ -294,6 +294,8 @@ class _SignUpScreenState extends State<SignUpScreen>
       password: _passwordController.text,
     );
 
+    Navigator.of(context).pop();
+
     final currentState = accountCubit.state;
 
     if (currentState is AccountVerifyingCode) {

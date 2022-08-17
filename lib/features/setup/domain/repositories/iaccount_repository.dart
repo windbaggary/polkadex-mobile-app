@@ -10,9 +10,10 @@ abstract class IAccountRepository {
     String code,
     bool useBiometric,
   );
-  Future<Either<ApiError, Unit>> signIn(
+  Future<Either<ApiError, ImportedAccountEntity>> signIn(
     String email,
     String password,
+    bool useBiometric,
   );
   Future<Either<ApiError, AuthUser>> getCurrentUser();
   Future<Either<ApiError, Unit>> signOut();

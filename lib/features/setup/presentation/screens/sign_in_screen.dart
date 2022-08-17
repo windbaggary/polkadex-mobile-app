@@ -223,6 +223,15 @@ class _SignInScreenState extends State<SignInScreen>
 
     FocusScope.of(context).unfocus();
 
+    if (_isFingerPrintEnabled.value) {
+      final isPasswordSaved =
+          await accountCubit.savePassword(_passwordController.text);
+
+      if (!isPasswordSaved) {
+        return;
+      }
+    }
+
     LoadingPopup.show(
       context: context,
       text: 'We are almost there...',
@@ -233,20 +242,22 @@ class _SignInScreenState extends State<SignInScreen>
         password: _passwordController.text,
         useBiometric: _isFingerPrintEnabled.value);
 
+    Navigator.of(context).pop();
+
     final currentState = accountCubit.state;
 
-    if (currentState is AccountLoaded) {
+    if (currentState is AccountLoggedIn) {
+      Coordinator.goToLandingScreen(
+        currentState.account,
+      );
+    } else {
       final errorMsg =
-          currentState is AccountLogInError ? currentState.errorMessage : null;
+          currentState is AccountNotLoaded ? currentState.errorMessage : null;
 
-      errorMsg != null
-          ? PolkadexSnackBar.show(
-              context: context,
-              text: errorMsg,
-            )
-          : Coordinator.goToLandingScreen(
-              currentState.account,
-            );
+      PolkadexSnackBar.show(
+        context: context,
+        text: errorMsg,
+      );
     }
   }
 
