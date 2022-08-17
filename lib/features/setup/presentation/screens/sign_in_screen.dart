@@ -221,6 +221,7 @@ class _SignInScreenState extends State<SignInScreen>
     BuildContext context,
   ) async {
     final accountCubit = context.read<AccountCubit>();
+    final marketsCubit = context.read<MarketAssetCubit>();
 
     FocusScope.of(context).unfocus();
 
@@ -238,6 +239,10 @@ class _SignInScreenState extends State<SignInScreen>
       text: 'We are almost there...',
     );
 
+    if (marketsCubit.state is! MarketAssetLoaded) {
+      await marketsCubit.getMarkets();
+    }
+
     await accountCubit.signIn(
         email: _emailController.text,
         password: _passwordController.text,
@@ -248,8 +253,6 @@ class _SignInScreenState extends State<SignInScreen>
     final currentState = accountCubit.state;
 
     if (currentState is AccountLoggedIn) {
-      await context.read<MarketAssetCubit>().getMarkets();
-
       Coordinator.goToLandingScreen(currentState.account);
     } else {
       final errorMsg =

@@ -259,6 +259,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
     BuildContext context,
   ) async {
     final accountCubit = context.read<AccountCubit>();
+    final marketsCubit = context.read<MarketAssetCubit>();
 
     FocusScope.of(context).unfocus();
 
@@ -275,6 +276,10 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
       text: 'We are almost there...',
     );
 
+    if (marketsCubit.state is! MarketAssetLoaded) {
+      await marketsCubit.getMarkets();
+    }
+
     await accountCubit.confirmSignUp(
         email: widget.email,
         password: widget.password,
@@ -286,8 +291,6 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
     final currentState = accountCubit.state;
 
     if (currentState is AccountLoggedIn) {
-      await context.read<MarketAssetCubit>().getMarkets();
-
       Coordinator.goToLandingScreen(currentState.account);
     } else {
       final errorMsg = currentState is AccountNotLoaded
