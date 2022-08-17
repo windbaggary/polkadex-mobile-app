@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
@@ -29,10 +30,16 @@ class AccountRepository implements IAccountRepository {
       await _accountRemoteDatasource.signUp(email, password);
 
       return Right(unit);
-    } catch (e) {
+    } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(
-          message: e.toString(),
+          message: amplifyError.message,
+        ),
+      );
+    } catch (error) {
+      return Left(
+        ApiError(
+          message: error.toString(),
         ),
       );
     }
@@ -56,10 +63,16 @@ class AccountRepository implements IAccountRepository {
           timerInterval: EnumTimerIntervalTypes.oneMinute,
         ),
       );
-    } catch (e) {
+    } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(
-          message: e.toString(),
+          message: amplifyError.message,
+        ),
+      );
+    } catch (error) {
+      return Left(
+        ApiError(
+          message: error.toString(),
         ),
       );
     }
@@ -74,10 +87,16 @@ class AccountRepository implements IAccountRepository {
       await _accountRemoteDatasource.signIn(email, password);
 
       return Right(unit);
-    } catch (e) {
+    } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(
-          message: e.toString(),
+          message: amplifyError.message,
+        ),
+      );
+    } catch (error) {
+      return Left(
+        ApiError(
+          message: error.toString(),
         ),
       );
     }
@@ -89,10 +108,16 @@ class AccountRepository implements IAccountRepository {
       await _accountRemoteDatasource.signOut();
 
       return Right(unit);
-    } catch (e) {
+    } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(
-          message: e.toString(),
+          message: amplifyError.message,
+        ),
+      );
+    } catch (error) {
+      return Left(
+        ApiError(
+          message: error.toString(),
         ),
       );
     }
@@ -104,10 +129,16 @@ class AccountRepository implements IAccountRepository {
       final result = await _accountRemoteDatasource.getCurrentUser();
 
       return Right(result);
-    } catch (e) {
+    } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(
-          message: e.toString(),
+          message: amplifyError.message,
+        ),
+      );
+    } catch (error) {
+      return Left(
+        ApiError(
+          message: error.toString(),
         ),
       );
     }
