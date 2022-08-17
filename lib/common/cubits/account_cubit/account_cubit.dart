@@ -173,7 +173,7 @@ class AccountCubit extends Cubit<AccountState> {
         }
 
         emit(
-          AccountLoaded(
+          AccountLoggedIn(
             account: newAccount,
             password: password,
           ),
@@ -186,7 +186,8 @@ class AccountCubit extends Cubit<AccountState> {
     return await _savePasswordUseCase(password: password);
   }
 
-  Future<bool> signIn({
+  Future<void> signIn({
+    //TODO: WIP
     required String email,
     required String password,
     required bool useBiometric,
@@ -206,19 +207,17 @@ class AccountCubit extends Cubit<AccountState> {
     //TODO: execute signIn usecase
 
     emit(
-      AccountLoaded(
+      AccountLoggedIn(
         account: account,
         password: password,
       ),
     );
-
-    return true;
   }
 
   Future<void> switchBiometricAccess() async {
     final currentState = state;
 
-    if (currentState is AccountLoaded) {
+    if (currentState is AccountLoggedIn) {
       final currentBioAccess = currentState.account.biometricAccess;
 
       emit(
@@ -233,7 +232,7 @@ class AccountCubit extends Cubit<AccountState> {
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));
       emit(
-        AccountLoaded(
+        AccountLoggedIn(
           account: acc,
           password: currentState.password,
         ),
@@ -246,7 +245,7 @@ class AccountCubit extends Cubit<AccountState> {
   Future<void> changeLockTimer(EnumTimerIntervalTypes newInterval) async {
     final currentState = state;
 
-    if (currentState is AccountLoaded) {
+    if (currentState is AccountLoggedIn) {
       emit(AccountUpdatingTimer(
         account: currentState.account,
         password: currentState.password,
@@ -257,7 +256,7 @@ class AccountCubit extends Cubit<AccountState> {
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));
       emit(
-        AccountLoaded(
+        AccountLoggedIn(
           account: acc,
           password: currentState.password,
         ),

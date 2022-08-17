@@ -333,7 +333,7 @@ void main() {
           );
         },
         expect: () => [
-          AccountLoaded(
+          AccountLoggedIn(
             account: tImportedAccountBioOff,
             password: tPassword,
           ),
@@ -434,7 +434,7 @@ void main() {
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(
+          AccountLoggedIn(
             account: tImportedAccountBioOff,
             password: tPassword,
           ),
@@ -442,7 +442,7 @@ void main() {
             account: tImportedAccountBioOff,
             password: tPassword,
           ),
-          AccountLoaded(
+          AccountLoggedIn(
             account: tImportedAccountBioOn,
             password: tPassword,
           ),
@@ -485,7 +485,7 @@ void main() {
           await cubit.switchBiometricAccess();
         },
         expect: () => [
-          AccountLoaded(
+          AccountLoggedIn(
             account: tImportedAccountBioOn,
             password: tPassword,
           ),
@@ -493,7 +493,7 @@ void main() {
             account: tImportedAccountBioOn,
             password: tPassword,
           ),
-          AccountLoaded(
+          AccountLoggedIn(
             account: tImportedAccountBioOff,
             password: tPassword,
           ),

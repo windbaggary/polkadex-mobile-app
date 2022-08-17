@@ -25,10 +25,24 @@ class AccountNotLoaded extends AccountState {
 class AccountLoaded extends AccountState {
   AccountLoaded({
     required this.account,
-    this.password,
   });
 
   final ImportedAccountEntity account;
+
+  @override
+  List<Object?> get props => [
+        account,
+      ];
+}
+
+class AccountLoggedIn extends AccountLoaded {
+  AccountLoggedIn({
+    required ImportedAccountEntity account,
+    this.password,
+  }) : super(
+          account: account,
+        );
+
   final String? password;
 
   @override
@@ -56,12 +70,10 @@ class AccountVerifyingCode extends AccountState {
 
 class AccountLogInError extends AccountLoaded {
   AccountLogInError({
-    required this.errorMessage,
     required ImportedAccountEntity account,
-    String? password,
+    required this.errorMessage,
   }) : super(
           account: account,
-          password: password,
         );
 
   final String? errorMessage;
@@ -70,11 +82,10 @@ class AccountLogInError extends AccountLoaded {
   List<Object?> get props => [
         errorMessage,
         account,
-        password,
       ];
 }
 
-class AccountUpdatingBiometric extends AccountLoaded {
+class AccountUpdatingBiometric extends AccountLoggedIn {
   AccountUpdatingBiometric({
     required ImportedAccountEntity account,
     String? password,
@@ -84,7 +95,7 @@ class AccountUpdatingBiometric extends AccountLoaded {
         );
 }
 
-class AccountPasswordValidating extends AccountLoaded {
+class AccountPasswordValidating extends AccountLoggedIn {
   AccountPasswordValidating({
     required ImportedAccountEntity account,
     String? password,
@@ -94,7 +105,7 @@ class AccountPasswordValidating extends AccountLoaded {
         );
 }
 
-class AccountUpdatingTimer extends AccountLoaded {
+class AccountUpdatingTimer extends AccountLoggedIn {
   AccountUpdatingTimer({
     required ImportedAccountEntity account,
     String? password,

@@ -274,7 +274,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
 
     final currentState = accountCubit.state;
 
-    if (currentState is AccountLoaded) {
+    if (currentState is AccountLoggedIn) {
       Coordinator.goToLandingScreen(currentState.account);
     } else {
       final errorMsg = currentState is AccountNotLoaded
