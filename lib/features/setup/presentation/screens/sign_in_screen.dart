@@ -12,6 +12,7 @@ import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/features/setup/presentation/utils/email_regex.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/injection_container.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -247,9 +248,9 @@ class _SignInScreenState extends State<SignInScreen>
     final currentState = accountCubit.state;
 
     if (currentState is AccountLoggedIn) {
-      Coordinator.goToLandingScreen(
-        currentState.account,
-      );
+      await context.read<MarketAssetCubit>().getMarkets();
+
+      Coordinator.goToLandingScreen(currentState.account);
     } else {
       final errorMsg =
           currentState is AccountNotLoaded ? currentState.errorMessage : null;

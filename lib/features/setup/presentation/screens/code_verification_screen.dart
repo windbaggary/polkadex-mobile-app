@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:polkadex/common/configs/app_config.dart';
+import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
@@ -285,6 +286,8 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
     final currentState = accountCubit.state;
 
     if (currentState is AccountLoggedIn) {
+      await context.read<MarketAssetCubit>().getMarkets();
+
       Coordinator.goToLandingScreen(currentState.account);
     } else {
       final errorMsg = currentState is AccountNotLoaded
