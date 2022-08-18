@@ -132,6 +132,8 @@ class AccountCubit extends Cubit<AccountState> {
     required String email,
     required String password,
   }) async {
+    emit(AccountLoading());
+
     final result = await _signUpUseCase(
       email: email,
       password: password,
@@ -139,7 +141,7 @@ class AccountCubit extends Cubit<AccountState> {
 
     result.fold(
       (error) => emit(
-        AccountNotLoaded(
+        AccountSignUpError(
           errorMessage: error.message,
         ),
       ),
@@ -158,6 +160,8 @@ class AccountCubit extends Cubit<AccountState> {
     required String code,
     required bool useBiometric,
   }) async {
+    emit(AccountLoading());
+
     final result = await _confirmSignUpUseCase(
       email: email,
       code: code,
@@ -169,7 +173,7 @@ class AccountCubit extends Cubit<AccountState> {
         await _deletePasswordUseCase();
 
         emit(
-          AccountNotLoaded(
+          AccountConfirmSignUpError(
             errorMessage: error.message,
           ),
         );
@@ -192,6 +196,8 @@ class AccountCubit extends Cubit<AccountState> {
     required String password,
     required bool useBiometric,
   }) async {
+    emit(AccountLoading());
+
     final result = await _signInUseCase(
       email: email,
       password: password,
@@ -203,7 +209,7 @@ class AccountCubit extends Cubit<AccountState> {
         await _deletePasswordUseCase();
 
         emit(
-          AccountNotLoaded(
+          AccountLogInError(
             errorMessage: error.message,
           ),
         );

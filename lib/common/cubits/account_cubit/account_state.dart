@@ -35,6 +35,8 @@ class AccountLoaded extends AccountState {
       ];
 }
 
+class AccountLoading extends AccountState {}
+
 class AccountLoggedIn extends AccountLoaded {
   AccountLoggedIn({
     required ImportedAccountEntity account,
@@ -68,20 +70,42 @@ class AccountVerifyingCode extends AccountState {
       ];
 }
 
-class AccountLogInError extends AccountLoaded {
-  AccountLogInError({
-    required ImportedAccountEntity account,
-    required this.errorMessage,
-  }) : super(
-          account: account,
-        );
+class AccountSignUpError extends AccountState {
+  AccountSignUpError({
+    this.errorMessage,
+  });
 
   final String? errorMessage;
 
   @override
   List<Object?> get props => [
         errorMessage,
-        account,
+      ];
+}
+
+class AccountConfirmSignUpError extends AccountState {
+  AccountConfirmSignUpError({
+    this.errorMessage,
+  });
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        errorMessage,
+      ];
+}
+
+class AccountLogInError extends AccountState {
+  AccountLogInError({
+    this.errorMessage,
+  });
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        errorMessage,
       ];
 }
 

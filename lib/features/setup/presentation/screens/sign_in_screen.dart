@@ -5,7 +5,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/common/widgets/loading_popup.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
@@ -30,6 +30,8 @@ class _SignInScreenState extends State<SignInScreen>
 
   final ValueNotifier<bool> _isLogInEnabled = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _isFingerPrintEnabled = ValueNotifier<bool>(false);
+
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   void initState() {
@@ -85,133 +87,155 @@ class _SignInScreenState extends State<SignInScreen>
           ),
           elevation: 0,
         ),
-        body: CustomScrollView(
-          physics: ClampingScrollPhysics(),
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.color2E303C,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.10),
-                          blurRadius: 30,
-                          offset: Offset(0.0, 20.0),
+        body: BlocListener<AccountCubit, AccountState>(
+          listener: (_, state) {
+            if (state is AccountLoggedIn) {
+              Coordinator.goToLandingScreen(state.account);
+            }
+
+            if (state is AccountLogInError) {
+              PolkadexSnackBar.show(
+                context: context,
+                text: state.errorMessage,
+              );
+            }
+
+            state is AccountLoading
+                ? _loadingOverlay.show(context: context, text: 'Signing in...')
+                : _loadingOverlay.hide();
+          },
+          child: CustomScrollView(
+            physics: ClampingScrollPhysics(),
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.color2E303C,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20.0),
+                          bottomRight: Radius.circular(20.0),
                         ),
-                      ],
-                    ),
-                    child: SafeArea(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              20,
-                              16,
-                              20,
-                              0,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: Text(
-                                    'Discover the decentralized world',
-                                    style: tsS26W600CFF,
-                                  ),
-                                ),
-                                Text(
-                                  'Buy and sell cryptocurrencies\nFast and Secure',
-                                  style: tsS18W400CFF,
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                        child: WalletInputWidget(
-                                          title: 'Email',
-                                          description: 'Email',
-                                          controller: _emailController,
-                                          onChanged: (_) => _evalLogInEnabled(),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 12),
-                                        child: WalletInputWidget(
-                                          title: 'Password',
-                                          description: 'Password',
-                                          controller: _passwordController,
-                                          obscureText: true,
-                                          onChanged: (_) => _evalLogInEnabled(),
-                                        ),
-                                      ),
-                                      if (dependency.get<bool>(
-                                          instanceName: 'isBiometricAvailable'))
-                                        ValueListenableBuilder<bool>(
-                                          valueListenable:
-                                              _isFingerPrintEnabled,
-                                          builder: (context,
-                                                  isFingerPrintEnabled, _) =>
-                                              OptionTabSwitchWidget(
-                                            svgAsset:
-                                                "finger-print".asAssetSvg(),
-                                            title: "Secure with Biometric Only",
-                                            description:
-                                                "Secure your access without typing your password.",
-                                            isChecked: isFingerPrintEnabled,
-                                            onSwitchChanged: (newValue) =>
-                                                _isFingerPrintEnabled.value =
-                                                    newValue,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.10),
+                            blurRadius: 30,
+                            offset: Offset(0.0, 20.0),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-                childCount: 1,
-              ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ValueListenableBuilder<bool>(
-                      valueListenable: _isLogInEnabled,
-                      builder: (context, isLogInEnabled, _) => AppButton(
-                        enabled: isLogInEnabled,
-                        label: 'Log In',
-                        onTap: () => _onLogInPressed(context),
+                      child: SafeArea(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                20,
+                                16,
+                                20,
+                                0,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                      'Discover the decentralized world',
+                                      style: tsS26W600CFF,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Buy and sell cryptocurrencies\nFast and Secure',
+                                    style: tsS18W400CFF,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
+                                          child: WalletInputWidget(
+                                            title: 'Email',
+                                            description: 'Email',
+                                            controller: _emailController,
+                                            onChanged: (_) =>
+                                                _evalLogInEnabled(),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 12),
+                                          child: WalletInputWidget(
+                                            title: 'Password',
+                                            description: 'Password',
+                                            controller: _passwordController,
+                                            obscureText: true,
+                                            onChanged: (_) =>
+                                                _evalLogInEnabled(),
+                                          ),
+                                        ),
+                                        if (dependency.get<bool>(
+                                            instanceName:
+                                                'isBiometricAvailable'))
+                                          ValueListenableBuilder<bool>(
+                                            valueListenable:
+                                                _isFingerPrintEnabled,
+                                            builder: (context,
+                                                    isFingerPrintEnabled, _) =>
+                                                OptionTabSwitchWidget(
+                                              svgAsset:
+                                                  "finger-print".asAssetSvg(),
+                                              title:
+                                                  "Secure with Biometric Only",
+                                              description:
+                                                  "Secure your access without typing your password.",
+                                              isChecked: isFingerPrintEnabled,
+                                              onSwitchChanged: (newValue) =>
+                                                  _isFingerPrintEnabled.value =
+                                                      newValue,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  childCount: 1,
                 ),
               ),
-            )
-          ],
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ValueListenableBuilder<bool>(
+                        valueListenable: _isLogInEnabled,
+                        builder: (context, isLogInEnabled, _) => AppButton(
+                          enabled: isLogInEnabled,
+                          label: 'Log In',
+                          onTap: () => _onLogInPressed(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -234,11 +258,6 @@ class _SignInScreenState extends State<SignInScreen>
       }
     }
 
-    LoadingPopup.show(
-      context: context,
-      text: 'We are almost there...',
-    );
-
     if (marketsCubit.state is! MarketAssetLoaded) {
       await marketsCubit.getMarkets();
     }
@@ -247,22 +266,6 @@ class _SignInScreenState extends State<SignInScreen>
         email: _emailController.text,
         password: _passwordController.text,
         useBiometric: _isFingerPrintEnabled.value);
-
-    Navigator.of(context).pop();
-
-    final currentState = accountCubit.state;
-
-    if (currentState is AccountLoggedIn) {
-      Coordinator.goToLandingScreen(currentState.account);
-    } else {
-      final errorMsg =
-          currentState is AccountNotLoaded ? currentState.errorMessage : null;
-
-      PolkadexSnackBar.show(
-        context: context,
-        text: errorMsg,
-      );
-    }
   }
 
   void _evalLogInEnabled() {

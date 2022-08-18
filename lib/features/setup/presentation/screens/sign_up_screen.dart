@@ -5,6 +5,7 @@ import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:polkadex/features/setup/presentation/utils/email_regex.dart';
@@ -12,7 +13,6 @@ import 'package:polkadex/features/setup/presentation/widgets/password_validation
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:polkadex/features/setup/presentation/utils/password_regex.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/injection_container.dart';
 
@@ -37,6 +37,8 @@ class _SignUpScreenState extends State<SignUpScreen>
   final ValueNotifier<bool> _hasLeast1Digit = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _isNextEnabled = ValueNotifier<bool>(false);
   final ValueNotifier<bool> _isFingerPrintEnabled = ValueNotifier<bool>(false);
+
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   void initState() {
@@ -100,178 +102,202 @@ class _SignUpScreenState extends State<SignUpScreen>
           ),
           elevation: 0,
         ),
-        body: CustomScrollView(
-          physics: ClampingScrollPhysics(),
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.color2E303C,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.10),
-                          blurRadius: 30,
-                          offset: Offset(0.0, 20.0),
+        body: BlocListener<AccountCubit, AccountState>(
+          listener: (_, state) {
+            if (state is AccountVerifyingCode) {
+              Coordinator.goToCodeVerificationScreen(
+                email: _emailController.text,
+                password: _passwordController.text,
+                useBiometric: _isFingerPrintEnabled.value,
+              );
+            }
+
+            if (state is AccountSignUpError) {
+              PolkadexSnackBar.show(
+                context: context,
+                text: state.errorMessage,
+              );
+            }
+
+            state is AccountLoading
+                ? _loadingOverlay.show(context: context, text: 'Signing up...')
+                : _loadingOverlay.hide();
+          },
+          child: CustomScrollView(
+            physics: ClampingScrollPhysics(),
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.color2E303C,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20.0),
+                          bottomRight: Radius.circular(20.0),
                         ),
-                      ],
-                    ),
-                    child: SafeArea(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: Text(
-                                    'Discover the decentralized world',
-                                    style: tsS26W600CFF,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: Text(
-                                    'Polkadex is a fully non-custodial platform',
-                                    style: tsS18W400CFF,
-                                  ),
-                                ),
-                                Column(
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: WalletInputWidget(
-                                        title: 'Email',
-                                        description: 'Set email',
-                                        controller: _emailController,
-                                        onChanged: (_) => _evalNextEnabled(),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: WalletInputWidget(
-                                        title: 'Password',
-                                        description: 'Set password',
-                                        controller: _passwordController,
-                                        obscureText: true,
-                                        onChanged: (_) => _evalNextEnabled(),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 32),
-                                      child: WalletInputWidget(
-                                        title: 'Repeat Password',
-                                        description: 'Repeat your password',
-                                        controller: _passwordRepeatController,
-                                        obscureText: true,
-                                        onChanged: (_) => _evalNextEnabled(),
-                                      ),
-                                    ),
-                                    GridView.count(
-                                      shrinkWrap: true,
-                                      primary: false,
-                                      childAspectRatio: (164 / 19),
-                                      crossAxisCount: 2,
-                                      children: [
-                                        ValueListenableBuilder<bool>(
-                                          valueListenable: _hasLeast8Characters,
-                                          builder: (context, has8chars, _) =>
-                                              PasswordValidationWidget(
-                                            title: 'At least 8 characters',
-                                            isValid: has8chars,
-                                          ),
-                                        ),
-                                        ValueListenableBuilder<bool>(
-                                          valueListenable:
-                                              _hasLeast1LowercaseLetter,
-                                          builder: (context, has1low, _) =>
-                                              PasswordValidationWidget(
-                                            title: 'At least 1 lowercase',
-                                            isValid: has1low,
-                                          ),
-                                        ),
-                                        ValueListenableBuilder<bool>(
-                                          valueListenable: _hasLeast1Uppercase,
-                                          builder: (context, has1up, _) =>
-                                              PasswordValidationWidget(
-                                            title:
-                                                'At least 1 uppercase letter',
-                                            isValid: has1up,
-                                          ),
-                                        ),
-                                        ValueListenableBuilder<bool>(
-                                          valueListenable: _hasLeast1Digit,
-                                          builder: (context, has1digit, _) =>
-                                              PasswordValidationWidget(
-                                            title: 'At least 1 digit',
-                                            isValid: has1digit,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                if (dependency.get<bool>(
-                                    instanceName: 'isBiometricAvailable'))
-                                  ValueListenableBuilder<bool>(
-                                    valueListenable: _isFingerPrintEnabled,
-                                    builder:
-                                        (context, isFingerPrintEnabled, _) =>
-                                            OptionTabSwitchWidget(
-                                      svgAsset: "finger-print".asAssetSvg(),
-                                      title: "Secure with Biometric Only",
-                                      description:
-                                          "Secure your access without typing your password.",
-                                      isChecked: isFingerPrintEnabled,
-                                      onSwitchChanged: (newValue) =>
-                                          _isFingerPrintEnabled.value =
-                                              newValue,
-                                    ),
-                                  ),
-                              ],
-                            ),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.10),
+                            blurRadius: 30,
+                            offset: Offset(0.0, 20.0),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-                childCount: 1,
-              ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ValueListenableBuilder<bool>(
-                      valueListenable: _isNextEnabled,
-                      builder: (context, isNextEnabled, _) => AppButton(
-                        enabled: isNextEnabled,
-                        label: 'Continue',
-                        onTap: () => _onContinuePressed(context),
+                      child: SafeArea(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                      'Discover the decentralized world',
+                                      style: tsS26W600CFF,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                      'Polkadex is a fully non-custodial platform',
+                                      style: tsS18W400CFF,
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: WalletInputWidget(
+                                          title: 'Email',
+                                          description: 'Set email',
+                                          controller: _emailController,
+                                          onChanged: (_) => _evalNextEnabled(),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: WalletInputWidget(
+                                          title: 'Password',
+                                          description: 'Set password',
+                                          controller: _passwordController,
+                                          obscureText: true,
+                                          onChanged: (_) => _evalNextEnabled(),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 32),
+                                        child: WalletInputWidget(
+                                          title: 'Repeat Password',
+                                          description: 'Repeat your password',
+                                          controller: _passwordRepeatController,
+                                          obscureText: true,
+                                          onChanged: (_) => _evalNextEnabled(),
+                                        ),
+                                      ),
+                                      GridView.count(
+                                        shrinkWrap: true,
+                                        primary: false,
+                                        childAspectRatio: (164 / 19),
+                                        crossAxisCount: 2,
+                                        children: [
+                                          ValueListenableBuilder<bool>(
+                                            valueListenable:
+                                                _hasLeast8Characters,
+                                            builder: (context, has8chars, _) =>
+                                                PasswordValidationWidget(
+                                              title: 'At least 8 characters',
+                                              isValid: has8chars,
+                                            ),
+                                          ),
+                                          ValueListenableBuilder<bool>(
+                                            valueListenable:
+                                                _hasLeast1LowercaseLetter,
+                                            builder: (context, has1low, _) =>
+                                                PasswordValidationWidget(
+                                              title: 'At least 1 lowercase',
+                                              isValid: has1low,
+                                            ),
+                                          ),
+                                          ValueListenableBuilder<bool>(
+                                            valueListenable:
+                                                _hasLeast1Uppercase,
+                                            builder: (context, has1up, _) =>
+                                                PasswordValidationWidget(
+                                              title:
+                                                  'At least 1 uppercase letter',
+                                              isValid: has1up,
+                                            ),
+                                          ),
+                                          ValueListenableBuilder<bool>(
+                                            valueListenable: _hasLeast1Digit,
+                                            builder: (context, has1digit, _) =>
+                                                PasswordValidationWidget(
+                                              title: 'At least 1 digit',
+                                              isValid: has1digit,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  if (dependency.get<bool>(
+                                      instanceName: 'isBiometricAvailable'))
+                                    ValueListenableBuilder<bool>(
+                                      valueListenable: _isFingerPrintEnabled,
+                                      builder:
+                                          (context, isFingerPrintEnabled, _) =>
+                                              OptionTabSwitchWidget(
+                                        svgAsset: "finger-print".asAssetSvg(),
+                                        title: "Secure with Biometric Only",
+                                        description:
+                                            "Secure your access without typing your password.",
+                                        isChecked: isFingerPrintEnabled,
+                                        onSwitchChanged: (newValue) =>
+                                            _isFingerPrintEnabled.value =
+                                                newValue,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  childCount: 1,
                 ),
               ),
-            )
-          ],
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ValueListenableBuilder<bool>(
+                        valueListenable: _isNextEnabled,
+                        builder: (context, isNextEnabled, _) => AppButton(
+                          enabled: isNextEnabled,
+                          label: 'Continue',
+                          onTap: () => _onContinuePressed(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -284,36 +310,10 @@ class _SignUpScreenState extends State<SignUpScreen>
 
     FocusScope.of(context).unfocus();
 
-    LoadingPopup.show(
-      context: context,
-      text: 'We are almost there...',
-    );
-
     await accountCubit.signUp(
       email: _emailController.text,
       password: _passwordController.text,
     );
-
-    Navigator.of(context).pop();
-
-    final currentState = accountCubit.state;
-
-    if (currentState is AccountVerifyingCode) {
-      Coordinator.goToCodeVerificationScreen(
-        email: _emailController.text,
-        password: _passwordController.text,
-        useBiometric: _isFingerPrintEnabled.value,
-      );
-    } else {
-      final errorMsg = currentState is AccountNotLoaded
-          ? currentState.errorMessage
-          : 'Unexpected error on sign up.';
-
-      PolkadexSnackBar.show(
-        context: context,
-        text: errorMsg,
-      );
-    }
   }
 
   void _evalNextEnabled() {

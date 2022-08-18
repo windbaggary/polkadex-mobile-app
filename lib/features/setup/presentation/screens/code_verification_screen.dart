@@ -6,8 +6,8 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
 import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 
@@ -34,6 +34,8 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
   final ValueNotifier<bool> _isVerifyEnabled = ValueNotifier<bool>(false);
 
   final TextEditingController _pinCodeController = TextEditingController();
+
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   void initState() {
@@ -87,169 +89,190 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
           ),
           elevation: 0,
         ),
-        body: CustomScrollView(
-          physics: ClampingScrollPhysics(),
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.color2E303C,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.10),
-                          blurRadius: 30,
-                          offset: Offset(0.0, 20.0),
-                        ),
-                      ],
-                    ),
-                    child: SafeArea(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 16,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: Text(
-                                    'Please check your email',
-                                    style: tsS26W600CFF,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 14),
-                                  child: Text(
-                                    'We have sent a code to your email:\nemail@polkadex.trade',
-                                    style: tsS18W400CFF,
-                                  ),
-                                ),
-                                Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 16),
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final codeLength = 6;
-                                          final pinCodeBoxDimension =
-                                              constraints.maxWidth /
-                                                      codeLength -
-                                                  16;
+        body: BlocListener<AccountCubit, AccountState>(
+          listener: (_, state) {
+            if (state is AccountLoggedIn) {
+              Coordinator.goToLandingScreen(state.account);
+            }
 
-                                          return PinCodeTextField(
-                                            appContext: context,
-                                            controller: _pinCodeController,
-                                            pastedTextStyle: TextStyle(
-                                              color: Colors.green.shade600,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            length: codeLength,
-                                            animationType: AnimationType.fade,
-                                            pinTheme: PinTheme(
-                                              fieldWidth: pinCodeBoxDimension,
-                                              fieldHeight: pinCodeBoxDimension,
-                                              shape: PinCodeFieldShape.box,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              activeFillColor: Colors.white,
-                                              activeColor: Colors.white,
-                                              selectedColor: Colors.white,
-                                              selectedFillColor: Colors.white,
-                                              inactiveFillColor:
-                                                  AppColors.color1C1C26,
-                                              inactiveColor:
-                                                  AppColors.color1C1C26,
-                                            ),
-                                            animationDuration: const Duration(
-                                                milliseconds: 300),
-                                            enableActiveFill: true,
-                                            keyboardType: TextInputType.number,
-                                            boxShadows: const [
-                                              BoxShadow(
-                                                offset: Offset(0, 1),
-                                                color: Colors.black12,
-                                                blurRadius: 10,
-                                              )
-                                            ],
-                                            onCompleted: (code) =>
-                                                _isVerifyEnabled.value = true,
-                                            onChanged: (code) =>
-                                                _isVerifyEnabled.value &&
-                                                        code.length < codeLength
-                                                    ? _isVerifyEnabled.value =
-                                                        false
-                                                    : null,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.zero,
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: tsS14W400CFF,
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text:
-                                                    'Didn\'t receive the code? '),
-                                            TextSpan(
-                                              text: 'Resend',
-                                              style: tsS14W400CFF.copyWith(
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                color: AppColors.colorE6007A,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
+            if (state is AccountConfirmSignUpError) {
+              PolkadexSnackBar.show(
+                context: context,
+                text: state.errorMessage,
+              );
+            }
+
+            state is AccountLoading
+                ? _loadingOverlay.show(context: context, text: 'Signing up...')
+                : _loadingOverlay.hide();
+          },
+          child: CustomScrollView(
+            physics: ClampingScrollPhysics(),
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.color2E303C,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20.0),
+                          bottomRight: Radius.circular(20.0),
+                        ),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.10),
+                            blurRadius: 30,
+                            offset: Offset(0.0, 20.0),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-                childCount: 1,
-              ),
-            ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ValueListenableBuilder<bool>(
-                      valueListenable: _isVerifyEnabled,
-                      builder: (context, isVerifyEnabled, _) => AppButton(
-                        enabled: isVerifyEnabled,
-                        label: 'Verify Account',
-                        onTap: () => _onVerifyPressed(context),
+                      child: SafeArea(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 16,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: Text(
+                                      'Please check your email',
+                                      style: tsS26W600CFF,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 14),
+                                    child: Text(
+                                      'We have sent a code to your email:\nemail@polkadex.trade',
+                                      style: tsS18W400CFF,
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
+                                        child: LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            final codeLength = 6;
+                                            final pinCodeBoxDimension =
+                                                constraints.maxWidth /
+                                                        codeLength -
+                                                    16;
+
+                                            return PinCodeTextField(
+                                              appContext: context,
+                                              controller: _pinCodeController,
+                                              pastedTextStyle: TextStyle(
+                                                color: Colors.green.shade600,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              length: codeLength,
+                                              animationType: AnimationType.fade,
+                                              pinTheme: PinTheme(
+                                                fieldWidth: pinCodeBoxDimension,
+                                                fieldHeight:
+                                                    pinCodeBoxDimension,
+                                                shape: PinCodeFieldShape.box,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                activeFillColor: Colors.white,
+                                                activeColor: Colors.white,
+                                                selectedColor: Colors.white,
+                                                selectedFillColor: Colors.white,
+                                                inactiveFillColor:
+                                                    AppColors.color1C1C26,
+                                                inactiveColor:
+                                                    AppColors.color1C1C26,
+                                              ),
+                                              animationDuration: const Duration(
+                                                  milliseconds: 300),
+                                              enableActiveFill: true,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              boxShadows: const [
+                                                BoxShadow(
+                                                  offset: Offset(0, 1),
+                                                  color: Colors.black12,
+                                                  blurRadius: 10,
+                                                )
+                                              ],
+                                              onCompleted: (code) =>
+                                                  _isVerifyEnabled.value = true,
+                                              onChanged: (code) =>
+                                                  _isVerifyEnabled.value &&
+                                                          code.length <
+                                                              codeLength
+                                                      ? _isVerifyEnabled.value =
+                                                          false
+                                                      : null,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.zero,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: tsS14W400CFF,
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text:
+                                                      'Didn\'t receive the code? '),
+                                              TextSpan(
+                                                text: 'Resend',
+                                                style: tsS14W400CFF.copyWith(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  color: AppColors.colorE6007A,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
+                  childCount: 1,
                 ),
               ),
-            )
-          ],
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ValueListenableBuilder<bool>(
+                        valueListenable: _isVerifyEnabled,
+                        builder: (context, isVerifyEnabled, _) => AppButton(
+                          enabled: isVerifyEnabled,
+                          label: 'Verify Account',
+                          onTap: () => _onVerifyPressed(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -271,11 +294,6 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
       }
     }
 
-    LoadingPopup.show(
-      context: context,
-      text: 'We are almost there...',
-    );
-
     if (marketsCubit.state is! MarketAssetLoaded) {
       await marketsCubit.getMarkets();
     }
@@ -285,23 +303,6 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
         password: widget.password,
         code: _pinCodeController.text,
         useBiometric: widget.useBiometric);
-
-    Navigator.of(context).pop();
-
-    final currentState = accountCubit.state;
-
-    if (currentState is AccountLoggedIn) {
-      Coordinator.goToLandingScreen(currentState.account);
-    } else {
-      final errorMsg = currentState is AccountNotLoaded
-          ? currentState.errorMessage
-          : 'Unexpected error on sign up verification.';
-
-      PolkadexSnackBar.show(
-        context: context,
-        text: errorMsg,
-      );
-    }
   }
 
   Future<bool> _onPop(BuildContext context) async {
