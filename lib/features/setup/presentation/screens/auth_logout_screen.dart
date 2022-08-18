@@ -53,74 +53,81 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
               Center(
                 child: polkadexLogo,
               ),
-              BlocConsumer<AccountCubit, AccountState>(
-                builder: (_, state) {
-                  return Visibility(
-                    visible: state is AccountLoaded,
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        child: IntrinsicHeight(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: AppButton(
-                                  label: 'Logout',
-                                  innerPadding: EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 16,
-                                  ),
-                                  backgroundColor: AppColors.colorFFFFFF,
-                                  textColor: Colors.black,
-                                  onTap: () async {
-                                    await context.read<AccountCubit>().logout();
-                                    Coordinator.goToIntroScreen();
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                width: 18,
-                              ),
-                              Expanded(
-                                child: AppButton(
-                                  label: 'Authenticate',
-                                  innerPadding: EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 16,
-                                  ),
-                                  onTap: () async {
-                                    if (state is AccountLoaded &&
-                                        state.account.biometricAccess) {
-                                      final authenticated = await context
+              BlocBuilder<MarketAssetCubit, MarketAssetState>(
+                builder: (_, marketAssetState) =>
+                    BlocConsumer<AccountCubit, AccountState>(
+                  builder: (_, accountState) {
+                    return Visibility(
+                      visible: marketAssetState is MarketAssetLoaded &&
+                          accountState is AccountLoaded,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: AppButton(
+                                    label: 'Logout',
+                                    innerPadding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 16,
+                                    ),
+                                    backgroundColor: AppColors.colorFFFFFF,
+                                    textColor: Colors.black,
+                                    onTap: () async {
+                                      await context
                                           .read<AccountCubit>()
-                                          .authenticateBiometric();
-
-                                      if (authenticated) {
-                                        await context
-                                            .read<MarketAssetCubit>()
-                                            .getMarkets();
-                                        Coordinator.goToLandingScreen(
-                                            state.account);
-                                      }
-                                    } else {
-                                      Coordinator.goToConfirmPasswordScreen();
-                                    }
-                                  },
+                                          .logout();
+                                      Coordinator.goToIntroScreen();
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(
+                                  width: 18,
+                                ),
+                                Expanded(
+                                  child: AppButton(
+                                    label: 'Authenticate',
+                                    innerPadding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 16,
+                                    ),
+                                    onTap: () async {
+                                      if (accountState is AccountLoaded &&
+                                          accountState
+                                              .account.biometricAccess) {
+                                        final authenticated = await context
+                                            .read<AccountCubit>()
+                                            .authenticateBiometric();
+
+                                        if (authenticated) {
+                                          await context
+                                              .read<MarketAssetCubit>()
+                                              .getMarkets();
+                                          Coordinator.goToLandingScreen(
+                                              accountState.account);
+                                        }
+                                      } else {
+                                        Coordinator.goToConfirmPasswordScreen();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                listener: (_, state) {
-                  if (state is AccountNotLoaded) {
-                    Coordinator.goToIntroScreen();
-                  }
-                },
+                    );
+                  },
+                  listener: (_, state) {
+                    if (state is AccountNotLoaded) {
+                      Coordinator.goToIntroScreen();
+                    }
+                  },
+                ),
               ),
             ],
           ),

@@ -46,8 +46,6 @@ class WebViewRunner {
             print("CONSOLE MESSAGE: " + message.message);
           }
 
-          if (message.messageLevel != ConsoleMessageLevel.LOG) return;
-
           String? path;
           dynamic data;
 
@@ -59,16 +57,19 @@ class WebViewRunner {
             data = message.message;
           });
 
+          if (_msgHandlers[path] != null) {
+            Function? handler = _msgHandlers[path];
+            handler!(data);
+          }
+
+          if (message.messageLevel != ConsoleMessageLevel.LOG) return;
+
           if (_msgCompleters[path] != null) {
             Completer? handler = _msgCompleters[path];
             handler?.complete(data);
             if (path!.contains('uid=')) {
               _msgCompleters.remove(path);
             }
-          }
-          if (_msgHandlers[path] != null) {
-            Function? handler = _msgHandlers[path];
-            handler!(data);
           }
         },
         onLoadStop: (controller, url) async {
@@ -162,12 +163,15 @@ class WebViewRunner {
   //}
 
   Future<void> subscribeMessage(
-    String code,
     String channel,
-    Function callback,
-  ) async {
+    Function callback, {
+    String? code,
+  }) async {
     addMsgHandler(channel, callback);
-    evalJavascript(code);
+
+    if (code != null) {
+      evalJavascript(code);
+    }
   }
 
   void unsubscribeMessage(String channel) {
