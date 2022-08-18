@@ -22,7 +22,7 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
 
   final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
-  var _isConfirmEnabled = false;
+  final ValueNotifier<bool> _isConfirmEnabled = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -126,8 +126,8 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                                   description: '',
                                   controller: _passwordController,
                                   obscureText: true,
-                                  onChanged: (password) => setState(() =>
-                                      _isConfirmEnabled = password.length >= 8),
+                                  onChanged: (password) => _isConfirmEnabled
+                                      .value = password.length >= 8,
                                 ),
                               ],
                             ),
@@ -148,14 +148,17 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AppButton(
-                      label: 'Confirm',
-                      innerPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 16,
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isConfirmEnabled,
+                      builder: (context, isConfirmEnabled, _) => AppButton(
+                        label: 'Confirm',
+                        innerPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
+                        enabled: isConfirmEnabled,
+                        onTap: () => _onTapConfirm(),
                       ),
-                      enabled: _isConfirmEnabled,
-                      onTap: () => _onTapConfirm(),
                     ),
                   ],
                 ),

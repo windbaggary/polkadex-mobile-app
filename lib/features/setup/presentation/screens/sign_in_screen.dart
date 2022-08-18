@@ -270,7 +270,7 @@ class _SignInScreenState extends State<SignInScreen>
 
   void _evalLogInEnabled() {
     _isLogInEnabled.value = EmailRegex.checkIsEmail(_emailController.text) &&
-        _passwordController.text.isNotEmpty;
+        _passwordController.text.length >= 8;
   }
 
   Future<bool> _onPop(BuildContext context) async {
