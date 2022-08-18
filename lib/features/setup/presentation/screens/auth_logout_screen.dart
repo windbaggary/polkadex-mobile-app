@@ -6,7 +6,6 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_overlay.dart';
-import 'package:polkadex/common/widgets/loading_popup.dart';
 
 class AuthLogoutScreen extends StatefulWidget {
   @override
@@ -40,13 +39,6 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AccountCubit, AccountState>(
       listener: (_, state) {
-        if (state is AccountPasswordValidating) {
-          LoadingPopup.show(
-            context: context,
-            text: 'We are almost there...',
-          );
-        }
-
         state is AccountLoading
             ? _loadingOverlay.show(context: context, text: _loadingOverlayText)
             : _loadingOverlay.hide();

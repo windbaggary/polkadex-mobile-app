@@ -132,16 +132,6 @@ class AccountUpdatingBiometric extends AccountLoggedIn {
         );
 }
 
-class AccountPasswordValidating extends AccountLoggedIn {
-  AccountPasswordValidating({
-    required ImportedAccountEntity account,
-    String? password,
-  }) : super(
-          account: account,
-          password: password,
-        );
-}
-
 class AccountUpdatingTimer extends AccountLoggedIn {
   AccountUpdatingTimer({
     required ImportedAccountEntity account,
