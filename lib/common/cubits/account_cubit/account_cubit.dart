@@ -106,12 +106,28 @@ class AccountCubit extends Cubit<AccountState> {
         : EnumTimerIntervalTypes.oneMinute;
   }
 
-  Future<void> loadAccountData() async {
-    final account = await _getAccountStorageUseCase();
+  Future<void> loadAccount() async {
+    final localAccount = await _getAccountStorageUseCase();
+    final resultRemoteAccount = await _getCurrentUserUseCase();
 
-    account != null
-        ? emit(AccountLoaded(account: account))
-        : emit(AccountNotLoaded());
+    if (localAccount != null) {
+      await resultRemoteAccount.fold(
+        (_) async => emit(
+          AccountLoaded(
+            account: localAccount,
+          ),
+        ),
+        (remoteAccount) async => emit(
+          AccountLoggedIn(account: localAccount),
+        ),
+      );
+    } else {
+      if (resultRemoteAccount.isRight()) {
+        await _signOutUseCase();
+      }
+
+      emit(AccountNotLoaded());
+    }
   }
 
   Future<void> logout() async {

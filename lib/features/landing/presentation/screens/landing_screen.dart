@@ -71,6 +71,11 @@ class _LandingScreenState extends State<LandingScreen>
 
     _scrollController = ScrollController();
 
+    WidgetsBinding.instance?.addPostFrameCallback(
+      (_) => _loadingOverlay.show(
+          context: context, text: 'Loading blockchain data...'),
+    );
+
     super.initState();
   }
 
@@ -164,44 +169,54 @@ class _LandingScreenState extends State<LandingScreen>
               backgroundColor: Colors.transparent,
               child: NotificationsWidget(),
             ),
-            body: BlocListener<AccountCubit, AccountState>(
-              listener: (_, state) {
-                if (state is AccountNotLoaded) {
-                  Coordinator.goToIntroScreen();
+            body: BlocConsumer<MarketAssetCubit, MarketAssetState>(
+              listener: (_, marketAssetState) {
+                if (marketAssetState is MarketAssetLoaded &&
+                    _loadingOverlay.isActive) {
+                  _loadingOverlay.hide();
                 }
-
-                if (state is AccountSignOutError) {
-                  PolkadexSnackBar.show(
-                    context: context,
-                    text: state.errorMessage,
-                  );
-                }
-
-                state is AccountLoading
-                    ? _loadingOverlay.show(
-                        context: context, text: 'Signing out...')
-                    : _loadingOverlay.hide();
               },
-              child: SafeArea(
-                child: PageView(
-                  controller: _pageController,
-                  children: [
-                    HomeTabView(
-                      scrollController: _scrollController,
+              builder: (context, marketAssetState) {
+                return BlocListener<AccountCubit, AccountState>(
+                  listener: (_, accountState) {
+                    if (accountState is AccountNotLoaded) {
+                      Coordinator.goToIntroScreen();
+                    }
+
+                    if (accountState is AccountSignOutError) {
+                      PolkadexSnackBar.show(
+                        context: context,
+                        text: accountState.errorMessage,
+                      );
+                    }
+
+                    accountState is AccountLoading
+                        ? _loadingOverlay.show(
+                            context: context, text: 'Signing out...')
+                        : _loadingOverlay.hide();
+                  },
+                  child: SafeArea(
+                    child: PageView(
+                      controller: _pageController,
+                      children: [
+                        HomeTabView(
+                          scrollController: _scrollController,
+                        ),
+                        ExchangeTabView(
+                          scrollController: _scrollController,
+                        ),
+                        TradeTabView(
+                          scrollController: _scrollController,
+                        ),
+                        BalanceTabView(
+                          scrollController: _scrollController,
+                        ),
+                      ],
+                      physics: NeverScrollableScrollPhysics(),
                     ),
-                    ExchangeTabView(
-                      scrollController: _scrollController,
-                    ),
-                    TradeTabView(
-                      scrollController: _scrollController,
-                    ),
-                    BalanceTabView(
-                      scrollController: _scrollController,
-                    ),
-                  ],
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ),
         ),

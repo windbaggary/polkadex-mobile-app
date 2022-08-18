@@ -143,7 +143,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.loadAccountData();
+          await cubit.loadAccount();
         },
         expect: () => [
           AccountLoaded(account: tImportedAccountBioOff),
@@ -161,7 +161,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.loadAccountData();
+          await cubit.loadAccount();
         },
         expect: () => [
           AccountNotLoaded(),
@@ -189,7 +189,7 @@ void main() {
           return cubit;
         },
         act: (cubit) async {
-          await cubit.loadAccountData();
+          await cubit.loadAccount();
           await cubit.logout();
         },
         expect: () => [

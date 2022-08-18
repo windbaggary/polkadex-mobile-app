@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -53,63 +52,62 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
               Center(
                 child: polkadexLogo,
               ),
-              BlocBuilder<MarketAssetCubit, MarketAssetState>(
-                builder: (_, marketAssetState) =>
-                    BlocConsumer<AccountCubit, AccountState>(
-                  builder: (_, accountState) {
-                    return Visibility(
-                      visible: marketAssetState is MarketAssetLoaded &&
-                          accountState is AccountLoaded,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: IntrinsicHeight(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: AppButton(
-                                    label: 'Logout',
-                                    innerPadding: EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 16,
-                                    ),
-                                    backgroundColor: AppColors.colorFFFFFF,
-                                    textColor: Colors.black,
-                                    onTap: () async {
-                                      await context
-                                          .read<AccountCubit>()
-                                          .logout();
-                                      Coordinator.goToIntroScreen();
-                                    },
+              BlocConsumer<AccountCubit, AccountState>(
+                builder: (_, accountState) {
+                  return Visibility(
+                    visible: accountState is AccountLoaded &&
+                        accountState is! AccountLoggedIn,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: AppButton(
+                                  label: 'Logout',
+                                  innerPadding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 16,
                                   ),
+                                  backgroundColor: AppColors.colorFFFFFF,
+                                  textColor: Colors.black,
+                                  onTap: () async {
+                                    await context.read<AccountCubit>().logout();
+                                    Coordinator.goToIntroScreen();
+                                  },
                                 ),
-                                SizedBox(
-                                  width: 18,
-                                ),
-                                Expanded(
-                                  child: AppButton(
-                                    label: 'Authenticate',
-                                    innerPadding: EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 16,
-                                    ),
-                                    onTap: () async {},
+                              ),
+                              SizedBox(
+                                width: 18,
+                              ),
+                              Expanded(
+                                child: AppButton(
+                                  label: 'Authenticate',
+                                  innerPadding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 16,
                                   ),
+                                  onTap: () async {},
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    );
-                  },
-                  listener: (_, state) {
-                    if (state is AccountNotLoaded) {
-                      Coordinator.goToIntroScreen();
-                    }
-                  },
-                ),
+                    ),
+                  );
+                },
+                listener: (_, state) {
+                  if (state is AccountLoggedIn) {
+                    Coordinator.goToLandingScreen(state.account);
+                  }
+
+                  if (state is AccountNotLoaded) {
+                    Coordinator.goToIntroScreen();
+                  }
+                },
               ),
             ],
           ),

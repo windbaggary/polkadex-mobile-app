@@ -7,6 +7,8 @@ import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 class LoadingOverlay {
   OverlayEntry? _overlay;
 
+  bool get isActive => _overlay != null;
+
   void show({
     required BuildContext context,
     required String text,

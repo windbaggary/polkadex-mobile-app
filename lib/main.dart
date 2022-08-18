@@ -131,8 +131,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, _) => MultiBlocProvider(
         providers: [
           BlocProvider<AccountCubit>(
-            create: (_) =>
-                injection.dependency<AccountCubit>()..loadAccountData(),
+            create: (_) => injection.dependency<AccountCubit>()..loadAccount(),
           ),
           BlocProvider<MarketAssetCubit>(
             create: (_) => injection.dependency<MarketAssetCubit>(),
