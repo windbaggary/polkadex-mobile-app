@@ -72,8 +72,12 @@ class _LandingScreenState extends State<LandingScreen>
     _scrollController = ScrollController();
 
     WidgetsBinding.instance?.addPostFrameCallback(
-      (_) => _loadingOverlay.show(
-          context: context, text: 'Loading blockchain data...'),
+      (_) {
+        if (context.read<MarketAssetCubit>().state is! MarketAssetLoaded) {
+          _loadingOverlay.show(
+              context: context, text: 'Loading blockchain data...');
+        }
+      },
     );
 
     super.initState();

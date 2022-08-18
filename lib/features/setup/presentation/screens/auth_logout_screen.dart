@@ -5,6 +5,7 @@ import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
 import 'package:polkadex/common/widgets/loading_popup.dart';
 
 class AuthLogoutScreen extends StatefulWidget {
@@ -14,6 +15,9 @@ class AuthLogoutScreen extends StatefulWidget {
 
 class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
   late Image polkadexLogo;
+
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
+  String _loadingOverlayText = 'Loading...';
 
   @override
   void initState() {
@@ -42,6 +46,10 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
             text: 'We are almost there...',
           );
         }
+
+        state is AccountLoading
+            ? _loadingOverlay.show(context: context, text: _loadingOverlayText)
+            : _loadingOverlay.hide();
       },
       child: Scaffold(
         backgroundColor: AppColors.color1C2023,
@@ -73,10 +81,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                   ),
                                   backgroundColor: AppColors.colorFFFFFF,
                                   textColor: Colors.black,
-                                  onTap: () async {
-                                    await context.read<AccountCubit>().logout();
-                                    Coordinator.goToIntroScreen();
-                                  },
+                                  onTap: () => _onLogOutTapped(),
                                 ),
                               ),
                               SizedBox(
@@ -89,7 +94,7 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
                                     horizontal: 12,
                                     vertical: 16,
                                   ),
-                                  onTap: () async {},
+                                  onTap: () => _onAuthenticateTapped(),
                                 ),
                               ),
                             ],
@@ -114,5 +119,23 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
         ),
       ),
     );
+  }
+
+  void _onAuthenticateTapped() async {
+    _loadingOverlayText = 'Signing in...';
+    final currentState = context.read<AccountCubit>().state;
+
+    if (currentState is AccountLoaded) {
+      currentState.account.biometricAccess
+          ? await context.read<AccountCubit>().signInWithLocalAcc()
+          : Coordinator.goToConfirmPasswordScreen();
+    }
+  }
+
+  void _onLogOutTapped() async {
+    _loadingOverlayText = 'Signing out...';
+    await context.read<AccountCubit>().localAccountLogout();
+
+    Coordinator.goToIntroScreen();
   }
 }

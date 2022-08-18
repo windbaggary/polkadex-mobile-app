@@ -140,12 +140,24 @@ class AccountCubit extends Cubit<AccountState> {
         AccountSignOutError(errorMessage: error.message),
       ),
       (_) async {
-        await _deleteAccountUseCase();
-        await _deletePasswordUseCase();
+        await _removeLocalData();
 
         emit(AccountNotLoaded());
       },
     );
+  }
+
+  Future<void> localAccountLogout() async {
+    emit(AccountLoading());
+
+    await _removeLocalData();
+
+    emit(AccountNotLoaded());
+  }
+
+  Future<void> _removeLocalData() async {
+    await _deleteAccountUseCase();
+    await _deletePasswordUseCase();
   }
 
   Future<bool> savePassword(String password) async {
@@ -249,6 +261,45 @@ class AccountCubit extends Cubit<AccountState> {
         );
       },
     );
+  }
+
+  Future<void> signInWithLocalAcc({
+    String? password,
+  }) async {
+    final currentState = state;
+    final passwordSignUp = password ?? await _getPasswordUseCase();
+
+    if (passwordSignUp == null) {
+      return;
+    }
+
+    emit(AccountLoading());
+
+    if (currentState is AccountLoaded) {
+      final result = await _signInUseCase(
+        email: currentState.account.email,
+        password: passwordSignUp,
+        useBiometric: password == null,
+      );
+
+      await result.fold(
+        (error) async {
+          emit(
+            AccountLogInError(
+              errorMessage: error.message,
+            ),
+          );
+        },
+        (_) async {
+          emit(
+            AccountLoggedIn(
+              account: currentState.account,
+              password: passwordSignUp,
+            ),
+          );
+        },
+      );
+    }
   }
 
   Future<void> switchBiometricAccess() async {
