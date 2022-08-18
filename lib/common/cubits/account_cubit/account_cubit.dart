@@ -115,13 +115,21 @@ class AccountCubit extends Cubit<AccountState> {
   }
 
   Future<void> logout() async {
-    emit(AccountNotLoaded());
+    emit(AccountLoading());
 
-    await _deleteAccountUseCase();
-    await _deletePasswordUseCase();
-    await _signOutUseCase();
+    final resultSignOut = await _signOutUseCase();
 
-    return;
+    await resultSignOut.fold(
+      (error) async => emit(
+        AccountSignOutError(errorMessage: error.message),
+      ),
+      (_) async {
+        await _deleteAccountUseCase();
+        await _deletePasswordUseCase();
+
+        emit(AccountNotLoaded());
+      },
+    );
   }
 
   Future<bool> savePassword(String password) async {

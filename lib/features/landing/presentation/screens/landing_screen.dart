@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
+import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -40,6 +43,8 @@ class _LandingScreenState extends State<LandingScreen>
   late ScrollController _scrollController;
 
   final ValueNotifier<int> _pageViewNotifier = ValueNotifier<int>(0);
+
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
   @override
   void initState() {
@@ -159,24 +164,43 @@ class _LandingScreenState extends State<LandingScreen>
               backgroundColor: Colors.transparent,
               child: NotificationsWidget(),
             ),
-            body: SafeArea(
-              child: PageView(
-                controller: _pageController,
-                children: [
-                  HomeTabView(
-                    scrollController: _scrollController,
-                  ),
-                  ExchangeTabView(
-                    scrollController: _scrollController,
-                  ),
-                  TradeTabView(
-                    scrollController: _scrollController,
-                  ),
-                  BalanceTabView(
-                    scrollController: _scrollController,
-                  ),
-                ],
-                physics: NeverScrollableScrollPhysics(),
+            body: BlocListener<AccountCubit, AccountState>(
+              listener: (_, state) {
+                if (state is AccountNotLoaded) {
+                  Coordinator.goToIntroScreen();
+                }
+
+                if (state is AccountSignOutError) {
+                  PolkadexSnackBar.show(
+                    context: context,
+                    text: state.errorMessage,
+                  );
+                }
+
+                state is AccountLoading
+                    ? _loadingOverlay.show(
+                        context: context, text: 'Signing out...')
+                    : _loadingOverlay.hide();
+              },
+              child: SafeArea(
+                child: PageView(
+                  controller: _pageController,
+                  children: [
+                    HomeTabView(
+                      scrollController: _scrollController,
+                    ),
+                    ExchangeTabView(
+                      scrollController: _scrollController,
+                    ),
+                    TradeTabView(
+                      scrollController: _scrollController,
+                    ),
+                    BalanceTabView(
+                      scrollController: _scrollController,
+                    ),
+                  ],
+                  physics: NeverScrollableScrollPhysics(),
+                ),
               ),
             ),
           ),

@@ -109,6 +109,19 @@ class AccountLogInError extends AccountState {
       ];
 }
 
+class AccountSignOutError extends AccountState {
+  AccountSignOutError({
+    this.errorMessage,
+  });
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        errorMessage,
+      ];
+}
+
 class AccountUpdatingBiometric extends AccountLoggedIn {
   AccountUpdatingBiometric({
     required ImportedAccountEntity account,
