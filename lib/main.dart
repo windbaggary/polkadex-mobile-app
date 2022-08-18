@@ -10,6 +10,7 @@ import 'package:polkadex/app_lifecycle_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
+import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:polkadex/injection_container.dart' as injection;
@@ -35,8 +36,14 @@ void main() async {
 
   await injection.init();
 
-  // A 2 seconds delay to show the splash screen
-  await Future.delayed(const Duration(seconds: 2));
+  await injection.dependency<WebViewRunner>().subscribeMessage(
+    'log',
+    (data) async {
+      if (data == 'polkadexWorker ready') {
+        await injection.dependency<MarketAssetCubit>().getMarkets();
+      }
+    },
+  );
 
   runApp(MyApp());
 }

@@ -506,8 +506,8 @@ Future<void> init() async {
     () => GetAssetsDetailsUseCase(assetRepository: dependency()),
   );
 
-  dependency.registerFactory(
-    () => MarketAssetCubit(
+  dependency.registerSingleton<MarketAssetCubit>(
+    MarketAssetCubit(
       getMarketsUseCase: dependency(),
       getAssetsDetailsUseCase: dependency(),
     ),
