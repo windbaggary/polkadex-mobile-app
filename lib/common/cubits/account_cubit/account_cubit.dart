@@ -48,12 +48,9 @@ class AccountCubit extends Cubit<AccountState> {
         _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountUseCase = deleteAccountUseCase,
         _deletePasswordUseCase = deletePasswordUseCase,
-        _importAccountUseCase = importAccountUseCase,
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
-        _confirmPasswordUseCase = confirmPasswordUseCase,
-        _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
   final SignUpUseCase _signUpUseCase;
@@ -65,12 +62,9 @@ class AccountCubit extends Cubit<AccountState> {
   final GetAccountUseCase _getAccountStorageUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
   final DeletePasswordUseCase _deletePasswordUseCase;
-  final ImportAccountUseCase _importAccountUseCase;
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
-  final ConfirmPasswordUseCase _confirmPasswordUseCase;
-  final GetMainAccountAddressUsecase _getMainAccountAddressUsecase;
 
   String get accountName {
     final currentState = state;
