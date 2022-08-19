@@ -132,11 +132,11 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<Either<ApiError, AuthUser>> getCurrentUser() async {
+  Future<Either<ApiError, Unit>> getCurrentUser() async {
     try {
-      final result = await _accountRemoteDatasource.getCurrentUser();
+      await _accountRemoteDatasource.getCurrentUser();
 
-      return Right(result);
+      return Right(unit);
     } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(
@@ -153,12 +153,11 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<Either<ApiError, ResendSignUpCodeResult>> resendCode(
-      String email) async {
+  Future<Either<ApiError, Unit>> resendCode(String email) async {
     try {
-      final result = await _accountRemoteDatasource.resendCode(email);
+      await _accountRemoteDatasource.resendCode(email);
 
-      return Right(result);
+      return Right(unit);
     } on AmplifyException catch (amplifyError) {
       return Left(
         ApiError(

@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
+import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
@@ -73,9 +74,12 @@ void main() {
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
+  late String tEmail;
+  late String tPassword;
+  late String tCode;
+  late ApiError tError;
   late ImportedAccountModel tImportedAccountBioOff;
   late ImportedAccountModel tImportedAccountBioOn;
-  late String tPassword;
 
   setUp(() {
     _mockSignUpUseCase = _MockSignUpUseCase();
@@ -125,7 +129,11 @@ void main() {
       biometricAccess: true,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
+
+    tEmail = 'test@test.com';
     tPassword = 'testPassword';
+    tError = ApiError(message: 'error');
+    tCode = 'code';
 
     registerFallbackValue(tImportedAccountBioOff);
     registerFallbackValue(tImportedAccountBioOn);
@@ -139,17 +147,190 @@ void main() {
       });
 
       blocTest<AccountCubit, AccountState>(
-        'Account found on local secure storage',
+        'Account found on local secure storage with no active session',
         build: () {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
             (_) async => tImportedAccountBioOff,
           );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
           return cubit;
         },
         act: (cubit) async {
           await cubit.loadAccount();
+        },
+        expect: () => [
+          AccountLoaded(account: tImportedAccountBioOff),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Logged in successfully using account found on local secure storage (biometric off)',
+        build: () {
+          when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccountBioOff,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
+          when(
+            () => _mockGetPasswordUseCase(),
+          ).thenAnswer(
+            (_) async => null,
+          );
+          when(
+            () => _mockSignInUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tImportedAccountBioOff),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.loadAccount();
+          await cubit.signInWithLocalAcc(password: tPassword);
+        },
+        expect: () => [
+          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoading(),
+          AccountLoggedIn(account: tImportedAccountBioOff, password: tPassword),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Logged in successfully using account found on local secure storage (biometric on)',
+        build: () {
+          when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccountBioOn,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
+          when(
+            () => _mockGetPasswordUseCase(),
+          ).thenAnswer(
+            (_) async => tPassword,
+          );
+          when(
+            () => _mockSignInUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tImportedAccountBioOn),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.loadAccount();
+          await cubit.signInWithLocalAcc();
+        },
+        expect: () => [
+          AccountLoaded(account: tImportedAccountBioOn),
+          AccountLoading(),
+          AccountLoggedIn(account: tImportedAccountBioOn, password: tPassword),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Failed to log in successfully using account found on local secure storage (biometric off)',
+        build: () {
+          when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccountBioOff,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
+          when(
+            () => _mockGetPasswordUseCase(),
+          ).thenAnswer(
+            (_) async => null,
+          );
+          when(
+            () => _mockSignInUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.loadAccount();
+          await cubit.signInWithLocalAcc(password: tPassword);
+        },
+        expect: () => [
+          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoading(),
+          AccountLogInError(errorMessage: tError.message),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Log in interrupted using account found on local secure storage (biometric on)',
+        build: () {
+          when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccountBioOff,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
+          when(
+            () => _mockGetPasswordUseCase(),
+          ).thenAnswer(
+            (_) async => null,
+          );
+          when(
+            () => _mockSignInUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.loadAccount();
+          await cubit.signInWithLocalAcc();
         },
         expect: () => [
           AccountLoaded(account: tImportedAccountBioOff),
@@ -164,6 +345,20 @@ void main() {
           ).thenAnswer(
             (_) async => null,
           );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
+          when(
+            () => _mockSignOutUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
           return cubit;
         },
         act: (cubit) async {
@@ -175,12 +370,75 @@ void main() {
       );
 
       blocTest<AccountCubit, AccountState>(
-        'Logged out from account',
+        'Account found on local secure storage and with active session',
         build: () {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
             (_) async => tImportedAccountBioOff,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Right(unit),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.loadAccount();
+        },
+        expect: () => [
+          AccountLoggedIn(account: tImportedAccountBioOff),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Account not found on local secure storage and with active session',
+        build: () {
+          when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => null,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Right(unit),
+          );
+          when(
+            () => _mockSignOutUseCase(),
+          ).thenAnswer(
+            (_) async => Left(
+              tError,
+            ),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.loadAccount();
+        },
+        expect: () => [
+          AccountNotLoaded(),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Logged out from local and remote account',
+        build: () {
+          when(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccountBioOff,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Right(unit),
+          );
+          when(
+            () => _mockSignOutUseCase(),
+          ).thenAnswer(
+            (_) async => Right(unit),
           );
           when(
             () => _mockDeleteAccountUsecase(),
@@ -199,118 +457,84 @@ void main() {
           await cubit.logout();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoggedIn(account: tImportedAccountBioOff),
+          AccountLoading(),
           AccountNotLoaded(),
         ],
       );
 
-      test(
-        'Biometric verification success for account creation',
-        () async {
-          when(
-            () => _mockSavePasswordUseCase(password: any(named: 'password')),
-          ).thenAnswer(
-            (_) async => true,
-          );
-
-          final result = await cubit.savePassword('test');
-
-          expect(result, true);
-          verify(() =>
-                  _mockSavePasswordUseCase(password: any(named: 'password')))
-              .called(1);
-          verifyNoMoreInteractions(_mockSavePasswordUseCase);
-        },
-      );
-
-      test(
-        'Biometric verification fail for account creation',
-        () async {
-          when(
-            () => _mockSavePasswordUseCase(password: any(named: 'password')),
-          ).thenAnswer(
-            (_) async => false,
-          );
-
-          final result = await cubit.savePassword('test');
-
-          expect(result, false);
-          verify(() =>
-                  _mockSavePasswordUseCase(password: any(named: 'password')))
-              .called(1);
-          verifyNoMoreInteractions(_mockSavePasswordUseCase);
-        },
-      );
-
-      //test(
-      //  'Biometric verification success for account login',
-      //  () async {
-      //    when(
-      //      () => _mockGetAccountUseCase(),
-      //    ).thenAnswer(
-      //      (_) async => tImportedAccountBioOff,
-      //    );
-      //    when(
-      //      () => _mockGetPasswordUseCase(),
-      //    ).thenAnswer(
-      //      (_) async => 'test',
-      //    );
-      //    when(
-      //      () => _mockConfirmPasswordUseCase(
-      //        account: any(named: 'account'),
-      //        password: any(named: 'password'),
-      //      ),
-      //    ).thenAnswer(
-      //      (_) async => true,
-      //    );
-//
-      //    await cubit.loadAccountData();
-      //    final result = await cubit.signInWithBiometric();
-//
-      //    expect(result, true);
-      //    verify(() => _mockGetPasswordUseCase()).called(1);
-      //    verifyNoMoreInteractions(_mockSavePasswordUseCase);
-      //  },
-      //);
-//
-      //test(
-      //  'Biometric verification fail for account login',
-      //  () async {
-      //    when(
-      //      () => _mockGetAccountUseCase(),
-      //    ).thenAnswer(
-      //      (_) async => tImportedAccountBioOff,
-      //    );
-      //    when(
-      //      () => _mockGetPasswordUseCase(),
-      //    ).thenAnswer(
-      //      (_) async => 'test',
-      //    );
-      //    when(
-      //      () => _mockConfirmPasswordUseCase(
-      //        account: any(named: 'account'),
-      //        password: any(named: 'password'),
-      //      ),
-      //    ).thenAnswer(
-      //      (_) async => false,
-      //    );
-//
-      //    await cubit.loadAccountData();
-      //    final result = await cubit.signInWithBiometric();
-//
-      //    expect(result, false);
-      //    verify(() => _mockGetPasswordUseCase()).called(1);
-      //    verifyNoMoreInteractions(_mockSavePasswordUseCase);
-      //  },
-      //);
-
       blocTest<AccountCubit, AccountState>(
-        'Account created and saved in secure storage',
+        'Failed to log out from local and remote account',
         build: () {
           when(
-            () => _mockConfirmSignUpUseCase(
+            () => _mockGetAccountUseCase(),
+          ).thenAnswer(
+            (_) async => tImportedAccountBioOff,
+          );
+          when(
+            () => _mockGetCurrentUserUseCase(),
+          ).thenAnswer(
+            (_) async => Right(unit),
+          );
+          when(
+            () => _mockSignOutUseCase(),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          when(
+            () => _mockDeleteAccountUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.loadAccount();
+          await cubit.logout();
+        },
+        expect: () => [
+          AccountLoggedIn(account: tImportedAccountBioOff),
+          AccountLoading(),
+          AccountSignOutError(errorMessage: tError.message),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Logged out from local',
+        build: () {
+          when(
+            () => _mockDeleteAccountUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.localAccountLogout();
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountNotLoaded(),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Signed in successfully (biometric off)',
+        build: () {
+          when(
+            () => _mockSignInUseCase(
               email: any(named: 'email'),
-              code: any(named: 'code'),
+              password: any(named: 'password'),
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
@@ -324,21 +548,21 @@ void main() {
             (_) async {},
           );
           when(
-            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+            () => _mockDeletePasswordUsecase(),
           ).thenAnswer(
-            (_) async => true,
+            (_) async {},
           );
           return cubit;
         },
         act: (cubit) async {
-          await cubit.confirmSignUp(
-            email: 'test@test.com',
+          await cubit.signIn(
+            email: tEmail,
             password: tPassword,
-            code: 'test',
             useBiometric: false,
           );
         },
         expect: () => [
+          AccountLoading(),
           AccountLoggedIn(
             account: tImportedAccountBioOff,
             password: tPassword,
@@ -346,63 +570,306 @@ void main() {
         ],
       );
 
-      //test(
-      //  'Password verification success for account login',
-      //  () async {
-      //    when(
-      //      () => _mockGetAccountUseCase(),
-      //    ).thenAnswer(
-      //      (_) async => tImportedAccountBioOff,
-      //    );
-      //    when(
-      //      () => _mockConfirmPasswordUseCase(
-      //        account: any(named: 'account'),
-      //        password: any(named: 'password'),
-      //      ),
-      //    ).thenAnswer(
-      //      (_) async => true,
-      //    );
-//
-      //    await cubit.loadAccountData();
-      //    final result = await cubit.signIn('test');
-//
-      //    expect(result, true);
-      //    verify(() => _mockConfirmPasswordUseCase(
-      //          account: any(named: 'account'),
-      //          password: any(named: 'password'),
-      //        )).called(1);
-      //    verifyNoMoreInteractions(_mockConfirmPasswordUseCase);
-      //  },
-      //);
-//
-      //test(
-      //  'Password verification fail for account login',
-      //  () async {
-      //    when(
-      //      () => _mockGetAccountUseCase(),
-      //    ).thenAnswer(
-      //      (_) async => tImportedAccountBioOff,
-      //    );
-      //    when(
-      //      () => _mockConfirmPasswordUseCase(
-      //        account: any(named: 'account'),
-      //        password: any(named: 'password'),
-      //      ),
-      //    ).thenAnswer(
-      //      (_) async => false,
-      //    );
-//
-      //    await cubit.loadAccountData();
-      //    final result = await cubit.signIn('test');
-//
-      //    expect(result, false);
-      //    verify(() => _mockConfirmPasswordUseCase(
-      //          account: any(named: 'account'),
-      //          password: any(named: 'password'),
-      //        )).called(1);
-      //    verifyNoMoreInteractions(_mockConfirmPasswordUseCase);
-      //  },
-      //);
+      blocTest<AccountCubit, AccountState>(
+        'Signed in successfully (biometric on)',
+        build: () {
+          when(
+            () => _mockSignInUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tImportedAccountBioOn),
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.signIn(
+            email: tEmail,
+            password: tPassword,
+            useBiometric: true,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tImportedAccountBioOn,
+            password: tPassword,
+          ),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Failed to Sign in',
+        build: () {
+          when(
+            () => _mockSignInUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.signIn(
+            email: tEmail,
+            password: tPassword,
+            useBiometric: false,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLogInError(errorMessage: tError.message),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Signed up successfully',
+        build: () {
+          when(
+            () => _mockSignUpUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(unit),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.signUp(
+            email: tEmail,
+            password: tPassword,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountVerifyingCode(),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Failed to Sign up',
+        build: () {
+          when(
+            () => _mockSignUpUseCase(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.signUp(
+            email: tEmail,
+            password: tPassword,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountSignUpError(errorMessage: tError.message),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Sign up confirmed successfully (biometric on)',
+        build: () {
+          when(
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tImportedAccountBioOff),
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.confirmSignUp(
+            email: tEmail,
+            password: tPassword,
+            code: tCode,
+            useBiometric: false,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tImportedAccountBioOff,
+            password: tPassword,
+          ),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Sign up confirmed successfully (biometric off)',
+        build: () {
+          when(
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tImportedAccountBioOn),
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.confirmSignUp(
+            email: tEmail,
+            password: tPassword,
+            code: tCode,
+            useBiometric: true,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tImportedAccountBioOn,
+            password: tPassword,
+          ),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Failed to confirm Sign up',
+        build: () {
+          when(
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          when(
+            () => _mockDeletePasswordUsecase(),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.confirmSignUp(
+            email: tEmail,
+            password: tPassword,
+            code: tCode,
+            useBiometric: false,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountConfirmSignUpError(errorMessage: tError.message),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Verification code resent',
+        build: () {
+          when(
+            () => _mockResendCodeUseCase(
+              email: any(named: 'email'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(unit),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.resendCode(
+            email: tEmail,
+          );
+        },
+        expect: () => [
+          AccountCodeResent(),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Failed to resend verification code',
+        build: () {
+          when(
+            () => _mockResendCodeUseCase(
+              email: any(named: 'email'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.resendCode(
+            email: tEmail,
+          );
+        },
+        expect: () => [
+          AccountResendCodeError(errorMessage: tError.message),
+        ],
+      );
 
       blocTest<AccountCubit, AccountState>(
         'Account biometric access switched on',
@@ -432,7 +899,7 @@ void main() {
         },
         act: (cubit) async {
           await cubit.confirmSignUp(
-            email: 'test@test.com',
+            email: tEmail,
             password: tPassword,
             code: 'test',
             useBiometric: false,
@@ -440,6 +907,7 @@ void main() {
           await cubit.switchBiometricAccess();
         },
         expect: () => [
+          AccountLoading(),
           AccountLoggedIn(
             account: tImportedAccountBioOff,
             password: tPassword,
@@ -483,7 +951,7 @@ void main() {
         },
         act: (cubit) async {
           await cubit.confirmSignUp(
-            email: 'test@test.com',
+            email: tEmail,
             password: tPassword,
             code: 'test',
             useBiometric: true,
@@ -491,6 +959,7 @@ void main() {
           await cubit.switchBiometricAccess();
         },
         expect: () => [
+          AccountLoading(),
           AccountLoggedIn(
             account: tImportedAccountBioOn,
             password: tPassword,
