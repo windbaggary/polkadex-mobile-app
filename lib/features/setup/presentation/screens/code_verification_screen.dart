@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -32,6 +34,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
   late Animation<double> _entryAnimation;
 
   final ValueNotifier<bool> _isVerifyEnabled = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isResendVisible = ValueNotifier<bool>(false);
 
   final TextEditingController _pinCodeController = TextEditingController();
 
@@ -46,8 +49,18 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
     );
     _entryAnimation = _animationController;
 
-    super.initState();
     Future.microtask(() => _animationController.forward());
+
+    WidgetsBinding.instance?.addPostFrameCallback(
+      (_) => Timer(
+        Duration(
+          minutes: 1,
+        ),
+        () => _isResendVisible.value = true,
+      ),
+    );
+
+    super.initState();
   }
 
   @override
@@ -96,6 +109,24 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
             }
 
             if (state is AccountConfirmSignUpError) {
+              PolkadexSnackBar.show(
+                context: context,
+                text: state.errorMessage,
+              );
+            }
+
+            if (state is AccountCodeResent) {
+              _isResendVisible.value = false;
+
+              Timer(
+                Duration(
+                  minutes: 1,
+                ),
+                () => _isResendVisible.value = true,
+              );
+            }
+
+            if (state is AccountResendCodeError) {
               PolkadexSnackBar.show(
                 context: context,
                 text: state.errorMessage,
@@ -217,26 +248,43 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
                                           },
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.zero,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            style: tsS14W400CFF,
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                  text:
-                                                      'Didn\'t receive the code? '),
-                                              TextSpan(
-                                                text: 'Resend',
-                                                style: tsS14W400CFF.copyWith(
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  color: AppColors.colorE6007A,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                      ValueListenableBuilder<bool>(
+                                        valueListenable: _isResendVisible,
+                                        builder: (context, isResendVisible,
+                                                _) =>
+                                            isResendVisible
+                                                ? Padding(
+                                                    padding: EdgeInsets.zero,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        style: tsS14W400CFF,
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                              text:
+                                                                  'Didn\'t receive the code? '),
+                                                          TextSpan(
+                                                            text: 'Resend',
+                                                            style: tsS14W400CFF
+                                                                .copyWith(
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline,
+                                                              color: AppColors
+                                                                  .colorE6007A,
+                                                            ),
+                                                            recognizer: TapGestureRecognizer()
+                                                              ..onTap = () => context
+                                                                  .read<
+                                                                      AccountCubit>()
+                                                                  .resendCode(
+                                                                      email: widget
+                                                                          .email),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
                                       )
                                     ],
                                   ),

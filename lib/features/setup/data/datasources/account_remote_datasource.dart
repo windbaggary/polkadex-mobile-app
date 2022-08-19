@@ -44,4 +44,8 @@ class AccountRemoteDatasource {
   Future<AuthUser> getCurrentUser() async {
     return await Amplify.Auth.getCurrentUser();
   }
+
+  Future<ResendSignUpCodeResult> resendCode(String email) async {
+    return await Amplify.Auth.resendSignUpCode(username: email);
+  }
 }

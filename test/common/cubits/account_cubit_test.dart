@@ -12,6 +12,7 @@ import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart
 import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/resend_code_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
@@ -30,6 +31,8 @@ class _MockConfirmSignUpUseCase extends Mock implements ConfirmSignUpUseCase {}
 
 class _MockGetCurrentUserUseCase extends Mock implements GetCurrentUserUseCase {
 }
+
+class _MockResendCodeUseCase extends Mock implements ResendCodeUseCase {}
 
 class _MockGetAccountUseCase extends Mock implements GetAccountUseCase {}
 
@@ -58,6 +61,7 @@ void main() {
   late _MockSignOutUseCase _mockSignOutUseCase;
   late _MockConfirmSignUpUseCase _mockConfirmSignUpUseCase;
   late _MockGetCurrentUserUseCase _mockGetCurrentUserUseCase;
+  late _MockResendCodeUseCase _mockResendCodeUseCase;
   late _MockGetAccountUseCase _mockGetAccountUseCase;
   late _MockDeleteAccountUsecase _mockDeleteAccountUsecase;
   late _MockDeletePasswordUsecase _mockDeletePasswordUsecase;
@@ -79,6 +83,7 @@ void main() {
     _mockSignOutUseCase = _MockSignOutUseCase();
     _mockConfirmSignUpUseCase = _MockConfirmSignUpUseCase();
     _mockGetCurrentUserUseCase = _MockGetCurrentUserUseCase();
+    _mockResendCodeUseCase = _MockResendCodeUseCase();
     _mockGetAccountUseCase = _MockGetAccountUseCase();
     _mockDeleteAccountUsecase = _MockDeleteAccountUsecase();
     _mockDeletePasswordUsecase = _MockDeletePasswordUsecase();
@@ -96,6 +101,7 @@ void main() {
       confirmSignUpUseCase: _mockConfirmSignUpUseCase,
       getCurrentUserUseCase: _mockGetCurrentUserUseCase,
       getAccountStorageUseCase: _mockGetAccountUseCase,
+      resendCodeUseCase: _mockResendCodeUseCase,
       deleteAccountUseCase: _mockDeleteAccountUsecase,
       deletePasswordUseCase: _mockDeletePasswordUsecase,
       importAccountUseCase: _mockImportAccountUseCase,

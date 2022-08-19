@@ -60,6 +60,7 @@ import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecas
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/resend_code_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_in_usecase.dart';
@@ -243,6 +244,7 @@ Future<void> init() async {
       signOutUseCase: dependency(),
       confirmSignUpUseCase: dependency(),
       getCurrentUserUseCase: dependency(),
+      resendCodeUseCase: dependency(),
       savePasswordUseCase: dependency(),
       deleteAccountUseCase: dependency(),
       deletePasswordUseCase: dependency(),
@@ -504,6 +506,10 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => GetAssetsDetailsUseCase(assetRepository: dependency()),
+  );
+
+  dependency.registerFactory(
+    () => ResendCodeUseCase(accountRepository: dependency()),
   );
 
   dependency.registerSingleton<MarketAssetCubit>(

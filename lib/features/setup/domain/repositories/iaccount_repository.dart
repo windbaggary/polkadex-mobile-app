@@ -16,6 +16,7 @@ abstract class IAccountRepository {
     bool useBiometric,
   );
   Future<Either<ApiError, AuthUser>> getCurrentUser();
+  Future<Either<ApiError, ResendSignUpCodeResult>> resendCode(String email);
   Future<Either<ApiError, Unit>> signOut();
   Future<void> saveAccountStorage(String keypairJson, {String? password});
   Future<ImportedAccountEntity?> getAccountStorage();

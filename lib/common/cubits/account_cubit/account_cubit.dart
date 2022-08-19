@@ -13,6 +13,7 @@ import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/resend_code_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_in_usecase.dart';
@@ -28,6 +29,7 @@ class AccountCubit extends Cubit<AccountState> {
     required SignOutUseCase signOutUseCase,
     required ConfirmSignUpUseCase confirmSignUpUseCase,
     required GetCurrentUserUseCase getCurrentUserUseCase,
+    required ResendCodeUseCase resendCodeUseCase,
     required GetAccountUseCase getAccountStorageUseCase,
     required DeleteAccountUseCase deleteAccountUseCase,
     required DeletePasswordUseCase deletePasswordUseCase,
@@ -42,6 +44,7 @@ class AccountCubit extends Cubit<AccountState> {
         _signOutUseCase = signOutUseCase,
         _confirmSignUpUseCase = confirmSignUpUseCase,
         _getCurrentUserUseCase = getCurrentUserUseCase,
+        _resendCodeUseCase = resendCodeUseCase,
         _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountUseCase = deleteAccountUseCase,
         _deletePasswordUseCase = deletePasswordUseCase,
@@ -58,6 +61,7 @@ class AccountCubit extends Cubit<AccountState> {
   final SignOutUseCase _signOutUseCase;
   final ConfirmSignUpUseCase _confirmSignUpUseCase;
   final GetCurrentUserUseCase _getCurrentUserUseCase;
+  final ResendCodeUseCase _resendCodeUseCase;
   final GetAccountUseCase _getAccountStorageUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
   final DeletePasswordUseCase _deletePasswordUseCase;
@@ -140,7 +144,7 @@ class AccountCubit extends Cubit<AccountState> {
         AccountSignOutError(errorMessage: error.message),
       ),
       (_) async {
-        await _removeLocalData();
+        //await _removeLocalData();
 
         emit(AccountNotLoaded());
       },
@@ -182,10 +186,7 @@ class AccountCubit extends Cubit<AccountState> {
         ),
       ),
       (_) => emit(
-        AccountVerifyingCode(
-          email: email,
-          password: password,
-        ),
+        AccountVerifyingCode(),
       ),
     );
   }
@@ -300,6 +301,19 @@ class AccountCubit extends Cubit<AccountState> {
         },
       );
     }
+  }
+
+  Future<void> resendCode({required String email}) async {
+    final result = await _resendCodeUseCase(email: email);
+
+    await result.fold(
+      (error) async => emit(
+        AccountResendCodeError(errorMessage: error.message),
+      ),
+      (_) async => emit(
+        AccountCodeResent(),
+      ),
+    );
   }
 
   Future<void> switchBiometricAccess() async {

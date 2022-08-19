@@ -153,6 +153,28 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
+  Future<Either<ApiError, ResendSignUpCodeResult>> resendCode(
+      String email) async {
+    try {
+      final result = await _accountRemoteDatasource.resendCode(email);
+
+      return Right(result);
+    } on AmplifyException catch (amplifyError) {
+      return Left(
+        ApiError(
+          message: amplifyError.message,
+        ),
+      );
+    } catch (error) {
+      return Left(
+        ApiError(
+          message: error.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
   Future<void> saveAccountStorage(String keypairJson,
       {String? password}) async {
     return await _accountLocalDatasource.saveAccountStorage(keypairJson,

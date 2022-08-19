@@ -54,21 +54,9 @@ class AccountLoggedIn extends AccountLoaded {
       ];
 }
 
-class AccountVerifyingCode extends AccountState {
-  AccountVerifyingCode({
-    required this.email,
-    required this.password,
-  });
+class AccountVerifyingCode extends AccountState {}
 
-  final String email;
-  final String password;
-
-  @override
-  List<Object?> get props => [
-        email,
-        password,
-      ];
-}
+class AccountCodeResent extends AccountVerifyingCode {}
 
 class AccountSignUpError extends AccountState {
   AccountSignUpError({
@@ -111,6 +99,19 @@ class AccountLogInError extends AccountState {
 
 class AccountSignOutError extends AccountState {
   AccountSignOutError({
+    this.errorMessage,
+  });
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        errorMessage,
+      ];
+}
+
+class AccountResendCodeError extends AccountState {
+  AccountResendCodeError({
     this.errorMessage,
   });
 
