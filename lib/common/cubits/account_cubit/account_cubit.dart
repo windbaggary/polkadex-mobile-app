@@ -138,7 +138,7 @@ class AccountCubit extends Cubit<AccountState> {
         AccountSignOutError(errorMessage: error.message),
       ),
       (_) async {
-        //await _removeLocalData();
+        await _removeLocalData();
 
         emit(AccountNotLoaded());
       },
