@@ -6,6 +6,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_overlay.dart';
+import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 
 class ConfirmPasswordScreen extends StatefulWidget {
@@ -73,9 +74,18 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
         elevation: 0,
       ),
       body: BlocListener<AccountCubit, AccountState>(
-        listener: (_, state) => state is AccountLoading
-            ? _loadingOverlay.show(context: context, text: 'Signing in...')
-            : _loadingOverlay.hide(),
+        listener: (_, state) {
+          if (state is AccountLoadedLogInError) {
+            PolkadexSnackBar.show(
+              context: context,
+              text: state.errorMessage,
+            );
+          }
+
+          state is AccountLoading
+              ? _loadingOverlay.show(context: context, text: 'Signing in...')
+              : _loadingOverlay.hide();
+        },
         child: CustomScrollView(
           physics: ClampingScrollPhysics(),
           slivers: [
