@@ -54,8 +54,9 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
               ),
               BlocConsumer<AccountCubit, AccountState>(
                 builder: (_, accountState) {
+                  print(accountState.runtimeType);
                   return Visibility(
-                    visible: accountState is! AccountNotLoaded ||
+                    visible: accountState is AccountLoaded &&
                         accountState is! AccountLoggedIn,
                     child: Align(
                       alignment: Alignment.bottomCenter,
