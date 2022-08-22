@@ -187,7 +187,7 @@ class _LandingScreenState extends State<LandingScreen>
                       Coordinator.goToIntroScreen();
                     }
 
-                    if (accountState is AccountSignOutError) {
+                    if (accountState is AccountLoggedInSignOutError) {
                       PolkadexSnackBar.show(
                         context: context,
                         text: accountState.errorMessage,

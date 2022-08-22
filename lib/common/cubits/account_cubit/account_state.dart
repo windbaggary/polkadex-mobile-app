@@ -9,18 +9,7 @@ abstract class AccountState extends Equatable {
 
 class AccountInitial extends AccountState {}
 
-class AccountNotLoaded extends AccountState {
-  AccountNotLoaded({
-    this.errorMessage,
-  });
-
-  final String? errorMessage;
-
-  @override
-  List<Object?> get props => [
-        errorMessage,
-      ];
-}
+class AccountNotLoaded extends AccountState {}
 
 class AccountLoaded extends AccountState {
   AccountLoaded({
@@ -54,16 +43,16 @@ class AccountLoggedIn extends AccountLoaded {
       ];
 }
 
-class AccountVerifyingCode extends AccountState {}
+class AccountVerifyingCode extends AccountNotLoaded {}
 
 class AccountCodeResent extends AccountVerifyingCode {}
 
-class AccountSignUpError extends AccountState {
+class AccountSignUpError extends AccountNotLoaded {
   AccountSignUpError({
-    this.errorMessage,
+    required this.errorMessage,
   });
 
-  final String? errorMessage;
+  final String errorMessage;
 
   @override
   List<Object?> get props => [
@@ -71,12 +60,12 @@ class AccountSignUpError extends AccountState {
       ];
 }
 
-class AccountConfirmSignUpError extends AccountState {
+class AccountConfirmSignUpError extends AccountVerifyingCode {
   AccountConfirmSignUpError({
-    this.errorMessage,
+    required this.errorMessage,
   });
 
-  final String? errorMessage;
+  final String errorMessage;
 
   @override
   List<Object?> get props => [
@@ -84,12 +73,12 @@ class AccountConfirmSignUpError extends AccountState {
       ];
 }
 
-class AccountLogInError extends AccountState {
-  AccountLogInError({
-    this.errorMessage,
+class AccountNotLoadedLogInError extends AccountNotLoaded {
+  AccountNotLoadedLogInError({
+    required this.errorMessage,
   });
 
-  final String? errorMessage;
+  final String errorMessage;
 
   @override
   List<Object?> get props => [
@@ -97,25 +86,64 @@ class AccountLogInError extends AccountState {
       ];
 }
 
-class AccountSignOutError extends AccountState {
-  AccountSignOutError({
+class AccountLoadedLogInError extends AccountLoaded {
+  AccountLoadedLogInError({
+    required ImportedAccountEntity account,
     this.errorMessage,
-  });
+  }) : super(
+          account: account,
+        );
 
   final String? errorMessage;
 
   @override
   List<Object?> get props => [
+        account,
         errorMessage,
       ];
 }
 
-class AccountResendCodeError extends AccountState {
+class AccountLoadedSignOutError extends AccountLoaded {
+  AccountLoadedSignOutError({
+    required ImportedAccountEntity account,
+    required this.errorMessage,
+  }) : super(account: account);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        account,
+        errorMessage,
+      ];
+}
+
+class AccountLoggedInSignOutError extends AccountLoggedIn {
+  AccountLoggedInSignOutError({
+    required ImportedAccountEntity account,
+    String? password,
+    required this.errorMessage,
+  }) : super(
+          account: account,
+          password: password,
+        );
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        account,
+        password,
+        errorMessage,
+      ];
+}
+
+class AccountResendCodeError extends AccountVerifyingCode {
   AccountResendCodeError({
-    this.errorMessage,
+    required this.errorMessage,
   });
 
-  final String? errorMessage;
+  final String errorMessage;
 
   @override
   List<Object?> get props => [

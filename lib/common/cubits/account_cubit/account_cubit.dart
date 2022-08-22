@@ -127,14 +127,31 @@ class AccountCubit extends Cubit<AccountState> {
   }
 
   Future<void> logout() async {
+    final initialState = state;
+
     emit(AccountLoading());
 
     final resultSignOut = await _signOutUseCase();
 
     await resultSignOut.fold(
-      (error) async => emit(
-        AccountSignOutError(errorMessage: error.message),
-      ),
+      (error) {
+        if (initialState is AccountLoggedIn) {
+          emit(
+            AccountLoggedInSignOutError(
+              account: initialState.account,
+              password: initialState.password,
+              errorMessage: error.message,
+            ),
+          );
+        } else if (initialState is AccountLoaded) {
+          emit(
+            AccountLoadedSignOutError(
+              account: initialState.account,
+              errorMessage: error.message,
+            ),
+          );
+        }
+      },
       (_) async {
         await _removeLocalData();
 
@@ -172,11 +189,13 @@ class AccountCubit extends Cubit<AccountState> {
     );
 
     result.fold(
-      (error) => emit(
-        AccountSignUpError(
-          errorMessage: error.message,
-        ),
-      ),
+      (error) {
+        emit(
+          AccountSignUpError(
+            errorMessage: error.message,
+          ),
+        );
+      },
       (_) => emit(
         AccountVerifyingCode(),
       ),
@@ -225,6 +244,8 @@ class AccountCubit extends Cubit<AccountState> {
     required String password,
     required bool useBiometric,
   }) async {
+    final initialState = state;
+
     emit(AccountLoading());
 
     final result = await _signInUseCase(
@@ -237,11 +258,18 @@ class AccountCubit extends Cubit<AccountState> {
       (error) async {
         await _deletePasswordUseCase();
 
-        emit(
-          AccountLogInError(
-            errorMessage: error.message,
-          ),
-        );
+        if (initialState is AccountLoaded) {
+          emit(
+            AccountLoadedLogInError(
+              account: initialState.account,
+              errorMessage: error.message,
+            ),
+          );
+        } else {
+          emit(
+            AccountNotLoadedLogInError(errorMessage: error.message),
+          );
+        }
       },
       (newAccount) async {
         await _saveAccountUseCase(keypairJson: json.encode(newAccount));
@@ -278,7 +306,8 @@ class AccountCubit extends Cubit<AccountState> {
       await result.fold(
         (error) async {
           emit(
-            AccountLogInError(
+            AccountLoadedLogInError(
+              account: currentState.account,
               errorMessage: error.message,
             ),
           );
@@ -299,9 +328,11 @@ class AccountCubit extends Cubit<AccountState> {
     final result = await _resendCodeUseCase(email: email);
 
     await result.fold(
-      (error) async => emit(
-        AccountResendCodeError(errorMessage: error.message),
-      ),
+      (error) async {
+        emit(
+          AccountResendCodeError(errorMessage: error.message),
+        );
+      },
       (_) async => emit(
         AccountCodeResent(),
       ),

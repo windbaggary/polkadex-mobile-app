@@ -286,7 +286,8 @@ void main() {
         expect: () => [
           AccountLoaded(account: tImportedAccountBioOff),
           AccountLoading(),
-          AccountLogInError(errorMessage: tError.message),
+          AccountLoadedLogInError(
+              account: tImportedAccountBioOff, errorMessage: tError.message),
         ],
       );
 
@@ -493,7 +494,11 @@ void main() {
         expect: () => [
           AccountLoggedIn(account: tImportedAccountBioOff),
           AccountLoading(),
-          AccountSignOutError(errorMessage: tError.message),
+          AccountLoggedInSignOutError(
+            account: tImportedAccountBioOff,
+            password: null,
+            errorMessage: tError.message,
+          ),
         ],
       );
 
@@ -640,7 +645,7 @@ void main() {
         },
         expect: () => [
           AccountLoading(),
-          AccountLogInError(errorMessage: tError.message),
+          AccountNotLoadedLogInError(errorMessage: tError.message),
         ],
       );
 

@@ -93,7 +93,7 @@ class _SignInScreenState extends State<SignInScreen>
               Coordinator.goToLandingScreen(state.account);
             }
 
-            if (state is AccountLogInError) {
+            if (state is AccountNotLoadedLogInError) {
               PolkadexSnackBar.show(
                 context: context,
                 text: state.errorMessage,
