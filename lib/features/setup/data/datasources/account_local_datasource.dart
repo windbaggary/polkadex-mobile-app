@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'package:biometric_storage/biometric_storage.dart';
-import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
-import 'package:polkadex/injection_container.dart';
 
 class AccountLocalDatasource {
   Future<BiometricStorageFile> _getKeypairFile() {
@@ -82,20 +79,5 @@ class AccountLocalDatasource {
     } on AuthException {
       return null;
     }
-  }
-
-  Future<bool> confirmPassword(
-      Map<String, dynamic> account, String password) async {
-    final String _callGetKeyPair =
-        'keypair = keyring.addFromJson(${json.encode(account)})';
-    final String _callUnlockWithPassword =
-        'polkadexWorker.confirmAndUnlock(keypair, "$password")';
-
-    await dependency<WebViewRunner>()
-        .evalJavascript(_callGetKeyPair, isSynchronous: true);
-    final bool result = await dependency<WebViewRunner>()
-        .evalJavascript(_callUnlockWithPassword);
-
-    return result;
   }
 }

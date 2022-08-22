@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
-import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
@@ -37,7 +36,6 @@ class AccountCubit extends Cubit<AccountState> {
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
-    required ConfirmPasswordUseCase confirmPasswordUseCase,
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
   })  : _signUpUseCase = signUpUseCase,
         _signInUseCase = signInUseCase,

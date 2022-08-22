@@ -52,7 +52,6 @@ import 'package:polkadex/features/setup/data/repositories/address_repository.dar
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iadress_repository.dart';
-import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
@@ -195,12 +194,6 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => ConfirmPasswordUseCase(
-      accountRepository: dependency(),
-    ),
-  );
-
-  dependency.registerFactory(
     () => SignUpUseCase(
       accountRepository: dependency(),
     ),
@@ -252,7 +245,6 @@ Future<void> init() async {
       importAccountUseCase: dependency(),
       getPasswordUseCase: dependency(),
       getAccountStorageUseCase: dependency(),
-      confirmPasswordUseCase: dependency(),
       getMainAccountAddressUsecase: dependency(),
     ),
   );
