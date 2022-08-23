@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
+import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -41,6 +44,8 @@ class _LandingScreenState extends State<LandingScreen>
 
   final ValueNotifier<int> _pageViewNotifier = ValueNotifier<int>(0);
 
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
+
   @override
   void initState() {
     _titleNotifier = ValueNotifier<String>("Hello Kas");
@@ -65,6 +70,15 @@ class _LandingScreenState extends State<LandingScreen>
     _pageController = PageController();
 
     _scrollController = ScrollController();
+
+    WidgetsBinding.instance?.addPostFrameCallback(
+      (_) {
+        if (context.read<MarketAssetCubit>().state is! MarketAssetLoaded) {
+          _loadingOverlay.show(
+              context: context, text: 'Loading blockchain data...');
+        }
+      },
+    );
 
     super.initState();
   }
@@ -159,25 +173,54 @@ class _LandingScreenState extends State<LandingScreen>
               backgroundColor: Colors.transparent,
               child: NotificationsWidget(),
             ),
-            body: SafeArea(
-              child: PageView(
-                controller: _pageController,
-                children: [
-                  HomeTabView(
-                    scrollController: _scrollController,
+            body: BlocConsumer<MarketAssetCubit, MarketAssetState>(
+              listener: (_, marketAssetState) {
+                if (marketAssetState is MarketAssetLoaded &&
+                    _loadingOverlay.isActive) {
+                  _loadingOverlay.hide();
+                }
+              },
+              builder: (context, marketAssetState) {
+                return BlocListener<AccountCubit, AccountState>(
+                  listener: (_, accountState) {
+                    if (accountState is AccountNotLoaded) {
+                      Coordinator.goToIntroScreen();
+                    }
+
+                    if (accountState is AccountLoggedInSignOutError) {
+                      PolkadexSnackBar.show(
+                        context: context,
+                        text: accountState.errorMessage,
+                      );
+                    }
+
+                    accountState is AccountLoading
+                        ? _loadingOverlay.show(
+                            context: context, text: 'Signing out...')
+                        : _loadingOverlay.hide();
+                  },
+                  child: SafeArea(
+                    child: PageView(
+                      controller: _pageController,
+                      children: [
+                        HomeTabView(
+                          scrollController: _scrollController,
+                        ),
+                        ExchangeTabView(
+                          scrollController: _scrollController,
+                        ),
+                        TradeTabView(
+                          scrollController: _scrollController,
+                        ),
+                        BalanceTabView(
+                          scrollController: _scrollController,
+                        ),
+                      ],
+                      physics: NeverScrollableScrollPhysics(),
+                    ),
                   ),
-                  ExchangeTabView(
-                    scrollController: _scrollController,
-                  ),
-                  TradeTabView(
-                    scrollController: _scrollController,
-                  ),
-                  BalanceTabView(
-                    scrollController: _scrollController,
-                  ),
-                ],
-                physics: NeverScrollableScrollPhysics(),
-              ),
+                );
+              },
             ),
           ),
         ),

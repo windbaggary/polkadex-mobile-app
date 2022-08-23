@@ -213,10 +213,7 @@ class _ThisProfileWidget extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () async {
-              await context.read<AccountCubit>().logout();
-              Coordinator.goToIntroScreen();
-            },
+            onTap: () async => await context.read<AccountCubit>().logout(),
             borderRadius: BorderRadius.circular(12),
             child: SvgPicture.asset(
               'drawer_logout'.asAssetSvg(),

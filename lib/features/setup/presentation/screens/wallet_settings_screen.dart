@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/common/widgets/loading_popup.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
-import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-import 'package:polkadex/common/utils/string_utils.dart';
 import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
@@ -27,8 +20,6 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _entryAnimation;
-
-  final _generatedPassword = StringUtils.generateCryptoRandomString(length: 16);
   final _nameController = TextEditingController(text: 'Cool Wallet');
   final _passwordController = TextEditingController();
   final _passwordRepeatController = TextEditingController();
@@ -41,16 +32,6 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
       reverseDuration: AppConfigs.animReverseDuration,
     );
     _entryAnimation = _animationController;
-
-    if (context.read<WalletSettingsProvider>().isBiometricOnlyEnabled) {
-      _passwordController.text = _generatedPassword;
-      _passwordRepeatController.text = _generatedPassword;
-    }
-
-    WidgetsBinding.instance?.addPostFrameCallback((_) => context
-        .read<WalletSettingsProvider>()
-        .evalNextEnabled(_nameController.text, _passwordController.text,
-            _passwordRepeatController.text));
 
     super.initState();
     Future.microtask(() => _animationController.forward());
@@ -159,87 +140,70 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                               _passwordRepeatController.text),
                                     ),
                                   ),
-                                  AnimatedSize(
-                                    duration: AppConfigs.animDurationSmall,
-                                    child: settingProvider
-                                            .isBiometricOnlyEnabled
-                                        ? Container()
-                                        : Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 12),
-                                                child: WalletInputWidget(
-                                                  title: 'Password',
-                                                  description: 'Set password',
-                                                  controller:
-                                                      _passwordController,
-                                                  obscureText: true,
-                                                  onChanged: (password) =>
-                                                      settingProvider
-                                                          .evalNextEnabled(
-                                                              _nameController
-                                                                  .text,
-                                                              _passwordController
-                                                                  .text,
-                                                              _passwordRepeatController
-                                                                  .text),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 26),
-                                                child: WalletInputWidget(
-                                                  title: 'Repeat Password',
-                                                  description:
-                                                      'Repeat your password',
-                                                  controller:
-                                                      _passwordRepeatController,
-                                                  obscureText: true,
-                                                  onChanged: (password) =>
-                                                      settingProvider
-                                                          .evalNextEnabled(
-                                                              _nameController
-                                                                  .text,
-                                                              _passwordController
-                                                                  .text,
-                                                              _passwordRepeatController
-                                                                  .text),
-                                                ),
-                                              ),
-                                              GridView.count(
-                                                shrinkWrap: true,
-                                                primary: false,
-                                                childAspectRatio: (164 / 19),
-                                                crossAxisCount: 2,
-                                                children: [
-                                                  PasswordValidationWidget(
-                                                    title:
-                                                        'At least 8 characters',
-                                                    isValid: settingProvider
-                                                        .hasLeast8Characters,
-                                                  ),
-                                                  PasswordValidationWidget(
-                                                    title:
-                                                        'At least 1 lowercase',
-                                                    isValid: settingProvider
-                                                        .hasLeast1LowercaseLetter,
-                                                  ),
-                                                  PasswordValidationWidget(
-                                                    title:
-                                                        'At least 1 uppercase letter',
-                                                    isValid: settingProvider
-                                                        .hasLeast1Uppercase,
-                                                  ),
-                                                  PasswordValidationWidget(
-                                                    title: 'At least 1 digit',
-                                                    isValid: settingProvider
-                                                        .hasLeast1Digit,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: WalletInputWidget(
+                                          title: 'Password',
+                                          description: 'Set password',
+                                          controller: _passwordController,
+                                          obscureText: true,
+                                          onChanged: (password) =>
+                                              settingProvider.evalNextEnabled(
+                                                  _nameController.text,
+                                                  _passwordController.text,
+                                                  _passwordRepeatController
+                                                      .text),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 26),
+                                        child: WalletInputWidget(
+                                          title: 'Repeat Password',
+                                          description: 'Repeat your password',
+                                          controller: _passwordRepeatController,
+                                          obscureText: true,
+                                          onChanged: (password) =>
+                                              settingProvider.evalNextEnabled(
+                                                  _nameController.text,
+                                                  _passwordController.text,
+                                                  _passwordRepeatController
+                                                      .text),
+                                        ),
+                                      ),
+                                      GridView.count(
+                                        shrinkWrap: true,
+                                        primary: false,
+                                        childAspectRatio: (164 / 19),
+                                        crossAxisCount: 2,
+                                        children: [
+                                          PasswordValidationWidget(
+                                            title: 'At least 8 characters',
+                                            isValid: settingProvider
+                                                .hasLeast8Characters,
                                           ),
+                                          PasswordValidationWidget(
+                                            title: 'At least 1 lowercase',
+                                            isValid: settingProvider
+                                                .hasLeast1LowercaseLetter,
+                                          ),
+                                          PasswordValidationWidget(
+                                            title:
+                                                'At least 1 uppercase letter',
+                                            isValid: settingProvider
+                                                .hasLeast1Uppercase,
+                                          ),
+                                          PasswordValidationWidget(
+                                            title: 'At least 1 digit',
+                                            isValid:
+                                                settingProvider.hasLeast1Digit,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   if (dependency.get<bool>(
                                       instanceName: 'isBiometricAvailable'))
@@ -248,11 +212,11 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                       title: "Secure with Biometric Only",
                                       description:
                                           "Secure your access without typing your password.",
-                                      isChecked: settingProvider
-                                          .isBiometricOnlyEnabled,
+                                      isChecked:
+                                          settingProvider.isFingerPrintEnabled,
                                       onSwitchChanged: (value) =>
-                                          _onSwitchChanged(
-                                              settingProvider, value),
+                                          settingProvider.fingerPrintAuth =
+                                              value,
                                     ),
                                 ],
                               ),
@@ -283,13 +247,8 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                             _passwordController.text ==
                                 _passwordRepeatController.text,
                         label: 'Next',
-                        onTap: () => _onNextTap(
-                            Provider.of<MnemonicProvider>(context,
-                                    listen: false)
-                                .mnemonicWords,
-                            _passwordController.text,
-                            _nameController.text,
-                            settingProvider.isBiometricOnlyEnabled),
+                        onTap:
+                            () {}, //TODO: Implement adding wallet to current account
                       ),
                     ],
                   ),
@@ -298,81 +257,6 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
             ],
           );
         }),
-      ),
-    );
-  }
-
-  void _onSwitchChanged(WalletSettingsProvider provider, bool value) {
-    if (value) {
-      _passwordController.text = _generatedPassword;
-      _passwordRepeatController.text = _generatedPassword;
-    } else {
-      _passwordController.text = '';
-      _passwordRepeatController.text = '';
-    }
-
-    provider.evalNextEnabled(_nameController.text, _passwordController.text,
-        _passwordRepeatController.text);
-    provider.fingerPrintAuth = value;
-  }
-
-  void _onNextTap(
-    List<String> mnemonicWords,
-    String password,
-    String name,
-    bool onlyBiometric,
-  ) async {
-    final accountCubit = context.read<AccountCubit>();
-    final isBiometricAvailable =
-        dependency.get<bool>(instanceName: 'isBiometricAvailable');
-
-    FocusScope.of(context).unfocus();
-
-    if (isBiometricAvailable) {
-      final hasImported = await accountCubit.savePassword(
-        password,
-      );
-
-      if (!hasImported) {
-        return;
-      }
-    }
-
-    LoadingPopup.show(
-      context: context,
-      text: 'We are almost there...',
-    );
-
-    await accountCubit.saveAccount(
-      mnemonicWords,
-      password,
-      name,
-      onlyBiometric,
-      isBiometricAvailable,
-    );
-    final accountState = accountCubit.state;
-
-    if (accountState is AccountLoaded) {
-      await context.read<MarketAssetCubit>().getMarkets();
-      Coordinator.goToLandingScreen(accountState.account);
-    } else if (accountState is AccountNotLoaded) {
-      _onShowRegisterErrorModal(accountState.errorMessage);
-    }
-  }
-
-  void _onShowRegisterErrorModal(String? errorMessage) {
-    Navigator.of(context).pop();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
-      ),
-      builder: (_) => WarningModalWidget(
-        title: 'Account register error',
-        subtitle: errorMessage,
       ),
     );
   }

@@ -52,6 +52,33 @@ abstract class Coordinator {
           );
   }
 
+  static void goToSignUpScreen() {
+    _navigationKey.currentState?.pushNamed(
+      Routes.signUpScreen,
+    );
+  }
+
+  static void goToSignInScreen() {
+    _navigationKey.currentState?.pushNamed(
+      Routes.signInScreen,
+    );
+  }
+
+  static void goToCodeVerificationScreen({
+    required String email,
+    required String password,
+    required bool useBiometric,
+  }) {
+    _navigationKey.currentState?.pushNamed(
+      Routes.codeVerificationScreen,
+      arguments: {
+        'email': email,
+        'password': password,
+        'useBiometric': useBiometric,
+      },
+    );
+  }
+
   static void goToIntroScreen() {
     _navigationKey.currentState?.pushNamedAndRemoveUntil(
       Routes.introScreen,

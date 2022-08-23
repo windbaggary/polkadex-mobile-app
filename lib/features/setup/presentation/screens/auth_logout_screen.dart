@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/common/widgets/loading_popup.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
 
 class AuthLogoutScreen extends StatefulWidget {
   @override
@@ -15,6 +14,9 @@ class AuthLogoutScreen extends StatefulWidget {
 
 class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
   late Image polkadexLogo;
+
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
+  String _loadingOverlayText = 'Loading...';
 
   @override
   void initState() {
@@ -37,12 +39,9 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
   Widget build(BuildContext context) {
     return BlocListener<AccountCubit, AccountState>(
       listener: (_, state) {
-        if (state is AccountPasswordValidating) {
-          LoadingPopup.show(
-            context: context,
-            text: 'We are almost there...',
-          );
-        }
+        state is AccountLoading
+            ? _loadingOverlay.show(context: context, text: _loadingOverlayText)
+            : _loadingOverlay.hide();
       },
       child: Scaffold(
         backgroundColor: AppColors.color1C2023,
@@ -53,86 +52,83 @@ class _AuthLogoutScreenState extends State<AuthLogoutScreen> {
               Center(
                 child: polkadexLogo,
               ),
-              BlocBuilder<MarketAssetCubit, MarketAssetState>(
-                builder: (_, marketAssetState) =>
-                    BlocConsumer<AccountCubit, AccountState>(
-                  builder: (_, accountState) {
-                    return Visibility(
-                      visible: marketAssetState is MarketAssetLoaded &&
-                          accountState is AccountLoaded,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: IntrinsicHeight(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: AppButton(
-                                    label: 'Logout',
-                                    innerPadding: EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 16,
-                                    ),
-                                    backgroundColor: AppColors.colorFFFFFF,
-                                    textColor: Colors.black,
-                                    onTap: () async {
-                                      await context
-                                          .read<AccountCubit>()
-                                          .logout();
-                                      Coordinator.goToIntroScreen();
-                                    },
+              BlocConsumer<AccountCubit, AccountState>(
+                builder: (_, accountState) {
+                  print(accountState.runtimeType);
+                  return Visibility(
+                    visible: accountState is AccountLoaded &&
+                        accountState is! AccountLoggedIn,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: AppButton(
+                                  label: 'Logout',
+                                  innerPadding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 16,
                                   ),
+                                  backgroundColor: AppColors.colorFFFFFF,
+                                  textColor: Colors.black,
+                                  onTap: () => _onLogOutTapped(),
                                 ),
-                                SizedBox(
-                                  width: 18,
-                                ),
-                                Expanded(
-                                  child: AppButton(
-                                    label: 'Authenticate',
-                                    innerPadding: EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 16,
-                                    ),
-                                    onTap: () async {
-                                      if (accountState is AccountLoaded &&
-                                          accountState
-                                              .account.biometricAccess) {
-                                        final authenticated = await context
-                                            .read<AccountCubit>()
-                                            .authenticateBiometric();
-
-                                        if (authenticated) {
-                                          await context
-                                              .read<MarketAssetCubit>()
-                                              .getMarkets();
-                                          Coordinator.goToLandingScreen(
-                                              accountState.account);
-                                        }
-                                      } else {
-                                        Coordinator.goToConfirmPasswordScreen();
-                                      }
-                                    },
+                              ),
+                              SizedBox(
+                                width: 18,
+                              ),
+                              Expanded(
+                                child: AppButton(
+                                  label: 'Authenticate',
+                                  innerPadding: EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 16,
                                   ),
+                                  onTap: () => _onAuthenticateTapped(),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    );
-                  },
-                  listener: (_, state) {
-                    if (state is AccountNotLoaded) {
-                      Coordinator.goToIntroScreen();
-                    }
-                  },
-                ),
+                    ),
+                  );
+                },
+                listener: (_, state) {
+                  if (state is AccountLoggedIn) {
+                    Coordinator.goToLandingScreen(state.account);
+                  }
+
+                  if (state is AccountNotLoaded) {
+                    Coordinator.goToIntroScreen();
+                  }
+                },
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onAuthenticateTapped() async {
+    _loadingOverlayText = 'Signing in...';
+    final currentState = context.read<AccountCubit>().state;
+
+    if (currentState is AccountLoaded) {
+      currentState.account.biometricAccess
+          ? await context.read<AccountCubit>().signInWithLocalAcc()
+          : Coordinator.goToConfirmPasswordScreen();
+    }
+  }
+
+  void _onLogOutTapped() async {
+    _loadingOverlayText = 'Signing out...';
+    await context.read<AccountCubit>().localAccountLogout();
+
+    Coordinator.goToIntroScreen();
   }
 }

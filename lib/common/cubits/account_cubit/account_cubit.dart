@@ -4,21 +4,31 @@ import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
-import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/resend_code_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_in_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_out_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
 
 part 'account_state.dart';
 
 class AccountCubit extends Cubit<AccountState> {
   AccountCubit({
+    required SignUpUseCase signUpUseCase,
+    required SignInUseCase signInUseCase,
+    required SignOutUseCase signOutUseCase,
+    required ConfirmSignUpUseCase confirmSignUpUseCase,
+    required GetCurrentUserUseCase getCurrentUserUseCase,
+    required ResendCodeUseCase resendCodeUseCase,
     required GetAccountUseCase getAccountStorageUseCase,
     required DeleteAccountUseCase deleteAccountUseCase,
     required DeletePasswordUseCase deletePasswordUseCase,
@@ -26,34 +36,38 @@ class AccountCubit extends Cubit<AccountState> {
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
-    required ConfirmPasswordUseCase confirmPasswordUseCase,
-    required RegisterUserUseCase registerUserUseCase,
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
-  })  : _getAccountStorageUseCase = getAccountStorageUseCase,
+  })  : _signUpUseCase = signUpUseCase,
+        _signInUseCase = signInUseCase,
+        _signOutUseCase = signOutUseCase,
+        _confirmSignUpUseCase = confirmSignUpUseCase,
+        _getCurrentUserUseCase = getCurrentUserUseCase,
+        _resendCodeUseCase = resendCodeUseCase,
+        _getAccountStorageUseCase = getAccountStorageUseCase,
         _deleteAccountUseCase = deleteAccountUseCase,
         _deletePasswordUseCase = deletePasswordUseCase,
-        _importAccountUseCase = importAccountUseCase,
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
-        _confirmPasswordUseCase = confirmPasswordUseCase,
-        _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
+  final SignUpUseCase _signUpUseCase;
+  final SignInUseCase _signInUseCase;
+  final SignOutUseCase _signOutUseCase;
+  final ConfirmSignUpUseCase _confirmSignUpUseCase;
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
+  final ResendCodeUseCase _resendCodeUseCase;
   final GetAccountUseCase _getAccountStorageUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
   final DeletePasswordUseCase _deletePasswordUseCase;
-  final ImportAccountUseCase _importAccountUseCase;
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
-  final ConfirmPasswordUseCase _confirmPasswordUseCase;
-  final GetMainAccountAddressUsecase _getMainAccountAddressUsecase;
 
   String get accountName {
     final currentState = state;
 
-    return currentState is AccountLoaded ? currentState.account.name : '';
+    return currentState is AccountLoaded ? currentState.account.email : '';
   }
 
   String get mainAccountAddress {
@@ -80,14 +94,6 @@ class AccountCubit extends Cubit<AccountState> {
         : false;
   }
 
-  bool get biometricOnly {
-    final currentState = state;
-
-    return currentState is AccountLoaded
-        ? currentState.account.biometricOnly
-        : true;
-  }
-
   EnumTimerIntervalTypes get timerInterval {
     final currentState = state;
 
@@ -96,125 +102,266 @@ class AccountCubit extends Cubit<AccountState> {
         : EnumTimerIntervalTypes.oneMinute;
   }
 
-  Future<void> loadAccountData() async {
-    final account = await _getAccountStorageUseCase();
+  Future<void> loadAccount() async {
+    final localAccount = await _getAccountStorageUseCase();
+    final resultRemoteAccount = await _getCurrentUserUseCase();
 
-    account != null
-        ? emit(AccountLoaded(account: account))
-        : emit(AccountNotLoaded());
+    if (localAccount != null) {
+      await resultRemoteAccount.fold(
+        (_) async => emit(
+          AccountLoaded(
+            account: localAccount,
+          ),
+        ),
+        (remoteAccount) async => emit(
+          AccountLoggedIn(account: localAccount),
+        ),
+      );
+    } else {
+      if (resultRemoteAccount.isRight()) {
+        await _signOutUseCase();
+      }
+
+      emit(AccountNotLoaded());
+    }
   }
 
   Future<void> logout() async {
-    emit(AccountNotLoaded());
+    final initialState = state;
 
+    emit(AccountLoading());
+
+    final resultSignOut = await _signOutUseCase();
+
+    await resultSignOut.fold(
+      (error) {
+        if (initialState is AccountLoggedIn) {
+          emit(
+            AccountLoggedInSignOutError(
+              account: initialState.account,
+              password: initialState.password,
+              errorMessage: error.message,
+            ),
+          );
+        } else if (initialState is AccountLoaded) {
+          emit(
+            AccountLoadedSignOutError(
+              account: initialState.account,
+              errorMessage: error.message,
+            ),
+          );
+        }
+      },
+      (_) async {
+        await _removeLocalData();
+
+        emit(AccountNotLoaded());
+      },
+    );
+  }
+
+  Future<void> localAccountLogout() async {
+    emit(AccountLoading());
+
+    await _removeLocalData();
+
+    emit(AccountNotLoaded());
+  }
+
+  Future<void> _removeLocalData() async {
     await _deleteAccountUseCase();
     await _deletePasswordUseCase();
-
-    return;
   }
 
   Future<bool> savePassword(String password) async {
     return await _savePasswordUseCase(password: password);
   }
 
-  Future<bool> authenticateBiometric() async {
-    final currentState = state;
+  Future<void> signUp({
+    required String email,
+    required String password,
+  }) async {
+    emit(AccountLoading());
 
-    if (currentState is AccountLoaded) {
-      final password = await _getPasswordUseCase();
-
-      return await confirmPassword(password!);
-    }
-
-    return false;
-  }
-
-  Future<void> saveAccount(List<String> mnemonicWords, String password,
-      String name, bool biometricOnly, bool useBiometric) async {
-    final resultImport = await _importAccountUseCase(
-      mnemonic: mnemonicWords.join(' '),
+    final result = await _signUpUseCase(
+      email: email,
       password: password,
     );
 
-    await resultImport.fold(
-      (_) {},
-      (importedAcc) async {
-        final resultMainAddress = await _getMainAccountAddressUsecase(
-          proxyAdrress: importedAcc.proxyAddress,
+    result.fold(
+      (error) {
+        emit(
+          AccountSignUpError(
+            errorMessage: error.message,
+          ),
         );
+      },
+      (_) => emit(
+        AccountVerifyingCode(),
+      ),
+    );
+  }
 
-        resultMainAddress.fold(
-          (error) {
-            emit(
-              AccountNotLoaded(errorMessage: error.message),
-            );
-          },
-          (mainAddress) async {
-            ImportedAccountEntity acc =
-                (importedAcc as ImportedAccountModel).copyWith(
-              name: name,
-              mainAddress: mainAddress,
-              biometricOnly: biometricOnly,
-              biometricAccess: useBiometric,
-            );
+  Future<void> confirmSignUp({
+    required String email,
+    required String password,
+    required String code,
+    required bool useBiometric,
+  }) async {
+    emit(AccountLoading());
 
-            emit(AccountLoaded(account: acc, password: password));
-            await _saveAccountUseCase(keypairJson: json.encode(acc));
-          },
+    final result = await _confirmSignUpUseCase(
+      email: email,
+      code: code,
+      useBiometric: useBiometric,
+    );
+
+    await result.fold(
+      (error) async {
+        await _deletePasswordUseCase();
+
+        emit(
+          AccountConfirmSignUpError(
+            errorMessage: error.message,
+          ),
+        );
+      },
+      (newAccount) async {
+        await _saveAccountUseCase(keypairJson: json.encode(newAccount));
+
+        emit(
+          AccountLoggedIn(
+            account: newAccount,
+            password: password,
+          ),
         );
       },
     );
   }
 
-  Future<bool> confirmPassword(String password) async {
+  Future<void> signIn({
+    required String email,
+    required String password,
+    required bool useBiometric,
+  }) async {
+    final initialState = state;
+
+    emit(AccountLoading());
+
+    final result = await _signInUseCase(
+      email: email,
+      password: password,
+      useBiometric: useBiometric,
+    );
+
+    await result.fold(
+      (error) async {
+        await _deletePasswordUseCase();
+
+        if (initialState is AccountLoaded) {
+          emit(
+            AccountLoadedLogInError(
+              account: initialState.account,
+              errorMessage: error.message,
+            ),
+          );
+        } else {
+          emit(
+            AccountNotLoadedLogInError(errorMessage: error.message),
+          );
+        }
+      },
+      (newAccount) async {
+        await _saveAccountUseCase(keypairJson: json.encode(newAccount));
+
+        emit(
+          AccountLoggedIn(
+            account: newAccount,
+            password: password,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> signInWithLocalAcc({
+    String? password,
+  }) async {
     final currentState = state;
+    final passwordSignUp = password ?? await _getPasswordUseCase();
 
-    if (currentState is AccountLoaded) {
-      emit(AccountPasswordValidating(account: currentState.account));
-
-      final confirmationResult = await _confirmPasswordUseCase(
-        account: (currentState.account as ImportedAccountModel).toJson(),
-        password: password,
-      );
-
-      emit(AccountLoaded(account: currentState.account, password: password));
-
-      return confirmationResult;
+    if (passwordSignUp == null) {
+      return;
     }
 
-    return false;
+    emit(AccountLoading());
+
+    if (currentState is AccountLoaded) {
+      final result = await _signInUseCase(
+        email: currentState.account.email,
+        password: passwordSignUp,
+        useBiometric: password == null,
+      );
+
+      await result.fold(
+        (error) async {
+          emit(
+            AccountLoadedLogInError(
+              account: currentState.account,
+              errorMessage: error.message,
+            ),
+          );
+        },
+        (_) async {
+          emit(
+            AccountLoggedIn(
+              account: currentState.account,
+              password: passwordSignUp,
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> resendCode({required String email}) async {
+    final result = await _resendCodeUseCase(email: email);
+
+    await result.fold(
+      (error) async {
+        emit(
+          AccountResendCodeError(errorMessage: error.message),
+        );
+      },
+      (_) async => emit(
+        AccountCodeResent(),
+      ),
+    );
   }
 
   Future<void> switchBiometricAccess() async {
     final currentState = state;
 
-    if (currentState is AccountLoaded && currentState.password != null) {
+    if (currentState is AccountLoggedIn) {
       final currentBioAccess = currentState.account.biometricAccess;
-      bool hasAuthNotFailed = true;
 
-      emit(AccountUpdatingBiometric(
-        account: currentState.account,
-        password: currentState.password,
-      ));
+      emit(
+        AccountUpdatingBiometric(
+          account: currentState.account,
+          password: currentState.password,
+        ),
+      );
 
-      if (!currentBioAccess) {
-        hasAuthNotFailed =
-            await _savePasswordUseCase(password: currentState.password!);
-      }
+      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+          .copyWith(biometricAccess: !currentBioAccess);
 
-      if (hasAuthNotFailed) {
-        ImportedAccountEntity acc =
-            (currentState.account as ImportedAccountModel)
-                .copyWith(biometricAccess: !currentBioAccess);
-
-        await _saveAccountUseCase(keypairJson: json.encode(acc));
-        emit(AccountLoaded(
+      await _saveAccountUseCase(keypairJson: json.encode(acc));
+      emit(
+        AccountLoggedIn(
           account: acc,
           password: currentState.password,
-        ));
-      } else {
-        emit(currentState);
-      }
+        ),
+      );
     }
 
     return;
@@ -223,7 +370,7 @@ class AccountCubit extends Cubit<AccountState> {
   Future<void> changeLockTimer(EnumTimerIntervalTypes newInterval) async {
     final currentState = state;
 
-    if (currentState is AccountLoaded) {
+    if (currentState is AccountLoggedIn) {
       emit(AccountUpdatingTimer(
         account: currentState.account,
         password: currentState.password,
@@ -233,10 +380,12 @@ class AccountCubit extends Cubit<AccountState> {
           .copyWith(timerInterval: newInterval);
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));
-      emit(AccountLoaded(
-        account: acc,
-        password: currentState.password,
-      ));
+      emit(
+        AccountLoggedIn(
+          account: acc,
+          password: currentState.password,
+        ),
+      );
     }
   }
 }

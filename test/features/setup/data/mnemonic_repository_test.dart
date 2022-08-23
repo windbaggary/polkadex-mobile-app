@@ -1,14 +1,10 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/data/models/encoding_model.dart';
-import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
-import 'package:polkadex/features/setup/domain/entities/meta_entity.dart';
-import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
+import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
 
 class _MockMnemonicRemoteDatasource extends Mock
     implements MnemonicRemoteDatasource {}
@@ -20,8 +16,6 @@ void main() {
   late Map<String, dynamic> tGenData;
   late Map<String, dynamic> tImportData;
   late Map<String, dynamic> tErrorData;
-  late MetaEntity tMeta;
-  late EncodingEntity tEncoding;
   late ImportedAccountEntity tImportedAccount;
 
   setUp(() {
@@ -44,20 +38,10 @@ void main() {
       "meta": {"name": "userName"},
     };
     tErrorData = {"error": "errorTest"};
-    tMeta = MetaModel(name: 'userName');
-    tEncoding = EncodingModel(
-      content: ["sr25519"],
-      version: '3',
-      type: ["none"],
-    );
     tImportedAccount = ImportedAccountModel(
-      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
-      encoding: tEncoding,
+      email: "",
       mainAddress: "",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      meta: tMeta,
-      name: "",
-      biometricOnly: false,
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );

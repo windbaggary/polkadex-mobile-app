@@ -1,13 +1,15 @@
+import 'package:dartz/dartz.dart';
+import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 
-class RegisterUserUseCase {
-  RegisterUserUseCase({
+class SignOutUseCase {
+  SignOutUseCase({
     required IAccountRepository accountRepository,
   }) : _accountRepository = accountRepository;
 
   final IAccountRepository _accountRepository;
 
-  Future<String?> call({required String address}) async {
-    return await _accountRepository.register(address);
+  Future<Either<ApiError, Unit>> call() async {
+    return await _accountRepository.signOut();
   }
 }

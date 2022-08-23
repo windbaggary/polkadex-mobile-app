@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
-import 'package:polkadex/app_lifecycle_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
@@ -75,16 +75,40 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _configureAmplify() async {
     final api = AmplifyAPI();
-    await Amplify.addPlugin(api);
+    final auth = AmplifyAuthCognito();
+
+    await Amplify.addPlugins([api, auth]);
 
     final amplifyConfigMap = jsonDecode(amplifyconfig);
+
+    //API access configuration
     amplifyConfigMap['api']['plugins']['awsAPIPlugin']
         [dotenv.get('API_NAME')] = {
-      'endpointType': 'GraphQL',
+      "endpointType": 'GraphQL',
       "endpoint": dotenv.get('GRAPHQL_ENDPOINT'),
       "region": dotenv.get('REGION'),
-      "authorizationType": "API_KEY",
+      "authorizationType": 'API_KEY',
       "apiKey": dotenv.get('API_KEY'),
+    };
+
+    //Auth configuration
+    amplifyConfigMap['auth']['plugins']['awsCognitoAuthPlugin'] = {
+      "IdentityManager": {"Default": {}},
+      "CredentialsProvider": {
+        "CognitoIdentity": {
+          "Default": {
+            "PoolId": dotenv.get('IDENTITY_POOL_ID'),
+            "Region": dotenv.get('REGION')
+          }
+        }
+      },
+      "CognitoUserPool": {
+        "Default": {
+          "PoolId": dotenv.get('USER_POOL_ID'),
+          "AppClientId": dotenv.get('CLIENT_POOL_ID'),
+          "Region": dotenv.get('REGION')
+        }
+      },
     };
 
     try {
@@ -106,8 +130,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, _) => MultiBlocProvider(
         providers: [
           BlocProvider<AccountCubit>(
-            create: (_) =>
-                injection.dependency<AccountCubit>()..loadAccountData(),
+            create: (_) => injection.dependency<AccountCubit>()..loadAccount(),
           ),
           BlocProvider<MarketAssetCubit>(
             create: (_) => injection.dependency<MarketAssetCubit>(),
@@ -118,66 +141,60 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<RecentTradesCubit>(
               create: (_) => injection.dependency<RecentTradesCubit>()),
         ],
-        child: AppLifecycleWidget(
-          child: KeyedSubtree(
-            key: key,
-            child: MaterialApp(
-              localizationsDelegates: [
-                S.delegate,
-                LocaleNamesLocalizationsDelegate(),
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-              title: 'Polkadex',
-              theme: ThemeData(
-                  cupertinoOverrideTheme:
-                      CupertinoThemeData(brightness: Brightness.dark),
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  buttonTheme:
-                      ButtonThemeData(buttonColor: AppColors.color1C2023),
-                  textSelectionTheme: TextSelectionThemeData(
-                    cursorColor: AppColors.colorE6007A,
-                    selectionColor: AppColors.color8E8E93,
-                    selectionHandleColor: AppColors.colorE6007A,
-                  ),
-                  canvasColor: Colors.white,
-                  fontFamily: 'WorkSans',
-                  dialogTheme: DialogTheme(
-                    backgroundColor: AppColors.color2E303C,
-                  ),
-                  colorScheme: ColorScheme(
-                    brightness: Brightness.light,
-                    primary: AppColors.color2E303C,
-                    onPrimary: AppColors.color2E303C,
-                    surface: AppColors.color2E303C,
-                    onSurface: AppColors.color2E303C,
-                    primaryContainer: AppColors.color2E303C,
-                    secondary: Colors.grey,
-                    secondaryContainer: Colors.grey,
-                    onSecondary: Colors.grey,
-                    background: AppColors.color3B4150,
-                    onBackground: AppColors.color3B4150,
-                    error: Colors.grey,
-                    onError: Colors.grey,
-                  )).copyWith(
-                pageTransitionsTheme: PageTransitionsTheme(
-                  builders: {
-                    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-                    TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-                  },
-                ),
+        child: MaterialApp(
+          localizationsDelegates: [
+            S.delegate,
+            LocaleNamesLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          title: 'Polkadex',
+          theme: ThemeData(
+              cupertinoOverrideTheme:
+                  CupertinoThemeData(brightness: Brightness.dark),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              buttonTheme: ButtonThemeData(buttonColor: AppColors.color1C2023),
+              textSelectionTheme: TextSelectionThemeData(
+                cursorColor: AppColors.colorE6007A,
+                selectionColor: AppColors.color8E8E93,
+                selectionHandleColor: AppColors.colorE6007A,
               ),
-              navigatorKey: Coordinator.navigationKey,
-              initialRoute: Routes.authLogoutScreen,
-              onGenerateRoute: Routes.onGenerateRoute,
-              debugShowCheckedModeBanner: false,
+              canvasColor: Colors.white,
+              fontFamily: 'WorkSans',
+              dialogTheme: DialogTheme(
+                backgroundColor: AppColors.color2E303C,
+              ),
+              colorScheme: ColorScheme(
+                brightness: Brightness.light,
+                primary: AppColors.color2E303C,
+                onPrimary: AppColors.color2E303C,
+                surface: AppColors.color2E303C,
+                onSurface: AppColors.color2E303C,
+                primaryContainer: AppColors.color2E303C,
+                secondary: Colors.grey,
+                secondaryContainer: Colors.grey,
+                onSecondary: Colors.grey,
+                background: AppColors.color3B4150,
+                onBackground: AppColors.color3B4150,
+                error: Colors.grey,
+                onError: Colors.grey,
+              )).copyWith(
+            pageTransitionsTheme: PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              },
             ),
           ),
+          navigatorKey: Coordinator.navigationKey,
+          initialRoute: Routes.authLogoutScreen,
+          onGenerateRoute: Routes.onGenerateRoute,
+          debugShowCheckedModeBanner: false,
         ),
       ),
     );

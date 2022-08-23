@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/configs/app_config.dart';
-import 'package:polkadex/common/navigation/coordinator.dart';
+import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
+import 'package:polkadex/common/widgets/loading_overlay.dart';
+import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
-import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-
-import 'package:provider/provider.dart';
 
 class ConfirmPasswordScreen extends StatefulWidget {
   @override
@@ -24,7 +21,9 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
 
   final _passwordController = TextEditingController();
 
-  var _isConfirmEnabled = false;
+  final LoadingOverlay _loadingOverlay = LoadingOverlay();
+
+  final ValueNotifier<bool> _isConfirmEnabled = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -74,122 +73,117 @@ class _ConfirmPasswordScreenState extends State<ConfirmPasswordScreen>
         ),
         elevation: 0,
       ),
-      body: CustomScrollView(
-        physics: ClampingScrollPhysics(),
-        slivers: [
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.color2E303C,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20.0),
-                      bottomRight: Radius.circular(20.0),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.10),
-                        blurRadius: 30,
-                        offset: Offset(0.0, 20.0),
+      body: BlocListener<AccountCubit, AccountState>(
+        listener: (_, state) {
+          if (state is AccountLoadedLogInError) {
+            PolkadexSnackBar.show(
+              context: context,
+              text: state.errorMessage,
+            );
+          }
+
+          state is AccountLoading
+              ? _loadingOverlay.show(context: context, text: 'Signing in...')
+              : _loadingOverlay.hide();
+        },
+        child: CustomScrollView(
+          physics: ClampingScrollPhysics(),
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.color2E303C,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
                       ),
-                    ],
-                  ),
-                  child: SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                'Login with security password',
-                                style: tsS26W600CFF,
-                              ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              Text(
-                                'Please enter your password.',
-                                style: tsS18W400CFF,
-                              ),
-                              SizedBox(
-                                height: 18,
-                              ),
-                              WalletInputWidget(
-                                title: 'Repeat Password',
-                                description: '',
-                                controller: _passwordController,
-                                obscureText: true,
-                                onChanged: (password) => setState(() =>
-                                    _isConfirmEnabled = password.length >= 8),
-                              ),
-                            ],
-                          ),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.10),
+                          blurRadius: 30,
+                          offset: Offset(0.0, 20.0),
                         ),
                       ],
                     ),
-                  ),
-                );
-              },
-              childCount: 1,
-            ),
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AppButton(
-                    label: 'Confirm',
-                    innerPadding: EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 16,
+                    child: SafeArea(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  'Login with security password',
+                                  style: tsS26W600CFF,
+                                ),
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                Text(
+                                  'Please enter your password.',
+                                  style: tsS18W400CFF,
+                                ),
+                                SizedBox(
+                                  height: 18,
+                                ),
+                                WalletInputWidget(
+                                  title: 'Repeat Password',
+                                  description: '',
+                                  controller: _passwordController,
+                                  obscureText: true,
+                                  onChanged: (password) => _isConfirmEnabled
+                                      .value = password.length >= 8,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    enabled: _isConfirmEnabled,
-                    onTap: () async {
-                      final isCorrect = await context
-                          .read<AccountCubit>()
-                          .confirmPassword(_passwordController.text);
-                      final accountState = context.read<AccountCubit>().state;
-
-                      if (isCorrect && accountState is AccountLoaded) {
-                        await context.read<MarketAssetCubit>().getMarkets();
-                        Coordinator.goToLandingScreen(accountState.account);
-                      } else {
-                        _onShowIncorrectPasswordModal(context);
-                      }
-                    },
-                  ),
-                ],
+                  );
+                },
+                childCount: 1,
               ),
             ),
-          )
-        ],
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isConfirmEnabled,
+                      builder: (context, isConfirmEnabled, _) => AppButton(
+                        label: 'Confirm',
+                        innerPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
+                        enabled: isConfirmEnabled,
+                        onTap: () => _onTapConfirm(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  void _onShowIncorrectPasswordModal(BuildContext context) {
-    Navigator.of(context).pop();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
-      ),
-      builder: (_) => WarningModalWidget(
-        title: 'Incorrect password',
-        subtitle: 'Please enter again.',
-      ),
-    );
+  Future<void> _onTapConfirm() async {
+    await context.read<AccountCubit>().signInWithLocalAcc(
+          password: _passwordController.text,
+        );
   }
 
   Future<bool> _onPop(BuildContext context) async {

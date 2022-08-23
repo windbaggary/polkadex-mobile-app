@@ -9,10 +9,8 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_slider_dots.dart';
 import 'package:polkadex/common/utils/responsive_utils.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/login_button_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/select_language_widget.dart';
-import 'package:polkadex/injection_container.dart';
 
 /// The dummy data for the screen
 ///
@@ -63,28 +61,9 @@ class _IntroScreenState extends State<IntroScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _animationController.reset();
-      //     _animationController.forward().orCancel;
-      //   },
-      // ),
       backgroundColor: AppColors.color1C2023,
       body: Stack(
         children: [
-          // // The background top image
-          // Positioned(
-          //   left: 0,
-          //   top: 0,
-          //   right: 0,
-          //   height: MediaQuery.of(context).size.height * 0.45,
-          //   child: Image.asset(
-          //     'home_bg.png'.asAssetImg(),
-          //     fit: BoxFit.fill,
-          //   ),
-          // ),
-
-          // The content of the screen
           Positioned.fill(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -114,10 +93,10 @@ class _IntroScreenState extends State<IntroScreen>
                   child: SizedBox(
                     height: 54,
                     child: LoginButtonWidget(
-                      text: 'Import Wallet',
+                      text: 'Create a new account',
                       backgroundColor: AppColors.colorE6007A,
                       textStyle: tsS16W500CFF,
-                      onTap: () => Coordinator.goToimportWalletMethods(),
+                      onTap: () => Coordinator.goToSignUpScreen(),
                     ),
                   ),
                 ),
@@ -126,11 +105,10 @@ class _IntroScreenState extends State<IntroScreen>
                   child: SizedBox(
                     height: 54,
                     child: LoginButtonWidget(
-                      text: 'Access with QR Code',
+                      text: 'I alredy have an account',
                       backgroundColor: AppColors.colorFFFFFF,
                       textStyle: tsS16W500C24252C,
-                      onTap: () => Coordinator.goToQrCodeScanScreen(
-                          onQrCodeScan: _qRCodeMnemonicEval),
+                      onTap: () => Coordinator.goToSignInScreen(),
                     ),
                   ),
                 ),
@@ -151,6 +129,7 @@ class _IntroScreenState extends State<IntroScreen>
                         TextSpan(
                           style: tsS13W400CABB2BC.copyWith(
                             decoration: TextDecoration.underline,
+                            color: AppColors.colorE6007A,
                           ),
                           text: 'Privacy Policy',
                           recognizer: TapGestureRecognizer()
@@ -244,26 +223,8 @@ class _IntroScreenState extends State<IntroScreen>
       ),
     );
   }
-
-  void _qRCodeMnemonicEval(String qrCode) async {
-    final provider = dependency<MnemonicProvider>();
-
-    provider.mnemonicWords = qrCode.split(' ');
-    final isMnemonicValid = await provider.checkMnemonicValid();
-
-    if (isMnemonicValid) {
-      Coordinator.goToWalletSettingsScreen(
-        provider,
-        removePrevivousScreens: true,
-      );
-    } else {
-      Navigator.pop(context);
-    }
-  }
 }
 
-/// The pageview of this screen
-///
 class _ThisPageView extends StatefulWidget {
   const _ThisPageView({
     required Key key,

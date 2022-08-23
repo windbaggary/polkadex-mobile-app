@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
-import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
 import 'package:polkadex/common/widgets/soon_widget.dart';
-import 'package:polkadex/features/app_settings_info/widgets/option_tab_timer_dropdown_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
@@ -34,20 +32,8 @@ class AppSettingsSecurity extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  OptionTabTimerDropdownWidget(
-                    options: EnumTimerIntervalTypes.values,
-                    activeOption: context.read<AccountCubit>().timerInterval,
-                    svgAsset: "finger-print".asAssetSvg(),
-                    title: "App Timelock Interval",
-                    description: "Set the time for the app to be locked.",
-                    onChanged: (newInterval) => context
-                        .read<AccountCubit>()
-                        .changeLockTimer(newInterval!),
-                    loading: state is AccountUpdatingTimer,
-                  ),
                   if (dependency.get<bool>(
-                          instanceName: 'isBiometricAvailable') &&
-                      !context.read<AccountCubit>().biometricOnly)
+                      instanceName: 'isBiometricAvailable'))
                     Column(
                       children: [
                         SizedBox(height: 8),

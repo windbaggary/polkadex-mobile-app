@@ -7,7 +7,6 @@ import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_updates_usecase.dart';
 import 'package:polkadex/features/landing/domain/usecases/get_balance_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
-import 'package:polkadex/features/setup/domain/usecases/register_user_usecase.dart';
 import 'package:test/test.dart';
 
 class _MockGetBalanceUsecase extends Mock implements GetBalanceUseCase {}
@@ -15,12 +14,9 @@ class _MockGetBalanceUsecase extends Mock implements GetBalanceUseCase {}
 class _MockGetBalanceLiveDataUsecase extends Mock
     implements GetBalanceUpdatesUseCase {}
 
-class _MockRegisterUserUseCase extends Mock implements RegisterUserUseCase {}
-
 void main() {
   late _MockGetBalanceUsecase _mockGetBalanceUsecase;
   late _MockGetBalanceLiveDataUsecase _mockGetBalanceLiveDataUsecase;
-  late _MockRegisterUserUseCase _mockRegisterUserUseCase;
   late BalanceCubit cubit;
   late String address;
   late BalanceEntity balance;
@@ -28,12 +24,10 @@ void main() {
   setUp(() {
     _mockGetBalanceUsecase = _MockGetBalanceUsecase();
     _mockGetBalanceLiveDataUsecase = _MockGetBalanceLiveDataUsecase();
-    _mockRegisterUserUseCase = _MockRegisterUserUseCase();
 
     cubit = BalanceCubit(
       getBalanceUseCase: _mockGetBalanceUsecase,
       getBalanceUpdatesUseCase: _mockGetBalanceLiveDataUsecase,
-      registerUserUseCase: _mockRegisterUserUseCase,
     );
 
     address = 'addressTest';
