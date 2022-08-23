@@ -141,7 +141,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
                               outerPadding: EdgeInsets.zero,
                               backgroundColor: AppColors.colorFFFFFF,
                               textColor: Colors.black,
-                              onTap: () {},
+                              onTap: () =>
+                                  Coordinator.goToimportWalletMethods(),
                             ),
                           ),
                         ],
