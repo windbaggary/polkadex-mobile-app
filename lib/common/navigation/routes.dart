@@ -22,8 +22,8 @@ import 'package:polkadex/features/landing/presentation/screens/landing_screen.da
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/backup_mnemonic_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/code_verification_screen.dart';

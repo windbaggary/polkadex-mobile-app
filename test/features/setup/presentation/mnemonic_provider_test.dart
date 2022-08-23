@@ -1,5 +1,5 @@
 import 'package:polkadex/common/utils/bip39.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
 import 'package:test/test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';

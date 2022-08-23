@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
 import 'package:provider/provider.dart';
 
 class GeneratedMnemonicWordWidget extends StatefulWidget {

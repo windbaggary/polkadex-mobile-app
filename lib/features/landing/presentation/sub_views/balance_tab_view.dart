@@ -5,6 +5,7 @@ import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dar
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/orderbook_app_bar_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -15,6 +16,7 @@ import 'package:polkadex/features/landing/presentation/widgets/balance_item_shim
 import 'package:polkadex/features/landing/presentation/widgets/balance_item_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/top_balance_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
+import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 class BalanceTabView extends StatefulWidget {
@@ -121,7 +123,9 @@ class _BalanceTabViewState extends State<BalanceTabView>
                                 vertical: 16,
                               ),
                               outerPadding: EdgeInsets.zero,
-                              onTap: () {},
+                              onTap: () => Coordinator.goToQrCodeScanScreen(
+                                  onQrCodeScan: (mnemonic) =>
+                                      _qrCodeMnemonicEval(mnemonic)),
                             ),
                           ),
                           SizedBox(
@@ -287,6 +291,22 @@ class _BalanceTabViewState extends State<BalanceTabView>
         return Container();
       },
     );
+  }
+
+  void _qrCodeMnemonicEval(String qrCode) async {
+    final provider = dependency<MnemonicProvider>();
+
+    provider.mnemonicWords = qrCode.split(' ');
+    final isMnemonicValid = await provider.checkMnemonicValid();
+
+    if (isMnemonicValid) {
+      Coordinator.goToWalletSettingsScreen(
+        provider,
+        removePrevivousScreens: true,
+      );
+    } else {
+      Navigator.pop(context);
+    }
   }
 }
 

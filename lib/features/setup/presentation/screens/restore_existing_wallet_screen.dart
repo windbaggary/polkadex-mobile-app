@@ -10,7 +10,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_pages_input_widget.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
 
 class RestoreExistingWalletScreen extends StatefulWidget {
   const RestoreExistingWalletScreen({required this.mnemonicLenght});

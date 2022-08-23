@@ -3,12 +3,8 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/common/widgets/option_tab_switch_widget.dart';
-import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
-import 'package:polkadex/features/setup/presentation/widgets/password_validation_widget.dart';
+import 'package:polkadex/features/landing/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
-import 'package:polkadex/common/utils/extensions.dart';
-import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
 
 class WalletSettingsScreen extends StatefulWidget {
@@ -51,7 +47,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
         backgroundColor: AppColors.color1C2023,
         appBar: AppBar(
           title: Text(
-            'Wallet Settings',
+            'Wallet Name',
             style: tsS19W600CFF,
           ),
           leading: SizedBox(
@@ -123,7 +119,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                   Padding(
                                     padding: const EdgeInsets.only(bottom: 14),
                                     child: Text(
-                                      'Security password is used for transfers, create orders, mnemonics backups, applications authorization, etc.',
+                                      'Set a wallet name for your wallet.',
                                       style: tsS18W400CFF,
                                     ),
                                   ),
@@ -140,84 +136,6 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                               _passwordRepeatController.text),
                                     ),
                                   ),
-                                  Column(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 12),
-                                        child: WalletInputWidget(
-                                          title: 'Password',
-                                          description: 'Set password',
-                                          controller: _passwordController,
-                                          obscureText: true,
-                                          onChanged: (password) =>
-                                              settingProvider.evalNextEnabled(
-                                                  _nameController.text,
-                                                  _passwordController.text,
-                                                  _passwordRepeatController
-                                                      .text),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 26),
-                                        child: WalletInputWidget(
-                                          title: 'Repeat Password',
-                                          description: 'Repeat your password',
-                                          controller: _passwordRepeatController,
-                                          obscureText: true,
-                                          onChanged: (password) =>
-                                              settingProvider.evalNextEnabled(
-                                                  _nameController.text,
-                                                  _passwordController.text,
-                                                  _passwordRepeatController
-                                                      .text),
-                                        ),
-                                      ),
-                                      GridView.count(
-                                        shrinkWrap: true,
-                                        primary: false,
-                                        childAspectRatio: (164 / 19),
-                                        crossAxisCount: 2,
-                                        children: [
-                                          PasswordValidationWidget(
-                                            title: 'At least 8 characters',
-                                            isValid: settingProvider
-                                                .hasLeast8Characters,
-                                          ),
-                                          PasswordValidationWidget(
-                                            title: 'At least 1 lowercase',
-                                            isValid: settingProvider
-                                                .hasLeast1LowercaseLetter,
-                                          ),
-                                          PasswordValidationWidget(
-                                            title:
-                                                'At least 1 uppercase letter',
-                                            isValid: settingProvider
-                                                .hasLeast1Uppercase,
-                                          ),
-                                          PasswordValidationWidget(
-                                            title: 'At least 1 digit',
-                                            isValid:
-                                                settingProvider.hasLeast1Digit,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  if (dependency.get<bool>(
-                                      instanceName: 'isBiometricAvailable'))
-                                    OptionTabSwitchWidget(
-                                      svgAsset: "finger-print".asAssetSvg(),
-                                      title: "Secure with Biometric Only",
-                                      description:
-                                          "Secure your access without typing your password.",
-                                      isChecked:
-                                          settingProvider.isFingerPrintEnabled,
-                                      onSwitchChanged: (value) =>
-                                          settingProvider.fingerPrintAuth =
-                                              value,
-                                    ),
                                 ],
                               ),
                             ),
@@ -236,17 +154,13 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Polkadex Exchange eApp does not keep it, if you forget the password, you cannot restore it.',
-                        textAlign: TextAlign.center,
-                        style: tsS13W400CABB2BC,
-                      ),
+                      Spacer(),
                       AppButton(
                         enabled: settingProvider.isNextEnabled &&
                             _nameController.text.isNotEmpty &&
                             _passwordController.text ==
                                 _passwordRepeatController.text,
-                        label: 'Next',
+                        label: 'Confirm',
                         onTap:
                             () {}, //TODO: Implement adding wallet to current account
                       ),

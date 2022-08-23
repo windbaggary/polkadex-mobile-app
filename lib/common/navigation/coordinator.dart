@@ -42,7 +42,7 @@ abstract class Coordinator {
         ? _navigationKey.currentState?.pushNamedAndRemoveUntil(
             Routes.walletSettingsScreen,
             (route) {
-              return route.settings.name == Routes.introScreen;
+              return route.settings.name == Routes.landingScreen;
             },
             arguments: provider,
           )
