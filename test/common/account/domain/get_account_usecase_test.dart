@@ -12,13 +12,13 @@ void main() {
   late GetAccountUseCase _usecase;
   late _AccountRepositoryMock _repository;
   late String tProxyAddress;
-  late ImportedAccountEntity tAccount;
+  late AccountEntity tAccount;
 
   setUp(() {
     _repository = _AccountRepositoryMock();
     _usecase = GetAccountUseCase(accountRepository: _repository);
     tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
-    tAccount = ImportedAccountModel(
+    tAccount = AccountModel(
       name: '',
       email: 'test',
       mainAddress: "k9o1dxJxQE8Zwm5Fy",

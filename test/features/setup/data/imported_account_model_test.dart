@@ -4,10 +4,10 @@ import 'package:polkadex/features/setup/data/models/imported_account_model.dart'
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 
 void main() {
-  late ImportedAccountModel tImportedAccount;
+  late AccountModel tAccount;
 
   setUp(() {
-    tImportedAccount = ImportedAccountModel(
+    tAccount = AccountModel(
       name: "",
       email: "",
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
@@ -17,7 +17,7 @@ void main() {
     );
   });
 
-  test('ImportAccountModel must be a ImportAccountEntity', () async {
-    expect(tImportedAccount, isA<ImportedAccountEntity>());
+  test('AccountModel must be a AccountEntity', () async {
+    expect(tAccount, isA<AccountEntity>());
   });
 }

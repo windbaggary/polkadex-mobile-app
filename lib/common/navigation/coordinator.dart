@@ -212,7 +212,7 @@ abstract class Coordinator {
     _navigationKey.currentState?.pushNamed(Routes.appSettingsSecurityScreen);
   }
 
-  static void goToLandingScreen(ImportedAccountEntity account) {
+  static void goToLandingScreen(AccountEntity account) {
     _navigationKey.currentState?.pushNamedAndRemoveUntil(
       Routes.landingScreen,
       (route) => route.isFirst,

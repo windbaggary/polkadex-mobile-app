@@ -352,7 +352,7 @@ class AccountCubit extends Cubit<AccountState> {
         ),
       );
 
-      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+      AccountEntity acc = (currentState.account as AccountModel)
           .copyWith(biometricAccess: !currentBioAccess);
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));
@@ -376,7 +376,7 @@ class AccountCubit extends Cubit<AccountState> {
         password: currentState.password,
       ));
 
-      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+      AccountEntity acc = (currentState.account as AccountModel)
           .copyWith(timerInterval: newInterval);
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));

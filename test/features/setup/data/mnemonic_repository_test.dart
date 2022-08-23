@@ -16,7 +16,7 @@ void main() {
   late Map<String, dynamic> tGenData;
   late Map<String, dynamic> tImportData;
   late Map<String, dynamic> tErrorData;
-  late ImportedAccountEntity tImportedAccount;
+  late AccountEntity tAccount;
 
   setUp(() {
     dataSource = _MockMnemonicRemoteDatasource();
@@ -38,7 +38,7 @@ void main() {
       "meta": {"name": "userName"},
     };
     tErrorData = {"error": "errorTest"};
-    tImportedAccount = ImportedAccountModel(
+    tAccount = AccountModel(
       name: "",
       email: "",
       mainAddress: "",
@@ -77,14 +77,14 @@ void main() {
 
         final result = await repository.importAccount('test', '123456');
 
-        late ImportedAccountEntity resultAcc;
+        late AccountEntity resultAcc;
 
         result.fold(
           (_) {},
           (acc) => resultAcc = acc,
         );
 
-        expect(resultAcc, tImportedAccount);
+        expect(resultAcc, tAccount);
         verify(() => dataSource.importAccount(any(), any())).called(1);
         verifyNoMoreInteractions(dataSource);
       },

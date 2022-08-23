@@ -2,8 +2,8 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 
-class ImportedAccountModel extends ImportedAccountEntity {
-  const ImportedAccountModel({
+class AccountModel extends AccountEntity {
+  const AccountModel({
     required String name,
     required String email,
     required String mainAddress,
@@ -19,8 +19,8 @@ class ImportedAccountModel extends ImportedAccountEntity {
           timerInterval: timerInterval,
         );
 
-  factory ImportedAccountModel.fromJson(Map<String, dynamic> map) {
-    return ImportedAccountModel(
+  factory AccountModel.fromJson(Map<String, dynamic> map) {
+    return AccountModel(
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       mainAddress: map['mainAddress'] ?? '',
@@ -42,7 +42,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
     };
   }
 
-  ImportedAccountModel copyWith({
+  AccountModel copyWith({
     String? name,
     String? email,
     String? mainAddress,
@@ -51,7 +51,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
     String? signature,
     EnumTimerIntervalTypes? timerInterval,
   }) {
-    return ImportedAccountModel(
+    return AccountModel(
       name: name ?? this.name,
       email: email ?? this.email,
       mainAddress: mainAddress ?? this.mainAddress,

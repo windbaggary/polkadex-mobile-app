@@ -16,7 +16,7 @@ void main() {
   late String tEmail;
   late String tCode;
   late String tProxyAddress;
-  late ImportedAccountEntity tAccount;
+  late AccountEntity tAccount;
   late ApiError tError;
 
   setUp(() {
@@ -25,7 +25,7 @@ void main() {
     tEmail = "test@test.com";
     tCode = '123456';
     tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
-    tAccount = ImportedAccountModel(
+    tAccount = AccountModel(
       name: '',
       email: 'test',
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
@@ -52,7 +52,7 @@ void main() {
         );
         // assert
 
-        late ImportedAccountEntity resultAccount;
+        late AccountEntity resultAccount;
 
         result.fold(
           (_) => null,

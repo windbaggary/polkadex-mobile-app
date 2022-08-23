@@ -13,12 +13,12 @@ class _MnemonicRepositoryMock extends Mock implements IMnemonicRepository {}
 void main() {
   late ImportAccountUseCase _usecase;
   late _MnemonicRepositoryMock _repository;
-  late ImportedAccountEntity tImportedAccount;
+  late AccountEntity tAccount;
 
   setUp(() {
     _repository = _MnemonicRepositoryMock();
     _usecase = ImportAccountUseCase(mnemonicRepository: _repository);
-    tImportedAccount = ImportedAccountModel(
+    tAccount = AccountModel(
       name: "",
       email: "",
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
@@ -34,20 +34,20 @@ void main() {
       () async {
         // arrange
         when(() => _repository.importAccount(any(), any())).thenAnswer(
-          (_) async => Right(tImportedAccount),
+          (_) async => Right(tAccount),
         );
         // act
         final result = await _usecase(mnemonic: '', password: '');
         // assert
 
-        late ImportedAccountEntity importedAccount;
+        late AccountEntity account;
 
         result.fold(
           (_) => null,
-          (acc) => importedAccount = acc,
+          (acc) => account = acc,
         );
 
-        expect(importedAccount, tImportedAccount);
+        expect(account, tAccount);
         verify(() => _repository.importAccount(any(), any())).called(1);
         verifyNoMoreInteractions(_repository);
       },

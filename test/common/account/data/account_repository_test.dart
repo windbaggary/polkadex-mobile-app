@@ -26,7 +26,7 @@ void main() {
   late String tCode;
   late String tPassword;
   late ApiError tError;
-  late ImportedAccountEntity tAccount;
+  late AccountEntity tAccount;
   late AmplifyException tAmplifyError;
 
   setUp(() {
@@ -41,7 +41,7 @@ void main() {
     tPassword = '123456';
     tCode = '654321';
     tError = ApiError(message: 'errorMessage');
-    tAccount = ImportedAccountModel(
+    tAccount = AccountModel(
       name: "",
       email: tEmail,
       mainAddress: "",
@@ -108,7 +108,7 @@ void main() {
         false,
       );
 
-      late ImportedAccountEntity successResult;
+      late AccountEntity successResult;
 
       result.fold(
         (_) => null,
@@ -154,7 +154,7 @@ void main() {
         false,
       );
 
-      late ImportedAccountEntity successResult;
+      late AccountEntity successResult;
 
       result.fold(
         (_) => null,

@@ -10,7 +10,7 @@ class ImportAccountUseCase {
 
   final IMnemonicRepository _mnemonicRepository;
 
-  Future<Either<ApiError, ImportedAccountEntity>> call({
+  Future<Either<ApiError, AccountEntity>> call({
     required String mnemonic,
     required String password,
   }) async {
