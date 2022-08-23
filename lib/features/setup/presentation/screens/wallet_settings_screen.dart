@@ -153,6 +153,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                   padding: const EdgeInsets.fromLTRB(28, 14, 28, 18),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Spacer(),
                       AppButton(
