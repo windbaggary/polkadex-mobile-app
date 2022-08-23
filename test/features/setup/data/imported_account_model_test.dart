@@ -8,6 +8,7 @@ void main() {
 
   setUp(() {
     tImportedAccount = ImportedAccountModel(
+      name: "",
       email: "",
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",

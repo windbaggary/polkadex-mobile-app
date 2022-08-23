@@ -39,6 +39,7 @@ void main() {
     };
     tErrorData = {"error": "errorTest"};
     tImportedAccount = ImportedAccountModel(
+      name: "",
       email: "",
       mainAddress: "",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",

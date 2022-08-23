@@ -4,12 +4,14 @@ import 'package:polkadex/features/setup/domain/entities/imported_account_entity.
 
 class ImportedAccountModel extends ImportedAccountEntity {
   const ImportedAccountModel({
+    required String name,
     required String email,
     required String mainAddress,
     required String proxyAddress,
     required bool biometricAccess,
     required EnumTimerIntervalTypes timerInterval,
   }) : super(
+          name: name,
           email: email,
           mainAddress: mainAddress,
           proxyAddress: proxyAddress,
@@ -19,6 +21,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
 
   factory ImportedAccountModel.fromJson(Map<String, dynamic> map) {
     return ImportedAccountModel(
+      name: map['name'] ?? '',
       email: map['email'] ?? '',
       mainAddress: map['mainAddress'] ?? '',
       proxyAddress: map['address'] ?? '',
@@ -30,6 +33,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'name': name,
       'email': email,
       'mainAddress': mainAddress,
       'address': proxyAddress,
@@ -39,6 +43,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
   }
 
   ImportedAccountModel copyWith({
+    String? name,
     String? email,
     String? mainAddress,
     String? proxyAddress,
@@ -47,6 +52,7 @@ class ImportedAccountModel extends ImportedAccountEntity {
     EnumTimerIntervalTypes? timerInterval,
   }) {
     return ImportedAccountModel(
+      name: name ?? this.name,
       email: email ?? this.email,
       mainAddress: mainAddress ?? this.mainAddress,
       proxyAddress: proxyAddress ?? this.proxyAddress,

@@ -54,6 +54,7 @@ class AccountRepository implements IAccountRepository {
 
       return Right(
         ImportedAccountModel(
+          name: '',
           email: email,
           mainAddress: '',
           proxyAddress: '',
@@ -87,6 +88,7 @@ class AccountRepository implements IAccountRepository {
 
       return Right(
         ImportedAccountModel(
+          name: '',
           email: email,
           mainAddress: '',
           proxyAddress: '',

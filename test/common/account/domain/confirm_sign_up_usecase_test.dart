@@ -26,6 +26,7 @@ void main() {
     tCode = '123456';
     tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
     tAccount = ImportedAccountModel(
+      name: '',
       email: 'test',
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: tProxyAddress,

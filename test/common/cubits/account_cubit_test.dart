@@ -109,14 +109,16 @@ void main() {
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
     tImportedAccountBioOff = ImportedAccountModel(
-      email: 'test',
+      name: "",
+      email: "test",
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
     tImportedAccountBioOn = ImportedAccountModel(
-      email: 'test',
+      name: "",
+      email: "test",
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: "k9o1dxJxQE8Zwm5Fy",
       biometricAccess: true,

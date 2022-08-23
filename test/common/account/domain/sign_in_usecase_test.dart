@@ -24,6 +24,7 @@ void main() {
     _usecase = SignInUseCase(accountRepository: _repository);
     tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
     tAccount = ImportedAccountModel(
+      name: "",
       email: 'test',
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: tProxyAddress,

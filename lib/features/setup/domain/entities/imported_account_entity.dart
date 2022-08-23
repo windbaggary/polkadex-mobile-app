@@ -3,6 +3,7 @@ import 'package:polkadex/common/utils/enums.dart';
 
 class ImportedAccountEntity extends Equatable {
   const ImportedAccountEntity({
+    required this.name,
     required this.email,
     required this.mainAddress,
     required this.proxyAddress,
@@ -10,6 +11,7 @@ class ImportedAccountEntity extends Equatable {
     required this.timerInterval,
   });
 
+  final String name;
   final String email;
   final String mainAddress;
   final String proxyAddress;

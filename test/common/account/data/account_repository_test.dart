@@ -42,6 +42,7 @@ void main() {
     tCode = '654321';
     tError = ApiError(message: 'errorMessage');
     tAccount = ImportedAccountModel(
+      name: "",
       email: tEmail,
       mainAddress: "",
       proxyAddress: "",
