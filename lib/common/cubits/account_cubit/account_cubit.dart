@@ -49,6 +49,7 @@ class AccountCubit extends Cubit<AccountState> {
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
+        _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
   final SignUpUseCase _signUpUseCase;
@@ -63,6 +64,7 @@ class AccountCubit extends Cubit<AccountState> {
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
+  final GetMainAccountAddressUsecase _getMainAccountAddressUsecase;
 
   String get accountName {
     final currentState = state;
@@ -337,6 +339,36 @@ class AccountCubit extends Cubit<AccountState> {
         AccountCodeResent(),
       ),
     );
+  }
+
+  Future<void> addWalletToAccount({required String proxyAddress}) async {
+    final currentState = state;
+
+    if (currentState is AccountLoggedIn) {
+      emit(AccountLoading());
+
+      final result = await _getMainAccountAddressUsecase(
+        proxyAdrress: proxyAddress,
+      );
+
+      result.fold(
+        (error) => emit(
+          AccountLoggedInMainAccountFetchError(
+            account: currentState.account,
+            password: currentState.password,
+            errorMessage: error.message,
+          ),
+        ),
+        (mainAddress) => emit(
+          AccountLoggedIn(
+            account: (currentState.account as AccountModel).copyWith(
+              proxyAddress: proxyAddress,
+              mainAddress: mainAddress,
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> switchBiometricAccess() async {

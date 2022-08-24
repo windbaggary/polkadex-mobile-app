@@ -138,6 +138,26 @@ class AccountLoggedInSignOutError extends AccountLoggedIn {
       ];
 }
 
+class AccountLoggedInMainAccountFetchError extends AccountLoggedIn {
+  AccountLoggedInMainAccountFetchError({
+    required AccountEntity account,
+    String? password,
+    required this.errorMessage,
+  }) : super(
+          account: account,
+          password: password,
+        );
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        account,
+        password,
+        errorMessage,
+      ];
+}
+
 class AccountResendCodeError extends AccountVerifyingCode {
   AccountResendCodeError({
     required this.errorMessage,

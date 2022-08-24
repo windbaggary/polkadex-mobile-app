@@ -107,8 +107,6 @@ class _HomeTabViewState extends State<HomeTabView> {
                           final quoteAsset =
                               cubit.listAvailableMarkets[index][1];
 
-                          print(state.runtimeType);
-
                           return TopPairWidget(
                             leftAsset: baseAsset,
                             rightAsset: quoteAsset,
