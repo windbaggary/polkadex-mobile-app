@@ -31,6 +31,18 @@ class AccountModel extends AccountEntity {
     );
   }
 
+  factory AccountModel.fromLocalJson(Map<String, dynamic> map) {
+    return AccountModel(
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      mainAddress: map['mainAddress'] ?? '',
+      proxyAddress: map['proxyAddress'] ?? '',
+      biometricAccess: map['biometricAccess'] ?? false,
+      timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
+          EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'name': name,

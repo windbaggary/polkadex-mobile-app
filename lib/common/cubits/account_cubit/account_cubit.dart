@@ -351,22 +351,30 @@ class AccountCubit extends Cubit<AccountState> {
         proxyAdrress: proxyAddress,
       );
 
-      result.fold(
-        (error) => emit(
+      await result.fold(
+        (error) async => emit(
           AccountLoggedInMainAccountFetchError(
             account: currentState.account,
             password: currentState.password,
             errorMessage: error.message,
           ),
         ),
-        (mainAddress) => emit(
-          AccountLoggedIn(
-            account: (currentState.account as AccountModel).copyWith(
-              proxyAddress: proxyAddress,
-              mainAddress: mainAddress,
+        (mainAddress) async {
+          final currentAccountWithWallet =
+              (currentState.account as AccountModel).copyWith(
+            proxyAddress: proxyAddress,
+            mainAddress: mainAddress,
+          );
+
+          await _saveAccountUseCase(
+              keypairJson: json.encode(currentAccountWithWallet));
+
+          emit(
+            AccountLoggedIn(
+              account: currentAccountWithWallet,
             ),
-          ),
-        ),
+          );
+        },
       );
     }
   }

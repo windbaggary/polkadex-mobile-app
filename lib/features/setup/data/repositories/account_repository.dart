@@ -185,7 +185,9 @@ class AccountRepository implements IAccountRepository {
   Future<AccountEntity?> getAccountStorage() async {
     final result = await _accountLocalDatasource.getAccountStorage();
 
-    return result != null ? AccountModel.fromJson(jsonDecode(result)) : null;
+    return result != null
+        ? AccountModel.fromLocalJson(jsonDecode(result))
+        : null;
   }
 
   @override
