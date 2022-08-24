@@ -224,7 +224,7 @@ abstract class Coordinator {
   static void goToLandingScreen(AccountEntity account) {
     _navigationKey.currentState?.pushNamedAndRemoveUntil(
       Routes.landingScreen,
-      (route) => route.isFirst,
+      (route) => false,
       arguments: account,
     );
   }
