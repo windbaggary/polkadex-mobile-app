@@ -20,6 +20,7 @@ class AccountEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+        name,
         email,
         mainAddress,
         proxyAddress,

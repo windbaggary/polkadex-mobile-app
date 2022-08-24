@@ -201,6 +201,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                             onTap: () async => await context
                                 .read<AccountCubit>()
                                 .addWalletToAccount(
+                                  name: _nameController.text,
                                   proxyAddress:
                                       widget.importedAccount.proxyAddress,
                                 ),

@@ -69,6 +69,7 @@ void main() {
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
+  late String tName;
   late String tAddress;
   late String tEmail;
   late String tPassword;
@@ -110,6 +111,7 @@ void main() {
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
 
+    tName = 'testName';
     tEmail = 'test@test.com';
     tPassword = 'testPassword';
     tError = ApiError(message: 'error');
@@ -914,7 +916,10 @@ void main() {
             code: 'test',
             useBiometric: false,
           );
-          await cubit.addWalletToAccount(proxyAddress: tAddress);
+          await cubit.addWalletToAccount(
+            name: tName,
+            proxyAddress: tAddress,
+          );
         },
         expect: () => [
           AccountLoading(),
@@ -925,6 +930,7 @@ void main() {
           AccountLoading(),
           AccountLoggedIn(
             account: tAccountBioOff.copyWith(
+              name: tName,
               proxyAddress: tAddress,
               mainAddress: tAddress,
             ),
@@ -973,7 +979,10 @@ void main() {
             code: 'test',
             useBiometric: false,
           );
-          await cubit.addWalletToAccount(proxyAddress: tAddress);
+          await cubit.addWalletToAccount(
+            name: tName,
+            proxyAddress: tAddress,
+          );
         },
         expect: () => [
           AccountLoading(),

@@ -69,7 +69,7 @@ class AccountCubit extends Cubit<AccountState> {
   String get accountName {
     final currentState = state;
 
-    return currentState is AccountLoaded ? currentState.account.email : '';
+    return currentState is AccountLoaded ? currentState.account.name : '';
   }
 
   String get mainAccountAddress {
@@ -341,7 +341,10 @@ class AccountCubit extends Cubit<AccountState> {
     );
   }
 
-  Future<void> addWalletToAccount({required String proxyAddress}) async {
+  Future<void> addWalletToAccount({
+    required String name,
+    required String proxyAddress,
+  }) async {
     final currentState = state;
 
     if (currentState is AccountLoggedIn) {
@@ -362,6 +365,7 @@ class AccountCubit extends Cubit<AccountState> {
         (mainAddress) async {
           final currentAccountWithWallet =
               (currentState.account as AccountModel).copyWith(
+            name: name,
             proxyAddress: proxyAddress,
             mainAddress: mainAddress,
           );
