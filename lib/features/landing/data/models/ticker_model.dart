@@ -26,14 +26,14 @@ class TickerModel extends TickerEntity {
   factory TickerModel.fromJson(Map<String, dynamic> map) {
     return TickerModel(
       m: map['m'],
-      priceChange24Hr: double.parse(map['priceChange24Hr']),
-      priceChangePercent24Hr: double.parse(map['priceChangePercent24Hr']),
-      open: double.parse(map['open']),
-      close: double.parse(map['close']),
-      high: double.parse(map['high']),
-      low: double.parse(map['low']),
-      volumeBase24hr: double.parse(map['volumeBase24hr']),
-      volumeQuote24Hr: double.parse(map['volumeQuote24Hr']),
+      priceChange24Hr: map['pc'],
+      priceChangePercent24Hr: map['pcp'],
+      open: map['o'],
+      close: map['c'],
+      high: map['h'],
+      low: map['l'],
+      volumeBase24hr: map['v_base'],
+      volumeQuote24Hr: map['v_quote'],
     );
   }
 }
