@@ -374,7 +374,7 @@ class AccountCubit extends Cubit<AccountState> {
               keypairJson: json.encode(currentAccountWithWallet));
 
           emit(
-            AccountLoggedIn(
+            AccountLoggedInWalletAdded(
               account: currentAccountWithWallet,
               password: currentState.password,
             ),

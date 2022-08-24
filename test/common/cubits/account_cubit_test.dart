@@ -928,7 +928,7 @@ void main() {
             password: tPassword,
           ),
           AccountLoading(),
-          AccountLoggedIn(
+          AccountLoggedInWalletAdded(
             account: tAccountBioOff.copyWith(
               name: tName,
               proxyAddress: tAddress,

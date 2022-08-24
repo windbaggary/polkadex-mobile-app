@@ -118,6 +118,22 @@ class AccountLoadedSignOutError extends AccountLoaded {
       ];
 }
 
+class AccountLoggedInWalletAdded extends AccountLoggedIn {
+  AccountLoggedInWalletAdded({
+    required AccountEntity account,
+    String? password,
+  }) : super(
+          account: account,
+          password: password,
+        );
+
+  @override
+  List<Object?> get props => [
+        account,
+        password,
+      ];
+}
+
 class AccountLoggedInSignOutError extends AccountLoggedIn {
   AccountLoggedInSignOutError({
     required AccountEntity account,
