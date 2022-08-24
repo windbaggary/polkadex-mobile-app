@@ -372,6 +372,7 @@ class AccountCubit extends Cubit<AccountState> {
           emit(
             AccountLoggedIn(
               account: currentAccountWithWallet,
+              password: currentState.password,
             ),
           );
         },

@@ -69,6 +69,7 @@ void main() {
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
+  late String tAddress;
   late String tEmail;
   late String tPassword;
   late String tCode;
@@ -108,27 +109,29 @@ void main() {
       getPasswordUseCase: _mockGetPasswordUseCase,
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
-    tAccountBioOff = AccountModel(
-      name: "",
-      email: "test",
-      mainAddress: "k9o1dxJxQE8Zwm5Fy",
-      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      biometricAccess: false,
-      timerInterval: EnumTimerIntervalTypes.oneMinute,
-    );
-    tAccountBioOn = AccountModel(
-      name: "",
-      email: "test",
-      mainAddress: "k9o1dxJxQE8Zwm5Fy",
-      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      biometricAccess: true,
-      timerInterval: EnumTimerIntervalTypes.oneMinute,
-    );
 
     tEmail = 'test@test.com';
     tPassword = 'testPassword';
     tError = ApiError(message: 'error');
     tCode = 'code';
+    tAddress = 'k9o1dxJxQE8Zwm5Fy';
+
+    tAccountBioOff = AccountModel(
+      name: "",
+      email: tEmail,
+      mainAddress: "",
+      proxyAddress: "",
+      biometricAccess: false,
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
+    tAccountBioOn = AccountModel(
+      name: "",
+      email: tEmail,
+      mainAddress: "",
+      proxyAddress: "",
+      biometricAccess: true,
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
 
     registerFallbackValue(tAccountBioOff);
     registerFallbackValue(tAccountBioOn);
@@ -868,6 +871,122 @@ void main() {
         },
         expect: () => [
           AccountResendCodeError(errorMessage: tError.message),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Wallet added to current logged in account',
+        build: () {
+          when(
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tAccountBioOff),
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
+          when(
+            () => _mockGetMainAccountAddressUseCase(
+              proxyAdrress: any(named: 'proxyAdrress'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tAddress),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.confirmSignUp(
+            email: tEmail,
+            password: tPassword,
+            code: 'test',
+            useBiometric: false,
+          );
+          await cubit.addWalletToAccount(proxyAddress: tAddress);
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tAccountBioOff,
+            password: tPassword,
+          ),
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tAccountBioOff.copyWith(
+              proxyAddress: tAddress,
+              mainAddress: tAddress,
+            ),
+            password: tPassword,
+          ),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Failed to add wallet to current logged in account',
+        build: () {
+          when(
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tAccountBioOff),
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
+          when(
+            () => _mockGetMainAccountAddressUseCase(
+              proxyAdrress: any(named: 'proxyAdrress'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.confirmSignUp(
+            email: tEmail,
+            password: tPassword,
+            code: 'test',
+            useBiometric: false,
+          );
+          await cubit.addWalletToAccount(proxyAddress: tAddress);
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tAccountBioOff,
+            password: tPassword,
+          ),
+          AccountLoading(),
+          AccountLoggedInMainAccountFetchError(
+            account: tAccountBioOff,
+            password: tPassword,
+            errorMessage: tError.message,
+          )
         ],
       );
 
