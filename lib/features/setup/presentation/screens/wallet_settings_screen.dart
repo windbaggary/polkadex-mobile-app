@@ -28,10 +28,10 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
   late Animation<double> _entryAnimation;
 
   final _nameController = TextEditingController(text: 'Cool Wallet');
-  final _passwordController = TextEditingController();
-  final _passwordRepeatController = TextEditingController();
 
   final LoadingOverlay _loadingOverlay = LoadingOverlay();
+  final ValueNotifier<bool> _isWalletNameNotEmptyNotifier =
+      ValueNotifier<bool>(true);
 
   @override
   void initState() {
@@ -49,6 +49,8 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _nameController.dispose();
+    _isWalletNameNotEmptyNotifier.dispose();
     super.dispose();
   }
 
@@ -166,11 +168,9 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                         title: 'Wallet Name',
                                         description: 'Set wallet name',
                                         controller: _nameController,
-                                        onChanged: (password) =>
-                                            settingProvider.evalNextEnabled(
-                                                _nameController.text,
-                                                _passwordController.text,
-                                                _passwordRepeatController.text),
+                                        onChanged: (walletName) =>
+                                            _isWalletNameNotEmptyNotifier
+                                                .value = walletName.isNotEmpty,
                                       ),
                                     ),
                                   ],
@@ -193,18 +193,18 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Spacer(),
-                        AppButton(
-                          enabled: settingProvider.isNextEnabled &&
-                              _nameController.text.isNotEmpty &&
-                              _passwordController.text ==
-                                  _passwordRepeatController.text,
-                          label: 'Confirm',
-                          onTap: () async => await context
-                              .read<AccountCubit>()
-                              .addWalletToAccount(
-                                proxyAddress:
-                                    widget.importedAccount.proxyAddress,
-                              ),
+                        ValueListenableBuilder<bool>(
+                          valueListenable: _isWalletNameNotEmptyNotifier,
+                          builder: (context, isConfirmEnabled, _) => AppButton(
+                            enabled: isConfirmEnabled,
+                            label: 'Confirm',
+                            onTap: () async => await context
+                                .read<AccountCubit>()
+                                .addWalletToAccount(
+                                  proxyAddress:
+                                      widget.importedAccount.proxyAddress,
+                                ),
+                          ),
                         ),
                       ],
                     ),
