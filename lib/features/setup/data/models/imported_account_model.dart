@@ -48,7 +48,7 @@ class AccountModel extends AccountEntity {
       'name': name,
       'email': email,
       'mainAddress': mainAddress,
-      'address': proxyAddress,
+      'proxyAddress': proxyAddress,
       'biometricAccess': biometricAccess,
       'timerInterval': timerInterval.toString(),
     };
