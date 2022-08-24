@@ -36,19 +36,28 @@ abstract class Coordinator {
     );
   }
 
-  static void goToWalletSettingsScreen(ChangeNotifier provider,
-      {bool removePrevivousScreens = false}) {
+  static void goToWalletSettingsScreen(
+    ChangeNotifier provider, {
+    required AccountEntity importedAccount,
+    bool removePrevivousScreens = false,
+  }) {
     removePrevivousScreens
         ? _navigationKey.currentState?.pushNamedAndRemoveUntil(
             Routes.walletSettingsScreen,
             (route) {
               return route.settings.name == Routes.landingScreen;
             },
-            arguments: provider,
+            arguments: {
+              'provider': provider,
+              'importedAccount': importedAccount,
+            },
           )
         : _navigationKey.currentState?.pushNamed(
             Routes.walletSettingsScreen,
-            arguments: provider,
+            arguments: {
+              'provider': provider,
+              'importedAccount': importedAccount,
+            },
           );
   }
 

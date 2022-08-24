@@ -298,11 +298,14 @@ class _RestoreExistingWalletScreenState
         context: context,
         text: 'We are almost there...',
       );
-      final isMnemonicValid = await provider.checkMnemonicValid();
+      final newAccount = await provider.createImportedAccount();
       Navigator.of(context).pop();
 
-      isMnemonicValid
-          ? Coordinator.goToWalletSettingsScreen(provider)
+      newAccount != null
+          ? Coordinator.goToWalletSettingsScreen(
+              provider,
+              importedAccount: newAccount,
+            )
           : showModalBottomSheet(
               context: context,
               isScrollControlled: true,

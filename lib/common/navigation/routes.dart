@@ -145,14 +145,18 @@ abstract class Routes {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
+            final walletSettingsArguments = settings.arguments as Map;
+
             return ChangeNotifierProvider(
               create: (context) => dependency<WalletSettingsProvider>(),
               child: ChangeNotifierProvider.value(
-                value: settings.arguments as MnemonicProvider,
+                value: walletSettingsArguments['provider'] as MnemonicProvider,
                 child: FadeTransition(
                   opacity: CurvedAnimation(
                       parent: animation, curve: Interval(0.500, 1.00)),
-                  child: WalletSettingsScreen(),
+                  child: WalletSettingsScreen(
+                    importedAccount: walletSettingsArguments['importedAccount'],
+                  ),
                 ),
               ),
             );

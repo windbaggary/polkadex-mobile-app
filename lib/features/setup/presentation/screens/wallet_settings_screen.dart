@@ -4,10 +4,15 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/landing/presentation/providers/wallet_settings_provider.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:provider/provider.dart';
 
 class WalletSettingsScreen extends StatefulWidget {
+  WalletSettingsScreen({required this.importedAccount});
+
+  final AccountEntity importedAccount;
+
   @override
   _WalletSettingsScreenState createState() => _WalletSettingsScreenState();
 }
@@ -42,7 +47,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => _onPop(context),
+      onWillPop: () => _onPop(),
       child: Scaffold(
         backgroundColor: AppColors.color1C2023,
         appBar: AppBar(
@@ -65,7 +70,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                 );
               },
               child: AppBackButton(
-                onTap: () => _onPop(context),
+                onTap: () => _onPop(),
               ),
             ),
           ),
@@ -176,7 +181,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
     );
   }
 
-  Future<bool> _onPop(BuildContext context) async {
+  Future<bool> _onPop() async {
     await _animationController.reverse();
     Navigator.of(context).pop();
     return false;
