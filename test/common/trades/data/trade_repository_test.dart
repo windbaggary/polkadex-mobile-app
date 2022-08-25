@@ -58,13 +58,12 @@ void main() {
       "listTransactionsByMainAccount": {
         "items": [
           {
-            "main_account": "asdfghj",
-            "txn_type": "DEPOSIT",
-            "asset": "PDEX",
-            "amount": "20",
+            "tt": "DEPOSIT",
+            "a": "PDEX",
+            "q": "20000000000000",
             "fee": "0.000000",
-            "status": "CONFIRMED",
-            "time": "2022-07-05T14:07:31.060470763+00:00"
+            "st": "CONFIRMED",
+            "t": "1661434434872"
           }
         ],
         "nextToken": null
