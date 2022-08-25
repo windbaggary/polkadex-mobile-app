@@ -12,8 +12,8 @@ class OrderbookModel extends OrderbookEntity {
         );
 
   factory OrderbookModel.fromJson(List<dynamic> listMap) {
-    final listAskData = listMap.where((item) => item['side'] == 'Ask').toList();
-    final listBidData = listMap.where((item) => item['side'] == 'Bid').toList();
+    final listAskData = listMap.where((item) => item['s'] == 'Ask').toList();
+    final listBidData = listMap.where((item) => item['s'] == 'Bid').toList();
 
     final List<OrderbookItemEntity> dataAsk =
         List<OrderbookItemEntity>.generate(
