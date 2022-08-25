@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/orderbook_app_bar_widget.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -169,8 +168,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                 String key = state.free.keys.elementAt(index);
                 final asset =
                     context.read<MarketAssetCubit>().getAssetDetailsById(key);
-                final amount =
-                    double.tryParse(state.free.getBalance(key)) ?? 0.0;
+                final amount = state.free[key];
 
                 return areSmallBalancesHidden && amount <= 0
                     ? Container()
@@ -183,7 +181,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                           tokenAcronym: asset.symbol,
                           tokenFullName: asset.name,
                           assetSvg: TokenUtils.tokenIdToAssetSvg(asset.assetId),
-                          amount: state.free.getBalance(key),
+                          amount: amount,
                         ),
                       );
               },

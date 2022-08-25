@@ -14,7 +14,7 @@ class BalanceItemWidget extends StatelessWidget {
   final String tokenAcronym;
   final String tokenFullName;
   final String assetSvg;
-  final String amount;
+  final double amount;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class BalanceItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                amount,
+                '$amount',
                 style: tsS16W500CFF,
               ),
             ],

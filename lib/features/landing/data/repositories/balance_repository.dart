@@ -51,7 +51,7 @@ class BalanceRepository implements IBalanceRepository {
 
           if (newBalanceData != null) {
             onMsgReceived(
-              BalanceModel.fromJson(
+              BalanceModel.fromUpdateJson(
                 [newBalanceData],
               ),
             );
