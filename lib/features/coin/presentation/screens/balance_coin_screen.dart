@@ -404,12 +404,12 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
   Widget _buildBalancesWidget() {
     return BlocBuilder<BalanceCubit, BalanceState>(
       builder: (context, state) {
-        String availableBalance = '-';
-        String lockedBalance = '-';
+        double availableBalance = 0.0;
+        double lockedBalance = 0.0;
 
         if (state is BalanceLoaded) {
-          availableBalance = state.free[widget.asset.assetId] ?? '-';
-          lockedBalance = state.reserved[widget.asset.assetId] ?? '-';
+          availableBalance = state.free.getBalance(widget.asset.assetId);
+          lockedBalance = state.reserved.getBalance(widget.asset.assetId);
         }
 
         return Padding(
@@ -425,7 +425,7 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                   ),
                   SizedBox(height: 8),
                   Text(
-                    availableBalance,
+                    '$availableBalance',
                     style: tsS16W600CFF,
                   ),
                 ],
@@ -438,7 +438,7 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                   ),
                   SizedBox(height: 8),
                   Text(
-                    lockedBalance,
+                    '$lockedBalance',
                     style: tsS16W600CFF,
                   )
                 ],
@@ -612,11 +612,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          (double.parse(state.free.getBalance(asset.assetId)) +
-                                  double.parse(
-                                    state.reserved.getBalance(asset.assetId),
-                                  ))
-                              .toStringAsFixed(2),
+                          '${state.free.getBalance(asset.assetId) + state.reserved.getBalance(asset.assetId)}',
                           style: tsS25W500CFF,
                         ),
                       ],

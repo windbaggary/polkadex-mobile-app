@@ -4,16 +4,16 @@ import 'package:polkadex/features/landing/domain/entities/balance_entity.dart';
 
 class BalanceModel extends BalanceEntity {
   const BalanceModel({
-    required Map free,
-    required Map reserved,
+    required Map<String, double> free,
+    required Map<String, double> reserved,
   }) : super(
           free: free,
           reserved: reserved,
         );
 
   factory BalanceModel.fromUpdateJson(List<dynamic> listMap) {
-    final mapFree = {};
-    final mapReserved = {};
+    final Map<String, double> mapFree = {};
+    final Map<String, double> mapReserved = {};
 
     for (var assetItem in listMap) {
       mapFree[StringUtils.formatAssetString(assetItem['asset'])] =
@@ -29,8 +29,8 @@ class BalanceModel extends BalanceEntity {
   }
 
   factory BalanceModel.fromJson(List<dynamic> listMap) {
-    final mapFree = {};
-    final mapReserved = {};
+    final Map<String, double> mapFree = {};
+    final Map<String, double> mapReserved = {};
 
     for (var assetItem in listMap) {
       mapFree[StringUtils.formatAssetString(assetItem['a'])] =

@@ -724,7 +724,7 @@ class _TopCoinWidget extends StatelessWidget {
                     builder: (context, state) {
                       return state is BalanceLoaded
                           ? Text(
-                              '${double.parse(state.free.getBalance(leftToken.assetId))}',
+                              '${state.free.getBalance(leftToken.assetId)}',
                               style: tsS26W500CFF,
                             )
                           : _amountCoinTradeShimmer();

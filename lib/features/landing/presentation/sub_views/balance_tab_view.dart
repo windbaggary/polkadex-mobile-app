@@ -14,8 +14,6 @@ import 'package:polkadex/features/landing/presentation/widgets/top_balance_widge
 import 'package:polkadex/features/landing/utils/token_utils.dart';
 import 'package:provider/provider.dart';
 
-/// XD_PAGE: 18
-/// XD_PAGE: 19
 class BalanceTabView extends StatefulWidget {
   BalanceTabView({required this.scrollController});
 

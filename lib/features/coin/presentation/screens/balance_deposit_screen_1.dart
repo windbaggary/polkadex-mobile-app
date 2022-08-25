@@ -308,9 +308,7 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
                             text: TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: double.parse(
-                                          state.free.getBalance(widget.tokenId))
-                                      .toStringAsFixed(2),
+                                  text: state.free.getBalance(widget.tokenId),
                                   style: tsS17W600C0CA564.copyWith(
                                       color: AppColors.colorFFFFFF),
                                 ),
