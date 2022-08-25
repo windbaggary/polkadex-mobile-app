@@ -69,12 +69,14 @@ void main() {
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
+  late String tName;
+  late String tAddress;
   late String tEmail;
   late String tPassword;
   late String tCode;
   late ApiError tError;
-  late ImportedAccountModel tImportedAccountBioOff;
-  late ImportedAccountModel tImportedAccountBioOn;
+  late AccountModel tAccountBioOff;
+  late AccountModel tAccountBioOn;
 
   setUp(() {
     _mockSignUpUseCase = _MockSignUpUseCase();
@@ -108,28 +110,33 @@ void main() {
       getPasswordUseCase: _mockGetPasswordUseCase,
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
-    tImportedAccountBioOff = ImportedAccountModel(
-      email: 'test',
-      mainAddress: "k9o1dxJxQE8Zwm5Fy",
-      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      biometricAccess: false,
-      timerInterval: EnumTimerIntervalTypes.oneMinute,
-    );
-    tImportedAccountBioOn = ImportedAccountModel(
-      email: 'test',
-      mainAddress: "k9o1dxJxQE8Zwm5Fy",
-      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      biometricAccess: true,
-      timerInterval: EnumTimerIntervalTypes.oneMinute,
-    );
 
+    tName = 'testName';
     tEmail = 'test@test.com';
     tPassword = 'testPassword';
     tError = ApiError(message: 'error');
     tCode = 'code';
+    tAddress = 'k9o1dxJxQE8Zwm5Fy';
 
-    registerFallbackValue(tImportedAccountBioOff);
-    registerFallbackValue(tImportedAccountBioOn);
+    tAccountBioOff = AccountModel(
+      name: "",
+      email: tEmail,
+      mainAddress: "",
+      proxyAddress: "",
+      biometricAccess: false,
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
+    tAccountBioOn = AccountModel(
+      name: "",
+      email: tEmail,
+      mainAddress: "",
+      proxyAddress: "",
+      biometricAccess: true,
+      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    );
+
+    registerFallbackValue(tAccountBioOff);
+    registerFallbackValue(tAccountBioOn);
   });
 
   group(
@@ -145,7 +152,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
+            (_) async => tAccountBioOff,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -160,7 +167,7 @@ void main() {
           await cubit.loadAccount();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(account: tAccountBioOff),
         ],
       );
 
@@ -170,7 +177,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
+            (_) async => tAccountBioOff,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -191,7 +198,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOff),
+            (_) async => Right(tAccountBioOff),
           );
           return cubit;
         },
@@ -200,9 +207,9 @@ void main() {
           await cubit.signInWithLocalAcc(password: tPassword);
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(account: tAccountBioOff),
           AccountLoading(),
-          AccountLoggedIn(account: tImportedAccountBioOff, password: tPassword),
+          AccountLoggedIn(account: tAccountBioOff, password: tPassword),
         ],
       );
 
@@ -212,7 +219,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOn,
+            (_) async => tAccountBioOn,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -233,7 +240,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOn),
+            (_) async => Right(tAccountBioOn),
           );
           return cubit;
         },
@@ -242,9 +249,9 @@ void main() {
           await cubit.signInWithLocalAcc();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOn),
+          AccountLoaded(account: tAccountBioOn),
           AccountLoading(),
-          AccountLoggedIn(account: tImportedAccountBioOn, password: tPassword),
+          AccountLoggedIn(account: tAccountBioOn, password: tPassword),
         ],
       );
 
@@ -254,7 +261,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
+            (_) async => tAccountBioOff,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -284,10 +291,10 @@ void main() {
           await cubit.signInWithLocalAcc(password: tPassword);
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(account: tAccountBioOff),
           AccountLoading(),
           AccountLoadedLogInError(
-              account: tImportedAccountBioOff, errorMessage: tError.message),
+              account: tAccountBioOff, errorMessage: tError.message),
         ],
       );
 
@@ -297,7 +304,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
+            (_) async => tAccountBioOff,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -327,7 +334,7 @@ void main() {
           await cubit.signInWithLocalAcc();
         },
         expect: () => [
-          AccountLoaded(account: tImportedAccountBioOff),
+          AccountLoaded(account: tAccountBioOff),
         ],
       );
 
@@ -369,7 +376,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
+            (_) async => tAccountBioOff,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -382,7 +389,7 @@ void main() {
           await cubit.loadAccount();
         },
         expect: () => [
-          AccountLoggedIn(account: tImportedAccountBioOff),
+          AccountLoggedIn(account: tAccountBioOff),
         ],
       );
 
@@ -422,7 +429,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
+            (_) async => tAccountBioOff,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -451,7 +458,7 @@ void main() {
           await cubit.logout();
         },
         expect: () => [
-          AccountLoggedIn(account: tImportedAccountBioOff),
+          AccountLoggedIn(account: tAccountBioOff),
           AccountLoading(),
           AccountNotLoaded(),
         ],
@@ -463,7 +470,7 @@ void main() {
           when(
             () => _mockGetAccountUseCase(),
           ).thenAnswer(
-            (_) async => tImportedAccountBioOff,
+            (_) async => tAccountBioOff,
           );
           when(
             () => _mockGetCurrentUserUseCase(),
@@ -492,10 +499,10 @@ void main() {
           await cubit.logout();
         },
         expect: () => [
-          AccountLoggedIn(account: tImportedAccountBioOff),
+          AccountLoggedIn(account: tAccountBioOff),
           AccountLoading(),
           AccountLoggedInSignOutError(
-            account: tImportedAccountBioOff,
+            account: tAccountBioOff,
             password: null,
             errorMessage: tError.message,
           ),
@@ -536,7 +543,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOff),
+            (_) async => Right(tAccountBioOff),
           );
           when(
             () => _mockSaveAccountUseCase(
@@ -562,7 +569,7 @@ void main() {
         expect: () => [
           AccountLoading(),
           AccountLoggedIn(
-            account: tImportedAccountBioOff,
+            account: tAccountBioOff,
             password: tPassword,
           ),
         ],
@@ -578,7 +585,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOn),
+            (_) async => Right(tAccountBioOn),
           );
           when(
             () => _mockSaveAccountUseCase(
@@ -604,7 +611,7 @@ void main() {
         expect: () => [
           AccountLoading(),
           AccountLoggedIn(
-            account: tImportedAccountBioOn,
+            account: tAccountBioOn,
             password: tPassword,
           ),
         ],
@@ -709,7 +716,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOff),
+            (_) async => Right(tAccountBioOff),
           );
           when(
             () => _mockDeletePasswordUsecase(),
@@ -736,7 +743,7 @@ void main() {
         expect: () => [
           AccountLoading(),
           AccountLoggedIn(
-            account: tImportedAccountBioOff,
+            account: tAccountBioOff,
             password: tPassword,
           ),
         ],
@@ -752,7 +759,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOn),
+            (_) async => Right(tAccountBioOn),
           );
           when(
             () => _mockDeletePasswordUsecase(),
@@ -779,7 +786,7 @@ void main() {
         expect: () => [
           AccountLoading(),
           AccountLoggedIn(
-            account: tImportedAccountBioOn,
+            account: tAccountBioOn,
             password: tPassword,
           ),
         ],
@@ -870,6 +877,129 @@ void main() {
       );
 
       blocTest<AccountCubit, AccountState>(
+        'Wallet added to current logged in account',
+        build: () {
+          when(
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tAccountBioOff),
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
+          when(
+            () => _mockGetMainAccountAddressUseCase(
+              proxyAdrress: any(named: 'proxyAdrress'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tAddress),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.confirmSignUp(
+            email: tEmail,
+            password: tPassword,
+            code: 'test',
+            useBiometric: false,
+          );
+          await cubit.addWalletToAccount(
+            name: tName,
+            proxyAddress: tAddress,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tAccountBioOff,
+            password: tPassword,
+          ),
+          AccountLoading(),
+          AccountLoggedInWalletAdded(
+            account: tAccountBioOff.copyWith(
+              name: tName,
+              proxyAddress: tAddress,
+              mainAddress: tAddress,
+            ),
+            password: tPassword,
+          ),
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
+        'Failed to add wallet to current logged in account',
+        build: () {
+          when(
+            () => _mockConfirmSignUpUseCase(
+              email: any(named: 'email'),
+              code: any(named: 'code'),
+              useBiometric: any(named: 'useBiometric'),
+            ),
+          ).thenAnswer(
+            (_) async => Right(tAccountBioOff),
+          );
+          when(
+            () => _mockSaveAccountUseCase(
+              keypairJson: any(named: 'keypairJson'),
+            ),
+          ).thenAnswer(
+            (_) async {},
+          );
+          when(
+            () => _mockSavePasswordUseCase(password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
+          when(
+            () => _mockGetMainAccountAddressUseCase(
+              proxyAdrress: any(named: 'proxyAdrress'),
+            ),
+          ).thenAnswer(
+            (_) async => Left(tError),
+          );
+          return cubit;
+        },
+        act: (cubit) async {
+          await cubit.confirmSignUp(
+            email: tEmail,
+            password: tPassword,
+            code: 'test',
+            useBiometric: false,
+          );
+          await cubit.addWalletToAccount(
+            name: tName,
+            proxyAddress: tAddress,
+          );
+        },
+        expect: () => [
+          AccountLoading(),
+          AccountLoggedIn(
+            account: tAccountBioOff,
+            password: tPassword,
+          ),
+          AccountLoading(),
+          AccountLoggedInMainAccountFetchError(
+            account: tAccountBioOff,
+            password: tPassword,
+            errorMessage: tError.message,
+          )
+        ],
+      );
+
+      blocTest<AccountCubit, AccountState>(
         'Account biometric access switched on',
         build: () {
           when(
@@ -879,7 +1009,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOff),
+            (_) async => Right(tAccountBioOff),
           );
           when(
             () => _mockSaveAccountUseCase(
@@ -907,15 +1037,15 @@ void main() {
         expect: () => [
           AccountLoading(),
           AccountLoggedIn(
-            account: tImportedAccountBioOff,
+            account: tAccountBioOff,
             password: tPassword,
           ),
           AccountUpdatingBiometric(
-            account: tImportedAccountBioOff,
+            account: tAccountBioOff,
             password: tPassword,
           ),
           AccountLoggedIn(
-            account: tImportedAccountBioOn,
+            account: tAccountBioOn,
             password: tPassword,
           ),
         ],
@@ -931,7 +1061,7 @@ void main() {
               useBiometric: any(named: 'useBiometric'),
             ),
           ).thenAnswer(
-            (_) async => Right(tImportedAccountBioOn),
+            (_) async => Right(tAccountBioOn),
           );
           when(
             () => _mockSaveAccountUseCase(
@@ -959,15 +1089,15 @@ void main() {
         expect: () => [
           AccountLoading(),
           AccountLoggedIn(
-            account: tImportedAccountBioOn,
+            account: tAccountBioOn,
             password: tPassword,
           ),
           AccountUpdatingBiometric(
-            account: tImportedAccountBioOn,
+            account: tAccountBioOn,
             password: tPassword,
           ),
           AccountLoggedIn(
-            account: tImportedAccountBioOff,
+            account: tAccountBioOff,
             password: tPassword,
           ),
         ],

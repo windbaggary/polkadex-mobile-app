@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
 
 abstract class ImportWalletUtils {
   static void editNextMnemonic(

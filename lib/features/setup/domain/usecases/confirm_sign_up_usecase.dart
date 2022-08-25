@@ -10,7 +10,7 @@ class ConfirmSignUpUseCase {
 
   final IAccountRepository _accountRepository;
 
-  Future<Either<ApiError, ImportedAccountEntity>> call({
+  Future<Either<ApiError, AccountEntity>> call({
     required String email,
     required String code,
     required bool useBiometric,

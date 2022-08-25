@@ -108,7 +108,7 @@ class AppButton extends StatelessWidget {
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: tsS18W600CFF.copyWith(
+                  style: tsS16W400CFF.copyWith(
                       color: enabled ? textColor : AppColors.colorFFFFFF),
                 ),
               ),

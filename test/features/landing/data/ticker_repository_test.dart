@@ -24,14 +24,14 @@ void main() {
       "getAllMarketTickers": {
         "items": [{
             "m":"PDEX-1",
-            "priceChange24Hr":"-4.9979",
-            "priceChangePercent24Hr":"-0.3331933333333333",
-            "open":"15",
-            "close":"10.0021",
-            "high":"100",
-            "low":"0.01",
-            "volumeBase24hr":"584.8233333300001",
-            "volumeQuote24Hr":"638.550543228393"
+            "pc":-4.9979,
+            "pcp":-0.3331933333333333,
+            "o":15.0,
+            "c":10.0021,
+            "h":100.0,
+            "l":0.01,
+            "v_base":584.8233333300001,
+            "v_quote":638.550543228393
             }],
         "nextToken": null
       }

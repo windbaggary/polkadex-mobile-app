@@ -16,14 +16,15 @@ class AddressRepository implements IAdressRepository {
     try {
       final result =
           await _addressRemoteDatasource.fetchMainAddress(proxyAddress);
-
       String item =
           jsonDecode(result.data)['findUserByProxyAccount']['items'][0];
       item = item.substring(1, item.length - 1);
 
-      final addresses = item.split(',');
+      final adresses = item.split(',');
+      final mainAddress =
+          adresses.firstWhere((adress) => adress.contains('range_key'));
 
-      return Right(addresses[1].split('=')[1]);
+      return Right(mainAddress.split('=')[1]);
     } catch (_) {
       return Left(ApiError(message: 'Unexpected error on fetch main account.'));
     }

@@ -49,6 +49,7 @@ class AccountCubit extends Cubit<AccountState> {
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
+        _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
   final SignUpUseCase _signUpUseCase;
@@ -63,11 +64,12 @@ class AccountCubit extends Cubit<AccountState> {
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
+  final GetMainAccountAddressUsecase _getMainAccountAddressUsecase;
 
   String get accountName {
     final currentState = state;
 
-    return currentState is AccountLoaded ? currentState.account.email : '';
+    return currentState is AccountLoaded ? currentState.account.name : '';
   }
 
   String get mainAccountAddress {
@@ -339,6 +341,49 @@ class AccountCubit extends Cubit<AccountState> {
     );
   }
 
+  Future<void> addWalletToAccount({
+    required String name,
+    required String proxyAddress,
+  }) async {
+    final currentState = state;
+
+    if (currentState is AccountLoggedIn) {
+      emit(AccountLoading());
+
+      final result = await _getMainAccountAddressUsecase(
+        proxyAdrress: proxyAddress,
+      );
+
+      await result.fold(
+        (error) async => emit(
+          AccountLoggedInMainAccountFetchError(
+            account: currentState.account,
+            password: currentState.password,
+            errorMessage: error.message,
+          ),
+        ),
+        (mainAddress) async {
+          final currentAccountWithWallet =
+              (currentState.account as AccountModel).copyWith(
+            name: name,
+            proxyAddress: proxyAddress,
+            mainAddress: mainAddress,
+          );
+
+          await _saveAccountUseCase(
+              keypairJson: json.encode(currentAccountWithWallet));
+
+          emit(
+            AccountLoggedInWalletAdded(
+              account: currentAccountWithWallet,
+              password: currentState.password,
+            ),
+          );
+        },
+      );
+    }
+  }
+
   Future<void> switchBiometricAccess() async {
     final currentState = state;
 
@@ -352,7 +397,7 @@ class AccountCubit extends Cubit<AccountState> {
         ),
       );
 
-      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+      AccountEntity acc = (currentState.account as AccountModel)
           .copyWith(biometricAccess: !currentBioAccess);
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));
@@ -376,7 +421,7 @@ class AccountCubit extends Cubit<AccountState> {
         password: currentState.password,
       ));
 
-      ImportedAccountEntity acc = (currentState.account as ImportedAccountModel)
+      AccountEntity acc = (currentState.account as AccountModel)
           .copyWith(timerInterval: newInterval);
 
       await _saveAccountUseCase(keypairJson: json.encode(acc));

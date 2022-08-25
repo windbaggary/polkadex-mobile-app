@@ -22,8 +22,8 @@ import 'package:polkadex/features/landing/presentation/screens/landing_screen.da
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_deposit_screen.dart';
 import 'package:polkadex/features/notifications/screens/notif_details_screen.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/setup/presentation/screens/auth_logout_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/backup_mnemonic_screen.dart';
 import 'package:polkadex/features/setup/presentation/screens/code_verification_screen.dart';
@@ -145,14 +145,18 @@ abstract class Routes {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) {
+            final walletSettingsArguments = settings.arguments as Map;
+
             return ChangeNotifierProvider(
               create: (context) => dependency<WalletSettingsProvider>(),
               child: ChangeNotifierProvider.value(
-                value: settings.arguments as MnemonicProvider,
+                value: walletSettingsArguments['provider'] as MnemonicProvider,
                 child: FadeTransition(
                   opacity: CurvedAnimation(
                       parent: animation, curve: Interval(0.500, 1.00)),
-                  child: WalletSettingsScreen(),
+                  child: WalletSettingsScreen(
+                    importedAccount: walletSettingsArguments['importedAccount'],
+                  ),
                 ),
               ),
             );

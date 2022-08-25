@@ -5,7 +5,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/check_box_widget.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_shimmer_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';

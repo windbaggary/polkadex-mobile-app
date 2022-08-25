@@ -65,8 +65,8 @@ import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.da
 import 'package:polkadex/features/setup/domain/usecases/sign_in_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_out_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/sign_up_usecase.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/wallet_settings_provider.dart';
 import 'package:polkadex/features/trade/presentation/cubits/coin_graph_cubit.dart';
 import 'package:polkadex/common/graph/data/datasources/graph_remote_datasource.dart';
 import 'package:polkadex/common/market_asset/data/datasources/asset_remote_datasource.dart';

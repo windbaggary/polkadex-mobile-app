@@ -44,7 +44,7 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<Either<ApiError, ImportedAccountEntity>> confirmSignUp(
+  Future<Either<ApiError, AccountEntity>> confirmSignUp(
     String email,
     String code,
     bool useBiometric,
@@ -53,7 +53,8 @@ class AccountRepository implements IAccountRepository {
       await _accountRemoteDatasource.confirmSignUp(email, code);
 
       return Right(
-        ImportedAccountModel(
+        AccountModel(
+          name: '',
           email: email,
           mainAddress: '',
           proxyAddress: '',
@@ -77,7 +78,7 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<Either<ApiError, ImportedAccountEntity>> signIn(
+  Future<Either<ApiError, AccountEntity>> signIn(
     String email,
     String password,
     bool useBiometric,
@@ -86,7 +87,8 @@ class AccountRepository implements IAccountRepository {
       await _accountRemoteDatasource.signIn(email, password);
 
       return Right(
-        ImportedAccountModel(
+        AccountModel(
+          name: '',
           email: email,
           mainAddress: '',
           proxyAddress: '',
@@ -180,11 +182,11 @@ class AccountRepository implements IAccountRepository {
   }
 
   @override
-  Future<ImportedAccountEntity?> getAccountStorage() async {
+  Future<AccountEntity?> getAccountStorage() async {
     final result = await _accountLocalDatasource.getAccountStorage();
 
     return result != null
-        ? ImportedAccountModel.fromJson(jsonDecode(result))
+        ? AccountModel.fromLocalJson(jsonDecode(result))
         : null;
   }
 

@@ -23,7 +23,7 @@ void main() {
     tDataSuccess = '''{
       "findUserByProxyAccount": {
         "items": [
-          "{main_account=proxy-abcdefg123456789, item_type=abcdefg123456789}"
+          "{range_key=abcdefg123456789, item_type=abcdefg123456789}"
         ],
         "nextToken": null
       }

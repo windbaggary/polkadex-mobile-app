@@ -8,7 +8,7 @@ class GetAccountUseCase {
 
   final IAccountRepository _accountRepository;
 
-  Future<ImportedAccountEntity?> call() async {
+  Future<AccountEntity?> call() async {
     return await _accountRepository.getAccountStorage();
   }
 }

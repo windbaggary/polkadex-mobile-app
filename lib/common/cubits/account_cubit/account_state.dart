@@ -16,7 +16,7 @@ class AccountLoaded extends AccountState {
     required this.account,
   });
 
-  final ImportedAccountEntity account;
+  final AccountEntity account;
 
   @override
   List<Object?> get props => [
@@ -28,7 +28,7 @@ class AccountLoading extends AccountState {}
 
 class AccountLoggedIn extends AccountLoaded {
   AccountLoggedIn({
-    required ImportedAccountEntity account,
+    required AccountEntity account,
     this.password,
   }) : super(
           account: account,
@@ -88,7 +88,7 @@ class AccountNotLoadedLogInError extends AccountNotLoaded {
 
 class AccountLoadedLogInError extends AccountLoaded {
   AccountLoadedLogInError({
-    required ImportedAccountEntity account,
+    required AccountEntity account,
     this.errorMessage,
   }) : super(
           account: account,
@@ -105,7 +105,7 @@ class AccountLoadedLogInError extends AccountLoaded {
 
 class AccountLoadedSignOutError extends AccountLoaded {
   AccountLoadedSignOutError({
-    required ImportedAccountEntity account,
+    required AccountEntity account,
     required this.errorMessage,
   }) : super(account: account);
 
@@ -118,9 +118,45 @@ class AccountLoadedSignOutError extends AccountLoaded {
       ];
 }
 
+class AccountLoggedInWalletAdded extends AccountLoggedIn {
+  AccountLoggedInWalletAdded({
+    required AccountEntity account,
+    String? password,
+  }) : super(
+          account: account,
+          password: password,
+        );
+
+  @override
+  List<Object?> get props => [
+        account,
+        password,
+      ];
+}
+
 class AccountLoggedInSignOutError extends AccountLoggedIn {
   AccountLoggedInSignOutError({
-    required ImportedAccountEntity account,
+    required AccountEntity account,
+    String? password,
+    required this.errorMessage,
+  }) : super(
+          account: account,
+          password: password,
+        );
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [
+        account,
+        password,
+        errorMessage,
+      ];
+}
+
+class AccountLoggedInMainAccountFetchError extends AccountLoggedIn {
+  AccountLoggedInMainAccountFetchError({
+    required AccountEntity account,
     String? password,
     required this.errorMessage,
   }) : super(
@@ -153,7 +189,7 @@ class AccountResendCodeError extends AccountVerifyingCode {
 
 class AccountUpdatingBiometric extends AccountLoggedIn {
   AccountUpdatingBiometric({
-    required ImportedAccountEntity account,
+    required AccountEntity account,
     String? password,
   }) : super(
           account: account,
@@ -163,7 +199,7 @@ class AccountUpdatingBiometric extends AccountLoggedIn {
 
 class AccountUpdatingTimer extends AccountLoggedIn {
   AccountUpdatingTimer({
-    required ImportedAccountEntity account,
+    required AccountEntity account,
     String? password,
   }) : super(
           account: account,

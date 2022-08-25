@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
 
-class ImportedAccountEntity extends Equatable {
-  const ImportedAccountEntity({
+class AccountEntity extends Equatable {
+  const AccountEntity({
+    required this.name,
     required this.email,
     required this.mainAddress,
     required this.proxyAddress,
@@ -10,6 +11,7 @@ class ImportedAccountEntity extends Equatable {
     required this.timerInterval,
   });
 
+  final String name;
   final String email;
   final String mainAddress;
   final String proxyAddress;
@@ -18,6 +20,7 @@ class ImportedAccountEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+        name,
         email,
         mainAddress,
         proxyAddress,

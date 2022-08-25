@@ -337,6 +337,12 @@ TextStyle get tsS25W500CFF => TextStyle(
       color: AppColors.colorFFFFFF,
     );
 
+TextStyle get tsS25W600CFF => TextStyle(
+      fontSize: 25,
+      fontWeight: FontWeight.w600,
+      color: AppColors.colorFFFFFF,
+    );
+
 TextStyle get tsS19W700CFF => TextStyle(
       fontSize: 19,
       fontWeight: FontWeight.w700,

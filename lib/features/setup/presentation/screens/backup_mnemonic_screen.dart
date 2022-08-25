@@ -4,7 +4,8 @@ import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
-import 'package:polkadex/features/setup/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
@@ -143,24 +144,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
                         child: AppButton(
                           enabled: provider.hasShuffledMnemonicChanged,
                           label: 'Next',
-                          onTap: () => provider.verifyMnemonicOrder()
-                              ? Coordinator.goToWalletSettingsScreen(provider)
-                              : showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(30),
-                                    ),
-                                  ),
-                                  builder: (_) => WarningModalWidget(
-                                    title: 'Incorrect mnemonic phrase',
-                                    subtitle: 'Please enter again.',
-                                    imagePath: 'mnemonic_error.png',
-                                    details:
-                                        'One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.',
-                                  ),
-                                ),
+                          onTap: () => _onNextTap(provider),
                         ),
                       ),
                     ),
@@ -174,7 +158,37 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
     );
   }
 
-  /// Handling the back button animation
+  Future<void> _onNextTap(MnemonicProvider provider) async {
+    final isOrderCorrect = provider.verifyMnemonicOrder();
+    AccountEntity? importedAccount;
+
+    if (isOrderCorrect) {
+      importedAccount = await provider.createImportedAccount();
+    }
+
+    importedAccount != null
+        ? Coordinator.goToWalletSettingsScreen(
+            provider,
+            importedAccount: importedAccount,
+          )
+        : showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(30),
+              ),
+            ),
+            builder: (_) => WarningModalWidget(
+              title: 'Incorrect mnemonic phrase',
+              subtitle: 'Please enter again.',
+              imagePath: 'mnemonic_error.png',
+              details:
+                  'One or more of your 12-24 words are incorrect, make sure that the order is correct or if there is a typing error.',
+            ),
+          );
+  }
+
   Future<bool> _onPop(BuildContext context) async {
     await _animationController.reverse();
     Navigator.of(context).pop();
