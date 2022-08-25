@@ -6,6 +6,7 @@ import 'package:polkadex/common/dummy_providers/balance_chart_dummy_provider.dar
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
+import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/orderbook_app_bar_widget.dart';
@@ -262,49 +263,69 @@ class _BalanceTabViewState extends State<BalanceTabView>
   }
 
   Widget _buildAssetList() {
-    return BlocBuilder<BalanceCubit, BalanceState>(
-      builder: (context, state) {
-        if (state is BalanceLoaded) {
-          return ValueListenableBuilder<bool>(
-            valueListenable: hideSmallBalancesNotifier,
-            builder: (context, areSmallBalancesHidden, child) =>
-                ListView.builder(
-              padding: const EdgeInsets.only(bottom: 24),
-              itemBuilder: (context, index) {
-                String key = state.free.keys.elementAt(index);
-                final asset =
-                    context.read<MarketAssetCubit>().getAssetDetailsById(key);
-                final amount =
-                    double.tryParse(state.free.getBalance(key)) ?? 0.0;
+    return BlocBuilder<MarketAssetCubit, MarketAssetState>(
+      builder: (context, marketAssetState) =>
+          BlocBuilder<BalanceCubit, BalanceState>(
+        builder: (context, balanceState) {
+          if (marketAssetState is MarketAssetLoaded &&
+              balanceState is BalanceLoaded) {
+            final avlbAssets =
+                context.read<MarketAssetCubit>().listAvailableAssets;
 
-                return areSmallBalancesHidden && amount <= 0
-                    ? Container()
-                    : InkWell(
-                        onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
-                          asset: asset,
-                          balanceCubit: context.read<BalanceCubit>(),
-                        ),
-                        child: BalanceItemWidget(
-                          tokenAcronym: asset.symbol,
-                          tokenFullName: asset.name,
-                          assetSvg: TokenUtils.tokenIdToAssetSvg(asset.assetId),
-                          amount: state.free.getBalance(key),
-                        ),
-                      );
-              },
-              itemCount: state.free.keys.length,
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-            ),
+            return ValueListenableBuilder<bool>(
+              valueListenable: hideSmallBalancesNotifier,
+              builder: (context, areSmallBalancesHidden, child) =>
+                  ListView.builder(
+                padding: const EdgeInsets.only(bottom: 24),
+                itemBuilder: (context, index) {
+                  String key = avlbAssets.keys.elementAt(index);
+                  final asset = avlbAssets[key];
+
+                  final amount =
+                      double.tryParse(balanceState.free.getBalance(key)) ?? 0.0;
+
+                  return (areSmallBalancesHidden && amount <= 0) ||
+                          asset == null
+                      ? Container()
+                      : InkWell(
+                          onTap: () => Coordinator.goToBalanceCoinPreviewScreen(
+                            asset: asset,
+                            balanceCubit: context.read<BalanceCubit>(),
+                          ),
+                          child: BalanceItemWidget(
+                            tokenAcronym: asset.symbol,
+                            tokenFullName: asset.name,
+                            assetSvg:
+                                TokenUtils.tokenIdToAssetSvg(asset.assetId),
+                            amount: balanceState.free.getBalance(key),
+                          ),
+                        );
+                },
+                itemCount: avlbAssets.keys.length,
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+              ),
+            );
+          }
+
+          if (marketAssetState is MarketAssetLoading ||
+              balanceState is BalanceLoading) {
+            return BalanceItemShimmerWidget();
+          }
+
+          return PolkadexErrorRefreshWidget(
+            onRefresh: () async {
+              if (marketAssetState is MarketAssetError) {
+                await context.read<MarketAssetCubit>().getMarkets();
+              }
+
+              if (balanceState is BalanceError) {
+                await context.read<MarketAssetCubit>().getMarkets();
+              }
+            },
           );
-        }
-
-        if (state is BalanceLoading) {
-          return BalanceItemShimmerWidget();
-        }
-
-        return Container();
-      },
+        },
+      ),
     );
   }
 
