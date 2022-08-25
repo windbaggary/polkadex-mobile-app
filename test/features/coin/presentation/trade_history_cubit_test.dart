@@ -20,11 +20,10 @@ void main() {
   late _MockGetAccountTradesUsecase _mockGetAccountTradesUsecase;
   late _MockGetAccountTradesUpdatesUseCase _mockGetAccountTradesUpdatesUseCase;
   late TradeHistoryCubit cubit;
-  late String mainAccount;
   late String asset;
   late DateTime time;
   late String status;
-  late String amount;
+  late double amount;
   late String fee;
   late String address;
   late AccountTradeEntity trade;
@@ -37,15 +36,13 @@ void main() {
         getTradesUseCase: _mockGetAccountTradesUsecase,
         getAccountTradesUpdatesUseCase: _mockGetAccountTradesUpdatesUseCase);
 
-    mainAccount = '786653432';
     asset = "0";
     time = DateTime.fromMillisecondsSinceEpoch(1644853305519);
     status = 'OPEN';
-    amount = "100.0";
+    amount = 100.0;
     fee = "1.0";
     address = 'test';
     trade = AccountTradeModel(
-      mainAccount: mainAccount,
       txnType: EnumTradeTypes.deposit,
       asset: asset,
       amount: amount,

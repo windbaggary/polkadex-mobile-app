@@ -8,10 +8,9 @@ void main() {
 
   setUp(() {
     tAccountTrade = AccountTradeModel(
-      mainAccount: "k9o1dxJxQE8Zwm5Fy",
       txnType: EnumTradeTypes.deposit,
       asset: '1',
-      amount: '10',
+      amount: 10,
       fee: '10.0',
       status: 'OPEN',
       time: DateTime.now(),

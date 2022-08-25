@@ -193,10 +193,13 @@ class TradeRepository implements ITradeRepository {
         if (message.data != null) {
           final liveData =
               jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+          final newTransactionData = liveData['SetTransaction'];
 
-          onMsgReceived(
-            RecentTradeModel.fromJson(liveData),
-          );
+          if (newTransactionData != null) {
+            onMsgReceived(
+              RecentTradeModel.fromJson(liveData),
+            );
+          }
         }
       });
     } catch (error) {
@@ -253,7 +256,7 @@ class TradeRepository implements ITradeRepository {
 
           if (newAccountTradeData != null) {
             onMsgReceived(
-              AccountTradeModel.fromJson(newAccountTradeData),
+              AccountTradeModel.fromUpdateJson(newAccountTradeData),
             );
           }
         }
