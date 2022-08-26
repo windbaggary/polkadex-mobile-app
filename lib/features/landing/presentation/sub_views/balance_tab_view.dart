@@ -34,7 +34,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   final ValueNotifier<bool> hideSmallBalancesNotifier =
-      ValueNotifier<bool>(false);
+      ValueNotifier<bool>(true);
 
   @override
   void initState() {
@@ -281,8 +281,7 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   String key = avlbAssets.keys.elementAt(index);
                   final asset = avlbAssets[key];
 
-                  final amount =
-                      double.tryParse(balanceState.free.getBalance(key)) ?? 0.0;
+                  final amount = balanceState.free.getBalance(key);
 
                   return (areSmallBalancesHidden && amount <= 0) ||
                           asset == null
