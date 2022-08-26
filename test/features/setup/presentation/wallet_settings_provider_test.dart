@@ -1,6 +1,6 @@
 import 'package:polkadex/injection_container.dart';
 import 'package:test/test.dart';
-import 'package:polkadex/features/setup/presentation/providers/wallet_settings_provider.dart';
+import 'package:polkadex/features/landing/presentation/providers/wallet_settings_provider.dart';
 
 void main() {
   late WalletSettingsProvider _provider;

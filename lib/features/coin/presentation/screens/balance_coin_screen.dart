@@ -599,7 +599,6 @@ class _TopCoinTitleWidget extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                color: AppColors.colorFFFFFF,
               ),
               width: 52,
               height: 52,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/bip39.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
 
@@ -103,13 +104,20 @@ class MnemonicProvider extends ChangeNotifier {
     _loading = false;
   }
 
-  Future<bool> checkMnemonicValid() async {
+  Future<AccountEntity?> createImportedAccount() async {
     final result = await _importAccountUseCase(
       mnemonic: mnemonicWords.join(' '),
       password: '',
     );
 
-    return result.isRight();
+    AccountEntity? newAccount;
+
+    result.fold(
+      (_) => null,
+      (account) => newAccount = account,
+    );
+
+    return newAccount;
   }
 
   Future<void> searchSuggestions(String inputWord) async {

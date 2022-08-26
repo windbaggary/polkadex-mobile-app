@@ -30,7 +30,6 @@ class BalanceItemWidget extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: AppColors.colorFFFFFF,
             ),
             width: 42,
             height: 42,

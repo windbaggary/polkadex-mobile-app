@@ -183,6 +183,12 @@ class _LandingScreenState extends State<LandingScreen>
               builder: (context, marketAssetState) {
                 return BlocListener<AccountCubit, AccountState>(
                   listener: (_, accountState) {
+                    if (accountState is AccountLoggedInWalletAdded) {
+                      context.read<BalanceCubit>().getBalance(
+                            accountState.account.mainAddress,
+                          );
+                    }
+
                     if (accountState is AccountNotLoaded) {
                       Coordinator.goToIntroScreen();
                     }

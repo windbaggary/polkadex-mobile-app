@@ -4,6 +4,6 @@ import 'package:polkadex/features/setup/domain/entities/imported_account_entity.
 
 abstract class IMnemonicRepository {
   Future<Either<ApiError, List<String>>> generateMnemonic();
-  Future<Either<ApiError, ImportedAccountEntity>> importAccount(
+  Future<Either<ApiError, AccountEntity>> importAccount(
       String mnemonic, String password);
 }

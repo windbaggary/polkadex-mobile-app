@@ -13,7 +13,7 @@ class _AccountRepositoryMock extends Mock implements IAccountRepository {}
 void main() {
   late SignInUseCase _usecase;
   late _AccountRepositoryMock _repository;
-  late ImportedAccountEntity tAccount;
+  late AccountEntity tAccount;
   late String tProxyAddress;
   late String tEmail;
   late String tPassword;
@@ -23,7 +23,8 @@ void main() {
     _repository = _AccountRepositoryMock();
     _usecase = SignInUseCase(accountRepository: _repository);
     tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
-    tAccount = ImportedAccountModel(
+    tAccount = AccountModel(
+      name: "",
       email: 'test',
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
       proxyAddress: tProxyAddress,
@@ -51,7 +52,7 @@ void main() {
         );
         // assert
 
-        late ImportedAccountEntity resultAccount;
+        late AccountEntity resultAccount;
 
         result.fold(
           (_) => null,

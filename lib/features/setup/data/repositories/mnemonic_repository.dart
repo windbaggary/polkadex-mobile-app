@@ -25,13 +25,13 @@ class MnemonicRepository implements IMnemonicRepository {
   }
 
   @override
-  Future<Either<ApiError, ImportedAccountEntity>> importAccount(
+  Future<Either<ApiError, AccountEntity>> importAccount(
       String mnemonic, String password) async {
     final result = await _mnemonicRemoteDatasource.importAccount(
         mnemonic, password.toBase64());
 
     if (result['error'] == null) {
-      return Right(ImportedAccountModel.fromJson(result));
+      return Right(AccountModel.fromJson(result));
     } else {
       return Left(ApiError.fromJson(result['error']));
     }
