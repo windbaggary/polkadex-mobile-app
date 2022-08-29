@@ -40,7 +40,7 @@ class OrderbookRepository implements IOrderbookRepository {
   Future<void> getOrderbookUpdates(
     String leftTokenId,
     String rightTokenId,
-    Function(List<dynamic>, List<dynamic>) onMsgReceived,
+    Function(List<dynamic>) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
     final Stream orderbookStream =
@@ -59,10 +59,7 @@ class OrderbookRepository implements IOrderbookRepository {
           final liveData =
               jsonDecode(jsonDecode(data)['websocket_streams']['data']);
 
-          final listPuts = liveData['puts'].toList();
-          final listDels = liveData['dels'].toList();
-
-          onMsgReceived(listPuts, listDels);
+          onMsgReceived(liveData);
         }
       });
     } catch (error) {

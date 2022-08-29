@@ -18,4 +18,13 @@ class OrderbookItemModel extends OrderbookItemEntity {
       amount: double.parse(map['q']) / pow(10, 12),
     );
   }
+
+  factory OrderbookItemModel.fromUpdateJson(
+    Map<String, dynamic> map,
+  ) {
+    return OrderbookItemModel(
+      price: map['price'] / pow(10, 12),
+      amount: map['qty'] / pow(10, 12),
+    );
+  }
 }

@@ -10,7 +10,7 @@ abstract class IOrderbookRepository {
   Future<void> getOrderbookUpdates(
     String leftTokenId,
     String rightTokenId,
-    Function(List<dynamic>, List<dynamic>) onMsgReceived,
+    Function(List<dynamic>) onMsgReceived,
     Function(Object) onMsgError,
   );
 }

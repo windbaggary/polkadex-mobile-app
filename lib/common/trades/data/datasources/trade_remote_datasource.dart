@@ -54,12 +54,7 @@ class TradeRemoteDatasource {
             document: mutations.cancelOrder,
             variables: {
               'input': {
-                'CancelOrder': [
-                  payloadResult['order_id'],
-                  payloadResult['account'],
-                  payloadResult['pair'],
-                  payloadResult['signature'],
-                ]
+                'payload': json.encode({'CancelOrder': payloadResult}),
               },
             },
           ),

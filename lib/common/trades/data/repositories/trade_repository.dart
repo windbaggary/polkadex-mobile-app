@@ -51,7 +51,7 @@ class TradeRepository implements ITradeRepository {
         amount,
       );
 
-      final newOrderId = jsonDecode(result.data)['place_order']['items'][0];
+      final newOrderId = jsonDecode(result.data)['place_order'];
 
       final newOrder = OrderModel(
         mainAccount: mainAddress,
@@ -145,7 +145,7 @@ class TradeRepository implements ITradeRepository {
 
           if (newOrderData != null) {
             onMsgReceived(
-              OrderModel.fromJson(newOrderData),
+              OrderModel.fromUpdateJson(newOrderData),
             );
           }
         }

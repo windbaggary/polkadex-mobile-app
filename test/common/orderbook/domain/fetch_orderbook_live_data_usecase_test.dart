@@ -32,7 +32,7 @@ void main() {
         await _usecase(
           leftTokenId: '0',
           rightTokenId: '0',
-          onMsgReceived: (_, __) {},
+          onMsgReceived: (_) {},
           onMsgError: (_) {},
         );
 

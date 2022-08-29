@@ -81,7 +81,7 @@ void main() {
       await repository.getOrderbookUpdates(
         leftTokenId,
         rightTokenId,
-        (_, __) {},
+        (_) {},
         (_) {},
       );
 
