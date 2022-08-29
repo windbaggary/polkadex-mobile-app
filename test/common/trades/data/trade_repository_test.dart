@@ -86,29 +86,26 @@ void main() {
       "listOrderHistorybyMainAccount": {
         "items": [
           {
-            "main_account": "fjwhuerjghwsejdfkweldhjgea",
-            "client_order_id": "239795334492173596420427136507382475609",
-            "exchange_order_id": "239795334492173596420427136507382475609",
-            "time": "2022-07-05T18:44:43.989964791+00:00",
+            "u": "fjwhuerjghwsejdfkweldhjgea",
+            "id": "239795334492173596420427136507382475609",
+            "cid": "239795334492173596420427136507382475609",
+            "t": "1661787799000",
             "m": "PDEX-1",
-            "side": "Ask",
-            "order_type": "LIMIT",
-            "status": "OPEN",
-            "price": "12",
-            "qty": "18",
-            "avg_filled_price": "12",
-            "filled_quantity": "0.08333333",
-            "fee": "0.00000000"
+            "s": "Ask",
+            "ot": "LIMIT",
+            "st": "OPEN",
+            "p": "00000001",
+            "q": "00000001",
+            "afp": "00000012",
+            "fq": "08333333",
+            "fee": "00000000"
           }
         ],
         "nextToken": null
       }
     }''';
     tPlaceOrderSuccess = '''{
-      "place_order": {
-        "items": ["239795334492173596420427136507382475609"],
-        "nextToken": null
-      }
+      "place_order": "239795334492173596420427136507382475609"
     }''';
     tStream = _MockStream();
   });
