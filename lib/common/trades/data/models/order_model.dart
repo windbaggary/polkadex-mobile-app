@@ -63,7 +63,6 @@ class OrderModel extends OrderEntity {
   }
 
   factory OrderModel.fromUpdateJson(Map<String, dynamic> map) {
-    print(map);
     return OrderModel(
       mainAccount: map['user'],
       tradeId: map['id'],

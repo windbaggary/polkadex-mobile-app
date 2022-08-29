@@ -50,16 +50,21 @@ class OrderbookModel extends OrderbookEntity {
     final tempBid = [...bid];
     final tempAsk = [...ask];
 
-    for (var itemPuts in listOrderbook) {
-      final list = itemPuts['side'] == 'Bid' ? tempBid : tempAsk;
+    for (var itemList in listOrderbook) {
+      final list = itemList['side'] == 'Bid' ? tempBid : tempAsk;
 
       final index = list
-          .indexWhere((item) => item.price == itemPuts['price'] / pow(12, 10));
+          .indexWhere((item) => item.price == itemList['price'] / pow(12, 10));
 
-      if (index >= 0) {
-        list[index] = OrderbookItemModel.fromUpdateJson(itemPuts);
+      final decodedOrderbookItem = OrderbookItemModel.fromUpdateJson(itemList);
+
+      if (decodedOrderbookItem.amount <= 0) {
+        list.removeWhere((itemFromCurrOrderbook) =>
+            itemFromCurrOrderbook.price == decodedOrderbookItem.price);
+      } else if (index >= 0) {
+        list[index] = OrderbookItemModel.fromUpdateJson(itemList);
       } else {
-        list.add(OrderbookItemModel.fromUpdateJson(itemPuts));
+        list.add(OrderbookItemModel.fromUpdateJson(itemList));
       }
     }
 
