@@ -238,7 +238,11 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => AccountCubit(
+    () => ResendCodeUseCase(accountRepository: dependency()),
+  );
+
+  dependency.registerSingleton<AccountCubit>(
+    AccountCubit(
       signUpUseCase: dependency(),
       signInUseCase: dependency(),
       signOutUseCase: dependency(),
@@ -506,10 +510,6 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => GetAssetsDetailsUseCase(assetRepository: dependency()),
-  );
-
-  dependency.registerFactory(
-    () => ResendCodeUseCase(accountRepository: dependency()),
   );
 
   dependency.registerSingleton<MarketAssetCubit>(
