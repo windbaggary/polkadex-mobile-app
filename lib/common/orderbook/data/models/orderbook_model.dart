@@ -53,8 +53,11 @@ class OrderbookModel extends OrderbookEntity {
     for (var itemList in listOrderbook) {
       final list = itemList['side'] == 'Bid' ? tempBid : tempAsk;
 
-      final index = list
-          .indexWhere((item) => item.price == itemList['price'] / pow(12, 10));
+      final index = list.indexWhere((item) {
+        print(
+            '${item.price} || ${item.amount} || ${itemList['price'] / pow(10, 12)}');
+        return item.price == itemList['price'] / pow(10, 12);
+      });
 
       final decodedOrderbookItem = OrderbookItemModel.fromUpdateJson(itemList);
 
