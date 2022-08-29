@@ -1,22 +1,24 @@
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/data/models/imported_trade_account_model.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
 
 class AccountModel extends AccountEntity {
   const AccountModel({
     required String name,
     required String email,
     required String mainAddress,
-    required String proxyAddress,
     required bool biometricAccess,
     required EnumTimerIntervalTypes timerInterval,
+    ImportedTradeAccountEntity? importedTradeAccountEntity,
   }) : super(
           name: name,
           email: email,
           mainAddress: mainAddress,
-          proxyAddress: proxyAddress,
           biometricAccess: biometricAccess,
           timerInterval: timerInterval,
+          importedTradeAccountEntity: importedTradeAccountEntity,
         );
 
   factory AccountModel.fromJson(Map<String, dynamic> map) {
@@ -24,22 +26,11 @@ class AccountModel extends AccountEntity {
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       mainAddress: map['mainAddress'] ?? '',
-      proxyAddress: map['address'] ?? '',
       biometricAccess: map['biometricAccess'] ?? false,
       timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
           EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
-    );
-  }
-
-  factory AccountModel.fromLocalJson(Map<String, dynamic> map) {
-    return AccountModel(
-      name: map['name'] ?? '',
-      email: map['email'] ?? '',
-      mainAddress: map['mainAddress'] ?? '',
-      proxyAddress: map['proxyAddress'] ?? '',
-      biometricAccess: map['biometricAccess'] ?? false,
-      timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
-          EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
+      importedTradeAccountEntity:
+          ImportedTradeAccountModel.fromJson(map['importedTradeAccountEntity']),
     );
   }
 
@@ -48,9 +39,11 @@ class AccountModel extends AccountEntity {
       'name': name,
       'email': email,
       'mainAddress': mainAddress,
-      'proxyAddress': proxyAddress,
       'biometricAccess': biometricAccess,
       'timerInterval': timerInterval.toString(),
+      'importedTradeAccountEntity': importedTradeAccountEntity != null
+          ? (importedTradeAccountEntity as ImportedTradeAccountModel).toJson()
+          : null,
     };
   }
 
@@ -58,18 +51,18 @@ class AccountModel extends AccountEntity {
     String? name,
     String? email,
     String? mainAddress,
-    String? proxyAddress,
     bool? biometricAccess,
-    String? signature,
     EnumTimerIntervalTypes? timerInterval,
+    ImportedTradeAccountEntity? importedTradeAccountEntity,
   }) {
     return AccountModel(
       name: name ?? this.name,
       email: email ?? this.email,
       mainAddress: mainAddress ?? this.mainAddress,
-      proxyAddress: proxyAddress ?? this.proxyAddress,
       biometricAccess: biometricAccess ?? this.biometricAccess,
       timerInterval: timerInterval ?? this.timerInterval,
+      importedTradeAccountEntity:
+          importedTradeAccountEntity ?? this.importedTradeAccountEntity,
     );
   }
 }

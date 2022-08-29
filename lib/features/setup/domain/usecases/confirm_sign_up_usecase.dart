@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 
 class ConfirmSignUpUseCase {

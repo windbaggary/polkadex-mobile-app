@@ -55,7 +55,7 @@ class OrderbookRepository implements IOrderbookRepository {
       orderbookSubscription = orderbookStream.listen((message) {
         final data = message.data;
 
-        if (message.data != null) {
+        if (data != null) {
           final liveData =
               jsonDecode(jsonDecode(data)['websocket_streams']['data']);
 

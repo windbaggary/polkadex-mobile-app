@@ -3,8 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/data/models/account_model.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 
@@ -15,7 +15,6 @@ void main() {
   late _AccountRepositoryMock _repository;
   late String tEmail;
   late String tCode;
-  late String tProxyAddress;
   late AccountEntity tAccount;
   late ApiError tError;
 
@@ -24,12 +23,10 @@ void main() {
     _usecase = ConfirmSignUpUseCase(accountRepository: _repository);
     tEmail = "test@test.com";
     tCode = '123456';
-    tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
     tAccount = AccountModel(
-      name: '',
-      email: 'test',
+      name: "",
+      email: "",
       mainAddress: "k9o1dxJxQE8Zwm5Fy",
-      proxyAddress: tProxyAddress,
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );

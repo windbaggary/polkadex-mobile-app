@@ -50,6 +50,7 @@ class TradeRepository implements ITradeRepository {
         price,
         amount,
       );
+
       final newOrderId = jsonDecode(result.data)['place_order']['items'][0];
 
       final newOrder = OrderModel(

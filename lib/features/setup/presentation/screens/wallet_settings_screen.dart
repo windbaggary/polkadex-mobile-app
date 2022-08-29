@@ -9,14 +9,14 @@ import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/common/widgets/loading_overlay.dart';
 import 'package:polkadex/common/widgets/polkadex_snack_bar.dart';
 import 'package:polkadex/features/landing/presentation/providers/wallet_settings_provider.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
 import 'package:polkadex/features/setup/presentation/widgets/wallet_input_widget.dart';
 import 'package:provider/provider.dart';
 
 class WalletSettingsScreen extends StatefulWidget {
   WalletSettingsScreen({required this.importedAccount});
 
-  final AccountEntity importedAccount;
+  final ImportedTradeAccountEntity importedAccount;
 
   @override
   _WalletSettingsScreenState createState() => _WalletSettingsScreenState();
@@ -89,8 +89,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
         body: BlocListener<AccountCubit, AccountState>(
           listener: (context, state) {
             if (state is AccountLoggedIn &&
-                state.account.mainAddress !=
-                    widget.importedAccount.mainAddress) {
+                state.account.mainAddress.isNotEmpty) {
               Coordinator.goBackToLandingScreen();
             }
 
@@ -202,8 +201,7 @@ class _WalletSettingsScreenState extends State<WalletSettingsScreen>
                                 .read<AccountCubit>()
                                 .addWalletToAccount(
                                   name: _nameController.text,
-                                  proxyAddress:
-                                      widget.importedAccount.proxyAddress,
+                                  importedTradeAccount: widget.importedAccount,
                                 ),
                           ),
                         ),

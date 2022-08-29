@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/data/models/account_model.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
@@ -11,7 +12,7 @@ import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart
 import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/import_trade_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/resend_code_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
@@ -32,7 +33,7 @@ class AccountCubit extends Cubit<AccountState> {
     required GetAccountUseCase getAccountStorageUseCase,
     required DeleteAccountUseCase deleteAccountUseCase,
     required DeletePasswordUseCase deletePasswordUseCase,
-    required ImportAccountUseCase importAccountUseCase,
+    required ImportTradeAccountUseCase importTradeAccountUseCase,
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
@@ -82,10 +83,13 @@ class AccountCubit extends Cubit<AccountState> {
 
   String get proxyAccountAddress {
     final currentState = state;
+    String? proxyAddress;
 
-    return currentState is AccountLoaded
-        ? currentState.account.proxyAddress
-        : '';
+    if (currentState is AccountLoaded) {
+      proxyAddress = currentState.account.importedTradeAccountEntity?.address;
+    }
+
+    return proxyAddress ?? '';
   }
 
   bool get biometricAccess {
@@ -343,7 +347,7 @@ class AccountCubit extends Cubit<AccountState> {
 
   Future<void> addWalletToAccount({
     required String name,
-    required String proxyAddress,
+    required ImportedTradeAccountEntity importedTradeAccount,
   }) async {
     final currentState = state;
 
@@ -351,7 +355,7 @@ class AccountCubit extends Cubit<AccountState> {
       emit(AccountLoading());
 
       final result = await _getMainAccountAddressUsecase(
-        proxyAdrress: proxyAddress,
+        proxyAdrress: importedTradeAccount.address,
       );
 
       await result.fold(
@@ -366,8 +370,8 @@ class AccountCubit extends Cubit<AccountState> {
           final currentAccountWithWallet =
               (currentState.account as AccountModel).copyWith(
             name: name,
-            proxyAddress: proxyAddress,
             mainAddress: mainAddress,
+            importedTradeAccountEntity: importedTradeAccount,
           );
 
           await _saveAccountUseCase(

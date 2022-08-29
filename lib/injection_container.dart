@@ -82,7 +82,7 @@ import 'features/setup/data/datasources/account_local_datasource.dart';
 import 'common/cubits/account_cubit/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
 import 'features/setup/domain/usecases/get_password_usecase.dart';
-import 'features/setup/domain/usecases/import_account_usecase.dart';
+import 'features/setup/domain/usecases/import_trade_account_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'common/web_view_runner/web_view_runner.dart';
 import 'package:get_it/get_it.dart';
@@ -146,7 +146,7 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => ImportAccountUseCase(
+    () => ImportTradeAccountUseCase(
       mnemonicRepository: dependency(),
     ),
   );
@@ -242,7 +242,7 @@ Future<void> init() async {
       deleteAccountUseCase: dependency(),
       deletePasswordUseCase: dependency(),
       saveAccountUseCase: dependency(),
-      importAccountUseCase: dependency(),
+      importTradeAccountUseCase: dependency(),
       getPasswordUseCase: dependency(),
       getAccountStorageUseCase: dependency(),
       getMainAccountAddressUsecase: dependency(),

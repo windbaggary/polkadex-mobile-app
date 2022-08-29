@@ -69,8 +69,8 @@ class _BalanceTabViewState extends State<BalanceTabView>
             child: BlocBuilder<AccountCubit, AccountState>(
               builder: (context, state) {
                 if (state is AccountLoaded &&
-                    (state.account.proxyAddress.isNotEmpty ||
-                        state.account.mainAddress.isNotEmpty)) {
+                    state.account.importedTradeAccountEntity != null &&
+                    state.account.mainAddress.isNotEmpty) {
                   return _buildWalletHeaderAndAssetList();
                 }
 
