@@ -5,6 +5,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/features/setup/data/models/account_model.dart';
 import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
@@ -37,6 +38,7 @@ class AccountCubit extends Cubit<AccountState> {
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
+    required ConfirmPasswordUseCase confirmPasswordUseCase,
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
   })  : _signUpUseCase = signUpUseCase,
         _signInUseCase = signInUseCase,
@@ -50,6 +52,7 @@ class AccountCubit extends Cubit<AccountState> {
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
+        _confirmPasswordUseCase = confirmPasswordUseCase,
         _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
@@ -65,6 +68,7 @@ class AccountCubit extends Cubit<AccountState> {
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
+  final ConfirmPasswordUseCase _confirmPasswordUseCase;
   final GetMainAccountAddressUsecase _getMainAccountAddressUsecase;
 
   String get accountName {
@@ -119,9 +123,18 @@ class AccountCubit extends Cubit<AccountState> {
             account: localAccount,
           ),
         ),
-        (remoteAccount) async => emit(
-          AccountLoggedIn(account: localAccount),
-        ),
+        (remoteAccount) async {
+          if (localAccount.importedTradeAccountEntity != null) {
+            await _confirmPasswordUseCase(
+              account: json.encode(localAccount.importedTradeAccountEntity),
+              password: '',
+            );
+          }
+
+          emit(
+            AccountLoggedIn(account: localAccount),
+          );
+        },
       );
     } else {
       if (resultRemoteAccount.isRight()) {
@@ -319,6 +332,14 @@ class AccountCubit extends Cubit<AccountState> {
           );
         },
         (_) async {
+          if (currentState.account.importedTradeAccountEntity != null) {
+            await _confirmPasswordUseCase(
+              account:
+                  json.encode(currentState.account.importedTradeAccountEntity),
+              password: '',
+            );
+          }
+
           emit(
             AccountLoggedIn(
               account: currentState.account,
@@ -376,6 +397,12 @@ class AccountCubit extends Cubit<AccountState> {
 
           await _saveAccountUseCase(
               keypairJson: json.encode(currentAccountWithWallet));
+
+          await _confirmPasswordUseCase(
+            account: json
+                .encode(currentAccountWithWallet.importedTradeAccountEntity),
+            password: '',
+          );
 
           emit(
             AccountLoggedInWalletAdded(

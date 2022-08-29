@@ -23,4 +23,5 @@ abstract class IAccountRepository {
   Future<void> deletePasswordStorage();
   Future<bool> savePasswordStorage(String password);
   Future<String?> getPasswordStorage();
+  Future<bool> confirmPassword(String account, String password);
 }

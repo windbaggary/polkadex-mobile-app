@@ -1,5 +1,6 @@
+import 'dart:convert';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/graphql/mutations.dart' as mutations;
@@ -16,10 +17,8 @@ class TradeRemoteDatasource {
     String price,
     String amount,
   ) async {
-    final nonce = MathUtils.getNonce();
-
     final String _callPlaceOrderJSON =
-        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), $nonce, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
@@ -28,7 +27,9 @@ class TradeRemoteDatasource {
           request: GraphQLRequest(
             document: mutations.placeOrder,
             variables: {
-              'input': {'PlaceOrder': payloadResult},
+              'input': {
+                'payload': json.encode({'PlaceOrder': payloadResult}),
+              },
             },
           ),
         )

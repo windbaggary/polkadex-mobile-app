@@ -9,6 +9,7 @@ import 'package:polkadex/features/setup/data/models/encoding_model.dart';
 import 'package:polkadex/features/setup/data/models/imported_trade_account_model.dart';
 import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
@@ -54,6 +55,9 @@ class _MockSavePasswordUseCase extends Mock implements SavePasswordUseCase {}
 
 class _MockGetPasswordUseCase extends Mock implements GetPasswordUseCase {}
 
+class _MockConfirmPasswordUseCase extends Mock
+    implements ConfirmPasswordUseCase {}
+
 class _MockGetMainAccountAddressUseCase extends Mock
     implements GetMainAccountAddressUsecase {}
 
@@ -71,6 +75,7 @@ void main() {
   late _MockSaveAccountUseCase _mockSaveAccountUseCase;
   late _MockSavePasswordUseCase _mockSavePasswordUseCase;
   late _MockGetPasswordUseCase _mockGetPasswordUseCase;
+  late _MockConfirmPasswordUseCase _mockConfirmPasswordUseCase;
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
@@ -100,6 +105,7 @@ void main() {
     _mockSaveAccountUseCase = _MockSaveAccountUseCase();
     _mockSavePasswordUseCase = _MockSavePasswordUseCase();
     _mockGetPasswordUseCase = _MockGetPasswordUseCase();
+    _mockConfirmPasswordUseCase = _MockConfirmPasswordUseCase();
     _mockGetMainAccountAddressUseCase = _MockGetMainAccountAddressUseCase();
 
     cubit = AccountCubit(
@@ -116,6 +122,7 @@ void main() {
       saveAccountUseCase: _mockSaveAccountUseCase,
       savePasswordUseCase: _mockSavePasswordUseCase,
       getPasswordUseCase: _mockGetPasswordUseCase,
+      confirmPasswordUseCase: _mockConfirmPasswordUseCase,
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
 
@@ -924,6 +931,13 @@ void main() {
             ),
           ).thenAnswer(
             (_) async => Right(tAddress),
+          );
+          when(
+            () => _mockConfirmPasswordUseCase(
+                account: any(named: 'account'),
+                password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
           );
           return cubit;
         },

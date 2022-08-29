@@ -1,5 +1,5 @@
-import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
+import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 
 class MnemonicRemoteDatasource {
   Future<Map<String, dynamic>> generateMnemonic() async {

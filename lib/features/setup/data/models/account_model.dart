@@ -29,8 +29,10 @@ class AccountModel extends AccountEntity {
       biometricAccess: map['biometricAccess'] ?? false,
       timerInterval: StringUtils.enumFromString<EnumTimerIntervalTypes>(
           EnumTimerIntervalTypes.values, map['timerInterval'] ?? 'oneMinute')!,
-      importedTradeAccountEntity:
-          ImportedTradeAccountModel.fromJson(map['importedTradeAccountEntity']),
+      importedTradeAccountEntity: map['importedTradeAccountEntity'] != null
+          ? ImportedTradeAccountModel.fromJson(
+              map['importedTradeAccountEntity'])
+          : null,
     );
   }
 
