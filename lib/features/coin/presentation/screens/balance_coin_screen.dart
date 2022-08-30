@@ -17,6 +17,7 @@ import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/common/widgets/chart/_app_line_chart_widget.dart';
 import 'package:polkadex/common/widgets/custom_app_bar.dart';
 import 'package:polkadex/common/widgets/custom_date_range_picker.dart';
+import 'package:polkadex/common/widgets/soon_widget.dart';
 import 'package:polkadex/features/coin/presentation/widgets/order_history_shimmer_widget.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
@@ -623,27 +624,29 @@ class _TopCoinTitleWidget extends StatelessWidget {
                   : _orderBalanceShimmerWidget(),
             ),
             if (state is BalanceLoaded)
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.colorE6007A,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                alignment: Alignment.center,
-                child: buildInkWell(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 6,
-                      horizontal: 12,
-                    ),
-                    child: Text(
-                      "Withdraw",
-                      style: tsS14W600CFF,
-                    ),
+              SoonWidget(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.colorE6007A,
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                  onTap: () => Coordinator.goToCoinWithdrawScreen(
-                    asset: asset,
-                    balanceCubit: context.read<BalanceCubit>(),
+                  alignment: Alignment.center,
+                  child: buildInkWell(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 6,
+                        horizontal: 12,
+                      ),
+                      child: Text(
+                        "Withdraw",
+                        style: tsS14W600CFF,
+                      ),
+                    ),
+                    onTap: () => Coordinator.goToCoinWithdrawScreen(
+                      asset: asset,
+                      balanceCubit: context.read<BalanceCubit>(),
+                    ),
                   ),
                 ),
               ),
