@@ -16,7 +16,7 @@ class RecentTradeModel extends RecentTradeEntity {
   factory RecentTradeModel.fromJson(Map<String, dynamic> map) {
     return RecentTradeModel(
       m: map['m'],
-      time: DateTime.parse(map['t']),
+      time: DateTime.fromMicrosecondsSinceEpoch(int.parse(map['t'])),
       price: double.parse(map['p']),
       qty: double.parse(map['q']),
     );

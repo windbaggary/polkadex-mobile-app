@@ -187,12 +187,12 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<void> fetchRecentTradesUpdates(
-    String address,
+    String market,
     Function(RecentTradeEntity) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
     final recentTradesStream =
-        await _userDataRemoteDatasource.getUserDataStream(address);
+        await _userDataRemoteDatasource.getUserDataStream(market);
 
     await recentTradesSubscription?.cancel();
 
