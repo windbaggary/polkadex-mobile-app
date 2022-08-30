@@ -465,7 +465,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             WidgetsBinding.instance
                 ?.addPostFrameCallback((_) => _onPriceAmountChanged(
                       placeOrderCubit,
-                      newPrice,
+                      newPrice.toDouble(),
                       false,
                     ));
           }
