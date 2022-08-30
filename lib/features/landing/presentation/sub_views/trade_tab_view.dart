@@ -11,6 +11,7 @@ import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
+import 'package:polkadex/features/landing/presentation/widgets/connect_trade_account_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/trade_bottom_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/place_order_widget.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
@@ -102,7 +103,7 @@ class _TradeTabViewState extends State<TradeTabView>
                     padding: EdgeInsets.symmetric(vertical: 8),
                     margin: EdgeInsets.only(top: 8),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child:
@@ -117,13 +118,20 @@ class _TradeTabViewState extends State<TradeTabView>
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(right: 8),
-                            child: PlaceOrderWidget(),
+                            child: ConnectTradeAccountWidget(
+                              child: PlaceOrderWidget(),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  TradeBottomWidget(),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  ConnectTradeAccountWidget(
+                    child: TradeBottomWidget(),
+                  ),
                 ],
               ),
             ),
