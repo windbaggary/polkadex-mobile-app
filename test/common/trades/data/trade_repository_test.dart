@@ -74,9 +74,9 @@ void main() {
         "items": [
           {
             "m": "PDEX-1",
-            "q": "1.0",
-            "p": "1.0",
-            "t": "2022-07-05T14:07:31.060470763+00:00"
+            "q": "100000000000",
+            "p": "100000000000",
+            "t": "1661434434872"
           }
         ],
         "nextToken": null
@@ -305,7 +305,7 @@ void main() {
 
   test('Must return a successful fetch recent trades live data response',
       () async {
-    when(() => userDataSource.getUserDataStream(
+    when(() => tradeDataSource.getRecentTradesStream(
           any(),
         )).thenAnswer(
       (_) async => tStream,
@@ -317,7 +317,7 @@ void main() {
       (_) {},
     );
 
-    verify(() => userDataSource.getUserDataStream(tMarket)).called(1);
+    verify(() => tradeDataSource.getRecentTradesStream(tMarket)).called(1);
     verifyNoMoreInteractions(userDataSource);
   });
 }
