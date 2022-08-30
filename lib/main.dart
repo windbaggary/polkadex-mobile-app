@@ -159,6 +159,10 @@ class _MyAppState extends State<MyApp> {
               hoverColor: Colors.transparent,
               focusColor: Colors.transparent,
               buttonTheme: ButtonThemeData(buttonColor: AppColors.color1C2023),
+              textTheme: Theme.of(context).textTheme.apply(
+                    bodyColor: Colors.white,
+                    displayColor: Colors.white,
+                  ),
               textSelectionTheme: TextSelectionThemeData(
                 cursorColor: AppColors.colorE6007A,
                 selectionColor: AppColors.color8E8E93,
