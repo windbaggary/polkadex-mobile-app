@@ -129,7 +129,7 @@ class _LandingScreenState extends State<LandingScreen>
                 create: (context) => NotificationDrawerProvider()),
             ChangeNotifierProvider<HomeScrollNotifProvider>(
                 create: (_) => HomeScrollNotifProvider()),
-            Provider<PageController>(
+            ChangeNotifierProvider<PageController>(
               create: (_) => _pageController,
             ),
           ],
