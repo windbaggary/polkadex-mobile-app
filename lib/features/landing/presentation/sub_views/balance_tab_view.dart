@@ -84,89 +84,97 @@ class _BalanceTabViewState extends State<BalanceTabView>
   }
 
   Widget _buildNoWalletWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 32,
-        vertical: 64,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: <BoxShadow>[bsDefault],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 32,
+          vertical: 64,
         ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            16,
-            8,
-            16,
-            16,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: <BoxShadow>[bsDefault],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SvgPicture.asset(
-                'walletBanner'.asAssetSvg(),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Looks like you don't have a wallet",
-                        textAlign: TextAlign.center,
-                        style: tsS25W600CFF.copyWith(
-                          color: AppColors.color1C2023,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              16,
+              8,
+              16,
+              16,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  'walletBanner'.asAssetSvg(),
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      32,
+                      0,
+                      32,
+                      16,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Looks like you don't have a wallet",
+                          textAlign: TextAlign.center,
+                          style: tsS25W600CFF.copyWith(
+                            color: AppColors.color1C2023,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "Explore a new way to trade with your own wallet!",
-                        textAlign: TextAlign.center,
-                        style: tsS16W400CFF.copyWith(
-                          color: AppColors.color93949A,
+                        SizedBox(height: 16),
+                        Text(
+                          "Explore a new way to trade with your own wallet!",
+                          textAlign: TextAlign.center,
+                          style: tsS16W400CFF.copyWith(
+                            color: AppColors.color93949A,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: AppButton(
-                      label: 'Scan QR Code',
-                      innerPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 16,
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppButton(
+                        label: 'Scan QR Code',
+                        innerPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
+                        outerPadding: EdgeInsets.zero,
+                        onTap: () => Coordinator.goToQrCodeScanScreen(
+                            onQrCodeScan: (mnemonic) =>
+                                _qrCodeMnemonicEval(mnemonic)),
                       ),
-                      outerPadding: EdgeInsets.zero,
-                      onTap: () => Coordinator.goToQrCodeScanScreen(
-                          onQrCodeScan: (mnemonic) =>
-                              _qrCodeMnemonicEval(mnemonic)),
                     ),
-                  ),
-                  SizedBox(
-                    width: 18,
-                  ),
-                  Expanded(
-                    child: AppButton(
-                      label: 'Import Wallet',
-                      innerPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 16,
+                    SizedBox(
+                      width: 18,
+                    ),
+                    Expanded(
+                      child: AppButton(
+                        label: 'Import Wallet',
+                        innerPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
+                        outerPadding: EdgeInsets.zero,
+                        backgroundColor: AppColors.colorFFFFFF,
+                        textColor: Colors.black,
+                        onTap: () => Coordinator.goToimportWalletMethods(),
                       ),
-                      outerPadding: EdgeInsets.zero,
-                      backgroundColor: AppColors.colorFFFFFF,
-                      textColor: Colors.black,
-                      onTap: () => Coordinator.goToimportWalletMethods(),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
