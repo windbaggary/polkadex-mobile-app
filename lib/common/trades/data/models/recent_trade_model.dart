@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:polkadex/common/trades/domain/entities/recent_trade_entity.dart';
 
 class RecentTradeModel extends RecentTradeEntity {
@@ -17,8 +19,8 @@ class RecentTradeModel extends RecentTradeEntity {
     return RecentTradeModel(
       m: map['m'],
       time: DateTime.fromMicrosecondsSinceEpoch(int.parse(map['t'])),
-      price: double.parse(map['p']),
-      qty: double.parse(map['q']),
+      price: double.parse(map['p']) / pow(10, 12),
+      qty: double.parse(map['q']) / pow(10, 12),
     );
   }
 }

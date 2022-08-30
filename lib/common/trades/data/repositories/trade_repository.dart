@@ -192,7 +192,7 @@ class TradeRepository implements ITradeRepository {
     Function(Object) onMsgError,
   ) async {
     final recentTradesStream =
-        await _userDataRemoteDatasource.getUserDataStream(market);
+        await _tradeRemoteDatasource.getRecentTradesStream(market);
 
     await recentTradesSubscription?.cancel();
 
