@@ -129,6 +129,9 @@ class _LandingScreenState extends State<LandingScreen>
                 create: (context) => NotificationDrawerProvider()),
             ChangeNotifierProvider<HomeScrollNotifProvider>(
                 create: (_) => HomeScrollNotifProvider()),
+            Provider<PageController>(
+              create: (_) => _pageController,
+            ),
           ],
           builder: (context, child) => Scaffold(
             resizeToAvoidBottomInset: false,
@@ -223,6 +226,7 @@ class _LandingScreenState extends State<LandingScreen>
                         ),
                       ],
                       physics: NeverScrollableScrollPhysics(),
+                      onPageChanged: (index) => _onPageChangedTapped(index),
                     ),
                   ),
                 );
@@ -251,8 +255,11 @@ class _LandingScreenState extends State<LandingScreen>
   }
 
   void _onItemTapped(int index) {
-    _pageViewNotifier.value = index;
     _pageController.animateToPage(index,
         duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+  }
+
+  void _onPageChangedTapped(int index) {
+    _pageViewNotifier.value = index;
   }
 }
