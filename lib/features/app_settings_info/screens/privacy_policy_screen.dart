@@ -20,6 +20,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: AppColors.color1C2023,
       body: AppSettingsLayout(
@@ -51,8 +53,12 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   return Theme(
                     // ignore accentColor deprecation since it's the only way to set desired pdf page on numberPicker
                     // ignore_for_file: deprecated_member_use
-                    data: Theme.of(context)
-                        .copyWith(accentColor: AppColors.colorE6007A),
+                    data: currentTheme.copyWith(
+                      accentColor: AppColors.colorE6007A,
+                      colorScheme: currentTheme.colorScheme.copyWith(
+                        primary: AppColors.colorE6007A,
+                      ),
+                    ),
                     child: PDFViewer(
                       document: snapshot.data!,
                       pickerButtonColor: AppColors.colorE6007A,
