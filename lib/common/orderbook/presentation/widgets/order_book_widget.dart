@@ -308,7 +308,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     return BlocBuilder<RecentTradesCubit, RecentTradesState>(
       builder: (context, state) {
         if (state is RecentTradesLoaded) {
-          final isUpTendency = state.trades.isNotEmpty
+          final isUpTendency = state.trades.length >= 2
               ? state.trades.first.price >= state.trades[1].price
               : true;
 
