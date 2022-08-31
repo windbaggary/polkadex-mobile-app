@@ -18,7 +18,8 @@ class ConnectTradeAccountWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountCubit, AccountState>(builder: (context, state) {
-      if (state is AccountLoggedIn && state.account.proxyAddress.isNotEmpty) {
+      if (state is AccountLoggedIn &&
+          state.account.importedTradeAccountEntity != null) {
         return child;
       }
 
