@@ -22,7 +22,7 @@ class OrderBuyItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return OrderBookChartItemWidget(
       percentage: percentageFilled,
-      direction: EnumGradientDirection.right,
+      direction: EnumGradientDirection.left,
       color: AppColors.color0CA564,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 6, 6, 6),
