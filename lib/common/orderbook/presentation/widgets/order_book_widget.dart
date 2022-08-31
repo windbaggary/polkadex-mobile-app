@@ -165,7 +165,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           ConstrainedBox(
             constraints: BoxConstraints(minHeight: 430),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: columnChildren,
             ),
           )
