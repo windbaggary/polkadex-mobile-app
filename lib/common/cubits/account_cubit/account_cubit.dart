@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/data/models/account_model.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
@@ -11,7 +13,7 @@ import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart
 import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_main_account_address_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/import_trade_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/resend_code_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
@@ -32,10 +34,11 @@ class AccountCubit extends Cubit<AccountState> {
     required GetAccountUseCase getAccountStorageUseCase,
     required DeleteAccountUseCase deleteAccountUseCase,
     required DeletePasswordUseCase deletePasswordUseCase,
-    required ImportAccountUseCase importAccountUseCase,
+    required ImportTradeAccountUseCase importTradeAccountUseCase,
     required SaveAccountUseCase saveAccountUseCase,
     required SavePasswordUseCase savePasswordUseCase,
     required GetPasswordUseCase getPasswordUseCase,
+    required ConfirmPasswordUseCase confirmPasswordUseCase,
     required GetMainAccountAddressUsecase getMainAccountAddressUsecase,
   })  : _signUpUseCase = signUpUseCase,
         _signInUseCase = signInUseCase,
@@ -49,6 +52,7 @@ class AccountCubit extends Cubit<AccountState> {
         _saveAccountUseCase = saveAccountUseCase,
         _savePasswordUseCase = savePasswordUseCase,
         _getPasswordUseCase = getPasswordUseCase,
+        _confirmPasswordUseCase = confirmPasswordUseCase,
         _getMainAccountAddressUsecase = getMainAccountAddressUsecase,
         super(AccountInitial());
 
@@ -64,6 +68,7 @@ class AccountCubit extends Cubit<AccountState> {
   final SaveAccountUseCase _saveAccountUseCase;
   final SavePasswordUseCase _savePasswordUseCase;
   final GetPasswordUseCase _getPasswordUseCase;
+  final ConfirmPasswordUseCase _confirmPasswordUseCase;
   final GetMainAccountAddressUsecase _getMainAccountAddressUsecase;
 
   String get accountName {
@@ -82,10 +87,13 @@ class AccountCubit extends Cubit<AccountState> {
 
   String get proxyAccountAddress {
     final currentState = state;
+    String? proxyAddress;
 
-    return currentState is AccountLoaded
-        ? currentState.account.proxyAddress
-        : '';
+    if (currentState is AccountLoaded) {
+      proxyAddress = currentState.account.importedTradeAccountEntity?.address;
+    }
+
+    return proxyAddress ?? '';
   }
 
   bool get biometricAccess {
@@ -115,9 +123,18 @@ class AccountCubit extends Cubit<AccountState> {
             account: localAccount,
           ),
         ),
-        (remoteAccount) async => emit(
-          AccountLoggedIn(account: localAccount),
-        ),
+        (remoteAccount) async {
+          if (localAccount.importedTradeAccountEntity != null) {
+            await _confirmPasswordUseCase(
+              account: json.encode(localAccount.importedTradeAccountEntity),
+              password: '',
+            );
+          }
+
+          emit(
+            AccountLoggedIn(account: localAccount),
+          );
+        },
       );
     } else {
       if (resultRemoteAccount.isRight()) {
@@ -315,6 +332,14 @@ class AccountCubit extends Cubit<AccountState> {
           );
         },
         (_) async {
+          if (currentState.account.importedTradeAccountEntity != null) {
+            await _confirmPasswordUseCase(
+              account:
+                  json.encode(currentState.account.importedTradeAccountEntity),
+              password: '',
+            );
+          }
+
           emit(
             AccountLoggedIn(
               account: currentState.account,
@@ -343,7 +368,7 @@ class AccountCubit extends Cubit<AccountState> {
 
   Future<void> addWalletToAccount({
     required String name,
-    required String proxyAddress,
+    required ImportedTradeAccountEntity importedTradeAccount,
   }) async {
     final currentState = state;
 
@@ -351,7 +376,7 @@ class AccountCubit extends Cubit<AccountState> {
       emit(AccountLoading());
 
       final result = await _getMainAccountAddressUsecase(
-        proxyAdrress: proxyAddress,
+        proxyAdrress: importedTradeAccount.address,
       );
 
       await result.fold(
@@ -366,12 +391,18 @@ class AccountCubit extends Cubit<AccountState> {
           final currentAccountWithWallet =
               (currentState.account as AccountModel).copyWith(
             name: name,
-            proxyAddress: proxyAddress,
             mainAddress: mainAddress,
+            importedTradeAccountEntity: importedTradeAccount,
           );
 
           await _saveAccountUseCase(
               keypairJson: json.encode(currentAccountWithWallet));
+
+          await _confirmPasswordUseCase(
+            account: json
+                .encode(currentAccountWithWallet.importedTradeAccountEntity),
+            password: '',
+          );
 
           emit(
             AccountLoggedInWalletAdded(

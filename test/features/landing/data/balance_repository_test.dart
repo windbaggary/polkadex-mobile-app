@@ -33,7 +33,7 @@ void main() {
     tDataSuccess = '''{
       "getAllBalancesByMainAccount": {
         "items": [
-          {"asset": "PDEX", "free": "100.0", "reversed": "0.0"}
+          {"a": "PDEX", "f": "100.0", "r": "0.0"}
         ],
         "nextToken": null
       }

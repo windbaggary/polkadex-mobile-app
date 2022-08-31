@@ -5,6 +5,7 @@ import 'package:polkadex/common/configs/app_config.dart';
 import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
+import 'package:polkadex/features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/token_pair_expanded_provider.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
@@ -267,6 +268,9 @@ class _ThisQuoteLayoutWidget extends AnimatedWidget {
           leftTokenId: provider.selectedBaseToken!.assetId,
           rightTokenId: provider.selectedQuoteToken!.assetId,
         );
+
+    context.read<RecentTradesCubit>().getRecentTrades(
+        '${provider.selectedBaseToken!.assetId}-${provider.selectedQuoteToken!.assetId}');
 
     Navigator.of(context).pop(
       MarketSelectionResultModel(

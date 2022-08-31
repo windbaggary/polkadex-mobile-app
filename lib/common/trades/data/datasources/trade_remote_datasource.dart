@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:polkadex/common/utils/math_utils.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
+import 'package:polkadex/graphql/subscriptions.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/graphql/mutations.dart' as mutations;
 import 'package:polkadex/graphql/queries.dart';
@@ -16,10 +18,8 @@ class TradeRemoteDatasource {
     String price,
     String amount,
   ) async {
-    final nonce = MathUtils.getNonce();
-
     final String _callPlaceOrderJSON =
-        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), $nonce, '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
@@ -28,7 +28,9 @@ class TradeRemoteDatasource {
           request: GraphQLRequest(
             document: mutations.placeOrder,
             variables: {
-              'input': {'PlaceOrder': payloadResult},
+              'input': {
+                'payload': json.encode({'PlaceOrder': payloadResult}),
+              },
             },
           ),
         )
@@ -53,12 +55,7 @@ class TradeRemoteDatasource {
             document: mutations.cancelOrder,
             variables: {
               'input': {
-                'CancelOrder': [
-                  payloadResult['order_id'],
-                  payloadResult['account'],
-                  payloadResult['pair'],
-                  payloadResult['signature'],
-                ]
+                'payload': json.encode({'CancelOrder': payloadResult}),
               },
             },
           ),
@@ -128,5 +125,17 @@ class TradeRemoteDatasource {
           ),
         )
         .response;
+  }
+
+  Future<Stream> getRecentTradesStream(String market) async {
+    return Amplify.API.subscribe(
+      GraphQLRequest(
+        document: websocketStreams,
+        variables: <String, dynamic>{
+          'name': '$market-recent-trades',
+        },
+      ),
+      onEstablished: () => print('recent trades subscription established'),
+    );
   }
 }

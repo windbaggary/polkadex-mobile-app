@@ -3,10 +3,11 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/account_remote_datasource.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/data/models/account_model.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 
 class AccountRepository implements IAccountRepository {
@@ -57,7 +58,6 @@ class AccountRepository implements IAccountRepository {
           name: '',
           email: email,
           mainAddress: '',
-          proxyAddress: '',
           biometricAccess: useBiometric,
           timerInterval: EnumTimerIntervalTypes.oneMinute,
         ),
@@ -91,7 +91,6 @@ class AccountRepository implements IAccountRepository {
           name: '',
           email: email,
           mainAddress: '',
-          proxyAddress: '',
           biometricAccess: useBiometric,
           timerInterval: EnumTimerIntervalTypes.oneMinute,
         ),
@@ -185,9 +184,7 @@ class AccountRepository implements IAccountRepository {
   Future<AccountEntity?> getAccountStorage() async {
     final result = await _accountLocalDatasource.getAccountStorage();
 
-    return result != null
-        ? AccountModel.fromLocalJson(jsonDecode(result))
-        : null;
+    return result != null ? AccountModel.fromJson(jsonDecode(result)) : null;
   }
 
   @override
@@ -208,5 +205,11 @@ class AccountRepository implements IAccountRepository {
   @override
   Future<String?> getPasswordStorage() async {
     return await _accountLocalDatasource.getPasswordStorage();
+  }
+
+  @override
+  Future<bool> confirmPassword(String account, String password) async {
+    return await _accountLocalDatasource.confirmPassword(
+        account, password.toBase64());
   }
 }

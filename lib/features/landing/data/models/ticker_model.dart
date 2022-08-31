@@ -3,14 +3,14 @@ import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 class TickerModel extends TickerEntity {
   const TickerModel({
     required String m,
-    required double priceChange24Hr,
-    required double priceChangePercent24Hr,
-    required double open,
-    required double close,
-    required double high,
-    required double low,
-    required double volumeBase24hr,
-    required double volumeQuote24Hr,
+    required num priceChange24Hr,
+    required num priceChangePercent24Hr,
+    required num open,
+    required num close,
+    required num high,
+    required num low,
+    required num volumeBase24hr,
+    required num volumeQuote24Hr,
   }) : super(
           m: m,
           priceChange24Hr: priceChange24Hr,

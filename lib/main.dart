@@ -39,7 +39,8 @@ void main() async {
     'log',
     (data) async {
       if (data == 'polkadexWorker ready') {
-        await injection.dependency<MarketAssetCubit>().getMarkets();
+        await injection.dependency<AccountCubit>().loadAccount();
+        injection.dependency<MarketAssetCubit>().getMarkets();
       }
     },
   );
@@ -130,7 +131,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, _) => MultiBlocProvider(
         providers: [
           BlocProvider<AccountCubit>(
-            create: (_) => injection.dependency<AccountCubit>()..loadAccount(),
+            create: (_) => injection.dependency<AccountCubit>(),
           ),
           BlocProvider<MarketAssetCubit>(
             create: (_) => injection.dependency<MarketAssetCubit>(),

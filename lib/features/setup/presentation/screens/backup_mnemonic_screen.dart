@@ -5,7 +5,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/app_buttons.dart';
 import 'package:polkadex/features/landing/presentation/providers/mnemonic_provider.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
 import 'package:polkadex/features/setup/presentation/widgets/warning_mnemonic_widget.dart';
 import 'package:polkadex/features/setup/presentation/widgets/mnemonic_grid_widget.dart';
 import 'package:provider/provider.dart';
@@ -160,7 +160,7 @@ class _BackupMnemonicScreenState extends State<BackupMnemonicScreen>
 
   Future<void> _onNextTap(MnemonicProvider provider) async {
     final isOrderCorrect = provider.verifyMnemonicOrder();
-    AccountEntity? importedAccount;
+    ImportedTradeAccountEntity? importedAccount;
 
     if (isOrderCorrect) {
       importedAccount = await provider.createImportedAccount();

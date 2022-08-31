@@ -41,7 +41,7 @@ class GraphRepository implements IGraphRepository {
         (index) => KLineEntity.fromCustom(
           open: double.parse(listData[index]['o']),
           close: double.parse(listData[index]['c']),
-          time: DateTime.parse(listData[index]['t']).millisecondsSinceEpoch,
+          time: int.parse(listData[index]['time']),
           high: double.parse(listData[index]['h']),
           low: double.parse(listData[index]['l']),
           vol: double.parse(listData[index]['v_base']),
@@ -82,7 +82,7 @@ class GraphRepository implements IGraphRepository {
             KLineEntity.fromCustom(
               open: double.parse(newGraphData['o']),
               close: double.parse(newGraphData['c']),
-              time: DateTime.parse(newGraphData['t']).millisecondsSinceEpoch,
+              time: int.parse(newGraphData['time']),
               high: double.parse(newGraphData['h']),
               low: double.parse(newGraphData['l']),
               vol: double.parse(newGraphData['v_base']),

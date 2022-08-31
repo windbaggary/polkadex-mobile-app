@@ -5,8 +5,4 @@ abstract class MathUtils {
     num mod = pow(10, precision);
     return (value * mod).floorToDouble() / mod;
   }
-
-  static int getNonce() {
-    return (DateTime.now().millisecondsSinceEpoch / 1000).floor();
-  }
 }

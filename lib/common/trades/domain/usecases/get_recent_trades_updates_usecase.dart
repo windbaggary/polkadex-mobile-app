@@ -9,12 +9,12 @@ class GetRecentTradesUpdatesUseCase {
   final ITradeRepository _tradeRepository;
 
   Future<void> call({
-    required String address,
+    required String market,
     required Function(RecentTradeEntity) onMsgReceived,
     required Function(Object) onMsgError,
   }) async {
     return await _tradeRepository.fetchRecentTradesUpdates(
-      address,
+      market,
       onMsgReceived,
       onMsgError,
     );

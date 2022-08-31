@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dartz/dartz.dart';
-import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/trades/data/models/account_trade_model.dart';
 import 'package:polkadex/common/trades/data/models/recent_trade_model.dart';
@@ -50,7 +49,8 @@ class TradeRepository implements ITradeRepository {
         price,
         amount,
       );
-      final newOrderId = jsonDecode(result.data)['place_order']['items'][0];
+
+      final newOrderId = jsonDecode(result.data)['place_order'];
 
       final newOrder = OrderModel(
         mainAccount: mainAddress,
@@ -66,9 +66,13 @@ class TradeRepository implements ITradeRepository {
         status: orderType == EnumOrderTypes.market ? 'CLOSED' : 'OPEN',
       );
 
+      if (result.errors.isNotEmpty) {
+        return Left(
+          ApiError(message: result.errors.first.message),
+        );
+      }
+
       return Right(newOrder);
-    } on RpcException catch (rpcError) {
-      return Left(ApiError(message: rpcError.message));
     } catch (e) {
       return Left(ApiError(message: e.toString()));
     }
@@ -82,12 +86,18 @@ class TradeRepository implements ITradeRepository {
     String orderId,
   ) async {
     try {
-      await _tradeRemoteDatasource.cancelOrder(
+      final result = await _tradeRemoteDatasource.cancelOrder(
         address,
         baseAsset == 'PDEX' ? '' : baseAsset,
         quoteAsset == 'PDEX' ? '' : quoteAsset,
         orderId,
       );
+
+      if (result.errors.isNotEmpty) {
+        return Left(
+          ApiError(message: result.errors.first.message),
+        );
+      }
 
       return Right(null);
     } catch (e) {
@@ -144,7 +154,7 @@ class TradeRepository implements ITradeRepository {
 
           if (newOrderData != null) {
             onMsgReceived(
-              OrderModel.fromJson(newOrderData),
+              OrderModel.fromUpdateJson(newOrderData),
             );
           }
         }
@@ -177,12 +187,12 @@ class TradeRepository implements ITradeRepository {
 
   @override
   Future<void> fetchRecentTradesUpdates(
-    String address,
+    String market,
     Function(RecentTradeEntity) onMsgReceived,
     Function(Object) onMsgError,
   ) async {
     final recentTradesStream =
-        await _userDataRemoteDatasource.getUserDataStream(address);
+        await _tradeRemoteDatasource.getRecentTradesStream(market);
 
     await recentTradesSubscription?.cancel();
 
@@ -193,10 +203,13 @@ class TradeRepository implements ITradeRepository {
         if (message.data != null) {
           final liveData =
               jsonDecode(jsonDecode(data)['websocket_streams']['data']);
+          final newTransactionData = liveData['SetTransaction'];
 
-          onMsgReceived(
-            RecentTradeModel.fromJson(liveData),
-          );
+          if (newTransactionData != null) {
+            onMsgReceived(
+              RecentTradeModel.fromJson(liveData),
+            );
+          }
         }
       });
     } catch (error) {
@@ -253,7 +266,7 @@ class TradeRepository implements ITradeRepository {
 
           if (newAccountTradeData != null) {
             onMsgReceived(
-              AccountTradeModel.fromJson(newAccountTradeData),
+              AccountTradeModel.fromUpdateJson(newAccountTradeData),
             );
           }
         }

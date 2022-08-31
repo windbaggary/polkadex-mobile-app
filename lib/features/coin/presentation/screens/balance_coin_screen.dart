@@ -161,7 +161,8 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                                             const EdgeInsets.only(right: 6),
                                         child: InkWell(
                                           onTap: () =>
-                                              _onBuyFilterButtonPress(context),
+                                              _onDepositFilterButtonPress(
+                                                  context),
                                           child: Container(
                                             width: 36,
                                             height: 36,
@@ -169,7 +170,7 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                                                 vertical: 7.0, horizontal: 9),
                                             decoration: BoxDecoration(
                                                 color: _typeFilters.contains(
-                                                        EnumBuySell.buy)
+                                                        EnumTradeTypes.deposit)
                                                     ? Colors.white
                                                     : AppColors.color8BA1BE
                                                         .withOpacity(0.2),
@@ -177,7 +178,8 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                                                     BorderRadius.circular(12)),
                                             child: SvgPicture.asset(
                                               (_typeFilters.contains(
-                                                          EnumBuySell.buy)
+                                                          EnumTradeTypes
+                                                              .deposit)
                                                       ? 'buysel'
                                                       : 'buy')
                                                   .asAssetSvg(),
@@ -190,7 +192,8 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                                             const EdgeInsets.only(right: 6),
                                         child: InkWell(
                                           onTap: () =>
-                                              _onSellFilterButtonPress(context),
+                                              _onWithdrawFilterButtonPress(
+                                                  context),
                                           child: Container(
                                             width: 36,
                                             height: 36,
@@ -198,7 +201,7 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                                                 vertical: 7.0, horizontal: 9),
                                             decoration: BoxDecoration(
                                                 color: _typeFilters.contains(
-                                                        EnumBuySell.sell)
+                                                        EnumTradeTypes.withdraw)
                                                     ? Colors.white
                                                     : AppColors.color8BA1BE
                                                         .withOpacity(0.2),
@@ -206,7 +209,8 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                                                     BorderRadius.circular(12)),
                                             child: SvgPicture.asset(
                                               (_typeFilters.contains(
-                                                          EnumBuySell.sell)
+                                                          EnumTradeTypes
+                                                              .withdraw)
                                                       ? 'sellsel'
                                                       : 'sell')
                                                   .asAssetSvg(),
@@ -344,10 +348,10 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
     );
   }
 
-  void _onBuyFilterButtonPress(BuildContext context) {
-    setState(() => _typeFilters.contains(EnumBuySell.buy)
-        ? _typeFilters.remove(EnumBuySell.buy)
-        : _typeFilters.add(EnumBuySell.buy));
+  void _onDepositFilterButtonPress(BuildContext context) {
+    setState(() => _typeFilters.contains(EnumTradeTypes.deposit)
+        ? _typeFilters.remove(EnumTradeTypes.deposit)
+        : _typeFilters.add(EnumTradeTypes.deposit));
 
     context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
           filters: _typeFilters,
@@ -355,10 +359,10 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
         );
   }
 
-  void _onSellFilterButtonPress(BuildContext context) {
-    setState(() => _typeFilters.contains(EnumBuySell.sell)
-        ? _typeFilters.remove(EnumBuySell.sell)
-        : _typeFilters.add(EnumBuySell.sell));
+  void _onWithdrawFilterButtonPress(BuildContext context) {
+    setState(() => _typeFilters.contains(EnumTradeTypes.withdraw)
+        ? _typeFilters.remove(EnumTradeTypes.withdraw)
+        : _typeFilters.add(EnumTradeTypes.withdraw));
 
     context.read<TradeHistoryCubit>().updateTradeHistoryFilter(
           filters: _typeFilters,
@@ -405,12 +409,12 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
   Widget _buildBalancesWidget() {
     return BlocBuilder<BalanceCubit, BalanceState>(
       builder: (context, state) {
-        String availableBalance = '-';
-        String lockedBalance = '-';
+        double availableBalance = 0.0;
+        double lockedBalance = 0.0;
 
         if (state is BalanceLoaded) {
-          availableBalance = state.free[widget.asset.assetId] ?? '-';
-          lockedBalance = state.reserved[widget.asset.assetId] ?? '-';
+          availableBalance = state.free.getBalance(widget.asset.assetId);
+          lockedBalance = state.reserved.getBalance(widget.asset.assetId);
         }
 
         return Padding(
@@ -426,7 +430,7 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                   ),
                   SizedBox(height: 8),
                   Text(
-                    availableBalance,
+                    '$availableBalance',
                     style: tsS16W600CFF,
                   ),
                 ],
@@ -439,7 +443,7 @@ class _BalanceCoinScreenState extends State<BalanceCoinScreen>
                   ),
                   SizedBox(height: 8),
                   Text(
-                    lockedBalance,
+                    '$lockedBalance',
                     style: tsS16W600CFF,
                   )
                 ],
@@ -612,11 +616,7 @@ class _TopCoinTitleWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          (double.parse(state.free.getBalance(asset.assetId)) +
-                                  double.parse(
-                                    state.reserved.getBalance(asset.assetId),
-                                  ))
-                              .toStringAsFixed(2),
+                          '${state.free.getBalance(asset.assetId) + state.reserved.getBalance(asset.assetId)}',
                           style: tsS25W500CFF,
                         ),
                       ],

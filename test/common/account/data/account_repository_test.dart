@@ -5,11 +5,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
+import 'package:polkadex/features/setup/data/models/account_model.dart';
 import 'package:polkadex/features/setup/data/repositories/account_repository.dart';
 import 'package:polkadex/features/setup/data/datasources/account_local_datasource.dart';
 import 'package:polkadex/features/setup/data/datasources/account_remote_datasource.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
 
 class _MockAccountLocalDatasource extends Mock
     implements AccountLocalDatasource {}
@@ -45,7 +45,6 @@ void main() {
       name: "",
       email: tEmail,
       mainAddress: "",
-      proxyAddress: "",
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );

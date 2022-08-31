@@ -32,14 +32,14 @@ class OrderbookCubit extends Cubit<OrderbookState> {
     await _fetchOrderbookUpdatesUseCase(
       leftTokenId: leftTokenId,
       rightTokenId: rightTokenId,
-      onMsgReceived: (putsList, delsList) {
+      onMsgReceived: (orderbookList) {
         final currentState = state;
 
         if (currentState is OrderbookLoaded) {
           final currentOrderbook = currentState.orderbook as OrderbookModel;
           emit(
             OrderbookLoaded(
-              orderbook: currentOrderbook.update(putsList, delsList),
+              orderbook: currentOrderbook.update(orderbookList),
             ),
           );
         }

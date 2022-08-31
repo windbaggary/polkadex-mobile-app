@@ -15,4 +15,7 @@ abstract class StringUtils {
         type.toString().split(".").last.toLowerCase() ==
         value.split(".").last.toLowerCase());
   }
+
+  static String formatAssetString(String asset) =>
+      asset == 'polkadex' ? 'PDEX' : asset;
 }

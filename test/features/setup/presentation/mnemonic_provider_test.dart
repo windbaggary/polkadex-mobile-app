@@ -4,11 +4,11 @@ import 'package:test/test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/import_trade_account_usecase.dart';
 
 class _MockGenerateUsecase extends Mock implements GenerateMnemonicUseCase {}
 
-class _MockImportUsecase extends Mock implements ImportAccountUseCase {}
+class _MockImportUsecase extends Mock implements ImportTradeAccountUseCase {}
 
 void main() {
   late _MockGenerateUsecase _mockGenerateUsecase;
