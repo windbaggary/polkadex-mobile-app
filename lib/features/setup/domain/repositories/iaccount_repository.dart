@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:polkadex/common/network/error.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
 
 abstract class IAccountRepository {
   Future<Either<ApiError, Unit>> signUp(String email, String password);
@@ -23,4 +23,5 @@ abstract class IAccountRepository {
   Future<void> deletePasswordStorage();
   Future<bool> savePasswordStorage(String password);
   Future<String?> getPasswordStorage();
+  Future<bool> confirmPassword(String account, String password);
 }

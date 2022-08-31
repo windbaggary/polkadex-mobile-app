@@ -10,7 +10,7 @@ class GetOrderbookUpdatesUseCase {
   Future<void> call({
     required String leftTokenId,
     required String rightTokenId,
-    required Function(List<dynamic>, List<dynamic>) onMsgReceived,
+    required Function(List<dynamic>) onMsgReceived,
     required Function(Object) onMsgError,
   }) async {
     return await _orderbookRepository.getOrderbookUpdates(

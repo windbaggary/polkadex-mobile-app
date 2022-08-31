@@ -18,14 +18,14 @@ class RecentTradesCubit extends Cubit<RecentTradesState> {
   final GetRecentTradesUpdatesUseCase _getRecentTradesUpdatesUseCase;
 
   Future<void> getRecentTrades(
-    String address,
+    String market,
   ) async {
     emit(RecentTradesLoading());
 
-    final result = await _getRecentTradesUseCase(market: address);
+    final result = await _getRecentTradesUseCase(market: market);
 
     await _getRecentTradesUpdatesUseCase(
-      address: address,
+      market: market,
       onMsgReceived: (newRecentTrade) {
         final currentState = state;
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
-import 'package:polkadex/common/navigation/routes.dart';
-import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/utils/enums.dart';
+import 'package:polkadex/common/navigation/routes.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
+import 'package:polkadex/common/market_asset/domain/entities/asset_entity.dart';
+import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/screens/market_token_selection_screen.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
 import 'package:polkadex/features/trade/presentation/widgets/card_flip_widgett.dart';
 
 abstract class Coordinator {
@@ -38,7 +39,7 @@ abstract class Coordinator {
 
   static void goToWalletSettingsScreen(
     ChangeNotifier provider, {
-    required AccountEntity importedAccount,
+    required ImportedTradeAccountEntity importedAccount,
     bool removePrevivousScreens = false,
   }) {
     removePrevivousScreens

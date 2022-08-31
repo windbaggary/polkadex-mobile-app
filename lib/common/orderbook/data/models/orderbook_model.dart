@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_entity.dart';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_item_entity.dart';
 import 'package:polkadex/common/orderbook/data/models/orderbook_item_model.dart';
@@ -12,8 +14,8 @@ class OrderbookModel extends OrderbookEntity {
         );
 
   factory OrderbookModel.fromJson(List<dynamic> listMap) {
-    final listAskData = listMap.where((item) => item['side'] == 'Ask').toList();
-    final listBidData = listMap.where((item) => item['side'] == 'Bid').toList();
+    final listAskData = listMap.where((item) => item['s'] == 'Ask').toList();
+    final listBidData = listMap.where((item) => item['s'] == 'Bid').toList();
 
     final List<OrderbookItemEntity> dataAsk =
         List<OrderbookItemEntity>.generate(
@@ -44,30 +46,25 @@ class OrderbookModel extends OrderbookEntity {
     );
   }
 
-  OrderbookModel update(List<dynamic> listPuts, List<dynamic> listDels) {
+  OrderbookModel update(List<dynamic> listOrderbook) {
     final tempBid = [...bid];
     final tempAsk = [...ask];
 
-    for (var itemDel in listDels) {
-      (itemDel['side'] == 'Bid' ? tempBid : tempAsk).removeWhere(
-        (item) =>
-            item.price ==
-            double.parse(
-              itemDel['price'],
-            ),
-      );
-    }
-
-    for (var itemPuts in listPuts) {
-      final list = itemPuts['side'] == 'Bid' ? tempBid : tempAsk;
+    for (var itemList in listOrderbook) {
+      final list = itemList['side'] == 'Bid' ? tempBid : tempAsk;
 
       final index = list
-          .indexWhere((item) => item.price == double.parse(itemPuts['price']));
+          .indexWhere((item) => item.price == itemList['price'] / pow(10, 12));
 
-      if (index >= 0) {
-        list[index] = OrderbookItemModel.fromJson(itemPuts);
+      final decodedOrderbookItem = OrderbookItemModel.fromUpdateJson(itemList);
+
+      if (decodedOrderbookItem.amount <= 0) {
+        list.removeWhere((itemFromCurrOrderbook) =>
+            itemFromCurrOrderbook.price == decodedOrderbookItem.price);
+      } else if (index >= 0) {
+        list[index] = OrderbookItemModel.fromUpdateJson(itemList);
       } else {
-        list.add(OrderbookItemModel.fromJson(itemPuts));
+        list.add(OrderbookItemModel.fromUpdateJson(itemList));
       }
     }
 

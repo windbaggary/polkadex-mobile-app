@@ -52,6 +52,7 @@ import 'package:polkadex/features/setup/data/repositories/address_repository.dar
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/repositories/iadress_repository.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
@@ -82,7 +83,7 @@ import 'features/setup/data/datasources/account_local_datasource.dart';
 import 'common/cubits/account_cubit/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
 import 'features/setup/domain/usecases/get_password_usecase.dart';
-import 'features/setup/domain/usecases/import_account_usecase.dart';
+import 'features/setup/domain/usecases/import_trade_account_usecase.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'common/web_view_runner/web_view_runner.dart';
 import 'package:get_it/get_it.dart';
@@ -146,7 +147,7 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => ImportAccountUseCase(
+    () => ImportTradeAccountUseCase(
       mnemonicRepository: dependency(),
     ),
   );
@@ -224,6 +225,12 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
+    () => ConfirmPasswordUseCase(
+      accountRepository: dependency(),
+    ),
+  );
+
+  dependency.registerFactory(
     () => MnemonicProvider(
       generateMnemonicUseCase: dependency(),
       importAccountUseCase: dependency(),
@@ -231,7 +238,11 @@ Future<void> init() async {
   );
 
   dependency.registerFactory(
-    () => AccountCubit(
+    () => ResendCodeUseCase(accountRepository: dependency()),
+  );
+
+  dependency.registerSingleton<AccountCubit>(
+    AccountCubit(
       signUpUseCase: dependency(),
       signInUseCase: dependency(),
       signOutUseCase: dependency(),
@@ -242,9 +253,10 @@ Future<void> init() async {
       deleteAccountUseCase: dependency(),
       deletePasswordUseCase: dependency(),
       saveAccountUseCase: dependency(),
-      importAccountUseCase: dependency(),
+      importTradeAccountUseCase: dependency(),
       getPasswordUseCase: dependency(),
       getAccountStorageUseCase: dependency(),
+      confirmPasswordUseCase: dependency(),
       getMainAccountAddressUsecase: dependency(),
     ),
   );
@@ -498,10 +510,6 @@ Future<void> init() async {
 
   dependency.registerFactory(
     () => GetAssetsDetailsUseCase(assetRepository: dependency()),
-  );
-
-  dependency.registerFactory(
-    () => ResendCodeUseCase(accountRepository: dependency()),
   );
 
   dependency.registerSingleton<MarketAssetCubit>(

@@ -19,6 +19,6 @@ extension StringExtension on String {
 
 extension DefaultMap<K, V> on Map<K, V> {
   V getBalance(K key) {
-    return this[key] ?? ('0.0' as V);
+    return this[key] ?? (0.0 as V);
   }
 }

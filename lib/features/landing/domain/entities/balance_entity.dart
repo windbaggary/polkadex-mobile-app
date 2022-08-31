@@ -6,8 +6,8 @@ abstract class BalanceEntity extends Equatable {
     required this.reserved,
   });
 
-  final Map free;
-  final Map reserved;
+  final Map<String, double> free;
+  final Map<String, double> reserved;
 
   @override
   List<Object> get props => [

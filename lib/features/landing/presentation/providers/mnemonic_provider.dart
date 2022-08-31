@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:polkadex/common/utils/bip39.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
 import 'package:polkadex/features/setup/domain/usecases/generate_mnemonic_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/import_trade_account_usecase.dart';
 
 class MnemonicProvider extends ChangeNotifier {
   MnemonicProvider({
     required GenerateMnemonicUseCase generateMnemonicUseCase,
-    required ImportAccountUseCase importAccountUseCase,
+    required ImportTradeAccountUseCase importAccountUseCase,
     int phraseLenght = 12,
   })  : _generateMnemonicUseCase = generateMnemonicUseCase,
         _importAccountUseCase = importAccountUseCase,
         mnemonicWords = List.generate(phraseLenght, (_) => '');
 
   final GenerateMnemonicUseCase _generateMnemonicUseCase;
-  final ImportAccountUseCase _importAccountUseCase;
+  final ImportTradeAccountUseCase _importAccountUseCase;
 
   bool _disposed = false;
   bool _isLoading = false;
@@ -104,17 +104,17 @@ class MnemonicProvider extends ChangeNotifier {
     _loading = false;
   }
 
-  Future<AccountEntity?> createImportedAccount() async {
+  Future<ImportedTradeAccountEntity?> createImportedAccount() async {
     final result = await _importAccountUseCase(
       mnemonic: mnemonicWords.join(' '),
       password: '',
     );
 
-    AccountEntity? newAccount;
+    ImportedTradeAccountEntity? newAccount;
 
     result.fold(
       (_) => null,
-      (account) => newAccount = account,
+      (importedTradeAccount) => newAccount = importedTradeAccount,
     );
 
     return newAccount;

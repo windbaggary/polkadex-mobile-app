@@ -1,10 +1,13 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
+import 'package:polkadex/features/setup/data/models/encoding_model.dart';
+import 'package:polkadex/features/setup/data/models/imported_trade_account_model.dart';
+import 'package:polkadex/features/setup/data/models/meta_model.dart';
 import 'package:polkadex/features/setup/data/repositories/mnemonic_repository.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
 import 'package:polkadex/features/setup/data/datasources/mnemonic_remote_datasource.dart';
+import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/meta_entity.dart';
 
 class _MockMnemonicRemoteDatasource extends Mock
     implements MnemonicRemoteDatasource {}
@@ -16,7 +19,10 @@ void main() {
   late Map<String, dynamic> tGenData;
   late Map<String, dynamic> tImportData;
   late Map<String, dynamic> tErrorData;
-  late AccountEntity tAccount;
+  late ImportedTradeAccountEntity tImportedTradeAccount;
+  late String tAddress;
+  late MetaEntity tMeta;
+  late EncodingEntity tEncoding;
 
   setUp(() {
     dataSource = _MockMnemonicRemoteDatasource();
@@ -38,13 +44,18 @@ void main() {
       "meta": {"name": "userName"},
     };
     tErrorData = {"error": "errorTest"};
-    tAccount = AccountModel(
-      name: "",
-      email: "",
-      mainAddress: "",
-      proxyAddress: "k9o1dxJxQE8Zwm5Fy",
-      biometricAccess: false,
-      timerInterval: EnumTimerIntervalTypes.oneMinute,
+    tAddress = 'k9o1dxJxQE8Zwm5Fy';
+    tEncoding = EncodingModel(
+      content: ["sr25519"],
+      version: '3',
+      type: ["none"],
+    );
+    tMeta = MetaModel(name: 'userName');
+    tImportedTradeAccount = ImportedTradeAccountModel(
+      address: tAddress,
+      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+      encoding: tEncoding,
+      meta: tMeta,
     );
   });
 
@@ -71,21 +82,21 @@ void main() {
     test(
       'Must return data related to the imported account from mnemonic',
       () async {
-        when(() => dataSource.importAccount(any(), any())).thenAnswer(
+        when(() => dataSource.importTradeAccount(any(), any())).thenAnswer(
           (_) async => tImportData,
         );
 
-        final result = await repository.importAccount('test', '123456');
+        final result = await repository.importTradeAccount('test', '123456');
 
-        late AccountEntity resultAcc;
+        late ImportedTradeAccountEntity resultAcc;
 
         result.fold(
           (_) {},
           (acc) => resultAcc = acc,
         );
 
-        expect(resultAcc, tAccount);
-        verify(() => dataSource.importAccount(any(), any())).called(1);
+        expect(resultAcc, tImportedTradeAccount);
+        verify(() => dataSource.importTradeAccount(any(), any())).called(1);
         verifyNoMoreInteractions(dataSource);
       },
     );
@@ -93,14 +104,14 @@ void main() {
     test(
       'Must return error related to a wrong mnemonic used for import',
       () async {
-        when(() => dataSource.importAccount(any(), any())).thenAnswer(
+        when(() => dataSource.importTradeAccount(any(), any())).thenAnswer(
           (_) async => tErrorData,
         );
 
-        final result = await repository.importAccount('test', '123456');
+        final result = await repository.importTradeAccount('test', '123456');
 
         expect(result.isLeft(), true);
-        verify(() => dataSource.importAccount(any(), any())).called(1);
+        verify(() => dataSource.importTradeAccount(any(), any())).called(1);
         verifyNoMoreInteractions(dataSource);
       },
     );

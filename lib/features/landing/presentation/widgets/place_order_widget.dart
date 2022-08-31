@@ -160,10 +160,9 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     double balance;
 
     if (balanceState is BalanceLoaded) {
-      balance = double.parse(balanceState.free.getBalance(
-          enumBuySell == EnumBuySell.buy
-              ? marketAssetCubit.currentQuoteAssetDetails.assetId
-              : marketAssetCubit.currentBaseAssetDetails.assetId));
+      balance = balanceState.free.getBalance(enumBuySell == EnumBuySell.buy
+          ? marketAssetCubit.currentQuoteAssetDetails.assetId
+          : marketAssetCubit.currentBaseAssetDetails.assetId);
     } else {
       balance = 0.0;
     }
@@ -214,11 +213,10 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     if (balanceState is BalanceLoaded) {
       context.read<PlaceOrderCubit>().updateOrderParams(
             orderside: newOrderSide,
-            balance: double.parse(
-              balanceState.free.getBalance(newOrderSide == EnumBuySell.buy
-                  ? pairToken.assetId
-                  : baseToken.assetId),
-            ),
+            balance: balanceState.free.getBalance(
+                newOrderSide == EnumBuySell.buy
+                    ? pairToken.assetId
+                    : baseToken.assetId),
           );
       return;
     }
@@ -467,7 +465,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
             WidgetsBinding.instance
                 ?.addPostFrameCallback((_) => _onPriceAmountChanged(
                       placeOrderCubit,
-                      newPrice,
+                      newPrice.toDouble(),
                       false,
                     ));
           }

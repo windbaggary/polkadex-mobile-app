@@ -1,8 +1,14 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
-import 'package:polkadex/features/setup/domain/entities/imported_account_entity.dart';
+import 'package:polkadex/features/setup/data/models/encoding_model.dart';
+import 'package:polkadex/features/setup/data/models/account_model.dart';
+import 'package:polkadex/features/setup/data/models/imported_trade_account_model.dart';
+import 'package:polkadex/features/setup/data/models/meta_model.dart';
+import 'package:polkadex/features/setup/domain/entities/encoding_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
+import 'package:polkadex/features/setup/domain/entities/meta_entity.dart';
 import 'package:polkadex/features/setup/domain/repositories/iaccount_repository.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 
@@ -11,20 +17,35 @@ class _AccountRepositoryMock extends Mock implements IAccountRepository {}
 void main() {
   late GetAccountUseCase _usecase;
   late _AccountRepositoryMock _repository;
-  late String tProxyAddress;
+  late String tAddress;
+  late MetaEntity tMeta;
+  late EncodingEntity tEncoding;
   late AccountEntity tAccount;
+  late ImportedTradeAccountEntity tImportedTradeAccount;
 
   setUp(() {
     _repository = _AccountRepositoryMock();
     _usecase = GetAccountUseCase(accountRepository: _repository);
-    tProxyAddress = "k9o1dxJxQE8Zwm5Fy";
+    tAddress = 'k9o1dxJxQE8Zwm5Fy';
+    tMeta = MetaModel(name: 'userName');
+    tEncoding = EncodingModel(
+      content: ["sr25519"],
+      version: '3',
+      type: ["none"],
+    );
+    tImportedTradeAccount = ImportedTradeAccountModel(
+      address: tAddress,
+      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+      encoding: tEncoding,
+      meta: tMeta,
+    );
     tAccount = AccountModel(
-      name: '',
-      email: 'test',
-      mainAddress: "k9o1dxJxQE8Zwm5Fy",
-      proxyAddress: tProxyAddress,
+      name: "",
+      email: "",
+      mainAddress: tAddress,
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
+      importedTradeAccountEntity: tImportedTradeAccount,
     );
   });
 

@@ -14,14 +14,14 @@ abstract class TickerEntity extends Equatable {
   });
 
   final String m;
-  final double priceChange24Hr;
-  final double priceChangePercent24Hr;
-  final double open;
-  final double close;
-  final double high;
-  final double low;
-  final double volumeBase24hr;
-  final double volumeQuote24Hr;
+  final num priceChange24Hr;
+  final num priceChangePercent24Hr;
+  final num open;
+  final num close;
+  final num high;
+  final num low;
+  final num volumeBase24hr;
+  final num volumeQuote24Hr;
 
   @override
   List<Object> get props => [

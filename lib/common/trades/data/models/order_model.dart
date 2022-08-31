@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/string_utils.dart';
@@ -39,22 +41,49 @@ class OrderModel extends OrderEntity {
     final assets = map['m'].split('-');
 
     return OrderModel(
-      mainAccount: map['main_account'],
-      tradeId: map['exchange_order_id'],
-      clientId: map['client_order_id'],
-      time: DateTime.parse(map['time']),
+      mainAccount: map['u'],
+      tradeId: map['id'],
+      clientId: map['cid'],
+      time: DateTime.fromMillisecondsSinceEpoch(int.parse(map['t'])),
       baseAsset: assets[0],
       quoteAsset: assets[1],
       orderSide: StringUtils.enumFromString<EnumBuySell>(
-          EnumBuySell.values, map['order_side'] == 'Bid' ? 'Buy' : 'Sell')!,
+          EnumBuySell.values, map['s'] == 'Bid' ? 'Buy' : 'Sell')!,
+      orderType: StringUtils.enumFromString<EnumOrderTypes>(
+          EnumOrderTypes.values, map['ot'])!,
+      status: map['st'],
+      price: (int.parse(map['p'], radix: 16) / pow(10, 12)).toString(),
+      qty: (int.parse(map['q'], radix: 16) / pow(10, 12)).toString(),
+      avgFilledPrice:
+          (int.parse(map['afp'], radix: 16) / pow(10, 12)).toString(),
+      filledQuantity:
+          (int.parse(map['fq'], radix: 16) / pow(10, 12)).toString(),
+      fee: (int.parse(map['fee'], radix: 16) / pow(10, 12)).toString(),
+    );
+  }
+
+  factory OrderModel.fromUpdateJson(Map<String, dynamic> map) {
+    return OrderModel(
+      mainAccount: map['user'],
+      tradeId: map['id'],
+      clientId: map['client_order_id'],
+      time: DateTime.fromMillisecondsSinceEpoch(map['timestamp']),
+      baseAsset: map['pair']['base_asset'] == 'polkadex'
+          ? 'PDEX'
+          : map['pair']['base_asset']['asset'].toString(),
+      quoteAsset: map['pair']['quote_asset'] == 'polkadex'
+          ? 'PDEX'
+          : map['pair']['quote_asset']['asset'].toString(),
+      orderSide: StringUtils.enumFromString<EnumBuySell>(
+          EnumBuySell.values, map['side'] == 'Bid' ? 'Buy' : 'Sell')!,
       orderType: StringUtils.enumFromString<EnumOrderTypes>(
           EnumOrderTypes.values, map['order_type'])!,
       status: map['status'],
-      price: map['price'],
-      qty: map['qty'],
-      avgFilledPrice: map['avg_filled_price'],
-      filledQuantity: map['filled_quantity'],
-      fee: map['fee'],
+      price: (map['price'] / pow(10, 12)).toString(),
+      qty: (map['qty'] / pow(10, 12)).toString(),
+      avgFilledPrice: (map['avg_filled_price'] / pow(10, 12)).toString(),
+      filledQuantity: (map['filled_quantity'] / pow(10, 12)).toString(),
+      fee: (map['fee'] / pow(10, 12)).toString(),
     );
   }
 

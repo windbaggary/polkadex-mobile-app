@@ -4,14 +4,19 @@ import 'package:mocktail/mocktail.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/network/error.dart';
 import 'package:polkadex/common/utils/enums.dart';
-import 'package:polkadex/features/setup/data/models/imported_account_model.dart';
+import 'package:polkadex/features/setup/data/models/account_model.dart';
+import 'package:polkadex/features/setup/data/models/encoding_model.dart';
+import 'package:polkadex/features/setup/data/models/imported_trade_account_model.dart';
+import 'package:polkadex/features/setup/data/models/meta_model.dart';
+import 'package:polkadex/features/setup/domain/entities/imported_trade_account_entity.dart';
+import 'package:polkadex/features/setup/domain/usecases/confirm_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/confirm_sign_up_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/delete_password_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_current_user_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/get_password_usecase.dart';
-import 'package:polkadex/features/setup/domain/usecases/import_account_usecase.dart';
+import 'package:polkadex/features/setup/domain/usecases/import_trade_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/resend_code_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_account_usecase.dart';
 import 'package:polkadex/features/setup/domain/usecases/save_password_usecase.dart';
@@ -41,13 +46,17 @@ class _MockDeleteAccountUsecase extends Mock implements DeleteAccountUseCase {}
 class _MockDeletePasswordUsecase extends Mock implements DeletePasswordUseCase {
 }
 
-class _MockImportAccountUseCase extends Mock implements ImportAccountUseCase {}
+class _MockImportAccountUseCase extends Mock
+    implements ImportTradeAccountUseCase {}
 
 class _MockSaveAccountUseCase extends Mock implements SaveAccountUseCase {}
 
 class _MockSavePasswordUseCase extends Mock implements SavePasswordUseCase {}
 
 class _MockGetPasswordUseCase extends Mock implements GetPasswordUseCase {}
+
+class _MockConfirmPasswordUseCase extends Mock
+    implements ConfirmPasswordUseCase {}
 
 class _MockGetMainAccountAddressUseCase extends Mock
     implements GetMainAccountAddressUsecase {}
@@ -66,15 +75,19 @@ void main() {
   late _MockSaveAccountUseCase _mockSaveAccountUseCase;
   late _MockSavePasswordUseCase _mockSavePasswordUseCase;
   late _MockGetPasswordUseCase _mockGetPasswordUseCase;
+  late _MockConfirmPasswordUseCase _mockConfirmPasswordUseCase;
   late _MockGetMainAccountAddressUseCase _mockGetMainAccountAddressUseCase;
 
   late AccountCubit cubit;
   late String tName;
   late String tAddress;
   late String tEmail;
+  late MetaModel tMeta;
+  late EncodingModel tEncoding;
   late String tPassword;
   late String tCode;
   late ApiError tError;
+  late ImportedTradeAccountEntity tImportedTradeAccount;
   late AccountModel tAccountBioOff;
   late AccountModel tAccountBioOn;
 
@@ -92,6 +105,7 @@ void main() {
     _mockSaveAccountUseCase = _MockSaveAccountUseCase();
     _mockSavePasswordUseCase = _MockSavePasswordUseCase();
     _mockGetPasswordUseCase = _MockGetPasswordUseCase();
+    _mockConfirmPasswordUseCase = _MockConfirmPasswordUseCase();
     _mockGetMainAccountAddressUseCase = _MockGetMainAccountAddressUseCase();
 
     cubit = AccountCubit(
@@ -104,10 +118,11 @@ void main() {
       resendCodeUseCase: _mockResendCodeUseCase,
       deleteAccountUseCase: _mockDeleteAccountUsecase,
       deletePasswordUseCase: _mockDeletePasswordUsecase,
-      importAccountUseCase: _mockImportAccountUseCase,
+      importTradeAccountUseCase: _mockImportAccountUseCase,
       saveAccountUseCase: _mockSaveAccountUseCase,
       savePasswordUseCase: _mockSavePasswordUseCase,
       getPasswordUseCase: _mockGetPasswordUseCase,
+      confirmPasswordUseCase: _mockConfirmPasswordUseCase,
       getMainAccountAddressUsecase: _mockGetMainAccountAddressUseCase,
     );
 
@@ -117,12 +132,23 @@ void main() {
     tError = ApiError(message: 'error');
     tCode = 'code';
     tAddress = 'k9o1dxJxQE8Zwm5Fy';
+    tMeta = MetaModel(name: 'userName');
+    tEncoding = EncodingModel(
+      content: ["sr25519"],
+      version: '3',
+      type: ["none"],
+    );
+    tImportedTradeAccount = ImportedTradeAccountModel(
+      address: tAddress,
+      encoded: "WFChrxNT3nd/UbHYklZlR3GWuoj9OhIwMhAJAx+",
+      encoding: tEncoding,
+      meta: tMeta,
+    );
 
     tAccountBioOff = AccountModel(
       name: "",
       email: tEmail,
       mainAddress: "",
-      proxyAddress: "",
       biometricAccess: false,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
@@ -130,7 +156,6 @@ void main() {
       name: "",
       email: tEmail,
       mainAddress: "",
-      proxyAddress: "",
       biometricAccess: true,
       timerInterval: EnumTimerIntervalTypes.oneMinute,
     );
@@ -907,6 +932,13 @@ void main() {
           ).thenAnswer(
             (_) async => Right(tAddress),
           );
+          when(
+            () => _mockConfirmPasswordUseCase(
+                account: any(named: 'account'),
+                password: any(named: 'password')),
+          ).thenAnswer(
+            (_) async => true,
+          );
           return cubit;
         },
         act: (cubit) async {
@@ -918,7 +950,7 @@ void main() {
           );
           await cubit.addWalletToAccount(
             name: tName,
-            proxyAddress: tAddress,
+            importedTradeAccount: tImportedTradeAccount,
           );
         },
         expect: () => [
@@ -931,8 +963,8 @@ void main() {
           AccountLoggedInWalletAdded(
             account: tAccountBioOff.copyWith(
               name: tName,
-              proxyAddress: tAddress,
               mainAddress: tAddress,
+              importedTradeAccountEntity: tImportedTradeAccount,
             ),
             password: tPassword,
           ),
@@ -981,7 +1013,7 @@ void main() {
           );
           await cubit.addWalletToAccount(
             name: tName,
-            proxyAddress: tAddress,
+            importedTradeAccount: tImportedTradeAccount,
           );
         },
         expect: () => [
