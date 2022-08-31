@@ -37,7 +37,10 @@ class OrderBookWidget extends StatelessWidget {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 8),
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  bottom: 8,
+                ),
                 child: OrderBookHeadingWidget(
                   marketDropDownNotifier: marketDropDownNotifier,
                   priceLengthNotifier: priceLengthNotifier,
@@ -151,6 +154,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
         columnChildren = [
           _buildSellWidget(sellItems),
           _buildLatestTransactionWidget(),
+          _buildHeadingWidget(),
           _buildBuyWidget(buyItems),
         ];
         break;
@@ -257,7 +261,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         left: 8,
-        top: 16,
         bottom: 10,
       ),
       child: Row(
