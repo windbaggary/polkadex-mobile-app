@@ -114,9 +114,9 @@ class _BalanceTabViewState extends State<BalanceTabView>
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(
                       32,
-                      0,
                       32,
-                      16,
+                      32,
+                      64,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
