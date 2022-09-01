@@ -48,10 +48,13 @@ class QuantityInputWidget extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTapUp: (_) => _onIncrementButtonPressed(-1.0),
-                  child: Icon(
-                    Icons.remove,
-                    color: Colors.white,
-                    size: 18,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(
+                      Icons.remove,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -86,10 +89,13 @@ class QuantityInputWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTapUp: (_) => _onIncrementButtonPressed(1.0),
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 18,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                   ),
                 ),
               ],
