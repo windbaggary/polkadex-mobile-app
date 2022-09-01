@@ -80,12 +80,12 @@ class GraphRepository implements IGraphRepository {
 
           onMsgReceived(
             KLineEntity.fromCustom(
-              open: double.parse(newGraphData['o']),
-              close: double.parse(newGraphData['c']),
+              open: newGraphData['o'],
+              close: newGraphData['c'],
               time: int.parse(newGraphData['time']),
-              high: double.parse(newGraphData['h']),
-              low: double.parse(newGraphData['l']),
-              vol: double.parse(newGraphData['v_base']),
+              high: newGraphData['h'],
+              low: newGraphData['l'],
+              vol: newGraphData['v_base'],
             ),
           );
         }
