@@ -92,7 +92,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
               }),
               SizedBox(height: 16),
               _totalWidget(
-                token: cubit.currentBaseAssetDetails,
+                token: cubit.currentQuoteAssetDetails,
               ),
               placeOrderState is PlaceOrderLoading
                   ? Padding(
