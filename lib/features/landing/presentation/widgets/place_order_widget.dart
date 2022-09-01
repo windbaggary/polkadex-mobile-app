@@ -278,7 +278,11 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       }
 
       if (walletBalance > 0.0) {
-        _progressNotifier.value = ((amount * price) / walletBalance);
+        _progressNotifier.value = ((amount *
+                (placeOrderCubit.state.orderSide == EnumBuySell.buy
+                    ? price
+                    : 1.0)) /
+            walletBalance);
       } else {
         _progressNotifier.value = 0.0;
       }
