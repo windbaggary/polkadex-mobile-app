@@ -28,7 +28,7 @@ class PlaceOrderWidget extends StatefulWidget {
 
 class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   final ValueNotifier<EnumOrderTypes> _orderTypeNotifier =
-      ValueNotifier(EnumOrderTypes.market);
+      ValueNotifier(EnumOrderTypes.limit);
   final ValueNotifier<double> _progressNotifier = ValueNotifier(0.0);
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -67,7 +67,6 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                 marketAssetCubit: cubit,
                 placeOrderState: placeOrderState,
               ),
-              SizedBox(height: 8),
               _amountInputWidget(
                 asset: cubit.currentBaseAssetDetails,
                 orderSide: placeOrderState.orderSide,
@@ -470,36 +469,39 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                     ));
           }
 
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            decoration: BoxDecoration(
-              color: AppColors.color3B4150,
-              border: Border.all(color: AppColors.color558BA1BE),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-            ),
-            child: IgnorePointer(
-              ignoring: _orderTypeNotifier.value == EnumOrderTypes.market &&
-                  state is TickerLoaded,
-              child: QuantityInputWidget(
-                hintText:
-                    'Price (${marketAssetCubit.currentQuoteAssetDetails.symbol})',
-                controller: _priceController,
-                onChanged: (price) => _onPriceAmountChanged(
-                  context.read<PlaceOrderCubit>(),
-                  double.tryParse(price) ?? 0.0,
-                  false,
-                ),
-                isLoading: _orderTypeNotifier.value == EnumOrderTypes.market &&
-                    state is TickerLoading,
-                onError: _orderTypeNotifier.value == EnumOrderTypes.market &&
-                        state is TickerError
-                    ? () => context.read<TickerCubit>().getAllTickers()
-                    : null,
-              ),
-            ),
-          );
+          return orderType != EnumOrderTypes.market
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.color3B4150,
+                      border: Border.all(color: AppColors.color558BA1BE),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: QuantityInputWidget(
+                      hintText:
+                          'Price (${marketAssetCubit.currentQuoteAssetDetails.symbol})',
+                      controller: _priceController,
+                      onChanged: (price) => _onPriceAmountChanged(
+                        context.read<PlaceOrderCubit>(),
+                        double.tryParse(price) ?? 0.0,
+                        false,
+                      ),
+                      isLoading:
+                          _orderTypeNotifier.value == EnumOrderTypes.market &&
+                              state is TickerLoading,
+                      onError: _orderTypeNotifier.value ==
+                                  EnumOrderTypes.market &&
+                              state is TickerError
+                          ? () => context.read<TickerCubit>().getAllTickers()
+                          : null,
+                    ),
+                  ),
+                )
+              : Container();
         },
       ),
     );
