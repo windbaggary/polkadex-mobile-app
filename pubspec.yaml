@@ -94,6 +94,7 @@ flutter:
   assets:
     - assets/js/
     - assets/svgs/
+    - assets/pdfs/
     - assets/images/
     - assets/images/trade_open/
     - .env
