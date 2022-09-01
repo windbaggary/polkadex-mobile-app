@@ -90,9 +90,14 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                   pairToken: cubit.currentQuoteAssetDetails,
                 );
               }),
-              SizedBox(height: 16),
-              _totalWidget(
-                token: cubit.currentQuoteAssetDetails,
+              ValueListenableBuilder<EnumOrderTypes>(
+                valueListenable: _orderTypeNotifier,
+                builder: (_, currentOrderType, ___) =>
+                    currentOrderType != EnumOrderTypes.market
+                        ? _totalWidget(
+                            token: cubit.currentQuoteAssetDetails,
+                          )
+                        : Container(),
               ),
               placeOrderState is PlaceOrderLoading
                   ? Padding(
@@ -105,18 +110,17 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                     )
                   : ValueListenableBuilder<EnumOrderTypes>(
                       valueListenable: _orderTypeNotifier,
-                      builder: (_, __, ___) => AppButton(
+                      builder: (_, currentOrderType, ___) => AppButton(
                         label:
                             '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${cubit.currentBaseAssetDetails.symbol}',
-                        enabled:
-                            _orderTypeNotifier.value == EnumOrderTypes.market
-                                ? context.read<TickerCubit>().state
-                                        is TickerLoaded &&
-                                    placeOrderState is! PlaceOrderNotValid
-                                : placeOrderState is! PlaceOrderNotValid,
+                        enabled: currentOrderType == EnumOrderTypes.market
+                            ? context.read<TickerCubit>().state
+                                    is TickerLoaded &&
+                                placeOrderState is! PlaceOrderNotValid
+                            : placeOrderState is! PlaceOrderNotValid,
                         onTap: () => _onBuyOrSell(
                           placeOrderState.orderSide,
-                          _orderTypeNotifier.value,
+                          currentOrderType,
                           cubit.currentBaseAssetDetails.assetId,
                           cubit.currentQuoteAssetDetails.assetId,
                           _priceController.text,
@@ -566,19 +570,22 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }
 
   Widget _totalWidget({required AssetEntity token}) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-      decoration: BoxDecoration(
-        color: AppColors.color3B4150,
-        border: Border.all(color: AppColors.color558BA1BE),
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        decoration: BoxDecoration(
+          color: AppColors.color3B4150,
+          border: Border.all(color: AppColors.color558BA1BE),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
         ),
-      ),
-      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: _evalTotalWidget(token.symbol),
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: _evalTotalWidget(token.symbol),
+        ),
       ),
     );
   }
