@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
-import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/common/trades/domain/entities/order_entity.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -16,7 +15,7 @@ import 'package:shimmer/shimmer.dart';
 class TradeBottomWidget extends StatelessWidget {
   final ValueNotifier<EnumTradeBottomDisplayTypes> tradeBottomDisplayNotifier =
       ValueNotifier<EnumTradeBottomDisplayTypes>(
-          EnumTradeBottomDisplayTypes.orderHistory);
+          EnumTradeBottomDisplayTypes.openOrders);
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +41,15 @@ class TradeBottomWidget extends StatelessWidget {
                     builder: (context, orderHistoryState) {
                       return _displayOptionWidget(
                         text:
+                            'Open Orders  ${orderHistoryState is OrderHistoryLoaded ? '(${_getOpenOrdersCount(orderHistoryState.orders)})' : ''}',
+                        enumValue: EnumTradeBottomDisplayTypes.openOrders,
+                      );
+                    },
+                  ),
+                  BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+                    builder: (context, orderHistoryState) {
+                      return _displayOptionWidget(
+                        text:
                             'Order History  ${orderHistoryState is OrderHistoryLoaded ? '(${orderHistoryState.orders.length})' : ''}',
                         enumValue: EnumTradeBottomDisplayTypes.orderHistory,
                       );
@@ -50,12 +58,6 @@ class TradeBottomWidget extends StatelessWidget {
                   _displayOptionWidget(
                     text: 'Trade History',
                     enumValue: EnumTradeBottomDisplayTypes.tradeHistory,
-                    enabled: false,
-                  ),
-                  _displayOptionWidget(
-                    text: 'Funds',
-                    enumValue: EnumTradeBottomDisplayTypes.funds,
-                    enabled: false,
                   ),
                 ],
               ),
@@ -138,6 +140,10 @@ class TradeBottomWidget extends StatelessWidget {
     );
   }
 
+  int _getOpenOrdersCount(List<OrderEntity> orderList) {
+    return orderList.where((order) => order.status == 'OPEN').length;
+  }
+
   Widget _shimmerWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -181,24 +187,11 @@ class TradeBottomWidget extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           padding: EdgeInsets.all(16),
-          child: Row(
-            children: [
-              if (enumValue == EnumTradeBottomDisplayTypes.orderHistory)
-                SvgPicture.asset(
-                  'orders'.asAssetSvg(),
-                  width: 14,
-                  color: tradeBottomDisplayNotifier.value == enumValue
-                      ? Colors.white
-                      : AppColors.color141415,
-                ),
-              SizedBox(width: 6),
-              Text(
-                text,
-                style: tradeBottomDisplayNotifier.value == enumValue
-                    ? tsS16W600CFF
-                    : tsS16W600C141415,
-              ),
-            ],
+          child: Text(
+            text,
+            style: tradeBottomDisplayNotifier.value == enumValue
+                ? tsS16W600CFF
+                : tsS16W600C141415,
           ),
         ),
       ),

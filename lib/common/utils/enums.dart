@@ -142,7 +142,7 @@ enum EnumTimerIntervalTypes {
 }
 
 enum EnumTradeBottomDisplayTypes {
+  openOrders,
   orderHistory,
   tradeHistory,
-  funds,
 }
