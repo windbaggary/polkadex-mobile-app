@@ -28,7 +28,7 @@ class PlaceOrderWidget extends StatefulWidget {
 
 class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   final ValueNotifier<EnumOrderTypes> _orderTypeNotifier =
-      ValueNotifier(EnumOrderTypes.market);
+      ValueNotifier(EnumOrderTypes.limit);
   final ValueNotifier<double> _progressNotifier = ValueNotifier(0.0);
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -67,7 +67,6 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                 marketAssetCubit: cubit,
                 placeOrderState: placeOrderState,
               ),
-              SizedBox(height: 8),
               _amountInputWidget(
                 asset: cubit.currentBaseAssetDetails,
                 orderSide: placeOrderState.orderSide,
@@ -91,9 +90,14 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                   pairToken: cubit.currentQuoteAssetDetails,
                 );
               }),
-              SizedBox(height: 16),
-              _totalWidget(
-                token: cubit.currentBaseAssetDetails,
+              ValueListenableBuilder<EnumOrderTypes>(
+                valueListenable: _orderTypeNotifier,
+                builder: (_, currentOrderType, ___) =>
+                    currentOrderType != EnumOrderTypes.market
+                        ? _totalWidget(
+                            token: cubit.currentQuoteAssetDetails,
+                          )
+                        : Container(),
               ),
               placeOrderState is PlaceOrderLoading
                   ? Padding(
@@ -106,18 +110,17 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                     )
                   : ValueListenableBuilder<EnumOrderTypes>(
                       valueListenable: _orderTypeNotifier,
-                      builder: (_, __, ___) => AppButton(
+                      builder: (_, currentOrderType, ___) => AppButton(
                         label:
                             '${placeOrderState.orderSide == EnumBuySell.buy ? 'Buy' : 'Sell'} ${cubit.currentBaseAssetDetails.symbol}',
-                        enabled:
-                            _orderTypeNotifier.value == EnumOrderTypes.market
-                                ? context.read<TickerCubit>().state
-                                        is TickerLoaded &&
-                                    placeOrderState is! PlaceOrderNotValid
-                                : placeOrderState is! PlaceOrderNotValid,
+                        enabled: currentOrderType == EnumOrderTypes.market
+                            ? context.read<TickerCubit>().state
+                                    is TickerLoaded &&
+                                placeOrderState is! PlaceOrderNotValid
+                            : placeOrderState is! PlaceOrderNotValid,
                         onTap: () => _onBuyOrSell(
                           placeOrderState.orderSide,
-                          _orderTypeNotifier.value,
+                          currentOrderType,
                           cubit.currentBaseAssetDetails.assetId,
                           cubit.currentQuoteAssetDetails.assetId,
                           _priceController.text,
@@ -279,7 +282,11 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
       }
 
       if (walletBalance > 0.0) {
-        _progressNotifier.value = ((amount * price) / walletBalance);
+        _progressNotifier.value = ((amount *
+                (placeOrderCubit.state.orderSide == EnumBuySell.buy
+                    ? price
+                    : 1.0)) /
+            walletBalance);
       } else {
         _progressNotifier.value = 0.0;
       }
@@ -470,36 +477,39 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
                     ));
           }
 
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-            decoration: BoxDecoration(
-              color: AppColors.color3B4150,
-              border: Border.all(color: AppColors.color558BA1BE),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-            ),
-            child: IgnorePointer(
-              ignoring: _orderTypeNotifier.value == EnumOrderTypes.market &&
-                  state is TickerLoaded,
-              child: QuantityInputWidget(
-                hintText:
-                    'Price (${marketAssetCubit.currentQuoteAssetDetails.symbol})',
-                controller: _priceController,
-                onChanged: (price) => _onPriceAmountChanged(
-                  context.read<PlaceOrderCubit>(),
-                  double.tryParse(price) ?? 0.0,
-                  false,
-                ),
-                isLoading: _orderTypeNotifier.value == EnumOrderTypes.market &&
-                    state is TickerLoading,
-                onError: _orderTypeNotifier.value == EnumOrderTypes.market &&
-                        state is TickerError
-                    ? () => context.read<TickerCubit>().getAllTickers()
-                    : null,
-              ),
-            ),
-          );
+          return orderType != EnumOrderTypes.market
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    decoration: BoxDecoration(
+                      color: AppColors.color3B4150,
+                      border: Border.all(color: AppColors.color558BA1BE),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: QuantityInputWidget(
+                      hintText:
+                          'Price (${marketAssetCubit.currentQuoteAssetDetails.symbol})',
+                      controller: _priceController,
+                      onChanged: (price) => _onPriceAmountChanged(
+                        context.read<PlaceOrderCubit>(),
+                        double.tryParse(price) ?? 0.0,
+                        false,
+                      ),
+                      isLoading:
+                          _orderTypeNotifier.value == EnumOrderTypes.market &&
+                              state is TickerLoading,
+                      onError: _orderTypeNotifier.value ==
+                                  EnumOrderTypes.market &&
+                              state is TickerError
+                          ? () => context.read<TickerCubit>().getAllTickers()
+                          : null,
+                    ),
+                  ),
+                )
+              : Container();
         },
       ),
     );
@@ -510,7 +520,7 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
     EnumBuySell orderSide = EnumBuySell.buy,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
         color: AppColors.color3B4150,
         border: Border.all(color: AppColors.color558BA1BE),
@@ -534,23 +544,26 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
           ValueListenableBuilder<double>(
             valueListenable: _progressNotifier,
             builder: (context, progress, child) {
-              return AppHorizontalSlider(
-                bgColor: Colors.white,
-                activeColor: orderSide == EnumBuySell.buy
-                    ? AppColors.color0CA564
-                    : AppColors.colorE6007A,
-                initialProgress: progress.clamp(0.0, 1.0),
-                onProgressUpdate: (progress) {
-                  _progressNotifier.value = progress;
-                  _onProgressOrOrderSideUpdate(
-                    context.read<PlaceOrderCubit>().state.orderSide,
-                    context.read<PlaceOrderCubit>().state.balance,
-                    progress,
-                    _amountController,
-                    _priceController,
-                    context,
-                  );
-                },
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: AppHorizontalSlider(
+                  bgColor: Colors.white,
+                  activeColor: orderSide == EnumBuySell.buy
+                      ? AppColors.color0CA564
+                      : AppColors.colorE6007A,
+                  initialProgress: progress.clamp(0.0, 1.0),
+                  onProgressUpdate: (progress) {
+                    _progressNotifier.value = progress;
+                    _onProgressOrOrderSideUpdate(
+                      context.read<PlaceOrderCubit>().state.orderSide,
+                      context.read<PlaceOrderCubit>().state.balance,
+                      progress,
+                      _amountController,
+                      _priceController,
+                      context,
+                    );
+                  },
+                ),
               );
             },
           ),
@@ -560,35 +573,38 @@ class _PlaceOrderWidgetState extends State<PlaceOrderWidget> {
   }
 
   Widget _totalWidget({required AssetEntity token}) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-      decoration: BoxDecoration(
-        color: AppColors.color3B4150,
-        border: Border.all(color: AppColors.color558BA1BE),
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        decoration: BoxDecoration(
+          color: AppColors.color3B4150,
+          border: Border.all(color: AppColors.color558BA1BE),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
         ),
-      ),
-      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: _evalTotalWidget(token.symbol),
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: _evalTotalWidget(token.symbol),
+        ),
       ),
     );
   }
 
   Widget _orderTypeWidget(MarketAssetCubit marketAssetCubit) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-      decoration: BoxDecoration(
-        color: AppColors.color3B4150,
-        border: Border.all(color: AppColors.color558BA1BE),
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
+    return GestureDetector(
+      onTapUp: (_) => _onTapOrderType(context, marketAssetCubit),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        decoration: BoxDecoration(
+          color: AppColors.color3B4150,
+          border: Border.all(color: AppColors.color558BA1BE),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
         ),
-      ),
-      child: GestureDetector(
-        onTapUp: (_) => _onTapOrderType(context, marketAssetCubit),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
