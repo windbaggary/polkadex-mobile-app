@@ -37,8 +37,8 @@ class OrderbookModel extends OrderbookEntity {
       },
     ).toList();
 
-    dataAsk.sort((a, b) => a.price.compareTo(b.price));
-    dataBid.sort((a, b) => a.price.compareTo(b.price));
+    dataAsk.sort((a, b) => b.price.compareTo(a.price));
+    dataBid.sort((a, b) => b.price.compareTo(a.price));
 
     return OrderbookModel(
       ask: dataAsk,

@@ -37,7 +37,10 @@ class OrderBookWidget extends StatelessWidget {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 8),
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  bottom: 8,
+                ),
                 child: OrderBookHeadingWidget(
                   marketDropDownNotifier: marketDropDownNotifier,
                   priceLengthNotifier: priceLengthNotifier,
@@ -151,6 +154,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
         columnChildren = [
           _buildSellWidget(sellItems),
           _buildLatestTransactionWidget(),
+          _buildHeadingWidget(),
           _buildBuyWidget(buyItems),
         ];
         break;
@@ -165,7 +169,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
           ConstrainedBox(
             constraints: BoxConstraints(minHeight: 430),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: columnChildren,
             ),
           )
@@ -175,7 +179,10 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   }
 
   Widget _buildSellWidget(List<OrderbookItemEntity> sellItems) {
-    List<double> cumulativeAmount = _buildCumulativeAmountList(sellItems);
+    List<double> cumulativeAmount = _buildCumulativeAmountList(
+      items: sellItems,
+      isAscendingOrder: false,
+    );
 
     return Padding(
       padding: EdgeInsets.only(left: 8),
@@ -186,7 +193,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
             (index) => OrderSellItemWidget(
                   orderbookItem: sellItems[index],
                   percentageFilled:
-                      cumulativeAmount[index] / cumulativeAmount.last,
+                      cumulativeAmount[index] / cumulativeAmount.first,
                   marketDropDownNotifier: marketDropDownNotifier,
                   priceLengthNotifier: priceLengthNotifier,
                 )),
@@ -195,7 +202,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
   }
 
   Widget _buildBuyWidget(List<OrderbookItemEntity> buyItems) {
-    List<double> cumulativeAmount = _buildCumulativeAmountList(buyItems);
+    List<double> cumulativeAmount = _buildCumulativeAmountList(items: buyItems);
 
     return Padding(
       padding: EdgeInsets.only(left: 8),
@@ -214,18 +221,35 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     );
   }
 
-  List<double> _buildCumulativeAmountList(List<OrderbookItemEntity> items) {
+  List<double> _buildCumulativeAmountList({
+    required List<OrderbookItemEntity> items,
+    bool isAscendingOrder = true,
+  }) {
     final List<double> cumulativeAmount = [];
 
-    for (var i = 0; i < items.length; i++) {
-      if (i == 0) {
-        cumulativeAmount.add(items[i].amount);
-      } else {
-        cumulativeAmount.add(cumulativeAmount[i - 1] + items[i].amount);
+    if (isAscendingOrder) {
+      for (var i = 0; i < items.length; i++) {
+        if (i == 0) {
+          cumulativeAmount.add((items[i].amount * items[i].price));
+        } else {
+          cumulativeAmount
+              .add(cumulativeAmount.last + (items[i].amount * items[i].price));
+        }
       }
-    }
 
-    return cumulativeAmount;
+      return cumulativeAmount;
+    } else {
+      for (var i = items.length - 1; i >= 0; i--) {
+        if (i == items.length - 1) {
+          cumulativeAmount.add((items[i].amount * items[i].price));
+        } else {
+          cumulativeAmount
+              .add(cumulativeAmount.last + (items[i].amount * items[i].price));
+        }
+      }
+
+      return cumulativeAmount.reversed.toList();
+    }
   }
 
   Widget _buildHeadingWidget() {
@@ -237,7 +261,6 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         left: 8,
-        top: 16,
         bottom: 10,
       ),
       child: Row(
@@ -308,7 +331,7 @@ class _ThisOrderBookChartWidget extends StatelessWidget {
     return BlocBuilder<RecentTradesCubit, RecentTradesState>(
       builder: (context, state) {
         if (state is RecentTradesLoaded) {
-          final isUpTendency = state.trades.isNotEmpty
+          final isUpTendency = state.trades.length >= 2
               ? state.trades.first.price >= state.trades[1].price
               : true;
 

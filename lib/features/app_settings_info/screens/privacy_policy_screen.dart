@@ -1,31 +1,26 @@
+import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:polkadex/common/widgets/loading_dots_widget.dart';
 import 'package:polkadex/features/app_settings_info/widgets/app_settings_layout.dart';
 import 'package:polkadex/common/utils/colors.dart';
-import 'package:polkadex/common/utils/styles.dart';
 
 /// XD_PAGE: 47
-class PrivacyPolicyScreen extends StatelessWidget {
-  Widget _buildTitleContentWidget({
-    required String? title,
-    required String? content,
-  }) =>
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            title ?? "",
-            style: tsS16W600CFF,
-          ),
-          SizedBox(height: 16),
-          Text(
-            content ?? "",
-            style: tsS14W400CFF.copyWith(height: 1.5),
-          ),
-          SizedBox(height: 8),
-        ],
-      );
+class PrivacyPolicyScreen extends StatefulWidget {
+  @override
+  State<PrivacyPolicyScreen> createState() => _PrivacyPolicyScreenState();
+}
+
+class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
+  late PDFDocument localPdf;
+
+  final String _pdfLink =
+      'https://github.com/Polkadex-Substrate/Docs/raw/master/Polkadex_Privacy_Policy.pdf';
+  final String _pdfLocalPath = 'assets/pdfs/Polkadex_Privacy_Policy.pdf';
+
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: AppColors.color1C2023,
       body: AppSettingsLayout(
@@ -42,42 +37,56 @@ class PrivacyPolicyScreen extends StatelessWidget {
               bottomRight: Radius.circular(40),
             ),
           ),
-          padding: EdgeInsets.fromLTRB(25, 8, 26, 8),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 20),
-                Text(
-                  'Last updated Feb 7, 2021',
-                  style: tsS13W400CFFOP60,
-                ),
-                SizedBox(height: 17),
-                _buildTitleContentWidget(
-                  title: 'Reservation of Rights',
-                  content:
-                      'We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amen these terms and conditions and it’s linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions.',
-                ),
-                SizedBox(height: 17),
-                _buildTitleContentWidget(
-                  title: 'Removal of links from our website',
-                  content:
-                      'If you find any link on our Website that is offensive for any reason, you are free to contact and inform us any moment. We will consider requests to remove links but we are not obligated to or so or to respond to you directly.\n\nWe do not ensure that the information on this website is correct, we do not warrant its completeness or accuracy; nor do we promise to ensure that the website remains available or that the material on the website is kept up to date.',
-                ),
-                SizedBox(height: 17),
-                _buildTitleContentWidget(
-                  title: 'Disclaimer',
-                  content:
-                      'The limitations and prohibitions of liability set in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer, including liabilities arising in contract, in tort and for breach of statutory duty.\n\nTo the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website. Nothing in this disclaimer will:',
-                ),
-                SizedBox(height: 17),
-              ],
+          child: FutureBuilder(
+            future: _fetchPdfs(
+              _pdfLink,
+              _pdfLocalPath,
             ),
+            builder:
+                (BuildContext context, AsyncSnapshot<PDFDocument> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: LoadingDotsWidget(
+                    dotSize: 12,
+                  ),
+                );
+              } else {
+                final pdfDocument = snapshot.hasData ? snapshot.data : localPdf;
+
+                return Theme(
+                  // ignore accentColor deprecation since it's the only way to set desired pdf page on numberPicker
+                  // ignore_for_file: deprecated_member_use
+                  data: currentTheme.copyWith(
+                    accentColor: AppColors.colorE6007A,
+                    colorScheme: currentTheme.colorScheme.copyWith(
+                      primary: AppColors.colorE6007A,
+                    ),
+                  ),
+                  child: PDFViewer(
+                    document: pdfDocument!,
+                    pickerButtonColor: AppColors.colorE6007A,
+                  ),
+                );
+              }
+            },
           ),
         ),
       ),
     );
   }
+
+  Future<PDFDocument> _fetchPdfs(
+    String link,
+    String path,
+  ) async {
+    localPdf = await _pdfRequestFromAsset(path);
+
+    return _pdfRequestFromURL(link);
+  }
+
+  Future<PDFDocument> _pdfRequestFromAsset(String path) =>
+      PDFDocument.fromAsset(path);
+
+  Future<PDFDocument> _pdfRequestFromURL(String link) =>
+      PDFDocument.fromURL(link);
 }

@@ -62,6 +62,10 @@ dependencies:
   amplify_flutter: ^0.6.5
   amplify_auth_cognito: ^0.6.5
   pin_code_fields: ^7.4.0
+  advance_pdf_viewer:
+    git:
+      url: https://github.com/lohanidamodar/pdf_viewer.git
+      ref: develop
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +94,7 @@ flutter:
   assets:
     - assets/js/
     - assets/svgs/
+    - assets/pdfs/
     - assets/images/
     - assets/images/trade_open/
     - .env
