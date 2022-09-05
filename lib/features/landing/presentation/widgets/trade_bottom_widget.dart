@@ -19,20 +19,20 @@ class TradeBottomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          margin: EdgeInsets.all(8),
-          padding: EdgeInsets.all(8),
-          child: ValueListenableBuilder<EnumTradeBottomDisplayTypes>(
-            valueListenable: tradeBottomDisplayNotifier,
-            builder: (context, optionDisplayValue, _) => SingleChildScrollView(
+    return ValueListenableBuilder<EnumTradeBottomDisplayTypes>(
+      valueListenable: tradeBottomDisplayNotifier,
+      builder: (context, optionDisplayValue, _) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            margin: EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
+            child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,24 +63,37 @@ class TradeBottomWidget extends StatelessWidget {
               ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        _listOpenOrders(),
-      ],
+          SizedBox(
+            height: 8,
+          ),
+          optionDisplayValue == EnumTradeBottomDisplayTypes.tradeHistory
+              ? Container() //TODO: Create Trade history widget
+              : _listOpenOrders(
+                  onlyOpenOrders: optionDisplayValue ==
+                      EnumTradeBottomDisplayTypes.openOrders,
+                ),
+        ],
+      ),
     );
   }
 
-  Widget _listOpenOrders() {
+  Widget _listOpenOrders({
+    bool onlyOpenOrders = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
           builder: (context, orderHistoryState) {
             if (orderHistoryState is OrderHistoryLoaded) {
+              final orderList = orderHistoryState.orders;
+
+              if (onlyOpenOrders) {
+                orderList.where((order) => order.status == 'OPEN').length;
+              }
+
               return Column(
-                children: orderHistoryState.orders
+                children: orderList
                     .map<Widget>(
                       (order) => Column(
                         children: [
