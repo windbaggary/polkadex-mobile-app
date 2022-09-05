@@ -19,7 +19,7 @@ class TradeRemoteDatasource {
     String amount,
   ) async {
     final String _callPlaceOrderJSON =
-        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
+        "polkadexWorker.placeOrderJSON(keyring.getPair('$proxyAddress'), '$mainAddress', '$baseAsset', '$quoteAsset', '$orderType', '$orderSide', $price, $amount)";
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
