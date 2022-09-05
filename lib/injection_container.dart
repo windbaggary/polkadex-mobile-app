@@ -11,6 +11,7 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/graph/data/repositories/graph_repository.dart';
 import 'package:polkadex/common/graph/domain/repositories/igraph_repository.dart';
 import 'package:polkadex/common/graph/domain/usecases/get_graph_data_usecase.dart';
+import 'package:polkadex/common/network/custom_function_provider.dart';
 import 'package:polkadex/common/orderbook/data/datasources/orderbook_remote_datasource.dart';
 import 'package:polkadex/common/orderbook/domain/repositories/iorderbook_repository.dart';
 import 'package:polkadex/common/orderbook/domain/usecases/get_orderbook_data_usecase.dart';
@@ -105,6 +106,9 @@ Future<void> init() async {
   );
 
   dependency.registerSingleton<FirebaseAnalytics>(FirebaseAnalytics.instance);
+
+  dependency
+      .registerSingleton<CustomFunctionProvider>(CustomFunctionProvider());
 
   dependency.registerFactory(
     () => MnemonicRemoteDatasource(),

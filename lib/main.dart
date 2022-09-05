@@ -77,8 +77,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _configureAmplify() async {
     final api = AmplifyAPI(
-      authProviders: const [
-        CustomFunctionProvider(),
+      authProviders: [
+        injection.dependency<CustomFunctionProvider>(),
       ],
     );
     final auth = AmplifyAuthCognito();
