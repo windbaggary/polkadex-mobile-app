@@ -34,12 +34,13 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
-          echo BLOCKCHAIN_URL=\${{ secrets.BLOCKCHAIN_URL }} > ${{env.ENV_FILE_PATH}}
-          echo API_KEY=\${{ secrets.API_KEY }} >> ${{env.ENV_FILE_PATH}}
           echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
-          echo GRAPHQL_ENDPOINT_WEBSOCKET=\${{ secrets.GRAPHQL_ENDPOINT_WEBSOCKET }} >> ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
           echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
+          echo IDENTITY_POOL_ID=\${{ secrets.IDENTITY_POOL_ID }} >> ${{env.IDENTITY_POOL_ID}}
+          echo USER_POOL_ID=\${{ secrets.USER_POOL_ID }} >> ${{env.USER_POOL_ID}}
+          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} > ${{env.CLIENT_POOL_ID}}
+          echo AUTH_TOKEN=\${{ secrets.AUTH_TOKEN }} > ${{env.AUTH_TOKEN}}
       - name: Check for errors in the code
         run: flutter analyze .
       - name: Run tests
@@ -82,12 +83,13 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
-          echo BLOCKCHAIN_URL=\${{ secrets.BLOCKCHAIN_URL }} > ${{env.ENV_FILE_PATH}}
-          echo API_KEY=\${{ secrets.API_KEY }} >> ${{env.ENV_FILE_PATH}}
           echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
-          echo GRAPHQL_ENDPOINT_WEBSOCKET=\${{ secrets.GRAPHQL_ENDPOINT_WEBSOCKET }} >> ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
           echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
+          echo IDENTITY_POOL_ID=\${{ secrets.IDENTITY_POOL_ID }} >> ${{env.IDENTITY_POOL_ID}}
+          echo USER_POOL_ID=\${{ secrets.USER_POOL_ID }} >> ${{env.USER_POOL_ID}}
+          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} > ${{env.CLIENT_POOL_ID}}
+          echo AUTH_TOKEN=\${{ secrets.AUTH_TOKEN }} > ${{env.AUTH_TOKEN}}
       - name: Create properties file using secrets
         run: |
           echo keyPassword=\${{ secrets.KEY_PASSWORD }} > ${{env.PROPERTIES_FILE_PATH}}
