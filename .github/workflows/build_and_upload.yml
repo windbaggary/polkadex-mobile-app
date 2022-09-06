@@ -34,10 +34,7 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
-          echo BLOCKCHAIN_URL=\${{ secrets.BLOCKCHAIN_URL }} > ${{env.ENV_FILE_PATH}}
-          echo API_KEY=\${{ secrets.API_KEY }} >> ${{env.ENV_FILE_PATH}}
           echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
-          echo GRAPHQL_ENDPOINT_WEBSOCKET=\${{ secrets.GRAPHQL_ENDPOINT_WEBSOCKET }} >> ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
           echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
       - name: Check for errors in the code
@@ -82,10 +79,7 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
-          echo BLOCKCHAIN_URL=\${{ secrets.BLOCKCHAIN_URL }} > ${{env.ENV_FILE_PATH}}
-          echo API_KEY=\${{ secrets.API_KEY }} >> ${{env.ENV_FILE_PATH}}
           echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
-          echo GRAPHQL_ENDPOINT_WEBSOCKET=\${{ secrets.GRAPHQL_ENDPOINT_WEBSOCKET }} >> ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
           echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
       - name: Create properties file using secrets
