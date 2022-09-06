@@ -34,12 +34,12 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
-          echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
+          echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} > ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
-          echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
+          echo REGION=\${{ secrets.REGION }} >> ${{env.ENV_FILE_PATH}}
           echo IDENTITY_POOL_ID=\${{ secrets.IDENTITY_POOL_ID }} >> ${{env.IDENTITY_POOL_ID}}
           echo USER_POOL_ID=\${{ secrets.USER_POOL_ID }} >> ${{env.USER_POOL_ID}}
-          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} > ${{env.CLIENT_POOL_ID}}
+          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} >> ${{env.CLIENT_POOL_ID}}
           echo AUTH_TOKEN=\${{ secrets.AUTH_TOKEN }} > ${{env.AUTH_TOKEN}}
       - name: Check for errors in the code
         run: flutter analyze .
@@ -83,12 +83,12 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
-          echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
+          echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} > ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
-          echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
+          echo REGION=\${{ secrets.REGION }} >> ${{env.ENV_FILE_PATH}}
           echo IDENTITY_POOL_ID=\${{ secrets.IDENTITY_POOL_ID }} >> ${{env.IDENTITY_POOL_ID}}
           echo USER_POOL_ID=\${{ secrets.USER_POOL_ID }} >> ${{env.USER_POOL_ID}}
-          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} > ${{env.CLIENT_POOL_ID}}
+          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} >> ${{env.CLIENT_POOL_ID}}
           echo AUTH_TOKEN=\${{ secrets.AUTH_TOKEN }} > ${{env.AUTH_TOKEN}}
       - name: Create properties file using secrets
         run: |
