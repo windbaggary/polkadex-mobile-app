@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:polkadex/common/network/custom_function_provider.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/graphql/subscriptions.dart';
 import 'package:polkadex/injection_container.dart';
@@ -23,6 +24,8 @@ class TradeRemoteDatasource {
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callPlaceOrderJSON, isSynchronous: true);
 
+    await dependency<CustomFunctionProvider>()
+        .setToUseCustomTokenNext(proxyAddress);
     return await Amplify.API
         .mutate(
           request: GraphQLRequest(
@@ -49,6 +52,7 @@ class TradeRemoteDatasource {
     final Map<String, dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callCancelOrderJSON, isSynchronous: true);
 
+    await dependency<CustomFunctionProvider>().setToUseCustomTokenNext(address);
     return await Amplify.API
         .mutate(
           request: GraphQLRequest(

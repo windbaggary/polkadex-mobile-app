@@ -15,5 +15,8 @@ class CustomFunctionProvider extends FunctionAuthProvider {
     }
   }
 
-  Future<void> setToUseCustomTokenNext() async => useCustomTokenNext = true;
+  Future<void> setToUseCustomTokenNext(String token) async {
+    customToken = token;
+    useCustomTokenNext = true;
+  }
 }
