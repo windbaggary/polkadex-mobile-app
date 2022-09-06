@@ -34,6 +34,10 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
+          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} >> ${{env.ENV_FILE_PATH}}
+          echo AUTH_TOKEN=\${{ secrets.AUTH_TOKEN }} >> ${{env.ENV_FILE_PATH}}
+          echo IDENTITY_POOL_ID=\${{ secrets.IDENTITY_POOL_ID }} >> ${{env.ENV_FILE_PATH}}
+          echo USER_POOL_ID=\${{ secrets.USER_POOL_ID }} >> ${{env.ENV_FILE_PATH}}
           echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
           echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
@@ -79,6 +83,10 @@ jobs:
         run: flutter format . --set-exit-if-changed
       - name: Create .env file using repo secrets
         run: |
+          echo CLIENT_POOL_ID=\${{ secrets.CLIENT_POOL_ID }} >> ${{env.ENV_FILE_PATH}}
+          echo AUTH_TOKEN=\${{ secrets.AUTH_TOKEN }} >> ${{env.ENV_FILE_PATH}}
+          echo IDENTITY_POOL_ID=\${{ secrets.IDENTITY_POOL_ID }} >> ${{env.ENV_FILE_PATH}}
+          echo USER_POOL_ID=\${{ secrets.USER_POOL_ID }} >> ${{env.ENV_FILE_PATH}}
           echo GRAPHQL_ENDPOINT=\${{ secrets.GRAPHQL_ENDPOINT }} >> ${{env.ENV_FILE_PATH}}
           echo API_NAME=\${{ secrets.API_NAME }} >> ${{env.ENV_FILE_PATH}}
           echo REGION=\${{ secrets.REGION }} > ${{env.ENV_FILE_PATH}}
