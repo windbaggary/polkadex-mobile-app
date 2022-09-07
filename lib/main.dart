@@ -8,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
+import 'package:polkadex/common/network/custom_function_provider.dart';
 import 'package:polkadex/common/providers/bottom_navigation_provider.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/common/utils/colors.dart';
@@ -75,7 +76,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _configureAmplify() async {
-    final api = AmplifyAPI();
+    final api = AmplifyAPI(
+      authProviders: [
+        injection.dependency<CustomFunctionProvider>(),
+      ],
+    );
     final auth = AmplifyAuthCognito();
 
     await Amplify.addPlugins([api, auth]);
@@ -88,7 +93,7 @@ class _MyAppState extends State<MyApp> {
       "endpointType": 'GraphQL',
       "endpoint": dotenv.get('GRAPHQL_ENDPOINT'),
       "region": dotenv.get('REGION'),
-      "authorizationType": 'API_KEY',
+      "authorizationType": 'AWS_LAMBDA',
       "apiKey": dotenv.get('API_KEY'),
     };
 

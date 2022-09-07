@@ -1,4 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:polkadex/common/network/custom_function_provider.dart';
 import 'package:polkadex/common/web_view_runner/web_view_runner.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:polkadex/graphql/mutations.dart' as mutations;
@@ -15,6 +16,8 @@ class CoinRemoteDatasource {
     final List<dynamic> payloadResult = await dependency<WebViewRunner>()
         .evalJavascript(_callWithdrawJSON, isSynchronous: true);
 
+    await dependency<CustomFunctionProvider>()
+        .setToUseCustomTokenNext(proxyAddress);
     return await Amplify.API
         .mutate(
           request: GraphQLRequest(
