@@ -8,6 +8,7 @@ import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cub
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
 import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
+import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
@@ -19,7 +20,6 @@ import 'package:polkadex/common/orderbook/presentation/widgets/order_book_widget
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/injection_container.dart';
-
 import 'package:provider/provider.dart';
 
 /// The tab view of trade for Homescreen
@@ -77,6 +77,12 @@ class _TradeTabViewState extends State<TradeTabView>
                     cubit.currentBaseAssetDetails.assetId,
                     context.read<AccountCubit>().proxyAccountAddress,
                     true,
+                  ),
+              ),
+              BlocProvider<TradeHistoryCubit>(
+                create: (_) => dependency<TradeHistoryCubit>()
+                  ..getAccountTrades(
+                    address: context.read<AccountCubit>().mainAccountAddress,
                   ),
               ),
             ],

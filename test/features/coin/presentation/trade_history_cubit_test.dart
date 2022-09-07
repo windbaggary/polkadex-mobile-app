@@ -85,8 +85,8 @@ void main() {
         },
         act: (cubit) async {
           await cubit.getAccountTrades(
-            '0',
-            address,
+            asset: '0',
+            address: address,
           );
         },
         expect: () => [
@@ -121,8 +121,8 @@ void main() {
         },
         act: (cubit) async {
           await cubit.getAccountTrades(
-            '0',
-            address,
+            asset: '0',
+            address: address,
           );
         },
         expect: () => [
