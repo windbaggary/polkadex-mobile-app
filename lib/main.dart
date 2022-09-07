@@ -94,7 +94,6 @@ class _MyAppState extends State<MyApp> {
       "endpoint": dotenv.get('GRAPHQL_ENDPOINT'),
       "region": dotenv.get('REGION'),
       "authorizationType": 'AWS_LAMBDA',
-      "apiKey": dotenv.get('API_KEY'),
     };
 
     //Auth configuration
