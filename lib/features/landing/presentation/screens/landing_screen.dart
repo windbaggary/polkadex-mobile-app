@@ -42,7 +42,7 @@ class _LandingScreenState extends State<LandingScreen>
 
   late ScrollController _scrollController;
 
-  final ValueNotifier<int> _pageViewNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> _pageViewNotifier = ValueNotifier<int>(2);
 
   final LoadingOverlay _loadingOverlay = LoadingOverlay();
 
@@ -67,7 +67,7 @@ class _LandingScreenState extends State<LandingScreen>
       reverseDuration: AppConfigs.animDurationSmall,
     );
 
-    _pageController = PageController();
+    _pageController = PageController(initialPage: 2);
 
     _scrollController = ScrollController();
 
