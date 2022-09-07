@@ -7,6 +7,7 @@ import 'package:polkadex/common/utils/enums.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/widgets/polkadex_progress_error_widget.dart';
 import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
+import 'package:polkadex/common/widgets/trade_history_widget.dart';
 import 'package:polkadex/features/landing/presentation/widgets/order_item_widget.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
@@ -67,7 +68,7 @@ class TradeBottomWidget extends StatelessWidget {
             height: 8,
           ),
           optionDisplayValue == EnumTradeBottomDisplayTypes.tradeHistory
-              ? Container() //TODO: Create Trade history widget
+              ? TradeHistoryWidget()
               : _listOpenOrders(
                   onlyOpenOrders: optionDisplayValue ==
                       EnumTradeBottomDisplayTypes.openOrders,
