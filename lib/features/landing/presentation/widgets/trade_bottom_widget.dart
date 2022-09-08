@@ -42,7 +42,7 @@ class TradeBottomWidget extends StatelessWidget {
                     builder: (context, orderHistoryState) {
                       return _displayOptionWidget(
                         text:
-                            'Open Orders  ${orderHistoryState is OrderHistoryLoaded ? '(${_getOpenOrdersCount(orderHistoryState.orders)})' : ''}',
+                            'Open Orders ${orderHistoryState is OrderHistoryLoaded ? '(${_getOpenOrdersCount(orderHistoryState.orders)})' : ''}',
                         enumValue: EnumTradeBottomDisplayTypes.openOrders,
                       );
                     },
@@ -51,7 +51,7 @@ class TradeBottomWidget extends StatelessWidget {
                     builder: (context, orderHistoryState) {
                       return _displayOptionWidget(
                         text:
-                            'Order History  ${orderHistoryState is OrderHistoryLoaded ? '(${orderHistoryState.orders.length})' : ''}',
+                            'Order History ${orderHistoryState is OrderHistoryLoaded ? '(${orderHistoryState.orders.length})' : ''}',
                         enumValue: EnumTradeBottomDisplayTypes.orderHistory,
                       );
                     },
