@@ -34,6 +34,7 @@ class WebViewRunner {
 
     if (_web == null) {
       _web = HeadlessInAppWebView(
+        initialUrlRequest: URLRequest(url: Uri.parse("")),
         initialOptions: InAppWebViewGroupOptions(
           crossPlatform: InAppWebViewOptions(),
         ),
