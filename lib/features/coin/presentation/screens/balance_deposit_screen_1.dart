@@ -1,17 +1,13 @@
 import 'package:clipboard/clipboard.dart';
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/common/widgets/build_methods.dart';
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/utils/token_utils.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BalanceDepositScreenOne extends StatefulWidget {
@@ -352,37 +348,5 @@ class _BalanceDepositScreenState extends State<BalanceDepositScreenOne> {
   }
 
   /// Share the qrcode to other apps
-  _onShare(BuildContext context) async {
-    final imgData = await rootBundle.load('qr-code.png'.asAssetImg());
-    // final dir = await pathProvider.getTemporaryDirectory();
-    // final file = File(path.join(dir.path, 'qrcode.png'));
-    // if (!await file.exists()) {
-    //   await file.create();
-    // }
-    // await file.writeAsBytes(imgData.buffer.asUint64List());
-    if (!await Permission.storage.isGranted) {
-      await Permission.storage.request();
-    }
-
-    if (!await Permission.manageExternalStorage.isGranted) {
-      await Permission.manageExternalStorage.request();
-    }
-    final path = await FileSaver.instance.saveFile(
-        'qrcode', imgData.buffer.asUint8List(), 'png',
-        mimeType: MimeType.PNG);
-    final box = context.findRenderObject() as RenderBox;
-
-    /// Share the saved image and address
-    Share.shareFiles(
-      [path],
-      subject: 'Polkadex',
-      text: 'Polkadex DEX Address: 3P3QsMVK89JBNqZQv5zMAKG8FK3k',
-      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
-      mimeTypes: ["image/png"],
-    );
-    // Share.share(
-    //   'Polkadex DEX Address: 3P3QsMVK89JBNqZQv5zMAKG8FK3k',
-    //   subject: 'Polkadex',
-    // );
-  }
+  _onShare(BuildContext context) async {}
 }
