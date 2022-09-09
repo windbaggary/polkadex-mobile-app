@@ -1,5 +1,4 @@
 import 'package:amplify_api/amplify_api.dart';
-import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/features/coin/data/datasources/coin_remote_datasource.dart';
@@ -70,7 +69,7 @@ void main() {
           any(),
         ),
       ).thenAnswer(
-        (_) async => throw RpcException(500, 'error'),
+        (_) async => throw Exception('Some arbitrary error'),
       );
 
       final result = await repository.withdraw(

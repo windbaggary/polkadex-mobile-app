@@ -179,7 +179,7 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
       await controller?.pauseCamera();
 
       if (widget.onQrCodeScan != null) {
-        await widget.onQrCodeScan!(scanData.code);
+        await widget.onQrCodeScan!(scanData.code ?? '');
       } else {
         Navigator.pop(context, scanData.code);
       }

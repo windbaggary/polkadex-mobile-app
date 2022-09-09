@@ -51,7 +51,7 @@ class _CodeVerificationScreenState extends State<CodeVerificationScreen>
 
     Future.microtask(() => _animationController.forward());
 
-    WidgetsBinding.instance?.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) => Timer(
         Duration(
           minutes: 1,

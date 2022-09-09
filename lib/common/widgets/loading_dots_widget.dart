@@ -19,7 +19,7 @@ class _LoadingDotsWidgetState extends State<LoadingDotsWidget> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) => animationTimer = Timer.periodic(
         Duration(milliseconds: 500),
         (_) => setState(() => indexDotFade = (indexDotFade + 1) % 3),

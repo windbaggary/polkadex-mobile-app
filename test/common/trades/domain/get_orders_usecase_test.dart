@@ -60,8 +60,8 @@ void main() {
   });
 
   setUpAll(() {
-    registerFallbackValue<EnumOrderTypes>(EnumOrderTypes.market);
-    registerFallbackValue<EnumBuySell>(EnumBuySell.buy);
+    registerFallbackValue(EnumOrderTypes.market);
+    registerFallbackValue(EnumBuySell.buy);
   });
 
   group('GetOrdersUsecase tests', () {
