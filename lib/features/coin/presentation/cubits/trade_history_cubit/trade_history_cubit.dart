@@ -21,10 +21,10 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
 
   List<AccountTradeEntity> _allTrades = [];
 
-  Future<void> getAccountTrades(
-    String asset,
-    String address,
-  ) async {
+  Future<void> getAccountTrades({
+    required String address,
+    String? asset,
+  }) async {
     emit(TradeHistoryLoading());
 
     final result = await _getTradesUseCase(
@@ -58,13 +58,15 @@ class TradeHistoryCubit extends Cubit<TradeHistoryState> {
         ),
       ),
       (trades) {
-        _allTrades = trades.where((trade) {
-          if (trade is OrderEntity) {
-            return trade.asset == asset || trade.asset == asset;
-          } else {
-            return trade.asset == asset;
-          }
-        }).toList();
+        _allTrades = asset == null
+            ? trades
+            : trades.where((trade) {
+                if (trade is OrderEntity) {
+                  return trade.asset == asset || trade.asset == asset;
+                } else {
+                  return trade.asset == asset;
+                }
+              }).toList();
         _allTrades.sort((a, b) => b.time.compareTo(a.time));
 
         emit(TradeHistoryLoaded(
