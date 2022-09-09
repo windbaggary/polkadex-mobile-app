@@ -83,7 +83,7 @@ void main() {
       );
 
       blocTest<MarketAssetCubit, MarketAssetState>(
-        'Market fetch successfull and Asset data fetch fail',
+        'Market fetch fail and Asset data fetch successfull',
         build: () {
           when(
             () => _mockGetMarketsUseCase(),
@@ -107,12 +107,12 @@ void main() {
       );
 
       blocTest<MarketAssetCubit, MarketAssetState>(
-        'Market fetch fail and Asset data fetch successfull',
+        'Market fetch successfull and Asset data fetch fail',
         build: () {
           when(
             () => _mockGetMarketsUseCase(),
           ).thenAnswer(
-            (_) async => Right([tMarket]),
+            (_) async => Right([]),
           );
           when(
             () => _mockGetAssetsDetailsUseCase(),
