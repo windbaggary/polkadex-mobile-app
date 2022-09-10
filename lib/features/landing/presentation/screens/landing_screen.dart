@@ -71,7 +71,7 @@ class _LandingScreenState extends State<LandingScreen>
 
     _scrollController = ScrollController();
 
-    WidgetsBinding.instance?.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         if (context.read<MarketAssetCubit>().state is! MarketAssetLoaded) {
           _loadingOverlay.show(

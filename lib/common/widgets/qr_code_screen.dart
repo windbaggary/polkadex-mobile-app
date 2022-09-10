@@ -1,16 +1,10 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 
-/// The QRCode screen can be accessed usign navigator. The screen displays
-/// the QR code and once its read it will pop the result
-///
 class QRCodeScanScreen extends StatefulWidget {
   QRCodeScanScreen(this.onQrCodeScan);
 
@@ -21,25 +15,22 @@ class QRCodeScanScreen extends StatefulWidget {
 
 class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  MobileScannerController controller = MobileScannerController(
+    facing: CameraFacing.front,
+    torchEnabled: false,
+  );
   late ValueNotifier<bool> _isFlashNotifier;
-  QRViewController? controller;
-  StreamSubscription<Barcode>? _streamSubscription;
-  // Barcode result;
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller?.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller?.resumeCamera();
-    }
-  }
 
   @override
   void initState() {
     _isFlashNotifier = ValueNotifier<bool>(false);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _isFlashNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -76,10 +67,10 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                       Positioned.fill(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
-                          child: QRView(
+                          child: MobileScanner(
                             key: qrKey,
-                            onQRViewCreated: (data) =>
-                                _onQRViewCreated(data, context),
+                            onDetect: (barcode, args) =>
+                                _onQRCodeDetected(barcode, context),
                           ),
                         ),
                       ),
@@ -88,12 +79,10 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                         bottom: 18.0,
                         child: InkWell(
                           onTap: () async {
-                            if (controller != null) {
-                              _isFlashNotifier.value = !_isFlashNotifier.value;
-                              await controller?.toggleFlash();
-                              controller?.getFlashStatus().then(
-                                  (value) => _isFlashNotifier.value = value!);
-                            }
+                            _isFlashNotifier.value = !_isFlashNotifier.value;
+                            await controller.toggleTorch();
+                            _isFlashNotifier.value =
+                                controller.torchEnabled ?? false;
                           },
                           child: ValueListenableBuilder<bool>(
                             valueListenable: _isFlashNotifier,
@@ -152,42 +141,13 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
         ),
       );
 
-  @override
-  void dispose() {
-    _isFlashNotifier.dispose();
-    _closeSubscription();
-    super.dispose();
-  }
-
-  void _closeSubscription() {
-    if (_streamSubscription != null) {
-      _streamSubscription?.cancel();
-      _streamSubscription = null;
-    }
-  }
-
-  bool hasData = false;
-  void _subscribe() async {
-    _closeSubscription();
-    _streamSubscription =
-        controller!.scannedDataStream.listen((scanData) async {
-      // setState(() {
-      //   result = scanData;
-      // });
-      if (hasData) return;
-      hasData = true;
-      await controller?.pauseCamera();
-
+  void _onQRCodeDetected(Barcode barcode, BuildContext context) async {
+    if (barcode.rawValue != null) {
       if (widget.onQrCodeScan != null) {
-        await widget.onQrCodeScan!(scanData.code);
+        await widget.onQrCodeScan!(barcode.rawValue ?? '');
       } else {
-        Navigator.pop(context, scanData.code);
+        Navigator.pop(context, barcode.rawValue);
       }
-    });
-  }
-
-  void _onQRViewCreated(QRViewController controller, BuildContext context) {
-    this.controller = controller;
-    _subscribe();
+    }
   }
 }

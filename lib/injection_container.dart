@@ -80,8 +80,6 @@ import 'package:polkadex/common/trades/domain/usecases/place_order_usecase.dart'
 import 'features/coin/domain/usecases/withdraw_usecase.dart';
 import 'features/coin/presentation/cubits/withdraw_cubit/withdraw_cubit.dart';
 import 'features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
-import 'features/setup/data/datasources/account_local_datasource.dart';
-import 'common/cubits/account_cubit/account_cubit.dart';
 import 'features/setup/domain/repositories/imnemonic_repository.dart';
 import 'features/setup/domain/usecases/get_password_usecase.dart';
 import 'features/setup/domain/usecases/import_trade_account_usecase.dart';

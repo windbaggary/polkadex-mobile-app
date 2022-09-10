@@ -1,5 +1,4 @@
 import 'package:amplify_api/amplify_api.dart';
-import 'package:json_rpc_2/json_rpc_2.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:polkadex/common/user_data/user_data_remote_datasource.dart';
@@ -111,8 +110,8 @@ void main() {
   });
 
   setUpAll(() {
-    registerFallbackValue<EnumOrderTypes>(EnumOrderTypes.market);
-    registerFallbackValue<EnumBuySell>(EnumBuySell.buy);
+    registerFallbackValue(EnumOrderTypes.market);
+    registerFallbackValue(EnumBuySell.buy);
   });
 
   group('Trade repository tests ', () {
@@ -142,7 +141,7 @@ void main() {
     test('Must return a failed orders submit response', () async {
       when(() => tradeDataSource.placeOrder(
           any(), any(), any(), any(), any(), any(), any(), any())).thenAnswer(
-        (_) async => throw RpcException(-32000, 'error'),
+        (_) async => throw Exception('Some arbitrary error'),
       );
 
       final result = await repository.placeOrder(

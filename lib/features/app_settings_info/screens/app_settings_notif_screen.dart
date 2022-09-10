@@ -129,18 +129,12 @@ class _ThisMenuItemWidget extends StatelessWidget {
   const _ThisMenuItemWidget({
     required this.title,
     required this.description,
-    this.onEmailTap,
-    this.onPhoneTap,
-    this.onPushTap,
     this.isShowLine = true,
     this.lockedItems,
   });
 
   final String title;
   final String description;
-  final VoidCallback? onEmailTap;
-  final VoidCallback? onPhoneTap;
-  final VoidCallback? onPushTap;
   final bool isShowLine;
   final List<EnumNotificationAlert>? lockedItems;
 
@@ -252,7 +246,6 @@ class _ThisAlertItemWidget extends StatelessWidget {
     required this.svgAsset,
     this.isLocked = false,
     this.isActive = false,
-    this.onTap,
   }) : _selectedNotifier = ValueNotifier<bool>(isActive);
 
   final ValueNotifier<bool> _selectedNotifier;
@@ -261,7 +254,6 @@ class _ThisAlertItemWidget extends StatelessWidget {
   final String svgAsset;
   final bool isLocked;
   final bool isActive;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +262,6 @@ class _ThisAlertItemWidget extends StatelessWidget {
           ? null
           : () {
               _selectedNotifier.value = !_selectedNotifier.value;
-              if (onTap != null) onTap!();
             },
       child: ValueListenableBuilder<bool>(
         valueListenable: _selectedNotifier,
