@@ -150,7 +150,7 @@ class TradeRepository implements ITradeRepository {
         if (data != null) {
           final liveData =
               jsonDecode(jsonDecode(data)['websocket_streams']['data']);
-          final newOrderData = liveData['SetOrder'];
+          final newOrderData = liveData['SetOrder'][0];
 
           if (newOrderData != null) {
             onMsgReceived(
@@ -203,7 +203,7 @@ class TradeRepository implements ITradeRepository {
         if (message.data != null) {
           final liveData =
               jsonDecode(jsonDecode(data)['websocket_streams']['data']);
-          final newTransactionData = liveData['SetTransaction'];
+          final newTransactionData = liveData['SetTransaction'][0];
 
           if (newTransactionData != null) {
             onMsgReceived(
