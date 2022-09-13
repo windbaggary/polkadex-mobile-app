@@ -14,7 +14,7 @@ class AppOptionsWidget extends StatelessWidget {
     final currentTheme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 16, 16, 16),
+      padding: EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.color1C2023,
         borderRadius: BorderRadius.only(
