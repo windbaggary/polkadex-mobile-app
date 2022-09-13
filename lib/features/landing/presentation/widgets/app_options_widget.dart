@@ -193,25 +193,16 @@ class _ThisProfileWidget extends StatelessWidget {
         vertical: 32,
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset(
-            'drawer_avatar'.asAssetSvg(),
-            width: 56,
-            height: 56,
-            fit: BoxFit.contain,
-          ),
-          SizedBox(width: 8),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  context.read<AccountCubit>().accountName,
-                  style: tsS21W600CFF,
-                ),
-              ],
+            child: SvgPicture.asset(
+              'logo_name'.asAssetSvg(),
+              fit: BoxFit.contain,
+              alignment: Alignment.centerLeft,
             ),
           ),
+          SizedBox(width: 16),
           InkWell(
             onTap: () async => await context.read<AccountCubit>().logout(),
             borderRadius: BorderRadius.circular(12),
