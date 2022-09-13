@@ -60,10 +60,6 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                   ),
                   child: Stack(
                     children: [
-                      // Image.asset(
-                      //   'bg_login_cam.png'.asAssetImg(),
-                      //   fit: BoxFit.fitWidth,
-                      // ),
                       Positioned.fill(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
@@ -74,35 +70,36 @@ class _QRCodeScanScreenState extends State<QRCodeScanScreen> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        right: 14.0,
-                        bottom: 18.0,
-                        child: InkWell(
-                          onTap: () async {
-                            _isFlashNotifier.value = !_isFlashNotifier.value;
-                            await controller.toggleTorch();
-                            _isFlashNotifier.value =
-                                controller.torchEnabled ?? false;
-                          },
-                          child: ValueListenableBuilder<bool>(
-                            valueListenable: _isFlashNotifier,
-                            builder: (context, isFlashOn, child) => Container(
-                                width: 53,
-                                height: 53,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isFlashOn
-                                      ? AppColors.colorE6007A
-                                      : AppColors.color2E303C,
-                                ),
-                                padding: const EdgeInsets.all(16),
-                                child: SvgPicture.asset(
-                                  'flashlight'.asAssetSvg(),
-                                  color: AppColors.colorFFFFFF,
-                                )),
+                      if (controller.hasTorch)
+                        Positioned(
+                          right: 14.0,
+                          bottom: 18.0,
+                          child: InkWell(
+                            onTap: () async {
+                              _isFlashNotifier.value = !_isFlashNotifier.value;
+                              await controller.toggleTorch();
+                              _isFlashNotifier.value =
+                                  controller.torchEnabled ?? false;
+                            },
+                            child: ValueListenableBuilder<bool>(
+                              valueListenable: _isFlashNotifier,
+                              builder: (context, isFlashOn, child) => Container(
+                                  width: 53,
+                                  height: 53,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isFlashOn
+                                        ? AppColors.colorE6007A
+                                        : AppColors.color2E303C,
+                                  ),
+                                  padding: const EdgeInsets.all(16),
+                                  child: SvgPicture.asset(
+                                    'flashlight'.asAssetSvg(),
+                                    color: AppColors.colorFFFFFF,
+                                  )),
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
