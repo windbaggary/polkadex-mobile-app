@@ -11,6 +11,7 @@ import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/o
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
 import 'package:polkadex/features/landing/domain/entities/ticker_entity.dart';
+import 'package:polkadex/features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/ticker_cubit/ticker_cubit.dart';
 import 'package:polkadex/features/landing/presentation/cubits/place_order_cubit/place_order_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/connect_trade_account_widget.dart';
@@ -118,6 +119,12 @@ class _TradeTabViewState extends State<TradeTabView>
                               BlocBuilder<MarketAssetCubit, MarketAssetState>(
                             builder: (context, state) {
                               if (state is MarketAssetLoaded) {
+                                context
+                                    .read<RecentTradesCubit>()
+                                    .getRecentTrades(context
+                                        .read<MarketAssetCubit>()
+                                        .currentMarketId);
+
                                 return OrderBookWidget(
                                   amountToken: cubit.currentBaseAssetDetails,
                                   priceToken: cubit.currentQuoteAssetDetails,

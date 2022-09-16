@@ -14,7 +14,6 @@ import 'package:polkadex/features/landing/presentation/widgets/scroll_to_hide_wi
 import 'package:polkadex/features/landing/presentation/cubits/balance_cubit/balance_cubit.dart';
 import 'package:polkadex/features/landing/presentation/providers/home_scroll_notif_provider.dart';
 import 'package:polkadex/features/landing/presentation/providers/notification_drawer_provider.dart';
-import 'package:polkadex/features/landing/presentation/cubits/recent_trades_cubit/recent_trades_cubit.dart';
 import 'package:polkadex/features/landing/presentation/widgets/notifications_widget.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/balance_tab_view.dart';
 import 'package:polkadex/features/landing/presentation/sub_views/exchange_tab_view.dart';
@@ -97,10 +96,6 @@ class _LandingScreenState extends State<LandingScreen>
 
   @override
   Widget build(BuildContext context) {
-    context
-        .read<RecentTradesCubit>()
-        .getRecentTrades(context.read<MarketAssetCubit>().currentMarketId);
-
     return WillPopScope(
       onWillPop: () async => false,
       child: MultiBlocProvider(
