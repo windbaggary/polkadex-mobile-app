@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:polkadex/common/orderbook/domain/entities/orderbook_item_entity.dart';
 
 class OrderbookItemModel extends OrderbookItemEntity {
@@ -14,8 +13,8 @@ class OrderbookItemModel extends OrderbookItemEntity {
     Map<String, dynamic> map,
   ) {
     return OrderbookItemModel(
-      price: double.parse(map['p']) / pow(10, 12),
-      amount: double.parse(map['q']) / pow(10, 12),
+      price: double.parse(map['p']),
+      amount: double.parse(map['q']),
     );
   }
 
@@ -23,8 +22,8 @@ class OrderbookItemModel extends OrderbookItemEntity {
     Map<String, dynamic> map,
   ) {
     return OrderbookItemModel(
-      price: map['price'] / pow(10, 12),
-      amount: map['qty'] / pow(10, 12),
+      price: map['price'],
+      amount: map['qty'],
     );
   }
 }
