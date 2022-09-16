@@ -6,6 +6,7 @@ import 'package:polkadex/common/navigation/coordinator.dart';
 import 'package:polkadex/common/cubits/account_cubit/account_cubit.dart';
 import 'package:polkadex/common/market_asset/presentation/cubit/market_asset_cubit.dart';
 import 'package:polkadex/common/orderbook/presentation/cubit/orderbook_cubit.dart';
+import 'package:polkadex/common/orderbook/presentation/widgets/orderbook_shimmer_widget.dart';
 import 'package:polkadex/common/trades/presentation/cubits/order_history_cubit/order_history_cubit.dart';
 import 'package:polkadex/common/utils/extensions.dart';
 import 'package:polkadex/features/coin/presentation/cubits/trade_history_cubit/trade_history_cubit.dart';
@@ -21,6 +22,7 @@ import 'package:polkadex/common/utils/colors.dart';
 import 'package:polkadex/common/utils/styles.dart';
 import 'package:polkadex/injection_container.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 /// The tab view of trade for Homescreen
 ///
@@ -114,10 +116,16 @@ class _TradeTabViewState extends State<TradeTabView>
                         Expanded(
                           child:
                               BlocBuilder<MarketAssetCubit, MarketAssetState>(
-                            builder: (context, state) => OrderBookWidget(
-                              amountToken: cubit.currentBaseAssetDetails,
-                              priceToken: cubit.currentQuoteAssetDetails,
-                            ),
+                            builder: (context, state) {
+                              if (state is MarketAssetLoaded) {
+                                return OrderBookWidget(
+                                  amountToken: cubit.currentBaseAssetDetails,
+                                  priceToken: cubit.currentQuoteAssetDetails,
+                                );
+                              }
+
+                              return OrderBookShimmerWidget();
+                            },
                           ),
                         ),
                         SizedBox(width: 8),
@@ -241,79 +249,153 @@ class _ThisTopSelectableWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 0),
       child: InkWell(
         onTap: onTap,
-        child: Row(
-          children: [
-            BlocBuilder<MarketAssetCubit, MarketAssetState>(
-              builder: (context, state) => Container(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: SvgPicture.asset(
-                    TokenUtils.tokenIdToAssetSvg(context
-                        .read<MarketAssetCubit>()
-                        .currentBaseAssetDetails
-                        .assetId),
-                    width: 48,
-                    height: 48,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
-                    builder: (context, state) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
-                          style: tsS20W600CFF,
-                        ),
-                        Text(
-                          context
-                              .read<MarketAssetCubit>()
-                              .currentBaseAssetDetails
-                              .name,
-                          style: tsS14W400CFF.copyWith(
-                              color: AppColors.colorABB2BC),
-                        ),
-                      ],
+        child: BlocBuilder<MarketAssetCubit, MarketAssetState>(
+          builder: (context, state) {
+            if (state is MarketAssetLoaded) {
+              return Row(
+                children: [
+                  Container(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: SvgPicture.asset(
+                        TokenUtils.tokenIdToAssetSvg(context
+                            .read<MarketAssetCubit>()
+                            .currentBaseAssetDetails
+                            .assetId),
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.color3B4150),
-                    color: AppColors.color2E303C,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${context.read<MarketAssetCubit>().currentBaseAssetDetails.symbol}/${context.read<MarketAssetCubit>().currentQuoteAssetDetails.symbol}',
+                              style: tsS20W600CFF,
+                            ),
+                            Text(
+                              context
+                                  .read<MarketAssetCubit>()
+                                  .currentBaseAssetDetails
+                                  .name,
+                              style: tsS14W400CFF.copyWith(
+                                  color: AppColors.colorABB2BC),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.color3B4150),
+                          color: AppColors.color2E303C,
+                        ),
+                        padding: EdgeInsets.all(4),
+                        margin: EdgeInsets.only(left: 4, right: 8),
+                        child: SvgPicture.asset(
+                          'switch'.asAssetSvg(),
+                          width: 12,
+                          height: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                  padding: EdgeInsets.all(4),
-                  margin: EdgeInsets.only(left: 4, right: 8),
-                  child: SvgPicture.asset(
-                    'switch'.asAssetSvg(),
-                    width: 12,
-                    height: 12,
-                    color: Colors.white,
+                  Flexible(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
+                      child: Sparkline(
+                        data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
+                        lineColor: graphColor,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Flexible(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
-                child: Sparkline(
-                  data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
-                  lineColor: graphColor,
-                ),
+                ],
+              );
+            }
+
+            return _buildTopRowShimmerWidget();
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopRowShimmerWidget() {
+    return Shimmer.fromColors(
+      highlightColor: AppColors.color8BA1BE,
+      baseColor: AppColors.color2E303C,
+      child: Row(
+        children: [
+          Container(
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: SvgPicture.asset(
+                TokenUtils.tokenIdToAssetSvg('PDEX'),
+                width: 48,
+                height: 48,
+                fit: BoxFit.contain,
               ),
             ),
-          ],
-        ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '/',
+                      style: tsS20W600CFF,
+                    ),
+                    Text(
+                      'Empty',
+                      style:
+                          tsS14W400CFF.copyWith(color: AppColors.colorABB2BC),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.color3B4150),
+                  color: AppColors.color2E303C,
+                ),
+                padding: EdgeInsets.all(4),
+                margin: EdgeInsets.only(left: 4, right: 8),
+                child: SvgPicture.asset(
+                  'switch'.asAssetSvg(),
+                  width: 12,
+                  height: 12,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          Flexible(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 80, maxHeight: 30),
+              child: Sparkline(
+                data: [-1.5, 1 - 0, 2 - 5, -1.5, 2, 5, -2.3],
+                lineColor: graphColor,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
